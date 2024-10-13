@@ -1,0 +1,146 @@
+#+TITLE: nerd-icons.el - A Library for Nerd Font icons
+#+AUTHOR: Hongyu Ding
+#+LANGUAGE: en
+
+[[https://melpa.org/#/nerd-icons][file:https://melpa.org/packages/nerd-icons-badge.svg]]
+
+Nerd-icons.el is a library for easily using [[https://github.com/ryanoasis/nerd-fonts][Nerd Font]] icons inside Emacs, an alternative to [[https://github.com/domtronn/all-the-icons.el][all-the-icons]].
+
+It works on both GUI and terminal! You only need a [[https://www.nerdfonts.com/#home][Nerd Font]] installed on your system.
+
+It is inspired by [[https://github.com/domtronn/all-the-icons.el][all-the-icons]], [[https://github.com/seagle0128/icons-in-terminal.el][icons-in-terminal]], [[https://github.com/ryanoasis/vim-devicons][vim-devicons]], and [[https://github.com/nvim-tree/nvim-web-devicons][nvim-web-devicons]].
+
+in GUI:
+[[file:screenshots/demo.png]]
+
+in terminal:
+[[file:screenshots/demo-terminal.png]]
+
+* Installing Fonts
+Please go to [[https://www.nerdfonts.com/][Nerd Fonts website]] and get a Nerd font. After installing the font on your machine, you need to set ~nerd-icons-font-family~ to match its font name so that the font can be properly used under GUI. If you want Nerd Fonts to work under a terminal, please change your terminal's font to a Nerd font.
+
+If the Nerd Font you installed does not display correctly (e.g. appear cut off), it is recommended to use =Symbols Nerd Fonts Mono= (Symbols Nerd Font). You can use ~M-x nerd-icons-install-fonts~ to install ~Symbols Nerd Fonts Mono~ for you. Note that for *Windows* you'll need to manually install the font after you used this function.
+
+* Usage
+~nerd-icons~ is on [[https://melpa.org/#/nerd-icons-completion][Melpa]]. You can install it with built-in ~M-x package-install~
+#+begin_src emacs-lisp
+  (require 'nerd-icons)
+#+end_src
+
+or using ~use-package~
+#+BEGIN_SRC emacs-lisp
+  (use-package nerd-icons
+    ;; :custom
+    ;; The Nerd Font you want to use in GUI
+    ;; "Symbols Nerd Font Mono" is the default and is recommended
+    ;; but you can use any other Nerd Font if you want
+    ;; (nerd-icons-font-family "Symbols Nerd Font Mono")
+    )
+#+END_SRC
+** insert icons
++ use icon based on category
+  - ~nerd-icons-icon-for-dir~
+  - ~nerd-icons-icon-for-file~
+  - ~nerd-icons-icon-for-extension~
+  - ~nerd-icons-icon-for-mode~
+  - ~nerd-icons-icon-for-url~
+  - ~nerd-icons-icon-for-buffer~
+
+  example:
+  #+BEGIN_SRC emacs-lisp
+    (insert (nerd-icons-icon-for-file "init.el"))
+    ;; Inserts an icon for Emacs Lisp
+  #+END_SRC
++ use icon directly
+  - ~nerd-icons-ipsicon~
+  - ~nerd-icons-octicon~
+  - ~nerd-icons-pomicon~
+  - ~nerd-icons-powerline~
+  - ~nerd-icons-faicon~
+  - ~nerd-icons-wicon~
+  - ~nerd-icons-sucicon~
+  - ~nerd-icons-devicon~
+  - ~nerd-icons-codicon~
+  - ~nerd-icons-flicon~
+  - ~nerd-icons-mdicon~
+
+  example:
+  #+BEGIN_SRC emacs-lisp
+    (insert (nerd-icons-faicon "nf-fa-gitlab"))
+    ;; Inserts a Gitlab icon
+#+END_SRC
++ insert icon interactively (~M-x~ functions)
+  - ~nerd-icons-insert~
+  - ~nerd-icons-insert-ipsicon~
+  - ~nerd-icons-insert-octicon~
+  - ~nerd-icons-insert-pomicon~
+  - ~nerd-icons-insert-powerline~
+  - ~nerd-icons-insert-faicon~
+  - ~nerd-icons-insert-wicon~
+  - ~nerd-icons-insert-sucicon~
+  - ~nerd-icons-insert-devicon~
+  - ~nerd-icons-insert-codicon~
+  - ~nerd-icons-insert-flicon~
+  - ~nerd-icons-insert-mdicon~
+
+** customize icons
+You can customize the icons via ~nerd-icons-extension-icon-alist~, ~nerd-icons-regexp-icon-alist~ and ~nerd-icons-mode-icon-alist~, etc.
+
+For example,
+#+begin_src emacs-lisp
+(add-to-list 'nerd-icons-extension-icon-alist '("epub" nerd-icons-faicon "nf-fa-book" :face nerd-icons-green))
+#+end_src
+
+* Glyph Sets
+| Glyph Set               | prefix               | Point Range                          | insert function      |
+|-------------------------+----------------------+--------------------------------------+----------------------|
+| Seti-UI + Custom        | ~nf-seti-~, ~nf-custom-~ | ~e5fa~ - ~e631~                          | ~nerd-icons-sucicon~   |
+| Devicons                | ~nf-dev-~              | ~e700~ - ~e7c5~                          | ~nerd-icons-devicon~   |
+| Font Awesome            | ~nf-fa-~               | ~f000~ - ~f2e0~                          | ~nerd-icons-faicon~    |
+| Font Awesome Extension  | ~nf-fae-~              | ~e200~ - ~e2a9~                          | ~nerd-icons-faicon~    |
+| Material Design Icons   | ~nf-md-~               | ~f500~ - ~fd46~                          | ~nerd-icons-mdicon~    |
+| Weather                 | ~nf-weather-~          | ~e300~ - ~e3eb~                          | ~nerd-icons-wicon~     |
+| Octicons                | ~nf-oct-~              | ~f400~ - ~f4a9~, ~2665~, ~26A1~              | ~nerd-icons-octicon~   |
+| Powerline Symbols       | ~nf-pl-~               | ~e0a0~ - ~e0a2~, ~e0b0~ - ~e0b3~             | ~nerd-icons-powerline~ |
+| Powerline Extra Symbols | ~nf-ple-~              | ~e0a3~, ~e0b4~ - ~e0c8~, ~e0ca~, ~e0cc~ - ~e0d4~ | ~nerd-icons-powerline~ |
+| IEC Power Symbols       | ~nf-iec-~              | ~23fb~ - ~23fe~, ~2b58~                    | ~nerd-icons-ipsicon~   |
+| Font Logos              | ~nf-linux-~            | ~f300~ - ~f32d~                          | ~nerd-icons-flicon~    |
+| Pomicons                | ~nf-pom-~              | ~e000~ - ~e00a~                          | ~nerd-icons-pomicon~   |
+| Codicons                | ~nf-cod-~              | ~ea60~ - ~ebeb~                          | ~nerd-icons-codicon~   |
+
+Please check [[https://github.com/ryanoasis/nerd-fonts/wiki/Glyph-Sets-and-Code-Points][Nerd Fonts Glyph Sets and Code Points]] for more information.
+
+* Related Packages
++ [[https://github.com/rainstormstudio/nerd-icons-dired][nerd-icons-dired]]
++ [[https://github.com/rainstormstudio/treemacs-nerd-icons][treemacs-nerd-icons]]
++ [[https://github.com/seagle0128/nerd-icons-ivy-rich][nerd-icons-ivy-rich]]
++ [[https://github.com/seagle0128/nerd-icons-ibuffer][nerd-icons-ibuffer]]
++ [[https://github.com/rainstormstudio/nerd-icons-completion][nerd-icons-completion]]
++ [[https://github.com/LuigiPiucco/nerd-icons-corfu][nerd-icons-corfu]]
++ [[https://github.com/alexluigit/dirvish][dirvish]]
++ [[https://github.com/seagle0128/doom-modeline][doom-modeline]]
+
+** use nerd-icons with dirvish
+sample configuration:
+#+BEGIN_SRC emacs-lisp
+(use-package dirvish
+  :init
+  (dirvish-override-dired-mode)
+  :config
+  (setq dirvish-mode-line-format
+        '(:left (sort symlink) :right (omit yank index)))
+  (setq dirvish-mode-line-height 10)
+  (setq dirvish-attributes
+        '(nerd-icons file-time file-size collapse subtree-state vc-state git-msg))
+  (setq dirvish-subtree-state-style 'nerd)
+  (setq delete-by-moving-to-trash t)
+  (setq dirvish-path-separators (list
+                                 (format "  %s " (nerd-icons-codicon "nf-cod-home"))
+                                 (format "  %s " (nerd-icons-codicon "nf-cod-root_folder"))
+                                 (format " %s " (nerd-icons-faicon "nf-fa-angle_right"))))
+  (setq dired-listing-switches
+        "-l --almost-all --human-readable --group-directories-first --no-group")
+  (dirvish-peek-mode) ; Preview files in minibuffer
+  (dirvish-side-follow-mode) ; similar to `treemacs-follow-mode'
+)
+#+END_SRC

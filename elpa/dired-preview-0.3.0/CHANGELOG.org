@@ -1,0 +1,403 @@
+#+title: Change log of dired-preview.el
+#+author: Protesilaos Stavrou
+#+email: info@protesilaos.com
+#+options: ':t toc:nil author:t email:t num:t
+#+startup: content
+
+This document contains the release notes for each tagged commit on the
+project's main git repository: <https://github.com/protesilaos/dired-preview>.
+
+The newest release is at the top.  For further details, please consult
+the manual: <https://protesilaos.com/emacs/dired-preview>.
+
+#+toc: headlines 1 insert TOC here, with one headline level
+
+* Version 0.3.0 on 2024-09-16
+:PROPERTIES:
+:CUSTOM_ID: h:d9780c65-4e70-4188-ae17-abdef97f7ea9
+:END:
+
+This version brings some nice new features and makes small refinements
+to the code base.
+
+** Run commands in the preview window
+:PROPERTIES:
+:CUSTOM_ID: h:4d4e2b08-df93-4738-936b-70de1a056def
+:END:
+
+The ~dired-preview-mode-map~ is active when ~dired-preview-mode~ is
+enabled. Here are all the keys and corresponding commands it provides
+right now:
+
+| Key binding | Command                   |
+|-------------+---------------------------|
+| C-c C-c     | dired-preview-hexl-toggle |
+| C-c C-d     | dired-preview-page-down   |
+| C-c C-f     | dired-preview-find-file   |
+| C-c C-o     | dired-preview-open-dwim   |
+| C-c C-u     | dired-preview-page-up     |
+
+With the exception of ~dired-preview-hexl-toggle~, these are all new
+commands.
+
+My most used command among those is ~dired-preview-open-dwim~, which
+has a Do-What-I-Mean behaviour: If the file name matches
+~dired-preview-media-extensions-regexp~,
+~dired-preview-ignored-extensions-regexp~, or
+~dired-preview-image-extensions-regexp~, then it opens it externally.
+Otherwise, it visits the file in an Emacs buffer. Note that here we
+include the ~dired-preview-image-extensions-regexp~ because while
+Emacs can visit those in a buffer, it does not offer as much
+functionality as other apps that specialise in handling image files.
+
+[ Emacs uses the system default for those files when opening them externally. ]
+
+** Advanced users can rely on the ~dired-preview-with-window~ macro
+:PROPERTIES:
+:CUSTOM_ID: h:90b9c693-c217-4760-a102-a7e04308bfd9
+:END:
+
+Use this in your custom functions to run some code with the preview
+window as the selected window. For example, here is a simple one from
+our code base:
+
+#+begin_src emacs-lisp
+(defun dired-preview-page-down ()
+  "Move a page down in the preview window.
+This technically runs `scroll-up-command'."
+  (interactive)
+  (dired-preview-with-window
+    (call-interactively 'scroll-up-command)))
+#+end_src
+
+Remember to add them to the ~dired-preview-mode-map~.
+
+** Placeholder window prevents preview jumpiness
+:PROPERTIES:
+:CUSTOM_ID: h:8c0034c1-9770-456f-b8db-40fe1db7754f
+:END:
+
+Wtih ~dired-preview-ignored-extensions-regexp~ we can exclude certain
+files from being previewed. This is useful because, for example, Emacs
+cannot display those files or do something useful with their contents,
+or we just want to hide them (e.g. to omit GPG-encrypted files from
+the preview).
+
+In the past, ~dired-preview-mode~ would pop up a preview window for a
+file that could be previewed and would then hide that window for
+anything matching ~dired-preview-ignored-extensions-regexp~. As a
+result, windows would jump in and out of the frame layout. This could
+be disorienting.
+
+We now provide the user option ~dired-preview-ignored-show-ignored-placeholders~
+which shows a placeholder window when trying to preview an ignored
+file. So as we move up and down the Dired buffer, the preview window
+stays in place regardless if we are on an ignored file or not.
+
+The default value of ~dired-preview-ignored-show-ignored-placeholders~
+is ~t~ because I think this is the better behaviour. Though users can
+set it to ~nil~ to retain the old functionality.
+
+Thanks to Álvaro Ramírez (xenodium) for the contribution. This was
+done in pull request 15: <https://github.com/protesilaos/dired-preview/pull/15>.
+
+The change is within the permissible limit of ~15 lines, meaning that
+Álvaro does not need to assign copyright to the Free Software
+Foundation.
+
+** The ~dired-preview-display-action-alist~ replaces ~dired-preview-display-action-alist-function~
+:PROPERTIES:
+:CUSTOM_ID: h:250662ef-3fd3-4abe-8cf7-71c72ce4619c
+:END:
+
+The old symbol is an alias for the new one and users will be notified
+accordingly while updating.
+
+This user option is for advanced users who want to customise where and
+how ~display-buffer~ places the preview window. Before, we were
+accepting only the symbol of a function that would return an
+appropriate action alist. Now we accept either a function's symbol or
+an action alist directly.
+
+Examples of both:
+
+#+begin_src emacs-lisp
+;; Use a function that returns an action alist:
+(setq dired-preview-display-action-alist #'dired-preview-display-action-alist-dwim)
+
+;; Use an action alist directly:
+(setq dired-preview-display-action-alist
+      '((display-buffer-in-side-window)
+        (side . bottom)
+        (window-height . 0.2)
+        (preserve-size . (t . t))))
+#+end_src
+
+Check our ~dired-preview-display-action-alist-dwim~ for inspiration if
+you want to have a function that returns an action alist based on,
+say, the width of the frame.
+
+** Preview of the next file works when marking for deletion
+:PROPERTIES:
+:CUSTOM_ID: h:68fd4a03-7ca9-489c-93bc-efdaf8faaefc
+:END:
+
+When we mark a file for deletion, Dired moves the point to the next
+line. Before, this would not trigger a preview of the updated
+file-at-point. Now it should work as expected.
+
+Technically, we check if the last command is among those stored in the
+variable ~dired-preview-trigger-commands~. If you think there are
+more commands we need to include there, just let me know.
+
+** The ~dired-preview-ignored-extensions-regexp~ can be ~nil~
+:PROPERTIES:
+:CUSTOM_ID: h:a06e0f9b-02d2-4a77-a259-eadaeff33c9e
+:END:
+
+This was always the intention, but the relevant code was not
+accounting for that scenario. It should work now as intended.
+
+* Version 0.2.0 on 2024-05-07
+:PROPERTIES:
+:CUSTOM_ID: h:4225d638-f5bb-4855-85c7-972ff40aad6d
+:END:
+
+This release brings many small improvements and fixes some bugs.
+
+** The preview shows up right away on new directories
+:PROPERTIES:
+:CUSTOM_ID: h:e3652b69-aa81-4b71-9887-81052ff7f9f7
+:END:
+
+In the past, entering a new directory would not trigger a preview: it
+would wait for some motion before doing so. This could make it seem
+that the mode was not enabled in the current buffer. Now, the preview
+shows up immediately.
+
+Thanks to Nofint for the initial contribution in pull request 8:
+<https://github.com/protesilaos/dired-preview/pull/8>. The changes are
+small and do not require copyright assignment to the Free Software
+Foundation.
+
+** Directories are previewed as well
+:PROPERTIES:
+:CUSTOM_ID: h:8dae8cba-3ca7-43be-a4ba-5dd938b37f82
+:END:
+
+The contents are displayed in a Dired buffer, using the current
+settings for it. This means that colours are possible icons are shown
+too.
+
+** Large files are previewed in ~hexl-mode~
+:PROPERTIES:
+:CUSTOM_ID: h:b4928def-5392-4e7b-8cb5-ed5c238b1b5e
+:END:
+
+As the documentation of this mode suggests:
+
+#+begin_quote
+A mode for editing binary files in hex dump format.
+This is not an ordinary major mode; it alters some aspects
+of the current mode’s behavior, but not all; also, you can exit
+Hexl mode and return to the previous mode using C-c C-c.
+#+end_quote
+
+The =C-c C-c= key binding toggles the mode, in case you want to see
+the raw output.
+
+Thanks to Karthik Chikmagalur for the contribution. This was done on
+the now defunct mailing list:
+<https://lists.sr.ht/~protesilaos/general-issues/%3C871qeb56bw.fsf@gmail.com%3E>.
+
+** Previews are displayed in a full-featured mode
+:PROPERTIES:
+:CUSTOM_ID: h:ea324fd1-f808-420f-b019-250e161465ff
+:END:
+
+Before, we would delay the execution of the mode hooks to speed things
+up. Though this came at the cost of (i) making the buffer less capable
+and (ii) forcing us to handle the execution of those hooks at a later
+stage when they would be needed, which proved to be error-prone in a
+number of scenaria.
+
+** Files without an extension are still previewed
+:PROPERTIES:
+:CUSTOM_ID: h:a4d6b125-5ef6-409d-aded-e7b1971ac87d
+:END:
+
+This is a bug fix. Before, they would be considered as part of the
+files to be ignored, per ~dired-preview-ignored-extensions-regexp~.
+
+** Previews are not added to what ~recentf-mode~ tracks
+:PROPERTIES:
+:CUSTOM_ID: h:67d61ed2-3e16-49a9-bd3a-61950d9ab81b
+:END:
+
+Thanks to Juergen Hoetzel for reporting this issue and for tweaking my
+suggested patch for it. This was done in pull request 12:
+<https://github.com/protesilaos/dired-preview/pull/12>. The change is
+small, so Juergen does not need to assign copyright to the Free
+Software Foundation.
+
+** A nil value for ~split-width-threshold~ still works
+:PROPERTIES:
+:CUSTOM_ID: h:493488b1-0f7d-4b44-b96d-4cd9a6bde352
+:END:
+
+We no longer consider this an error and adapt the preview accordingly.
+Thanks to Juergen Hoetzel for the contribution. This was done in pull
+request 11 and does not require copyright assignment:
+<https://github.com/protesilaos/dired-preview/pull/11>.
+
+** For developers: previews are done with ~cl-defmethod~
+:PROPERTIES:
+:CUSTOM_ID: h:d8c42eea-a540-44fd-91b4-138fdba47288
+:END:
+
+Each file type will thus have its own method on how to display the
+contents in a buffer. The idea is to make this easier to extend. The
+goal is to have methods that can preview PDFs and images without
+blocking Emacs. Other file types can be considered as well, though
+those two are the immediate priority.
+
+* Version 0.1.0 on 2023-07-08
+:PROPERTIES:
+:CUSTOM_ID: h:99cbb3dd-a0f1-4d2b-a945-58531f4ab189
+:END:
+
+The ~dired-preview~ package was in a public testing phase from
+2023-06-25 until today.  In the meantime, lots of changes have been
+made in the interest of usability and robustness.
+
+** Global and buffer-local modes
+:PROPERTIES:
+:CUSTOM_ID: h:598de101-5c1f-4fbd-8f27-709375d8950b
+:END:
+
+The ~dired-preview-mode~ is a local minor mode, while
+~dired-preview-global-mode~ is its global counterpart.  Both only take
+effect in Dired buffers.
+
+The idea for a global and a local mode is to empower the user to
+toggle the functionality on demand, such as when they are in a meeting
+and want to disable/enable previews in a given context.
+
+During the development phase, I had made an error regarding the scope
+of what should be a local minor mode.  Thanks to Christian Tietze for
+pointing it out: <https://lists.sr.ht/~protesilaos/general-issues/%3Cm1zg4noej2.fsf%40christiantietze.de%3E>.
+
+** Preview delay runs on an idle timer
+:PROPERTIES:
+:CUSTOM_ID: h:b80cc550-24ee-4817-be8c-c24c5e98e4c2
+:END:
+
+Originally, previews would run on a timer that would block Emacs.
+Whereas we now arrange to only trigger a preview when Emacs is idle
+for a customisable amount of seconds.  Refer to the user option
+~dired-preview-delay~.
+
+** Trigger a preview in the post-command phase
+:PROPERTIES:
+:CUSTOM_ID: h:c298121a-5ba4-408b-b063-14022c307c47
+:END:
+
+In the original design, previews were triggered by bespoke
+~dired-preview~ commands that were remapped to =n= and =p= in Dired
+buffers.  This had several downsides, namely, (i) the other motions
+would not pick up the trigger, (ii) we would have to remap all
+possible motions, and (iii) the code was needlessly complex.
+
+Currently, we install a local hook in the post-command phase, which
+will trigger a preview if the previous command was a Dired motion.  In
+future versions, we may expand the list of commands that we check for.
+
+Thanks to Peter Prevos for reporting this in issue 1 on the GitHub
+mirror: <https://github.com/protesilaos/dired-preview/issues/1>.
+  
+Thanks to Christian Tietze and Ed Hamilton for discussing this topic
+with me on the mailing list:
+<https://lists.sr.ht/~protesilaos/general-issues/%3Cm1zg4noej2.fsf%40christiantietze.de%3E>.
+Commit ae93720 by Christian Tietze is based on this discussion,
+although the implementation details have since been redone.
+
+During the development phase, I had made the mistake of checking the
+~last-command~, whereas I should be testing against the
+~this-command~.  Thanks to Karthik Chikmagalur for pointing out my
+error:
+<https://lists.sr.ht/~protesilaos/general-issues/%3C87sfab8ixn.fsf%40gmail.com%3E>.
+
+** The placement of the preview window is customisable
+:PROPERTIES:
+:CUSTOM_ID: h:3033401f-878d-4298-9256-228d6c249b3a
+:END:
+
+We arrange to display previews in a side window.  Due to the inherent
+complexity of the ~display-buffer~ function and its accoutrements, a
+user option is necessarily reserved for experienced users.  To this
+end, we provide the ~dired-preview-display-action-alist-function~.
+Refer to the ~dired-preview-display-action-alist-dwim~ function for
+the implementation details.
+
+Thanks to Karthik Chikmagalur for making an initial suggestion about
+such a feature:
+<https://lists.sr.ht/~protesilaos/general-issues/%3C87jzvp484n.fsf%40gmail.com%3E>
+
+Thanks to Bruno Boal for discussing the user option and concomitant
+function with me and for checking the relevant definitions.  This was
+done via a private channel and the information is shared with
+permission.
+
+** Window placement and deletion is more robust
+:PROPERTIES:
+:CUSTOM_ID: h:06e6249d-8755-450e-b65e-b8f999d982a4
+:END:
+
+The idea of "preview" windows is that they are not ordinary windows
+that the user can interact with.  As such, they are to be deleted when
+some non-preview mode of action is taken.
+
+Testing for such cases was extensive and required lots of changes to
+the code base.  Thanks to Bruno Boal for performing the tests with me,
+for brainstorming possible solutions, and for inspecting the
+implementation details.  This was done via a private channel and the
+information is shared with permission.
+
+** We no longer try to preview irregular files
+:PROPERTIES:
+:CUSTOM_ID: h:a2ee3d09-7356-465c-8627-bdc56e9ec303
+:END:
+
+Before, ~dired-preview~ would attempt to produce a preview of named
+pipes and sockets.  This was not intended and has since been
+addressed.  Use 'file-regular-p' instead of 'file-exists-p'
+  
+Thanks to Karthik Chikmagalur for bringing this matter to my attention
+and for recommending the use of ~file-regular-p~ instead of
+~file-exists-p~:
+<https://lists.sr.ht/~protesilaos/general-issues/%3C87pm5cnpaf.fsf%40gmail.com%3E>.
+
+** Preview buffers are killed up to a cumulative size threshold
+:PROPERTIES:
+:CUSTOM_ID: h:d8ba0949-76b0-4d3a-b0f3-1bfb62280483
+:END:
+
+In the original design, we were killing preview buffers all at once.
+This was wasteful because all the work we were doing in the background
+to, for example, fetch a large file was discarded even though the user
+could theoretically request another preview of it.
+
+The current approach is to keep around the newer buffers in order to
+speed up potential requests for another preview.  Older buffers are
+discarded starting from the oldest.  The clearance of older buffers is
+done until we reach a cumulative size of what is specified as the
+value of the variable ~dired-preview--buffers-threshold~.
+
+Note that the symbol includes double dashes, meaning that it is
+intended for "private" (internal) purposes.  I am mentioning it here,
+because this seems like a good candidate for a future user option,
+subject to further refinements.
+
+Thanks to Bruno Boal for suggesting this idea and checking its
+implementation with me.  This was done via a private channel and the
+information is shared with permission.

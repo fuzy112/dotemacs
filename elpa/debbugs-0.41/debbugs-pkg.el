@@ -1,0 +1,2 @@
+;; Generated package description from debbugs.el  -*- no-byte-compile: t -*-
+(define-package "debbugs" "0.41" "SOAP library to access debbugs servers" '((emacs "26.1") (soap-client "3.1.5")) :commit "3ca6aba1288caa8ed575b4ae48120ca739fc978a" :url "https://elpa.gnu.org/packages/debbugs.html" :authors '(("Michael Albinus" . "michael.albinus@gmx.de")) :maintainer '("Michael Albinus" . "michael.albinus@gmx.de") :keywords '("comm" "hypermedia"))

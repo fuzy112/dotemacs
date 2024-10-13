@@ -1,0 +1,2 @@
+*.el text eol=lf diff=elisp
+*.eld text eol=lf

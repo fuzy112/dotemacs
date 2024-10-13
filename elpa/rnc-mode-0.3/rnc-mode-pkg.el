@@ -1,0 +1,2 @@
+;; Generated package description from rnc-mode.el  -*- no-byte-compile: t -*-
+(define-package "rnc-mode" "0.3" "Emacs mode to edit Relax-NG Compact files" 'nil :commit "dfee31d83208b734ed1d1fdc523565d7056db850" :url "https://elpa.gnu.org/packages/rnc-mode.html" :authors '(("Stefan Monnier" . "monnier@iro.umontreal.ca")) :maintainer '("Stefan Monnier" . "monnier@iro.umontreal.ca") :keywords '("xml" "relaxng"))

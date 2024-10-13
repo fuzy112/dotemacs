@@ -1,0 +1,2 @@
+;; Generated package description from capf-autosuggest.el  -*- no-byte-compile: t -*-
+(define-package "capf-autosuggest" "0.3" "History autosuggestions for comint and eshell" '((emacs "25.1")) :commit "6d66f0ce52c6a41945a48e7b562dd6d262c62cd9" :authors '(("jakanakaevangeli" . "jakanakaevangeli@chiru.no")) :maintainer '("jakanakaevangeli" . "jakanakaevangeli@chiru.no") :url "https://repo.or.cz/emacs-capf-autosuggest.git")

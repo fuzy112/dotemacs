@@ -1,0 +1,59 @@
+#+title: gptel-quick: Quick LLM lookups in Emacs
+
+gptel-quick is a tiny everyday helper for easily looking up or summarizing text using an LLM (Large Language Model).
+
+It provides one command.  Call =gptel-quick= to show a short summary or explanation of the word at point, or an active region, in a popup.  This is useful for quickly looking up names, words, phrases, or summarizing/explaining prose or snippets of code, with minimal friction:
+
+https://github.com/karthink/gptel-quick/assets/8607532/11c21577-56e0-44fc-a6f2-14dff159bfb4
+
+When the popup is active,
+- press ~+~ to get a longer summary, 
+- ~M-w~ (or =kill-ring-save=) to copy the response,
+- or ~C-g~ (or =keyboard-quit=) to clear it.
+
+(You probably want to bind it to a key instead of having to =M-x gptel-quick=, see Setup below for suggestions.)  
+
+You can press ~+~ multiple times.
+
+Looking up a word in progressively more detail before copying the response:
+
+https://github.com/karthink/gptel-quick/assets/8607532/47c862fb-5240-4287-96cf-92f0fe194d1d  
+
+It works with PDFs if you use pdf-tools in Emacs:
+
+https://github.com/karthink/gptel-quick/assets/8607532/c5d96963-f9a7-4ee6-bd24-0fe6ff2c8e97
+
+Explaining what a function does:
+
+https://github.com/karthink/gptel-quick/assets/8607532/6f75d283-9425-408b-996b-0702d47e20e6
+
+Finally, if you have follow-up questions you can switch to a chat buffer and continue the conversation with ~M-RET~:
+
+https://github.com/karthink/gptel-quick/assets/8607532/9d17886b-4994-4e3f-93d6-fda79fc814ad
+
+If the [[https://github.com/tumashu/posframe][posframe]] package (optional) is not installed, the response is messaged to the echo area instead.
+
+You can control the response word count (approximate) via =gptel-quick-word-count=, and the popup timeout via =gptel-quick-timeout=.
+
+Set =gptel-quick-use-context= if you have added context to gptel (other regions, buffers or files) and want that to be included in the queries.
+
+** Setup
+
+This package requires [[https://github.com/karthink/gptel][gptel]] and access to any LLM via gptel to be available.  See its README for details.  The above examples were with different LLMs -- Claude 3 Haiku, Llama3-70b and ChatGPT 3.5 respectively.
+
+Install this package however you install packages, either via straight/elpaca/quelpa, or the built-in =package-vc-install=, or by cloning this repo and running =package-install=file= on the repository directory.
+
+Once installed, you can call =gptel-quick= at any time on a word/region.
+
+It might be useful to add this command as an Embark action if you use Embark:
+
+#+begin_src emacs-lisp
+(keymap-set embark-general-map "?" #'gptel-quick)
+#+end_src
+
+You can set it in =embark-region-map= and =embark-identifier-map= instead of =embark-general-map= if you only want it available at certain times.
+
+** Notes
+
+This small package is intended as a demonstration of =gptel-request=, gptel's general purpose API for constructing prompts and querying LLMs from Emacs.
+

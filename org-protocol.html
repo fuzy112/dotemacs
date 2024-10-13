@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!-- Copyright (C) 2024 by Fu Zhengyi -->
+
+</head>
+  <body>
+    <h1>Some useful links for org-protocol</h1>
+
+    <div>
+      <a href="org-protocol://store-link?url=http://localhost">Click here to set up protocol handler for Firefox</a>
+    </div>
+
+    <div>
+      <a href="javascript: void((function(){location.href='org-protocol://bookmark?' + new URLSearchParams({url:location.href, title:document.title})})())">Add bookmark</a>
+    </div>
+
+    <div>
+      <a href="javascript: void((function(){location.href='org-protocol://capture?' + new URLSearchParams({url: location.href, title: document.title, body: window.getSelection()})})())">Capture</a>
+    </div>
+
+    <div>
+      <a href="javascript: void((function(){location.href = 'org-protocol://store-link?' + new URLSearchParams({url: location.href, title: document.title})})())">Store link</a>
+    </div>
+  </body>
+</html>
