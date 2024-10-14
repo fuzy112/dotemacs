@@ -536,6 +536,8 @@ value for USE-OVERLAYS."
   ;;  consult--source-recent-file consult--source-project-recent-file
   ;;  :preview-key "M-.")
 
+  (consult-customize consult-xref :preview-key '(:debounce 0.2 any))
+
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
   (setq consult-narrow-key "<") ;; "C-+"
