@@ -1239,7 +1239,7 @@ value for USE-OVERLAYS."
   (when (eq (framep-on-display) t)
     (require 'clipetty))
   :config
-  (clipetty-mode))
+  (global-clipetty-mode))
 
 ;;;; which-key
 
