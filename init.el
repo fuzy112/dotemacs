@@ -685,7 +685,13 @@ value for USE-OVERLAYS."
 ;;;; autorevert
 
 (use-package autorevert
+  :hook
+  (find-file . auto-revert--global-adopt-current-buffer)
   :config
+  (setq auto-revert-remote-files t)
+  ;; avoid polling when notification is available
+  (setq auto-revert-avoid-polling t)
+  ;; TODO: configure auto-revert-notify-exclude-dir-regexp
   (global-auto-revert-mode))
 
 ;;;; dired-x
