@@ -40,7 +40,8 @@
   :init
   (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
   :config
-  (nerd-icons-set-font))
+  (when (display-graphic-p)
+    (nerd-icons-set-font)))
 
 ;;;; pixel-scroll
 
