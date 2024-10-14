@@ -1278,6 +1278,7 @@ value for USE-OVERLAYS."
 ;;;; auth-sources
 
 (use-package auth-source
+  :defer t
   :init
   (setq auth-sources '("~/.authinfo.gpg"))
   :config
