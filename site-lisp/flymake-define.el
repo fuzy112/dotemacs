@@ -238,6 +238,7 @@ function or a form."
     `(progn
        (defvar-local ,proc-var nil)
        (defun ,name (report-fn &rest _args)
+	 ,documentation
          (when (process-live-p ,proc-var)
            (kill-process ,proc-var))
          (if (not ,(cond ((null condition)
@@ -303,8 +304,7 @@ function or a form."
                            (process-send-eof ,proc-var))))
                ((debug t)
                 (funcall cleanup)
-                (signal (car err) (cdr err))))))
-         ,documentation)
+                (signal (car err) (cdr err)))))))
        (setq-default ,name (symbol-function',name)))))
 
 (provide 'flymake-define)
