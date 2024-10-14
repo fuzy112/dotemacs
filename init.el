@@ -684,7 +684,7 @@ value for USE-OVERLAYS."
 (use-package saveplace
   :hook
   (find-file . save-place-find-file-hook)
-  (dired-initial-position-hook . save-place-dired-hook)
+  (dired-initial-position . save-place-dired-hook)
   :config
   (save-place-mode))
 
@@ -1122,8 +1122,8 @@ value for USE-OVERLAYS."
 (use-package eat
   :unless (memq system-type '(windows-nt ms-dos))
   :hook
-  (eshell-load-hook . eat-eshell-mode)
-  (eshell-load-hook . eat-eshell-visual-command-mode)
+  (eshell-load . eat-eshell-mode)
+  (eshell-load . eat-eshell-visual-command-mode)
   :bind
   ("C-x p s" . eat-project)
   :config
@@ -1268,7 +1268,7 @@ value for USE-OVERLAYS."
               (require 'repeat)
               (repeat-post-hook)))))
   :hook
-  (post-command-hook . repeat-post-hook)
+  (post-command . repeat-post-hook)
   :config
   (repeat-mode))
 
@@ -1277,7 +1277,7 @@ value for USE-OVERLAYS."
 (use-package savehist
   :hook
   (minibuffer-setup . savehist-minibuffer-hook)
-  (kill-emacs-hook . savehist-autosave)
+  (kill-emacs . savehist-autosave)
   :config
   (savehist-mode))
 
