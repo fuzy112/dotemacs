@@ -2,7 +2,7 @@
 ;; Copyright © 2024  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
-;; Version: 0.10.0
+;; Version: 0.10.1
 ;; Keywords: convenience
 
 ;; This file is not part of GNU Emacs.
@@ -34,8 +34,7 @@
 ;; An example configuration is like this:
 ;;
 ;;  (keymap-global-set "M-s %" #'medit-dwim)
-;;  (with-eval-after-load 'isearch
-;;    (keymap-set isearch-mode-map "M-s %" #'medit-from-isearch))
+;;  (keymap-set isearch-mode-map "M-s %" #'medit-from-isearch))
 ;;  (with-eval-after-load 'embark
 ;;    (keymap-set embark-identifier-map "%" #'medit))
 ;;

@@ -612,9 +612,8 @@ value for USE-OVERLAYS."
   ("C-:" . avy-goto-char)
   ("C-'" . avy-goto-char-timer)
   ("M-g w" . avy-goto-word-1)
-  :init
-  (with-eval-after-load 'isearch
-    (bind-key "C-'" #'avy-isearch isearch-mode-map))
+  (:map isearch-mode-map
+        ("C-'" . avy-isearch))
   :config
   (setq avy-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n ?s ?l ?m)))
 
@@ -742,9 +741,9 @@ value for USE-OVERLAYS."
 (use-package medit
   :bind
   ("M-s %" . medit-dwim)
+  (:map isearch-mode-map
+        ("M-s %" . medit-from-isearch))
   :config
-  (with-eval-after-load 'isearch
-    (bind-key "M-s %" #'medit-from-isearch isearch-mode-map))
   (with-eval-after-load 'embark
     (bind-key "%" #'medit embark-identifier-map)))
 
