@@ -940,10 +940,16 @@ value for USE-OVERLAYS."
     (interactive)
     (insert (substring-no-properties (popon-text +pp--popon))))
 
+  (defun +pp--show-buffer ()
+    (interactive)
+    (with-output-to-temp-buffer " *Pp Output*"
+      (princ (popon-text +pp--popon))))
+
   (defvar-keymap +pp--output-map
     "w" #'+pp--copy-output-as-kill
     "M-w" #'+pp--copy-output-as-kill
     "i" #'+pp--insert-output
+    "b" #'+pp--show-buffer
     "q" #'ignore)
 
   (define-advice pp-display-expression
