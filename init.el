@@ -1563,6 +1563,11 @@ value for USE-OVERLAYS."
   :bind
   ("M-s b" . browser-hist-search)
   :config
+  (setf (alist-get 'zen browser-hist-db-paths nil t)
+        (cond ((memq system-type '(cygwin windows-nt ms-dos))
+               "$APPDATA/zen/Profiles/*/places.sqlite")))
+  (setf (alist-get 'zen browser-hist--db-fields)
+        '("title" "url" "moz_places" "ORDER BY last_visit_date desc"))
   (setq browser-hist-default-browser 'zen))
 
 ;;;; vundo
