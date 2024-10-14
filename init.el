@@ -1291,6 +1291,7 @@ value for USE-OVERLAYS."
 ;;;; lin
 
 (use-package lin
+  :defer t
   :init
   (setq lin-mode-hooks
         '( gnus-group-mode-hook gnus-server-mode-hook
