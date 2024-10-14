@@ -739,7 +739,7 @@ value for USE-OVERLAYS."
   (add-to-list 'eshell-modules-list 'eshell-tramp)
   (defun +eshell--capf ()
     (when (fboundp 'cape-history)
-      (add-hook 'completion-at-point-functions #'cape-history nil t)))
+      (add-hook 'completion-at-point-functions #'cape-history 50 t)))
   (add-hook 'eshell-mode-hook '+eshell--capf)
   (with-eval-after-load 'esh-hist
     (when (fboundp 'consult-history)
