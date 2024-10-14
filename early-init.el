@@ -58,8 +58,9 @@
 ;;;; package
 
 (use-package package
+  :defer
   :init
-  (package-initialize))
+  (package-activate-all))
 
 ;;;; Site lisp
 
