@@ -536,7 +536,10 @@ value for USE-OVERLAYS."
   ;;  consult--source-recent-file consult--source-project-recent-file
   ;;  :preview-key "M-.")
 
-  (consult-customize consult-xref :preview-key '(:debounce 0.2 any))
+  (consult-customize
+   consult-xref consult-ripgrep consult-grep consult-git-grep
+   consult-line consult-focus-lines consult-keep-lines
+   :preview-key '(:debounce 0.2 any))
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
