@@ -3,7 +3,7 @@
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
 ;; Package-Requires: ((emacs "29.4"))
-;; Version: 0.1.0
+;; Version: 0.1.1
 ;; Keywords:
 
 ;;; Commentary:
@@ -21,15 +21,13 @@
       (let ((site-lisp-mtime
              (file-attribute-modification-time
               (file-attributes site-lisp-autoload-file))))
-        (catch 'found
-          (dolist (file (directory-files-recursively
-                         site-lisp-directory
-                         "\\.el\\'"))
-            (let ((mtime (file-attribute-modification-time
-                          (file-attributes file))))
-              (when (time-less-p site-lisp-mtime mtime)
-                (throw 'found t))))
-          nil))))
+	(seq-find (lambda (file)
+		    (let ((mtime (file-attribute-modification-time
+				  (file-attributes file))))
+		      (time-less-p site-lisp-mtime mtime)))
+		  (directory-files-recursively
+                   site-lisp-directory
+                   "\\.el\\'")))))
 
 (defun site-lisp-dirs ()
   (cons site-lisp-directory
@@ -37,7 +35,7 @@
                     (directory-files-recursively
                      site-lisp-directory "." t))))
 
-(defvar site-lisp-dirs (site-lisp-dirs))
+(defvar site-lisp-dirs nil)
 
 (defun site-lisp-byte-compile-all ()
   "Byte compile all Emacs lisp files in `site-lisp-directory'."
@@ -50,14 +48,16 @@
   "Load autoloads for site-lisp files."
   (interactive)
   (when (site-lisp-autoload-need-update-p)
-    (loaddefs-generate (site-lisp-dirs) site-lisp-autoload-file)
+    (loaddefs-generate site-lisp-dirs site-lisp-autoload-file)
     (set-file-times site-lisp-autoload-file)
     (byte-recompile-directory site-lisp-directory))
   (load site-lisp-autoload-file nil t))
 
+;;;###autoload
 (defun site-lisp-activate ()
   "Activate site-lisp directories."
   (interactive)
+  (setq site-lisp-dirs (site-lisp-dirs))
   (setq load-path (append site-lisp-dirs load-path))
   (site-lisp-load-autoloads))
 
