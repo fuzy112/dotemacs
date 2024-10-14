@@ -551,7 +551,7 @@ value for USE-OVERLAYS."
 
   (setq-default consult--regexp-compiler #'+consult--orderless-regexp-compiler)
 
-  )
+  (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow))))
 
 
 (use-package consult-dir
