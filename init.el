@@ -26,7 +26,7 @@
 
 (eval-when-compile
   (require 'use-package)
-  (require 'early-init))
+  (require 'early-init nil t))
 
 ;;;; nerd-icons
 
