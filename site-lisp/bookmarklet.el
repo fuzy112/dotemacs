@@ -13,7 +13,7 @@
 
 ;;; Code:
 
-(require 'url-hexify-string)
+(require 'url-util)
 
 (defun bookmarklet-from-string (code)
   (concat "javascript:void((function(){" (url-hexify-string code) "})())"))
