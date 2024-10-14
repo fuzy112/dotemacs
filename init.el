@@ -741,7 +741,12 @@ value for USE-OVERLAYS."
 
 (use-package medit
   :bind
-  ("M-s %" . medit-dwim))
+  ("M-s %" . medit-dwim)
+  :config
+  (with-eval-after-load 'isearch
+    (bind-key "M-s %" #'medit-from-isearch isearch-mode-map))
+  (with-eval-after-load 'embark
+    (bind-key "%" #'medit embark-identifier-map)))
 
 ;;;; text-mode
 

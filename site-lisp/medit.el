@@ -2,7 +2,7 @@
 ;; Copyright © 2024  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
-;; Version: 0.9.1
+;; Version: 0.10.0
 ;; Keywords: convenience
 
 ;; This file is not part of GNU Emacs.
@@ -30,6 +30,15 @@
 ;; then move point to a symbol that you want to edit.  Press the key
 ;; to activate a medit session.  Once you are done, press `RET' to
 ;; apply the result or `C-g' to cancel the edit.
+
+;; An example configuration is like this:
+;;
+;;  (keymap-global-set "M-s %" #'medit-dwim)
+;;  (with-eval-after-load 'isearch
+;;    (keymap-set isearch-mode-map "M-s %" #'medit-from-isearch))
+;;  (with-eval-after-load 'embark
+;;    (keymap-set embark-identifier-map "%" #'medit))
+;;
 
 ;;; Code:
 
@@ -372,6 +381,8 @@ This function internally calls `medit-edit-in-minibuffer' to do the work."
   (medit-edit (and arg (bounds-of-thing-at-point 'defun))))
 
 ;;;; Isearch Integration
+
+;;;###autoload
 (defun medit-from-isearch ()
   "Convert an active isearch session to medit."
   (interactive)
@@ -396,24 +407,8 @@ This function internally calls `medit-edit-in-minibuffer' to do the work."
         (medit-edit)
       (delq 'isearch medit-style-alist))))
 
+;;;###autoload
 (defalias 'isearch-to-medit #'medit-from-isearch)
-
-(with-eval-after-load 'isearch
-  (keymap-set isearch-mode-map "C-;" #'isearch-to-medit)
-  (keymap-set isearch-mode-map "M-s %" #'isearch-to-medit))
-
-;;;; Embark Integration
-(defvar embark-target-injection-hooks)
-(defvar embark-identifier-map)
-(defvar embark-region-map)
-
-(declare-function embark--allow-edit "ext:embark" (&rest rest))
-
-(with-eval-after-load 'embark
-  (cl-pushnew #'embark--allow-edit
-              (alist-get #'medit-dwim
-                         embark-target-injection-hooks))
-  (keymap-set embark-identifier-map "%" #'medit-dwim))
 
 
 (provide 'medit)
