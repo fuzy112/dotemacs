@@ -1006,7 +1006,8 @@ value for USE-OVERLAYS."
   :config
   (setq c-tab-always-indent nil
         c-insert-tab-function #'completion-at-point)
-
+  (setq-default c-auto-newline t
+                c-hungry-delete-key t)
   (defun +cc-mode--hook ()
     (electric-pair-local-mode)
     (add-hook 'flymake-diagnostics-functions #'flymake-clang-tidy nil t))
