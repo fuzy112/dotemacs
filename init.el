@@ -1594,6 +1594,11 @@ value for USE-OVERLAYS."
   (setq vundo-glyph-alist vundo-unicode-symbols))
 
 
+(defvar post-init-file (locate-user-emacs-file "post-init.el"))
+
+(when (file-exists-p post-init-file)
+  (load post-init-file))
+
 ;; Local Variables:
 ;; eval: (outline-minor-mode)
 ;; indent-tabs-mode: nil

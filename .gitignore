@@ -40,3 +40,4 @@ elpa/archives
 /gtkdoc/
 /site-lisp/vterm/build/
 /elpa/gnupg/*.lock
+/post-init.el
