@@ -1195,13 +1195,21 @@ value for USE-OVERLAYS."
 ;;;; term-keys
 
 (use-package term-keys
-  :hook
-  (tty-setup . term-keys/init)
+  :defer t
+  :defines
+  term-keys/prefix
   :init
-  (when (eq (framep-on-display) t)
-    (require 'term-keys))
-  :config
   (setq term-keys/prefix "\033\035")      ; ^[^]
+  (define-key input-decode-map term-keys/prefix
+              (lambda (_prompt)
+                (require 'term-keys)
+                (let* ((keys (this-command-keys))
+                       (events (mapcar (lambda (ev) (cons t ev))
+                                       (listify-key-sequence keys))))
+                  (setq unread-command-events (append events unread-command-events))
+                  nil)))
+  :config
+  (define-key input-decode-map term-keys/prefix nil)
   (term-keys-mode))
 
 ;;;; xterm
