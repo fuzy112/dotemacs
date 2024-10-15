@@ -1103,10 +1103,10 @@ value for USE-OVERLAYS."
   ("C-c M-g" . magit-file-dispatch)
   ("C-x p m" . magit-project-status)
   :defines (magit-credential-cache-daemon-process)
-  :config
+  :init
   (with-eval-after-load 'project
     (add-to-list 'project-switch-commands '(magit-project-status "Magit") t))
-
+  :config
   (defun +magit--ccdp-no-query ()
     "Avoid query process status on exit."
     (when magit-credential-cache-daemon-process
