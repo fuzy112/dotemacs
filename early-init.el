@@ -33,6 +33,12 @@
   (load pre-early-init-file nil t))
 
 
+
+;;;; use-package
+
+(setq use-package-enable-imenu-support t)
+(eval-when-compile (require 'use-package))
+
 ;;;; emacs core
 
 (use-package emacs
