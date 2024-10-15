@@ -24,7 +24,15 @@
 
 ;;; Code:
 
+;;;; pre-early-init
 
+(defvar pre-early-init-file (locate-user-emacs-file "pre-early-init.el")
+  "The file to load before `early-init'.")
+
+(when (file-exists-p pre-early-init-file)
+  (load pre-early-init-file nil t))
+
+
 ;;;; emacs core
 
 (use-package emacs
@@ -118,6 +126,15 @@
     (dolist (theme custom-enabled-themes)
       (load-theme theme)))
   (+modus-themes--reload))
+
+
+;;;; post-early-init
+
+(defvar post-early-init-file (locate-user-emacs-file "post-early-init.el")
+  "The file to load after `early-init'.")
+
+(when (file-exists-p post-early-init-file)
+  (load post-early-init-file nil t))
 
 
 (provide 'early-init)

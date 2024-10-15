@@ -28,6 +28,15 @@
   (require 'use-package)
   (require 'early-init nil t))
 
+;;;; pre-init
+
+(defvar pre-init--file (locate-user-emacs-file "pre-init.el")
+  "The file to load before the init file.")
+
+(when (file-exists-p pre-init--file)
+  (load pre-init--file nil t))
+
+
 ;;;; nerd-icons
 
 (use-package nerd-icons
@@ -1611,10 +1620,12 @@ value for USE-OVERLAYS."
   (setq vundo-glyph-alist vundo-unicode-symbols))
 
 
+;;;; post-init
+
 (defvar post-init-file (locate-user-emacs-file "post-init.el"))
 
 (when (file-exists-p post-init-file)
-  (load post-init-file))
+  (load post-init-file nil t))
 
 ;; Local Variables:
 ;; eval: (outline-minor-mode)
