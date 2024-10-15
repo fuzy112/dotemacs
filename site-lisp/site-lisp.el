@@ -15,19 +15,23 @@
 (defvar site-lisp-autoload-file
   (expand-file-name ".autoload.el" site-lisp-directory))
 
+(defvar site-lisp-skip-check nil)
+
 (defun site-lisp-autoload-need-update-p ()
   "Return non-nil if `site-lisp-autoload-file' needs regeneration."
   (or (not (file-exists-p site-lisp-autoload-file))
-      (let ((site-lisp-mtime
-             (file-attribute-modification-time
-              (file-attributes site-lisp-autoload-file))))
-	(seq-find (lambda (file)
-		    (let ((mtime (file-attribute-modification-time
-				  (file-attributes file))))
-		      (time-less-p site-lisp-mtime mtime)))
-		  (directory-files-recursively
-                   site-lisp-directory
-                   "\\.el\\'")))))
+      (if site-lisp-skip-check
+	  nil
+	(let ((site-lisp-mtime
+               (file-attribute-modification-time
+		(file-attributes site-lisp-autoload-file))))
+	  (seq-find (lambda (file)
+		      (let ((mtime (file-attribute-modification-time
+				    (file-attributes file))))
+			(time-less-p site-lisp-mtime mtime)))
+		    (directory-files-recursively
+                     site-lisp-directory
+                     "\\.el\\'"))))))
 
 (defun site-lisp-dirs ()
   (cons site-lisp-directory
