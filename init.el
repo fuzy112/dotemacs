@@ -1066,7 +1066,9 @@ value for USE-OVERLAYS."
 
   (setq-default project-vc-external-roots-function #'+project--external-roots)
 
-  (setq project-compilation-buffer-name-function #'project-prefixed-buffer-name))
+  (setq project-compilation-buffer-name-function #'project-prefixed-buffer-name)
+
+  (add-to-list 'project-switch-commands '(project-compile "Compile") t))
 
 ;;;; buffer-env
 (use-package buffer-env
