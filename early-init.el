@@ -103,7 +103,7 @@
   :init
   (setq custom-file (locate-user-emacs-file "custom.el"))
   :config
-  (load custom-file))
+  (load custom-file nil t))
 
 ;;;; theme
 
