@@ -102,20 +102,10 @@
         kept-old-versions 9
         kept-new-versions 9))
 
-;;;; custom
-
-(use-package custom
-  :defer t
-  :init
-  (setq custom-file (locate-user-emacs-file "custom.el"))
-  :config
-  (load custom-file nil t))
-
-;;;; theme
+;;;; modus-theme
 
 (use-package modus-themes
-  :after custom
-  :demand t
+  :defer t
   :bind
   ("<f9>" . modus-themes-toggle)
   :config
@@ -125,13 +115,18 @@
         modus-themes-mixed-fonts t
         modus-themes-bold-constructs t
         modus-themes-italic-constructs t
-        modus-themes-variable-pitch-ui nil)
-  (defun +modus-themes--reload ()
-    (unless custom-enabled-themes
-      (setq custom-enabled-themes '(modus-vivendi)))
-    (dolist (theme custom-enabled-themes)
-      (load-theme theme)))
-  (+modus-themes--reload))
+        modus-themes-variable-pitch-ui nil))
+
+;;;; custom
+
+(use-package custom
+  :init
+  (setq custom-file (locate-user-emacs-file "custom.el"))
+  :config
+  (load custom-file nil t)
+  (unless custom-enabled-themes
+    (require 'modus-themes)
+    (modus-themes-load-theme 'modus-vivendi)))
 
 
 ;;;; post-early-init
