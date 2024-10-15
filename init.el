@@ -1527,9 +1527,11 @@ value for USE-OVERLAYS."
 
 (use-package org
   :bind
+  ("C-c l" . org-store-link))
+
+(use-package org-agenda
+  :bind
   ("C-c a" . org-agenda)
-  ("C-c l" . org-store-link)
-  ("C-c c" . org-capture)
   :config
   (setq org-agenda-hide-tags-regexp ".")
   (setq org-agenda-prefix-format
@@ -1538,13 +1540,9 @@ value for USE-OVERLAYS."
           (tags   . " %i %-12:c")
           (search . " %i %-12:c"))))
 
-(use-package org-modern
-  :hook
-  (org-mode . org-modern-mode)
-  (org-agenda-finalize . org-modern-agenda))
-
 (use-package org-capture
-  :defer t
+  :bind
+  ("C-c c" . org-capture)
   :config
   (add-to-list 'org-capture-templates
                `("i" "Inbox" entry (file "inbox.org")
@@ -1560,6 +1558,11 @@ value for USE-OVERLAYS."
                `("n" "Note" entry (file "notes.org")
                  ,(concat "* Note (%a)\n"
                           "/Entered on/ %U\n" "\n" "%?"))))
+
+(use-package org-modern
+  :hook
+  (org-mode . org-modern-mode)
+  (org-agenda-finalize . org-modern-agenda))
 
 ;;;; denote
 
