@@ -117,8 +117,8 @@ Use M-0 `ace-window' to toggle this value."
 (defcustom aw-leading-char-style 'char
   "Style of the leading char overlay."
   :type '(choice
-          (const :tag "single char" 'char)
-          (const :tag "full path" 'path)))
+          (const :tag "single char" char)
+          (const :tag "full path" path)))
 
 (defcustom aw-dispatch-always nil
   "When non-nil, `ace-window' will issue a `read-char' even for one window.
@@ -150,8 +150,8 @@ Its value is a (width . height) pair in pixels or nil for the default frame size
   "Window positions of the character overlay.
 Consider changing this if the overlay tends to overlap with other things."
   :type '(choice
-          (const :tag "top left corner only" 'top-left)
-          (const :tag "both left corners" 'left)))
+          (const :tag "top left corner only" top-left)
+          (const :tag "both left corners" left)))
 
 ;; Must be defined before `aw-make-frame-char' since its :set function references this.
 (defvar aw-dispatch-alist
@@ -528,9 +528,9 @@ Amend MODE-LINE to the mode line for the duration of the selection."
   (setq aw-action action)
   (let ((start-window (selected-window))
         (next-window-scope (cl-case aw-scope
-                             ('visible 'visible)
-                             ('global 'visible)
-                             ('frame 'frame)))
+                             (visible 'visible)
+                             (global 'visible)
+                             (frame 'frame)))
         (wnd-list (aw-window-list))
         window)
     (setq window
