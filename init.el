@@ -659,7 +659,7 @@ value for USE-OVERLAYS."
 
 (use-package ace-window
   :bind
-  ("<remap> <other-window>" . ace-window)
+  ("M-o" . ace-window)
   :config
   (setq aw-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n ?s ?l ?m)))
 
