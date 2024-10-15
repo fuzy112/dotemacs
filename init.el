@@ -1512,7 +1512,8 @@ value for USE-OVERLAYS."
   :defer t
   :config
   (setq bookmark-save-flag 1
-        bookmark-watch-bookmark-file 'silent)
+        bookmark-watch-bookmark-file 'silent
+        bookmark-version-control t)
   (defun +bookmark--pp-28 (&rest args)
     (let ((pp-default-function 'pp-28))
       (apply args)))
