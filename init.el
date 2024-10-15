@@ -596,12 +596,14 @@ value for USE-OVERLAYS."
 ;;;; popper
 
 (use-package popper
-  :demand t
   :bind
   ("C-`" . popper-toggle)
   ("M-`" . popper-cycle)
   ("C-M-`" . popper-toggle-type)
-  :config
+  :defines
+  popper-reference-buffers
+  popper-display-function
+  :init
   (setq popper-reference-buffers '("\\*Messages\\*" "Output\\*$"
                                    "\\*Async Shell Command\\*"
                                    "-eat\\*$"
@@ -611,6 +613,27 @@ value for USE-OVERLAYS."
                                    "\\*vc-git : "
                                    help-mode compilation-mode
                                    flymake-diagnostics-buffer-mode))
+  (defun +popper--popup-p (buffer-or-name &optional arg)
+    (and (seq-some
+          (lambda (it)
+            (buffer-match-p
+             (cond
+              ((stringp it) it)
+              ((symbolp it) `(derived-mode . ,it))
+              ((functionp it) it)
+              (t (error "Invalid element in `popper-reference-buffers': %S" it)))
+             buffer-or-name
+             arg))
+          popper-reference-buffers)
+         (progn
+           (require 'popper)
+           (popper-display-control-p buffer-or-name arg))))
+  (defun +popper--display (buffer alist)
+    (funcall popper-display-function buffer alist))
+
+  (add-to-list 'display-buffer-alist `(+popper--popup-p (+popper--display)))
+  :config
+  (delq '+popper--puppup-p display-buffer-alist)
   (popper-mode)
   (popper-echo-mode))
 
