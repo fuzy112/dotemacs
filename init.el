@@ -1172,6 +1172,9 @@ value for USE-OVERLAYS."
   (eshell-load . eat-eshell-visual-command-mode)
   :bind
   ("C-x p s" . eat-project)
+  :init
+  (with-eval-after-load 'project
+    (add-to-list 'project-switch-commands '(eat-project "Eat") t))
   :config
   (setq eat-kill-buffer-on-exit t)
   
