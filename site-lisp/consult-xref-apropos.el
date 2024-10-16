@@ -80,7 +80,7 @@ INITIAL is the initial input."
      (consult--read
       (consult-xref-apropos--collection (current-buffer))
       :prompt "Search for pattern: "
-      :history 'consult-xref-history
+      :history 'consult-xref--history
       :require-match t
       :sort nil
       :category 'consult-xref
@@ -88,10 +88,6 @@ INITIAL is the initial input."
       :group #'consult--prefix-group
       :state (consult-xref--preview #'switch-to-buffer)
       :lookup (apply-partially #'consult--lookup-prop 'consult-xref)))))
-
-(defvar savehist-additional-variables)
-(with-eval-after-load 'savehist
-  (add-to-list 'savehist-additional-variables 'consult-xref-history))
 
 (provide 'consult-xref-apropos)
 ;;; consult-xref-apropos.el ends here
