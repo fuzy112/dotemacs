@@ -1602,7 +1602,7 @@ value for USE-OVERLAYS."
   (defun +bookmark--pp-28 (&rest args)
     (let ((pp-default-function 'pp-28))
       (apply args)))
-  (add-hook #'bookmark-write-file :around '+bookmark--pp-28))
+  (advice-add #'bookmark-write-file :around '+bookmark--pp-28))
 
 (use-package bookmark-extras
   :bind
