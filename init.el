@@ -1195,7 +1195,24 @@ value for USE-OVERLAYS."
   ("<remap> <async-shell-command>" . with-editor-async-shell-command)
   ("<remap> <shell-command>" . with-editor-shell-command)
   :hook
-  ((eshell-mode shell-mode term-exec vterm-mode) . with-editor-export-editor))
+  ((eshell-mode shell-mode term-exec vterm-mode) . with-editor-export-editor)
+  :init
+  (defun +with-editor--export-editor-to-eat (proc)
+    (require 'with-editor)
+    (if with-editor-emacsclient-executable
+        (with-editor
+          (with-editor--setup)
+          (while (accept-process-output proc 1 nil t))
+          (when-let ((v (getenv "EDITOR")))
+            (eat-term-send-string eat-terminal (format " export EDITOR=%S" v))
+            (eat-self-input 1 'return))
+          (when-let ((v (getenv "EMACS_SERVER_FILE")))
+            (eat-term-send-string eat-terminal (format " export EMACS_SERVER_FILE=%S" v))
+            (eat-self-input 1 'return))
+          (eat-term-send-string eat-terminal " clear")
+          (eat-self-input 1 'return))
+      (error "Cannot use sleeping editor in this buffer")))
+  (add-hook 'eat-exec-hook '+with-editor--export-editor-to-eat))
 
 ;;;; pyim
 
