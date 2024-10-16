@@ -15,6 +15,7 @@ projects
 *.so.*
 *.dll
 *.a
+/site-lisp/.autoload.el
 elpa/archives
 /pyim/
 /history
@@ -28,7 +29,6 @@ elpa/archives
 /rime/
 /url/
 /devdocs/
-.*
 /tree-sitter
 /ielm-history.eld
 /package-quickstart.el
