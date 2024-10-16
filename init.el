@@ -1250,17 +1250,38 @@ value for USE-OVERLAYS."
   term-keys/prefix
   :init
   (setq term-keys/prefix "\033\035")      ; ^[^]
-  (define-key input-decode-map term-keys/prefix
-              (lambda (_prompt)
-                (require 'term-keys)
-                (let* ((keys (this-command-keys))
-                       (events (mapcar (lambda (ev) (cons t ev))
-                                       (listify-key-sequence keys))))
-                  (setq unread-command-events (append events unread-command-events))
-                  nil)))
+
+  (defun +term-keys--autoload (_prompt)
+    (require 'term-keys)
+    (let* ((keys (this-command-keys))
+           (events (mapcar (lambda (ev) (cons t ev))
+                           (listify-key-sequence keys))))
+      (setq unread-command-events (append events unread-command-events))
+      nil))
+
+  (defun +term-keys--tty-setup (&optional terminal)
+    ;; TERMINAL: nil means the current terminal
+    (when (and (eq (framep-on-display terminal) t)
+               (not term-keys-mode))
+      (with-selected-frame (car (frames-on-display-list terminal))
+        (define-key input-decode-map term-keys/prefix '+term-keys--autoload))))
+
+  (add-hook 'tty-setup-hook '+term-keys--tty-setup)
+  (mapc '+term-keys--tty-setup (terminal-list))
+
   :config
-  (define-key input-decode-map term-keys/prefix nil)
-  (term-keys-mode))
+  (remove-hook 'tty-setup-hook '+term-keys--tty-setup)
+  ;; (fmakunbound '+term-keys--tty-setup)
+  ;; (fmakunbound '+term-keys--autoload)
+  ;; (dolist (terminal (terminal-list))
+  ;;   (when (eq (framep-on-display terminal) t)
+  ;;     (with-selected-frame (car (frames-on-display-list terminal))
+  ;;       (define input-decode-map term-keys/prefix nil))))
+  (term-keys-mode)
+  (dolist (terminal (terminal-list))
+    (when (eq (framep-on-display terminal) t)
+      (with-selected-frame (car (frames-on--display-list terminal))
+        (term-keys/init)))))
 
 ;;;; xterm
 
