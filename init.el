@@ -1282,7 +1282,7 @@ value for USE-OVERLAYS."
   (term-keys-mode)
   (dolist (terminal (terminal-list))
     (when (eq (framep-on-display terminal) t)
-      (with-selected-frame (car (frames-on--display-list terminal))
+      (with-selected-frame (car (frames-on-display-list terminal))
         (term-keys/init)))))
 
 ;;;; xterm
