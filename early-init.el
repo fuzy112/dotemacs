@@ -67,7 +67,7 @@
                               (alpha-background . 80)
                               (alpha . 80)))
 
-  (set-fontset-font t 'han "Sarasa Gothic TC"))
+  (set-fontset-font t 'han "Sarasa Gothic CL"))
 
 ;;;; package
 
@@ -115,7 +115,13 @@
         modus-themes-mixed-fonts t
         modus-themes-bold-constructs t
         modus-themes-italic-constructs t
-        modus-themes-variable-pitch-ui nil))
+        modus-themes-variable-pitch-ui nil)
+  (defun +modus-themes--set-font ()
+    (let ((inhibit-redisplay t))
+      (set-face-attribute 'fixed-pitch nil :family "Iosevka SS04")
+      (set-face-attribute 'fixed-pitch-serif nil :family "Sarasa Fixed Slab CL")
+      (set-face-attribute 'variable-pitch nil :family "Sarasa Gothic CL")))
+  (add-hook 'modus-themes-after-load-theme-hook '+modus-themes--set-font))
 
 ;;;; custom
 
