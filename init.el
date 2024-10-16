@@ -131,6 +131,14 @@
   (setq help-enable-variable-value-editing t
         help-enable-completion-autoload nil))
 
+;;;; shortdoc
+
+(use-package shortdoc
+  :init
+  (when (fboundp 'shortdoc-help-fns-examples-function)
+    (add-hook 'help-fns-describe-function-functions
+              #'shortdoc-help-fns-examples-function 50)))
+
 ;;;; breadcrumb
 
 (use-package breadcrumb
