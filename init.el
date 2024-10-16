@@ -1173,6 +1173,8 @@ value for USE-OVERLAYS."
   :bind
   ("C-x p s" . eat-project)
   :config
+  (setq eat-kill-buffer-on-exit t)
+  
   (with-eval-after-load 'project
     (when-let ((cell (assq 'project-shell project-switch-commands)))
       (setcar cell #'eat-project))
