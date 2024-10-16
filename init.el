@@ -123,12 +123,13 @@
   (add-hook 'enable-theme-functions #'+nano-modeline--reload-face)
   (nano-modeline-text-mode t))
 
-;;;; show-font
+;;;; help
 
-;; (use-package show-font
-;;   :config
-;;   (set-face-attribute 'show-font-title-small nil :fontset "fontset-standard")
-;;   (set-face-attribute 'show-font-title nil :fontset "fontset-standard"))
+(use-package help
+  :defer t
+  :config
+  (setq help-enable-variable-value-editing t
+        help-enable-completion-autoload nil))
 
 ;;;; breadcrumb
 
