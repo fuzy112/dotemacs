@@ -1389,6 +1389,11 @@ value for USE-OVERLAYS."
   :config
   (setq epg-pinentry-mode 'loopback))
 
+(use-package epa
+  :defer t
+  :config
+  (setq epa-keys-select-method 'minibuffer))
+
 ;;;; tui
 
 (use-package tui
