@@ -184,13 +184,15 @@
 (use-package marginalia
   :hook
   (minibuffer-setup . marginalia--minibuffer-setup)
+  :bind
+  (:map minibuffer-local-map
+        ("M-A" . marginalia-cycle))
   :config
   (add-to-list 'marginalia-prompt-categories
                '("\\<info manuals\\>" . info-manual))
   (add-to-list 'marginalia-prompt-categories
                '("\\<manual name\\>" . info-manual))
-  (marginalia-mode)
-  (bind-key "M-A" #'marginalia-cycle minibuffer-local-map))
+  (marginalia-mode))
 
 ;;;; crm
 
