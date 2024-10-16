@@ -134,6 +134,7 @@
 ;;;; shortdoc
 
 (use-package shortdoc
+  :defer t
   :init
   (when (fboundp 'shortdoc-help-fns-examples-function)
     (add-hook 'help-fns-describe-function-functions
