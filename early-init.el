@@ -115,13 +115,15 @@
         modus-themes-mixed-fonts t
         modus-themes-bold-constructs t
         modus-themes-italic-constructs t
-        modus-themes-variable-pitch-ui nil)
-  (defun +modus-themes--set-font ()
-    (let ((inhibit-redisplay t))
-      (set-face-attribute 'fixed-pitch nil :family "Iosevka SS04")
-      (set-face-attribute 'fixed-pitch-serif nil :family "Sarasa Fixed Slab CL")
-      (set-face-attribute 'variable-pitch nil :family "Sarasa Gothic CL")))
-  (add-hook 'modus-themes-after-load-theme-hook '+modus-themes--set-font))
+        modus-themes-variable-pitch-ui nil))
+
+;;;; faces
+
+(use-package faces
+  :config
+  (cl-pushnew "Sarasa Fixed CL" (alist-get "Monospace" face-font-family-alternatives nil nil #'string=))
+  (cl-pushnew "Sarasa Fixed Slab CL" (alist-get "Monospace Serif" face-font-family-alternatives nil nil #'string=))
+  (cl-pushnew "Sarasa Gothic CL" (alist-get "Sans Serif" face-font-family-alternatives nil nil #'string=)))
 
 ;;;; custom
 
