@@ -847,16 +847,16 @@ value for USE-OVERLAYS."
   :hook
   ((prog-mode conf-mode) . hl-todo-mode)
   :bind
+  (:repeat-map +hl-todo--repeat-map
+               ("[" . hl-todo-previous)
+               ("]" . hl-todo-next)
+               :exit
+               ("o" . hl-todo-occur))
   (:map hl-todo-mode-map
         ("C-c t [" . hl-todo-previous)
         ("C-c t ]" . hl-todo-next)
         ("C-c t o" . hl-todo-occur)
-        ("C-c t i" . hl-todo-insert))
-  :config
-  (map-keymap (lambda (_ev cmd)
-                (when (symbolp cmd)
-                  (put cmd 'repeat-map hl-todo-mode-map)))
-              hl-todo-mode-map))
+        ("C-c t i" . hl-todo-insert)))
 
 ;;;; display-line-numbers
 
