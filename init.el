@@ -24,9 +24,10 @@
 
 ;;; Code:
 
+(require 'early-init nil t)
+
 (eval-when-compile
-  (require 'use-package)
-  (require 'early-init nil t))
+  (require 'use-package))
 
 ;;;; pre-init
 
