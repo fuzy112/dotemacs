@@ -74,7 +74,10 @@
 (use-package package
   :defer
   :init
-  (package-activate-all))
+  (package-activate-all)
+  :config
+  (setq package-install-upgrade-built-in t)
+  (package-initialize))
 
 ;;;; Site lisp
 
