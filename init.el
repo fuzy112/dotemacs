@@ -717,12 +717,13 @@ value for USE-OVERLAYS."
     (setf (plist-get consult--source-recent-file :items)
           (lambda ()
             (require 'recentf)
-            (unless recentf-mode
+            (unless (bound-and-true-p recentf-mode)
               (recentf-mode))
             (funcall +consult--source-recentf-file--items))))
   :config
   (setq recentf-max-saved-items 128)
-  (recentf-mode))
+  (let ((inhibit-message t))
+    (recentf-mode)))
 
 ;;;; saveplace
 
