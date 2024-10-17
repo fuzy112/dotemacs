@@ -24,6 +24,8 @@
 
 ;;; Code:
 
+(defvar gpg-agent-buffer-name " *gpg-tty*")
+
 ;;;###autoload
 (defun gpg-agent-terminal-start ()
   (interactive)
@@ -31,15 +33,21 @@
   ;; Unset GPG_TTY to prevent the pinentry from messing up emacs UI.
   (setenv "GPG_TTY")
 
-  (unless (process-live-p (get-process "gpg-tty"))
+  (when-let ((proc (get-buffer-process " *gpg-tty*")))
+    (set-process-buffer proc nil)
+    (kill-process proc))
 
-    ;; Allocate a PTY and use it as GPG_TTY.
-    ;; NOTE: pinentry-curses is not supported.
-    (make-comint-in-buffer
-     "gpg-tty" " *gpg-tty*" "/bin/sh" nil
-     "-c" "GPG_TTY=$(tty) gpg-connect-agent updatestartuptty /bye && exec sleep infinity")
-    (set-process-query-on-exit-flag (get-process "gpg-tty") nil)
-    (setenv "GPG_TTY" (process-tty-name (get-process "gpg-tty")))))
+  ;; Allocate a PTY and use it as GPG_TTY.
+  ;; NOTE: pinentry-curses is not supported.
+  (let* ((buf (make-comint-in-buffer
+	       "gpg-tty" " *gpg-tty*" "/bin/sh" nil
+	       "-c" "GPG_TTY=$(tty) gpg-connect-agent updatestartuptty /bye && exec sleep infinity"))
+	 (proc (get-buffer-process buf))
+	 (tty (process-tty-name proc)))
+    (with-current-buffer buf
+      (add-hook 'comint-output-filter-functions #'comint-watch-for-password-prompt nil t))
+    (set-process-query-on-exit-flag proc nil)
+    (setenv "GPG_TTY" tty)))
 
 (provide 'gpg-agent)
 ;;; gpg-agent.el ends here
