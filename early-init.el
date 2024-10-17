@@ -77,7 +77,8 @@
   (package-activate-all)
   :config
   (setq package-install-upgrade-built-in t)
-  (package-initialize))
+  (package-initialize)
+  (add-hook 'kill-emacs-hook #'package-quickstart-refresh -50))
 
 ;;;; Site lisp
 
