@@ -1467,20 +1467,7 @@ value for USE-OVERLAYS."
            (width . 180))))
 
   (setf (alist-get "^\\*tui-\\(?:run\\|find\\)\\*" display-buffer-alist nil nil #'equal)
-        '((display-buffer-in-side-window
-           display-buffer-below-selected
-           display-buffer-pop-up-frame)
-          (pop-up-frame-parameters
-           (unsplittable . t)
-           (alpha-background . 50)
-           (tool-bar-lines . 0)
-           (tab-bar-lines . 0)
-           (menu-bar-lines . 0)
-           (auto-hide-function . delete-frame))
-          (side . bottom)
-          (dedicated . t)
-          (window-min-height . 40)
-          (window-min-width . 110)))
+        '((display-buffer-same-window)))
 
   (setf (alist-get "^\\*tui-line\\*" display-buffer-alist nil nil #'equal)
         '((display-buffer-same-window

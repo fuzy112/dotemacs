@@ -195,7 +195,8 @@ When called interactively, the symbol at point is used as the initial query."
       :ansi t
       :bind '("ctrl-k:kill-line")
       :cmd "fd . || fd-find . || find ."
-      :preview "[ -d {} ] && ls -lBh --color=always {} || bat --force-colorization -- {}")
+      :preview "[ -d {} ] && ls -lBh --color=always {} || bat --force-colorization -- {}"
+      :preview-window "up:60%:+{2}/3")
      #'tui--file-callback)))
 
 ;;;###autoload
