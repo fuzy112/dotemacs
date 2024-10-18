@@ -1,8 +1,8 @@
-;;; medit.el --- match edit -*- lexical-binding: t -*-
+;;; medit.el --- Edit multiple matches of the same text -*- lexical-binding: t -*-
 ;; Copyright © 2024  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
-;; Version: 0.10.1
+;; Version: 0.11.0
 ;; Keywords: convenience
 
 ;; This file is not part of GNU Emacs.
@@ -82,7 +82,7 @@ See also `medit-style-alist'."
                  (const symbol)
                  (symbol :tag "Other")))
 
-(defcustom medit-in-minibuffer nil
+(defcustom medit-use-minibuffer nil
   "Run medit in minibuffer."
   :type 'boolean)
 
@@ -107,10 +107,17 @@ The value should be either nil, or one of `plain', `word', and
 (defvar medit--edit-overlay
   (let ((ol (make-overlay 0 0 nil nil t)))
     (overlay-put ol 'category 'medit-region)
+    (overlay-put ol 'modification-hooks '(medit--in-buffer-modification-hook))
+    (overlay-put ol 'insert-in-fronk-hooks '(medit--in-buffer-modification-hook))
+    (overlay-put ol 'insert-behind-hooks '(medit--in-buffer-modification-hook))
     (delete-overlay ol)
     ol))
 
-(defvar medit--update-highlight-function nil)
+(defvar medit--bounds nil)
+
+(defvar medit--matches nil)
+
+(defvar medit--in-buffer-modified nil)
 
 ;;;; Keymap
 
@@ -161,16 +168,19 @@ The value should be either nil, or one of `plain', `word', and
   "Find matches of `medit-string' and create overlays.
 If START and END are not-nil, the search will be limited to that
 region."
-  (save-excursion
-    (goto-char (or start (point-min)))
-    (let ((regexp (medit--regexp medit-string))
-          overlays)
-      (while (re-search-forward regexp end t)
-        (let ((match
-               (make-overlay (match-beginning 0) (match-end 0) nil nil t)))
-          (overlay-put match 'category 'medit-match)
-          (push match overlays)))
-      overlays)))
+  (when medit-string
+    (save-excursion
+      (goto-char (or start (point-min)))
+      (let ((regexp (medit--regexp medit-string))
+            overlays)
+	(while (re-search-forward regexp end t)
+	  (when (or medit-use-minibuffer
+		    (not (memq medit--edit-overlay (overlays-at (match-beginning 0)))))
+            (let ((match
+		   (make-overlay (match-beginning 0) (match-end 0) nil nil t)))
+              (overlay-put match 'category 'medit-match)
+              (push match overlays))))
+	overlays))))
 
 (defun medit--minibuffer-after-change-function (&rest _)
   "Function to call after minibuffer content change."
@@ -181,10 +191,11 @@ region."
     (put 'medit-match 'display
          (propertize replacement 'face 'medit-match))))
 
-(defun medit--update-highlight ()
-  "Call `medit--update-highlight-function' to update the highlight."
-  (when medit--update-highlight-function
-    (funcall medit--update-highlight-function)))
+(defun medit--find-matches ()
+  (mapc #'delete-overlay medit--matches)
+  (setq medit--matches (medit--make-overlays
+                        (and medit--bounds (car medit--bounds))
+                        (and medit--bounds (cdr medit--bounds)))))
 
 (defun medit--find-regexp-at-point (regexp)
   "Find a match of REGEXP at point."
@@ -199,16 +210,45 @@ region."
       ;; Search for the match at point
       (re-search-backward regexp nil))))
 
+(defun medit--overlay-text ()
+  (buffer-substring-no-properties
+   (overlay-start medit--edit-overlay)
+   (overlay-end medit--edit-overlay)))
+
+(defun medit--in-buffer-modification-hook (_overlay changed &rest _)
+  (when (and (not medit-use-minibuffer) changed)
+    (setq medit--in-buffer-modified t)
+    (let ((new-str (medit--overlay-text)))
+      (put 'medit-match 'display
+	   (propertize new-str 'face 'medit-match)))))
+
 ;;;; Public functions
+
+(defun medit-reset-vars ()
+  "Reset internal variables used by medit."
+  (setq medit-string nil)
+  (setq medit-style nil)
+  (mapc #'delete-overlay medit--matches)
+  (setq medit--matches nil)
+  (setq medit--bounds nil)
+  (setq medit--in-buffer-modified nil)
+  (overlay-put medit--edit-overlay 'display nil)
+  (delete-overlay medit--edit-overlay)
+  (put 'medit-match 'display nil))
 
 (defun medit-edit-in-minibuffer (&optional bounds)
   "Edit all matches of STR in BOUNDS."
+  (medit-reset-vars)
   (let ((regexp (medit--regexp medit-string))
         (buffer (current-buffer))
-        initial pos matches)
+        initial pos)
+    (setq medit--bounds bounds)
     (medit--find-regexp-at-point regexp)
     (setq initial (match-string-no-properties 0))
     (setq pos (- (match-end 0) (point)))
+    (move-overlay medit--edit-overlay
+                  (match-beginning 0)
+                  (match-end 0))
     (unwind-protect
         (minibuffer-with-setup-hook
             (:append
@@ -219,91 +259,43 @@ region."
                          nil t)
                (ignore-errors
                  (backward-char pos))))
-          (move-overlay medit--edit-overlay
-                        (match-beginning 0)
-                        (match-end 0))
-          (setq medit--update-highlight-function
-                (lambda ()
-                  (with-current-buffer buffer
-                    (mapc #'delete-overlay matches)
-                    (setq matches (medit--make-overlays
-                                   (and bounds (car bounds))
-                                   (and bounds (cdr bounds)))))))
-          (medit--update-highlight)
+
+	  (with-current-buffer buffer
+            (medit--find-matches))
           (read-from-minibuffer
            (format "Replace `%s' with: " initial)
            initial))
-      (put 'medit-match 'display nil)
-      (overlay-put medit--edit-overlay 'display nil)
-      (delete-overlay medit--edit-overlay)
-      (dolist (ol matches)
-        (delete-overlay ol)))))
-
-
-
-(defvar medit-in-buffer--changed nil)
-
-(defun medit-in-buffer-done ()
-  "Exit medit session."
-  (interactive)
-  (save-excursion
-    (delete-overlay medit--edit-overlay)
-    (save-restriction
-      (narrow-to-region (point-min) (point-min))
-      (medit--update-highlight))))
+      (medit-reset-vars))))
 
 (defun medit-in-buffer-cancel ()
   "Exit medit session and undo the changes."
   (interactive)
-  (medit-in-buffer-done)
-  (when medit-in-buffer--changed
+  (medit-reset-vars)
+  (when medit--in-buffer-modified
     (undo)))
 
 (defvar-keymap medit-edit-map
-  "M-RET" #'medit-in-buffer-done
+  "M-RET" #'medit-replace
   "C-g" #'medit-in-buffer-cancel)
 
 (defun medit-edit-in-buffer (&optional bounds)
   "Edit all matches of STR in BOUNDS."
   (undo-boundary)
-  (set (make-local-variable 'medit-in-buffer--changed) nil)
-  (let ((regexp (medit--regexp medit-string))
-	(buffer (current-buffer))
-	matches)
+  (medit-reset-vars)
+  (setq medit--bounds bounds)
+  (set (make-local-variable 'medit--in-buffer-modified) nil)
+  (let ((regexp (medit--regexp medit-string)))
     (medit--find-regexp-at-point regexp)
     (move-overlay medit--edit-overlay
 		  (match-beginning 0)
 		  (match-end 0))
-    (let ((sync-change
-	   (lambda (_ov changed &rest _)
-	     (when changed
-	       (setq medit-in-buffer--changed t)
-	       (let ((new-str (buffer-substring-no-properties
-			       (overlay-start medit--edit-overlay)
-			       (overlay-end medit--edit-overlay))))
-		 (save-excursion
-		   (dolist (match matches)
-		     (goto-char (overlay-start match))
-		     (unless (memq medit--edit-overlay (overlays-at (point)))
-		       (delete-region (overlay-start match) (overlay-end match))
-		       (insert new-str)))))))))
-      (overlay-put medit--edit-overlay 'modification-hooks (list sync-change))
-      (overlay-put medit--edit-overlay 'insert-in-front-hooks (list sync-change))
-      (overlay-put medit--edit-overlay 'insert-behind-hooks (list sync-change)))
     (overlay-put medit--edit-overlay
 		 'keymap medit-edit-map)
     (overlay-put medit--edit-overlay 'display nil)
-    (setq medit--update-highlight-function
-          (lambda ()
-            (with-current-buffer buffer
-              (mapc #'delete-overlay matches)
-              (setq matches (medit--make-overlays
-                             (and bounds (car bounds))
-                             (and bounds (cdr bounds)))))))
-    (medit--update-highlight)))
+    (medit--find-matches)))
 
 (defun medit-edit (&optional bounds)
-  (if medit-in-minibuffer
+  (if medit-use-minibuffer
       (medit-edit-in-minibuffer bounds)
     (medit-edit-in-buffer bounds)))
 
@@ -312,13 +304,13 @@ region."
 (defun medit-replace ()
   "Apply the replacement."
   (interactive)
-  (let ((regexp (medit--regexp medit-string))
-        (replacement (minibuffer-contents-no-properties)))
-    (with-current-buffer (overlay-buffer medit--edit-overlay)
-      (replace-regexp-in-region regexp
-                                (replace-quote replacement)
-                                (point-min)
-                                (point-max)))
+  (let ((replacement (minibuffer-contents-no-properties)))
+    (dolist (match medit--matches)
+      (with-current-buffer (overlay-buffer match)
+	(goto-char (overlay-start match))
+	(delete-region (overlay-start match) (overlay-end match))
+	(insert replacement))))
+  (when medit-use-minibuffer
     (exit-minibuffer)))
 
 (defun medit-previous ()
@@ -347,7 +339,8 @@ region."
   (pcase medit-style
     ('word (setq medit-style 'plain))
     (_  (setq medit-style 'word)))
-  (medit--update-highlight)
+  (with-minibuffer-selected-window
+    (medit--find-matches))
   (message "Match style `%s'" medit-style))
 
 (defun medit-toggle-symbol ()
@@ -356,7 +349,8 @@ region."
   (pcase medit-style
     ('symbol (setq medit-style 'plain))
     (_ (setq medit-style 'symbol)))
-  (medit--update-highlight)
+  (with-minibuffer-selected-window
+    (medit--find-matches))
   (message "Match style `%s'" medit-style))
 
 ;;;###autoload
@@ -369,7 +363,7 @@ the region.  Otherwise, edit the symbol at point.
 If ARG or interactively the `prefix-arg' is non-nil, the edit is
 limited to the current defun.
 
-This function internally calls `medit-edit-in-minibuffer' to do the work."
+This function internally calls `medit-edit' to do the work."
   (interactive "P")
   (setq medit-style medit-default-style)
   (setq medit-string
@@ -379,7 +373,8 @@ This function internally calls `medit-edit-in-minibuffer' to do the work."
           (medit--string)))
   (medit-edit (and arg (bounds-of-thing-at-point 'defun))))
 
-;;;; Isearch Integration
+
+;; Isearch Integration
 
 ;;;###autoload
 (defun medit-from-isearch ()
