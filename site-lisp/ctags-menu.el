@@ -2,7 +2,7 @@
 ;; Copyright © 2024  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
-;; Version: 0.1.2
+;; Version: 0.1.3
 ;; Keywords: tools
 
 ;; This file is NOT part of GNU Emacs.
@@ -106,8 +106,8 @@
               (list (concat "--languages=" (string-join (cdr languages) ","))))
             (and-let* ((langmap (assoc "--langmap=" args)))
               (list (concat "--langmap=" (string-join (cdr langmap) ","))))
-            (and-let* ((excludes (assoc "--excludes=" args)))
-              (mapcar (lambda (arg) (concat "--excludes=" arg)) (cdr args)))
+            (and-let* ((excludes (assoc "--exclude=" args)))
+              (mapcar (lambda (arg) (concat "--exclude=" arg)) (cdr args)))
             (or (alist-get "--" args nil nil 'equal)
                 (list ".")))))
 
