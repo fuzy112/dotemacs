@@ -809,7 +809,7 @@ value for USE-OVERLAYS."
         ("M-s %" . medit-from-isearch))
   :config
   (with-eval-after-load 'embark
-    (bind-key "%" #'medit embark-identifier-map)))
+    (bind-key "%" #'medit-dwim embark-identifier-map)))
 
 ;;;; text-mode
 
