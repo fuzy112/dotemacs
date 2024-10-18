@@ -3,7 +3,7 @@
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
 ;; Package-Requires: ((emacs "29.4"))
-;; Version: 0.1.1
+;; Version: 0.1.2
 ;; Keywords:
 
 ;;; Commentary:
@@ -33,11 +33,22 @@
                      site-lisp-directory
                      "\\.el\\'"))))))
 
+(defun site-lisp--dir-p (file)
+  (let ((basename (file-name-nondirectory file)))
+    (and (file-directory-p file)
+	 (not (string-prefix-p "." basename))
+	 (not (string-match-p "tests?\\'" file))
+	 (not (string-match-p "CMakeFiles\\'" file))
+	 (not (string-match-p "scripts?\\'" file))
+	 (not (string-match-p "data\\'" file))
+	 (not (string-match-p "build\\'" file))
+	 (not (string-match-p "assets\\'" file)))))
+
 (defun site-lisp-dirs ()
   (cons site-lisp-directory
-        (seq-filter #'file-directory-p
-                    (directory-files-recursively
-                     site-lisp-directory "." t))))
+	(seq-filter #'site-lisp--dir-p
+		    (directory-files-recursively
+		     site-lisp-directory "." t #'site-lisp--dir-p t))))
 
 (defvar site-lisp-dirs nil)
 
