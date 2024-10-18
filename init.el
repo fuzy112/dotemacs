@@ -1355,18 +1355,15 @@ value for USE-OVERLAYS."
 
 (use-package repeat
   :defer t
-  :preface
-  (unless (fboundp 'repeat-post-hook)
-    (fset 'repeat-post-hook
-          (lambda ()
-            (when (get this-command 'repeat-map)
-              (message "Command %s has a `repeat-map'" this-command)
-              (fmakunbound 'repeat-post-hook)
-              (require 'repeat)
-              (repeat-post-hook)))))
-  :hook
-  (post-command . repeat-post-hook)
+  :init
+  (defun +repeat--post-command ()
+    (when (function-get this-command 'repeat-map)
+      (message "Command %S has a `repeat-map'" this-command)
+      (require 'repeat)
+      (repeat-post-hook)))
+  (add-hook 'post-command-hook '+repeat--post-command)
   :config
+  (remove-hook 'post-command-hook '+repeat--post-command)
   (repeat-mode))
 
 ;;;; savehist
