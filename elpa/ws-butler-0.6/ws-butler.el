@@ -242,7 +242,7 @@ ensure point doesn't jump due to white space trimming."
      (lambda (_prop beg end)
        (save-excursion
          (setq beg (progn (goto-char beg)
-                          (pos-eol))
+                          (pos-bol))
                ;; Subtract one from end to overcome Emacs bug #17784, since we
                ;; always expand to end of line anyway, this should be OK.
                end (progn (goto-char (1- end))
