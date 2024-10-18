@@ -685,6 +685,12 @@ value for USE-OVERLAYS."
   (when (memq system-type '(windows-nt ms-dos))
     (advice-add #'apheleia-format-after-save :override #'ignore)))
 
+;;;; ws-butler
+
+(use-package ws-butler
+  :hook
+  (find-file . ws-butler-mode))
+
 ;;;; activities
 
 (use-package activities
