@@ -752,6 +752,13 @@ value for USE-OVERLAYS."
   ;; TODO: configure auto-revert-notify-exclude-dir-regexp
   (global-auto-revert-mode))
 
+;;;; dired
+
+(use-package dired
+  :defer t
+  :config
+  (setq dired-listing-switches "-lah"))
+
 ;;;; dired-x
 
 (use-package dired-x
