@@ -107,7 +107,7 @@
             (and-let* ((langmap (assoc "--langmap=" args)))
               (list (concat "--langmap=" (string-join (cdr langmap) ","))))
             (and-let* ((excludes (assoc "--exclude=" args)))
-              (mapcar (lambda (arg) (concat "--exclude=" arg)) (cdr args)))
+              (mapcar (lambda (arg) (concat "--exclude=" arg)) (cdr excludes)))
             (or (alist-get "--" args nil nil 'equal)
                 (list ".")))))
 
