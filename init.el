@@ -1192,7 +1192,7 @@ value for USE-OVERLAYS."
     (add-to-list 'project-switch-commands '(eat-project "Eat") t))
   :config
   (setq eat-kill-buffer-on-exit t)
-  
+
   (with-eval-after-load 'project
     (when-let ((cell (assq 'project-shell project-switch-commands)))
       (setcar cell #'eat-project))
@@ -1320,7 +1320,12 @@ value for USE-OVERLAYS."
   (dolist (terminal (terminal-list))
     (when (eq (framep-on-display terminal) t)
       (with-selected-frame (car (frames-on-display-list terminal))
-        (term-keys/init)))))
+        (term-keys/init))))
+
+  (with-eval-after-load 'eat
+    (unless (member [?\e ?\C-\]] eat-semi-char-non-bound-keys)
+      (setopt eat-semi-char-non-bound-keys
+              (cons [?\e ?\C-\]] eat-semi-char-non-bound-keys)))))
 
 ;;;; xterm
 
