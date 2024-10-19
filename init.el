@@ -561,6 +561,7 @@ value for USE-OVERLAYS."
   (consult-customize
    consult-xref consult-ripgrep consult-grep consult-git-grep
    consult-line consult-focus-lines consult-keep-lines
+   consult-imenu
    :preview-key '(:debounce 0.2 any))
 
   ;; Optionally configure the narrowing key.
