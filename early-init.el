@@ -65,9 +65,7 @@
                               (width . 174)
                               (height . 46)
                               (alpha-background . 80)
-                              (alpha . 80)))
-
-  (set-fontset-font t 'han "Sarasa Gothic CL"))
+                              (alpha . 80))))
 
 ;;;; package
 
@@ -119,15 +117,7 @@
         modus-themes-mixed-fonts t
         modus-themes-bold-constructs t
         modus-themes-italic-constructs t
-        modus-themes-variable-pitch-ui nil))
-
-;;;; faces
-
-(use-package faces
-  :config
-  (cl-pushnew "Sarasa Fixed CL" (alist-get "Monospace" face-font-family-alternatives nil nil #'string=))
-  (cl-pushnew "Sarasa Fixed Slab CL" (alist-get "Monospace Serif" face-font-family-alternatives nil nil #'string=))
-  (cl-pushnew "Sarasa Gothic CL" (alist-get "Sans Serif" face-font-family-alternatives nil nil #'string=)))
+        modus-themes-variable-pitch-ui t))
 
 ;;;; custom
 
