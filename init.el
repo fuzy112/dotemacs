@@ -992,6 +992,7 @@ value for USE-OVERLAYS."
   ("C-x C-e" . pp-eval-last-sexp)
   :config
   (defvar +pp--popon nil)
+  (defvar +pp--output-buffer nil)
 
   (defun +pp--post-command ()
     (and (poponp +pp--popon)
@@ -1012,8 +1013,7 @@ value for USE-OVERLAYS."
 
   (defun +pp--show-buffer ()
     (interactive)
-    (with-output-to-temp-buffer " *Pp Output*"
-      (princ (popon-text +pp--popon))))
+    (display-buffer +pp--output-buffer))
 
   (defvar-keymap +pp--output-map
     "w" #'+pp--copy-output-as-kill
@@ -1038,6 +1038,7 @@ value for USE-OVERLAYS."
                   (when (poponp +pp--popon) (popon-kill +pp--popon))
                   (setq +pp--popon (popon-create (cons text width) pos))
                   (message "")          ; clear the message
+                  (setq +pp--output-buffer out-buffer-name)
                   (set-transient-map +pp--output-map))))))
       (with-output-to-temp-buffer out-buffer-name
         (if lisp
