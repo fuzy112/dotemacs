@@ -81,57 +81,6 @@
   (:map window-prefix-map
         ("q" . quit-window)))           ; this is default for emacs 30
 
-;;;; nano-modeline
-
-(use-package nano-modeline
-  :demand t
-  :hook
-  (prog-mode . nano-modeline-prog-mode)
-  (text-mode . nano-modeline-text-mode)
-  (org-mode . nano-modeline-org-mode)
-  (pdf-view-mode . nano-modeline-pdf-mode)
-  (mu4e-headers-mode . nano-modeline-mu4e-headers-mode)
-  (mu4e-view-mode . nano-modeline-mu4e-message-mode)
-  (mu4e-compose-mode . nano-modeline-mu4e-compose-mode)
-  (elfeed-show-mode . nano-modeline-elfeed-entry-mode)
-  (elfeed-search-mode . nano-modeline-elfeed-search-mode)
-  (elpher-mode . nano-modeline-elpher-mode)
-  (term-mode . nano-modeline-term-mode)
-  (eat-mode . nano-modeline-eat-mode)
-  (xwidget-webkit-mode . nano-modeline-xwidget-mode)
-  (messages-buffer-mode . nano-modeline-message-mode)
-  (org-capture-mode . nano-modeline-org-capture-mode)
-  (org-agenda-mode . nano-modeline-org-agenda-mode)
-  :init
-  (setq nano-modeline-base-face 'nerd-icons-blue)
-  :config
-  (setq nano-modeline-position 'nano-modeline-footer)
-
-  (defun +nano-modeline--reload-face (&optional _)
-    (set-face-attribute 'nano-modeline-active nil
-                        :foreground (face-foreground 'default)
-                        :background (face-background 'header-line nil t)
-                        :box `(:line-width 1 :color ,(face-background 'default)))
-    (set-face-attribute 'nano-modeline-status nil
-                        :foreground (face-background 'default)
-                        :background (face-foreground 'shadow nil t))
-    (set-face-attribute 'nano-modeline-button-active-face nil
-                        :foreground (face-foreground 'default)
-                        :background (face-background 'default)
-                        :box `( :line-width 2
-                                :color ,(face-foreground 'default)
-                                :style flat-button))
-    (set-face-attribute 'nano-modeline-button-inactive-face nil
-                        :foreground (face-foreground (if (facep 'nano-faded) 'nano-faded 'default))
-                        :background (face-background 'header-line nil t)
-                        :box `( :line-width 2
-                                :color ,(face-foreground 'default)
-                                :style flat-button))
-    (set-face-attribute 'nano-modeline-button-highlight-face nil
-                        :foreground (face-background 'default)
-                        :background (face-foreground 'default)))
-  (add-hook 'enable-theme-functions #'+nano-modeline--reload-face)
-  (nano-modeline-text-mode t))
 
 ;;;; help
 
