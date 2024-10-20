@@ -55,20 +55,30 @@
 
 ;; Define the ctags functions.
 (ctags-define-tag ctags-xref-tag
-                  input name line pattern content kind scope roles language
-                  score)
+  input name line pattern content kind scope roles language
+  score)
 
 
 (cl-defstruct (ctags-xref-location
                (:include xref-file-location)
-               (:constructor ctags-xref-make-location (file line column name hint)))
+               (:constructor ctags-xref-make-location (file line column tag)))
   "Xref location used for ctags."
-  name hint)
+  tag)
+
+(cl-defmethod ctags-xref-location-name ((location ctags-xref-location))
+  (ctags-xref-tag-name (ctags-xref-location-tag location)))
+
+(cl-defmethod ctags-xref-location-hint ((location ctags-xref-location))
+  (let ((tag (ctags-xref-location-tag location)))
+    (or (ctags-xref-tag-pattern tag)
+	(regexp-quote (ctags-xref-tag-name tag)))))
 
 (cl-defmethod xref-location-marker ((location ctags-xref-location))
   "Return the marker for LOCATION.
 The `hint' slot of LOCATION is used to find the position."
-  (pcase-let (((cl-struct ctags-xref-location file line column name hint) location))
+  (pcase-let* (((cl-struct ctags-xref-location file line column tag) location)
+	       (name (ctags-xref-tag-name tag))
+	       (hint (ctags-xref-location-hint location)))
     (with-current-buffer
         (or (get-file-buffer file)
             (let ((find-file-suppress-same-file-warnings t))
@@ -97,7 +107,6 @@ The `hint' slot of LOCATION is used to find the position."
         (name (ctags-xref-tag-name tag))
         (line (ctags-xref-tag-line tag))
         (column 0)
-        (pattern (ctags-xref-tag-pattern tag))
         (summary (ctags-xref-tag-content tag))
         (scope (ctags-xref-tag-scope tag))
         (score (or (ctags-xref-tag-score tag) 0)))
@@ -109,9 +118,7 @@ The `hint' slot of LOCATION is used to find the position."
              (and score
                   (propertize (concat "\t" (number-to-string score))
                               'face 'ctags-xref-score-face)))
-     (ctags-xref-make-location input line column
-                               name
-                               (or pattern (regexp-quote name))))))
+     (ctags-xref-make-location input line column tag))))
 
 ;;;; Xref backend
 
@@ -139,7 +146,6 @@ The `hint' slot of LOCATION is used to find the position."
 (cl-defmethod xref-backend-definitions ((_backend (eql 'ctags)) identifier)
   (let ((xrefs)
         (tags (ctags-xref-tag-readtags "-PEne" "-" identifier)))
-    (setq tags (ctags-xref-filter identifier tags))
     (dolist (tag tags)
       (when-let ((xref (ctags-xref-make-item tag)))
         (push xref xrefs)))
