@@ -454,8 +454,7 @@ value for USE-OVERLAYS."
   (advice-add #'register-preview :override #'consult-register-window)
 
   ;; Use Consult to select xref locations with preview
-  (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref)
+  (setq xref-show-definitions-function #'consult-xref)
 
   (defun +consult--read-file-name-function (prompt &optional dir _default mustmatch initial pred)
     (let* ((default-directory (abbreviate-file-name (or dir default-directory)))
@@ -849,8 +848,9 @@ value for USE-OVERLAYS."
   ("C-<mouse-1>" . xref-find-definitions-at-mouse)
   ("C-M-<mouse-1>" . xref-find-references-at-mouse)
   :config
+  (setq xref-show-xrefs-function #'xref-show-definitions-buffer-at-bottom)
   (setq xref-search-program
-        (cond ((executable-find "ripgrep") 'ripgrep)
+        (cond ((executable-find "rg") 'ripgrep)
               ((executable-find "ugrep") 'ugrep)
               (t 'grep))))
 
