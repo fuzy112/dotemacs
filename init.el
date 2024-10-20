@@ -936,7 +936,7 @@ value for USE-OVERLAYS."
 
 (use-package elisp-mode
   :config
-  (setq-default elisp-flymake--byte-compile-process load-path)
+  (setq-default elisp-flymake-byte-compile-load-path load-path)
   :bind
   (:map emacs-lisp-mode-map
         ("C-M-x" . compile-defun)
