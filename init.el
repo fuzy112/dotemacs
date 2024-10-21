@@ -47,7 +47,11 @@
   (set-fontset-font t 'han "Sarasa Gothic CL")
   (set-face-attribute 'default nil :family "Iosevka SS04")
   (set-face-attribute 'fixed-pitch nil :family "Iosevka SS04")
-  (set-face-attribute 'variable-pitch nil :family "Sarasa UI CL"))
+  (set-face-attribute 'variable-pitch nil :family "Sarasa UI CL")
+
+  (add-to-list 'face-font-family-alternatives '("Sarasa Gothic CL" "Iosevka SS04"))
+  (add-to-list 'face-font-family-alternatives '("Sarasa UI CL" "Sarasa Gothic CL" "Iosevka SS04"))
+  (setopt face-font-family-alternatives (append face-font-family-alternatives nil)))
 
 ;;;; nerd-icons
 
