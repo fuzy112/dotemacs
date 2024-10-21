@@ -1155,7 +1155,7 @@ value for USE-OVERLAYS."
       (set-process-query-on-exit-flag
        magit-credential-cache-daemon-process nil)))
   (advice-add #'magit-maybe-start-credential-cache-daemon :after '+magit--ccdp-no-query)
-
+  (setq magit-wip-mode-lighter "")
   (magit-wip-mode))
 
 ;;;; diff-hl
