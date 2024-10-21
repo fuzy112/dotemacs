@@ -9,7 +9,7 @@
 ;; URL: https://orgmode.org
 ;; Package-Requires: ((emacs "26.1"))
 
-;; Version: 9.7.12
+;; Version: 9.7.13
 
 ;; This file is part of GNU Emacs.
 ;;
@@ -9102,6 +9102,8 @@ keywords relative to each registered export backend."
 	     (delq nil keywords))
       ;; Backend name (for keywords, like #+LATEX:)
       (push (upcase (symbol-name (org-export-backend-name backend))) keywords)
+      ;; Backend attributes, like #+ATTR_LATEX:
+      (push (format "ATTR_%s" (upcase (symbol-name (org-export-backend-name backend)))) keywords)
       (dolist (option-entry (org-export-backend-options backend))
 	;; Backend options.
 	(push (nth 1 option-entry) keywords)))))
@@ -20557,11 +20559,15 @@ strictly within a source block, use appropriate comment syntax."
 		end)))
       ;; Translate region boundaries for the Org buffer to the source
       ;; buffer.
-      (let ((offset (- end beg)))
+      (let (src-end)
+        (save-excursion
+          (goto-char end)
+          (org-babel-do-in-edit-buffer
+           (setq src-end (point))))
 	(save-excursion
 	  (goto-char beg)
 	  (org-babel-do-in-edit-buffer
-	   (comment-or-uncomment-region (point) (+ offset (point))))))
+	   (comment-or-uncomment-region (point) src-end))))
     (save-restriction
       ;; Restrict region
       (narrow-to-region (save-excursion (goto-char beg)
