@@ -83,7 +83,10 @@
 (use-package window
   :bind
   (:map window-prefix-map
-        ("q" . quit-window)))           ; this is default for emacs 30
+        ("q" . quit-window))            ; this is default for emacs 30
+  :config
+  (setq kill-buffer-quit-windows t
+        quit-restore-window-no-switch t))
 
 
 ;;;; help
