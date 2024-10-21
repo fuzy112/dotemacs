@@ -132,10 +132,10 @@
 
       (setq items (seq-filter (lambda (item) (> (gethash item scores) 0)) items))
 
-      (setq items (sort items
-                        :key (lambda (item) (gethash item scores))
-                        :reverse t
-                        :in-place t))
+      (setq items (cl-sort items
+                           :key (lambda (item) (gethash item scores))
+                           :reverse t
+                           :in-place t))
 
       (when ctags-xref-c-annotate-score
         (dolist (item items)
