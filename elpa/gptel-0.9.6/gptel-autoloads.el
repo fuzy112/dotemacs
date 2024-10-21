@@ -14,19 +14,19 @@
 (autoload 'gptel-mode "gptel" "\
 Minor mode for interacting with LLMs.
 
-This is a minor mode.  If called interactively, toggle the `GPTel
-mode' mode.  If the prefix argument is positive, enable the mode,
-and if it is zero or negative, disable the mode.
+This is a minor mode.  If called interactively, toggle the `GPTel mode'
+mode.  If the prefix argument is positive, enable the mode, and if it is
+zero or negative, disable the mode.
 
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the
+mode if ARG is nil, omitted, or is a positive number.  Disable the mode
+if ARG is a negative number.
 
 To check whether the minor mode is enabled in the current buffer,
-evaluate `gptel-mode'.
+evaluate the variable `gptel-mode'.
 
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
+The mode's hook is called both when the mode is enabled and when it is
+disabled.
 
 (fn &optional ARG)" t)
 (autoload 'gptel-send "gptel" "\
@@ -77,9 +77,9 @@ information, in the form
 
  (model-name . plist)
 
-Currently recognized plist keys are :description, :capabilities
-and :mime-types.  An example of a model specification including
-both kinds of specs:
+For a list of currently recognized plist keys, see
+`gptel--anthropic-models'. An example of a model specification
+including both kinds of specs:
 
 :models
 \\='(claude-3-haiku-20240307               ;Simple specs
@@ -106,9 +106,9 @@ alist, like:
 KEY is a variable whose value is the API key, or function that
 returns the key.
 
-(fn NAME &key CURL-ARGS STREAM KEY (HEADER (lambda nil (when-let (key (gptel--get-api-key)) \\=`((\"x-api-key\" \\=\\, key) (\"anthropic-version\" . \"2023-06-01\"))))) (MODELS \\='((claude-3-5-sonnet-20240620 :description \"Balance of intelligence and speed\" :capabilities (media tool) :mime-types (\"image/jpeg\" \"image/png\" \"image/gif\" \"image/webp\")) (claude-3-sonnet-20240229 :description \"Highest level of intelligence and capability\" :capabilities (media tool) :mime-types (\"image/jpeg\" \"image/png\" \"image/gif\" \"image/webp\")) (claude-3-haiku-20240307 :description \"Fast and most compact model for near-instant responsiveness\" :capabilities (media tool) :mime-types (\"image/jpeg\" \"image/png\" \"image/gif\" \"image/webp\")) (claude-3-opus-20240229 :description \"Top-level performance, intelligence, fluency, and understanding\" :capabilities (media tool) :mime-types (\"image/jpeg\" \"image/png\" \"image/gif\" \"image/webp\")))) (HOST \"api.anthropic.com\") (PROTOCOL \"https\") (ENDPOINT \"/v1/messages\"))")
+(fn NAME &key CURL-ARGS STREAM KEY (HEADER (lambda nil (when-let (key (gptel--get-api-key)) \\=`((\"x-api-key\" \\=\\, key) (\"anthropic-version\" . \"2023-06-01\"))))) (MODELS gptel--anthropic-models) (HOST \"api.anthropic.com\") (PROTOCOL \"https\") (ENDPOINT \"/v1/messages\"))")
 (function-put 'gptel-make-anthropic 'lisp-indent-function 1)
-(register-definition-prefixes "gptel-anthropic" '("gptel--anthropic-parse-multipart"))
+(register-definition-prefixes "gptel-anthropic" '("gptel--anthropic-"))
 
 
 ;;; Generated autoloads from gptel-context.el
@@ -160,9 +160,9 @@ information, in the form
 
  (model-name . plist)
 
-Currently recognized plist keys are :description, :capabilities
-and :mime-types.  An example of a model specification including
-both kinds of specs:
+For a list of currently recognized plist keys, see
+`gptel--gemini-models'. An example of a model specification
+including both kinds of specs:
 
 :models
 \\='(gemini-pro                            ;Simple specs
@@ -191,9 +191,9 @@ alist, like:
 KEY (optional) is a variable whose value is the API key, or
 function that returns the key.
 
-(fn NAME &key CURL-ARGS HEADER KEY (STREAM nil) (HOST \"generativelanguage.googleapis.com\") (PROTOCOL \"https\") (MODELS \\='((gemini-pro :description \"Complex reasoning tasks, problem solving, data extraction and generation\" :capabilities (tool json media) :mime-types (\"image/png\" \"image/jpeg\" \"image/webp\" \"image/heic\" \"image/heif\" \"application/pdf\" \"text/plain\" \"text/csv\" \"text/html\")) (gemini-1.5-flash :description \"Fast and versatile performance across a diverse variety of tasks\" :capabilities (tool json media) :mime-types (\"image/png\" \"image/jpeg\" \"image/webp\" \"image/heic\" \"image/heif\" \"application/pdf\" \"text/plain\" \"text/csv\" \"text/html\")) (gemini-1.5-pro-latest :description \"Complex reasoning tasks, problem solving, data extraction and generation\" :capabilities (tool json media) :mime-types (\"image/png\" \"image/jpeg\" \"image/webp\" \"image/heic\" \"image/heif\" \"application/pdf\" \"text/plain\" \"text/csv\" \"text/html\")))) (ENDPOINT \"/v1beta/models\"))")
+(fn NAME &key CURL-ARGS HEADER KEY (STREAM nil) (HOST \"generativelanguage.googleapis.com\") (PROTOCOL \"https\") (MODELS gptel--gemini-models) (ENDPOINT \"/v1beta/models\"))")
 (function-put 'gptel-make-gemini 'lisp-indent-function 1)
-(register-definition-prefixes "gptel-gemini" '("gptel--gemini-parse-multipart"))
+(register-definition-prefixes "gptel-gemini" '("gptel--gemini-"))
 
 
 ;;; Generated autoloads from gptel-kagi.el
@@ -315,9 +315,9 @@ information, in the form
 
  (model-name . plist)
 
-Currently recognized plist keys are :description, :capabilities
-and :mime-types.  An example of a model specification including
-both kinds of specs:
+For a list of currently recognized plist keys, see
+`gptel--openai-models'. An example of a model specification
+including both kinds of specs:
 
 :models
 \\='(gpt-3.5-turbo                         ;Simple specs
