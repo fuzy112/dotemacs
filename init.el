@@ -124,14 +124,19 @@
   (advice-add #'completing-read-default :around #'vertico--advice)
   (advice-add #'completing-read-multiple :around #'vertico--advice)
   :bind
-  (:map vertico-map
-        ("RET" . vertico-directory-enter)
-        ("DEL" . vertico-directory-delete-char)
-        ("M-DEL" . vertico-directory-delete-word)
-        ("C-q" . vertico-quick-insert)
-        ("M-q" . vertico-quick-exit))
+  (("M-R" . vertico-repeat)
+   :map vertico-map
+   ("RET" . vertico-directory-enter)
+   ("DEL" . vertico-directory-delete-char)
+   ("M-DEL" . vertico-directory-delete-word)
+   ("C-q" . vertico-quick-insert)
+   ("M-q" . vertico-quick-exit)
+   :map vertico-map
+   ("M-P" . vertico-repeat-previous)
+   ("M-N" . vertico-repeat-next))
   :hook
   (rfn-eshadow-update-overlay . vertico-directory-tidy)
+  (minibuffer-setup . vertico-repeat-save)
   :config
   (setq enable-recursive-minibuffers t)
   (setq vertico-quick1 "aoeuip"

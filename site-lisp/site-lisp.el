@@ -15,23 +15,22 @@
 (defvar site-lisp-autoload-file
   (expand-file-name ".autoload.el" site-lisp-directory))
 
-(defvar site-lisp-skip-check nil)
+(defvar site-lisp-quickstart-file
+  (locate-user-emacs-file "site-lisp-quickstart.el"))
 
 (defun site-lisp-autoload-need-update-p ()
   "Return non-nil if `site-lisp-autoload-file' needs regeneration."
   (or (not (file-exists-p site-lisp-autoload-file))
-      (if site-lisp-skip-check
-	  nil
-	(let ((site-lisp-mtime
-               (file-attribute-modification-time
-		(file-attributes site-lisp-autoload-file))))
-	  (seq-find (lambda (file)
-		      (let ((mtime (file-attribute-modification-time
-				    (file-attributes file))))
-			(time-less-p site-lisp-mtime mtime)))
-		    (directory-files-recursively
-                     site-lisp-directory
-                     "\\.el\\'"))))))
+      (let ((site-lisp-mtime
+             (file-attribute-modification-time
+	      (file-attributes site-lisp-autoload-file))))
+	(seq-find (lambda (file)
+		    (let ((mtime (file-attribute-modification-time
+				  (file-attributes file))))
+		      (time-less-p site-lisp-mtime mtime)))
+		  (directory-files-recursively
+                   site-lisp-directory
+                   "\\.el\\'")))))
 
 (defun site-lisp--dir-p (file)
   (let ((basename (file-name-nondirectory file)))
@@ -69,12 +68,31 @@
   (load site-lisp-autoload-file nil t))
 
 ;;;###autoload
-(defun site-lisp-activate ()
-  "Activate site-lisp directories."
+(progn
+  (defun site-lisp-activate (&optional arg)
+    "Activate site-lisp directories."
+    (interactive "P")
+    (if (and (file-exists-p site-lisp-quickstart-file)
+	     (not arg))
+	(load site-lisp-quickstart-file)
+      (setq site-lisp-dirs (site-lisp-dirs))
+      (setq load-path (append site-lisp-dirs load-path))
+      (site-lisp-load-autoloads))))
+
+(defun site-lisp-quickstart-refresh ()
   (interactive)
-  (setq site-lisp-dirs (site-lisp-dirs))
-  (setq load-path (append site-lisp-dirs load-path))
-  (site-lisp-load-autoloads))
+  (let ((coding-system-for-write  'emacs-internal))
+    (site-lisp-activate t)
+    (delete-file site-lisp-quickstart-file)
+    (loaddefs-generate (site-lisp-dirs) site-lisp-autoload-file)
+    (with-temp-file site-lisp-quickstart-file
+      (pp-emacs-lisp-code
+       `(progn
+	  (setq site-lisp-dirs ',(site-lisp-dirs))
+	  (setq load-path (append site-lisp-dirs load-path))))
+      (insert "\n\n")
+      (insert-file-contents site-lisp-autoload-file))
+    (byte-recompile-file site-lisp-quickstart-file t)))
 
 (provide 'site-lisp)
 ;;; site-lisp.el ends here
