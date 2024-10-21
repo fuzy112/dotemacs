@@ -4,7 +4,7 @@
 
 ;; Author: Zhengyi Fu  <i@fuzy.me>
 ;; Keywords: c, tools
-;; Version: 0.4.0
+;; Version: 0.6.0
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -20,8 +20,6 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-
-;; TODO: improve readability.
 
 ;;; Code:
 
@@ -44,39 +42,11 @@
 (cl-defmethod ctags-xref-c--macro-name (&context (major-mode c-ts-base-mode))
   (c-ts-mode--emacs-current-defun-name))
 
-
-(defun ctags-xref--c-sort (items)
-  (let ((is-function-call
-         (save-excursion
-           (when-let ((symbol (thing-at-point 'symbol)))
-             (when (not (looking-back (regexp-opt `(,symbol) 'symbols) (line-beginning-position)))
-               (forward-symbol 1))
-             (looking-at-p "[[:space:]]*(")))))
-    (cl-stable-sort
-     items
-     #'>
-     :key #'(lambda (item)
-              (let ((tag (ctags-xref-location-tag (xref-item-location item)))
-                    (score 0))
-                (pcase-let (((cl-struct ctags-xref-tag
-                                        input kind)
-                             tag))
-                  (when (equal input (buffer-file-name))
-                    (cl-incf score))
-                  (when (and (buffer-file-name)
-                             (equal (file-name-nondirectory input)
-                                    (file-name-nondirectory (buffer-file-name))))
-                    (cl-incf score))
-                  (when (and is-function-call (member kind '("f" "function" "p" "prototype" "s" "signal" "slot" "d" "macro")))
-                    (cl-incf score))
-                  (when (member kind '("m" "macro"))
-                    (cl-incf score)))
-                (ctags-xref--message "score %d -- %s" score tag)
-                score)))))
+(defvar ctags-xref-c-annotate-score t)
 
 
 (defun ctags-xref-c--filter (identifier items)
-  "Filter TAGS of IDENTIFIER based on the context."
+  "Filter and sort definition ITEMS of IDENTIFIER based on the context."
   (ctags-xref--message "ctags-xref-filter-tags")
   (save-excursion
     (when (not (looking-at (regexp-quote identifier)))
@@ -93,66 +63,101 @@
                                             (car-safe (split-string defun-name ":" nil "[[:space:]]"))))))
           (is-header (and (looking-at-p (concat (regexp-quote identifier) "[>\"]"))
                           (looking-back "^[[:space:]]*include[[:space:]]*[<\"]" (line-beginning-position))))
-          protos fns
-          externvars vars)
+          (scores (make-hash-table :test 'eq :weakness t)))
       (ctags-xref--message "is-member %s, tag-type %s, function-scope %s, macro-scope %s, class-scope %s"
                            is-member tag-type function-scope macro-scope class-scope)
-      (let ((results
-             (cl-delete-if-not
-              (lambda (item)
-                (ctags-xref--message "filtering item %s..." item)
-                (let* ((tag (ctags-xref-location-tag (xref-item-location item)))
-                       (res
-                        (pcase-exhaustive tag
-                          ((cl-struct ctags-xref-tag (roles "undef") (language (or "C" "C++")))
-                           nil)
-                          ((cl-struct ctags-xref-tag (kind (or "s" "struct" "g" "enum" "u" "union")) (language (or "C" "C++")))
-                           (or (derived-mode-p '(c++-mode c++-ts-mode))
-                               tag-type))
-                          ((cl-struct ctags-xref-tag (kind (or "m" "member")) (language (or "C" "C++")) scope)
-                           (or is-member
-                               (equal scope class-scope)))
-                          ((cl-struct ctags-xref-tag (kind (or "l" "local" "z" "parameter" "L" "label")) (language (or "C" "C++")) scope)
-                           (equal scope function-scope))
-                          ((cl-struct ctags-xref-tag (kind (or "D" "macroparam")) (language (or "C" "C++")) scope)
-                           (equal scope macro-scope))
-                          ((cl-struct ctags-xref-tag (kind (or "p" "prototype"  "s" "slot" "s" "signal")) (language (or "C" "C++" "QtMoc")) scope)
-                           (and (or (not (string-prefix-p "class:" scope))
-                                    (and (string-prefix-p "class:" scope)
-                                         (or (equal scope class-scope) is-member)))
-                                (push tag protos)
-                                nil))
-                          ((cl-struct ctags-xref-tag (kind (or "f" "function")) name scope)
-                           (and (or (not (string-prefix-p "class:" scope))
-                                    (and (string-prefix-p "class:" scope)
-                                         (or (equal scope class-scope) is-member)))
-                                (push name fns)
-                                t))
-                          ((cl-struct ctags-xref-tag (kind (or "x" "externvar")))
-                           (push tag externvars)
-                           nil)
-                          ((cl-struct ctags-xref-tag (kind (or "v" "variable")) name)
-                           (push name vars)
-                           t)
-                          ((cl-struct ctags-xref-tag (kind (or "h" "header" "file")))
-                           is-header)
-                          (_
-                           t))))
-                  (ctags-xref--message "filtering item %s...%s"
-                                       item (if res "accepted" "ignored"))
-                  res))
-              items)))
-        (dolist (proto protos)
-          (let ((name (ctags-xref-location-name (xref-item-location proto))))
-            (unless (member name fns)
-              (push proto results))))
-        (dolist (xvar externvars)
-          (let ((name (ctags-xref-location-name (xref-item-location xvar))))
-            (unless (member name vars)
-              (push xvar results))))
-        (ctags-xref--c-sort results)))))
+
+      (dolist (item items)
+        (let* ((loc (xref-item-location item))
+               (tag (ctags-xref-location-tag loc))
+               (score 0))
+
+          (pcase tag
+            ((cl-struct ctags-xref-tag
+                        (language (or "C" "C++" "QtMoc"))
+                        roles kind scope)
+
+             (pcase roles
+               ("undef" (cl-decf score 5)))
+             (pcase kind
+               ((or "s" "struct" "g" "enum" "u" "union")
+                (when (derived-mode-p '(c++-mode c++-ts-mode))
+                  (cl-incf score 2))
+                (when tag-type
+                  (cl-incf score 2)))
+               ((or "m" "member")
+                (if is-member
+                    (cl-incf score 1)
+                  (when (equal scope class-scope)
+                    (cl-incf score 2))))
+               ((or "l" "local" "z" "parameter" "L" "label")
+                (when (equal scope function-scope)
+                  (cl-incf score 2))
+                (when is-member
+                  (cl-decf score 2))
+                (when tag-type
+                  (cl-decf score 2)))
+               ((or "D" "macroparam")
+                (when (equal scope macro-scope)
+                  (cl-incf score 2))
+                (when is-member
+                  (cl-decf score 2))
+                (when tag-type
+                  (cl-decf score 2)))
+               ((or "p" "prototype" "s" "slot" "signal")
+                (if (string-prefix-p "class:" scope)
+                    (if is-member
+                        (cl-incf score 1)
+                      (when (equal scope class-scope)
+                        (cl-incf score 2)))
+                  (cl-incf score 2)))
+               ((or "f" "function")
+                (if (string-prefix-p "class:" scope)
+                    (if is-member
+                        (cl-incf score 2)
+                      (when (equal scope class-scope)
+                        (cl-incf score 3)))
+                  (cl-incf score 3)))
+               ((or "x" "externvar")
+                (unless (or is-member tag-type)
+                  (cl-incf score 1)))
+               ((or "v" "variable")
+                (unless (or is-member tag-type)
+                  (cl-incf score 2)))
+               ((or "h" "header" "file")
+                (when is-header
+                  (cl-incf score 5))))))
+
+          (puthash item score scores)))
+
+      (setq items (seq-filter (lambda (item) (> (gethash item scores) 0)) items))
+
+      (setq items (sort items
+                        :key (lambda (item) (gethash item scores))
+                        :reverse t
+                        :in-place t))
+
+      (when ctags-xref-c-annotate-score
+        (dolist (item items)
+          (let ((score (gethash item scores))
+                (summary (xref-item-summary item)))
+            (setq summary (concat summary
+                                  (and score
+                                       (propertize (concat "\t" (number-to-string score))
+                                                   'face 'ctags-xref-score-face))))
+            (setf (xref-item-summary item) summary))))
+
+      items)))
 
 (cl-defmethod xref-backend-definitions :around ((_backend (eql 'ctags)) identifier &context (major-mode c-mode))
+  (let ((items (cl-call-next-method)))
+    (ctags-xref-c--filter identifier items)))
+
+(cl-defmethod xref-backend-definitions :around ((_backend (eql 'ctags)) identifier &context (major-mode c++-mode))
+  (let ((items (cl-call-next-method)))
+    (ctags-xref-c--filter identifier items)))
+
+(cl-defmethod xref-backend-definitions :around ((_backend (eql 'ctags)) identifier &context (major-mode c-ts-base-mode))
   (let ((items (cl-call-next-method)))
     (ctags-xref-c--filter identifier items)))
 

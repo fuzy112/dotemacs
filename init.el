@@ -582,6 +582,7 @@ value for USE-OVERLAYS."
                                    "\\*Warnings\\*"
                                    "\\*Compile-Log\\*"
                                    "\\*vc-git : "
+                                   "\\*xref\\*"
                                    help-mode compilation-mode
                                    flymake-diagnostics-buffer-mode))
   (defun +popper--popup-p (buffer-or-name &optional arg)
@@ -848,7 +849,6 @@ value for USE-OVERLAYS."
   ("C-<mouse-1>" . xref-find-definitions-at-mouse)
   ("C-M-<mouse-1>" . xref-find-references-at-mouse)
   :config
-  (setq xref-show-xrefs-function #'xref-show-definitions-buffer-at-bottom)
   (setq xref-search-program
         (cond ((executable-find "rg") 'ripgrep)
               ((executable-find "ugrep") 'ugrep)
@@ -869,7 +869,10 @@ value for USE-OVERLAYS."
     (if (and (locate-dominating-file default-directory "GRTAGS")
              (executable-find "global" t))
         (xref-backend-references 'gtags identifier)
-      (cl-call-next-method))))
+      (cl-call-next-method)))
+
+  (with-eval-after-load 'cc-mode
+    (require 'ctags-xref-c)))
 
 ;;;; gtags
 

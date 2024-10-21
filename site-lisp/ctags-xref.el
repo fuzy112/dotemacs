@@ -4,7 +4,7 @@
 
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Keywords: c, tools
-;; Version: 0.5.3
+;; Version: 0.6.0
 
 ;; This file is not part of GNU Emacs.
 
@@ -55,8 +55,7 @@
 
 ;; Define the ctags functions.
 (ctags-define-tag ctags-xref-tag
-  input name line pattern content kind scope roles language
-  score)
+  input name line pattern content kind scope roles language)
 
 
 (cl-defstruct (ctags-xref-location
@@ -108,16 +107,12 @@ The `hint' slot of LOCATION is used to find the position."
         (line (ctags-xref-tag-line tag))
         (column 0)
         (summary (ctags-xref-tag-content tag))
-        (scope (ctags-xref-tag-scope tag))
-        (score (or (ctags-xref-tag-score tag) 0)))
+        (scope (ctags-xref-tag-scope tag)))
     (xref-make
      (concat (string-trim (or summary name))
              (and scope
                   (propertize (concat "  " scope)
-                              'face 'ctags-xref-scope-face))
-             (and score
-                  (propertize (concat "\t" (number-to-string score))
-                              'face 'ctags-xref-score-face)))
+                              'face 'ctags-xref-scope-face)))
      (ctags-xref-make-location input line column tag))))
 
 ;;;; Xref backend
