@@ -200,6 +200,7 @@ ARGS: see `completion-read-multiple'."
 ;;;; goggles
 
 (use-package goggles
+  :delight
   :hook
   (prog-mode . goggles-mode)
   (text-mode . goggles-mode))
@@ -297,6 +298,12 @@ ARGS: see `completion-read-multiple'."
   (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
   (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
   (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode))
+
+;;;; abbrev
+
+(use-package abbrev
+  :defer t
+  :delight)
 
 ;;;; tempel
 
@@ -656,6 +663,7 @@ value for USE-OVERLAYS."
 ;;;; ws-butler
 
 (use-package ws-butler
+  :delight
   :hook
   (find-file . ws-butler-mode))
 
@@ -938,6 +946,7 @@ value for USE-OVERLAYS."
 ;;;; paredit
 
 (use-package paredit
+  :delight
   :hook
   (lisp-data-mode . paredit-mode)
   :bind
@@ -1032,6 +1041,12 @@ value for USE-OVERLAYS."
   ("C-x V" . find-variable)
   ("C-x K" . find-function-on-key)
   ("C-x L" . find-library))
+
+;;;; eldoc
+
+(use-package eldoc
+  :defer t
+  :delight)
 
 ;;;; cc-mode
 
@@ -1320,6 +1335,7 @@ value for USE-OVERLAYS."
 ;;;; clipetty
 
 (use-package clipetty
+  :delight
   :hook
   (tty-setup . clipetty-mode)
   :init
