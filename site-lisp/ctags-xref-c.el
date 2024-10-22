@@ -24,7 +24,6 @@
 ;;; Code:
 
 (require 'ctags-xref)
-(require 'cl-seq)
 
 (declare-function c-defun-name "cc-cmds.el")
 (declare-function c-cpp-define-name "cc-cmds.el")
@@ -132,10 +131,7 @@
 
       (setq items (seq-filter (lambda (item) (> (gethash item scores) 0)) items))
 
-      (setq items (cl-sort items
-                           :key (lambda (item) (gethash item scores))
-                           :reverse t
-                           :in-place t))
+      (setq items (seq-sort-by (lambda (item) (gethash item scores)) #'> items))
 
       (when ctags-xref-c-annotate-score
         (dolist (item items)
