@@ -56,15 +56,29 @@
 ;;;; nerd-icons
 
 (use-package nerd-icons
-  :hook
-  (dired-mode . nerd-icons-dired-mode)
-  (ibuffer-mode . nerd-icons-ibuffer-mode)
-  (marginalia-mode . nerd-icons-completion-marginalia-setup)
-  :init
-  (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
   :config
   (when (display-graphic-p)
     (nerd-icons-set-font)))
+
+(use-package nerd-icons-corfu
+  :defer t
+  :init
+  (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
+(use-package nerd-icons-completion
+  :delight
+  :hook
+  (marginalia-mode . nerd-icons-completion-marginalia-setup))
+
+(use-package nerd-icons-ibuffer
+  :delight
+  :hook
+  (ibuffer-mode . nerd-icons-ibuffer))
+
+(use-package nerd-icons-dired
+  :delight
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
 
 ;;;; pixel-scroll
 
