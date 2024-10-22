@@ -750,7 +750,8 @@ value for USE-OVERLAYS."
 (use-package dired
   :defer t
   :config
-  (setq dired-listing-switches "-lah"))
+  (setq dired-listing-switches "-lah"
+        dired-hide-details-hide-absolute-location t))
 
 ;;;; dired-x
 
