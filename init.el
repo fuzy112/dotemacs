@@ -874,6 +874,14 @@ value for USE-OVERLAYS."
   :config
   (setq display-line-numbers-type 'relative))
 
+;;;; eglot
+
+(use-package eglot
+  :defer t
+  :config
+  (setq eglot-autoshutdown t
+        eglot-extend-to-xref t))
+
 ;;;; xref
 
 (use-package xref
