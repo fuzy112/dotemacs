@@ -45,7 +45,8 @@
 	 (proc (get-buffer-process buf))
 	 (tty (process-tty-name proc)))
     (with-current-buffer buf
-      (add-hook 'comint-output-filter-functions #'comint-watch-for-password-prompt nil t))
+      (unless (memq #'comint-watch-for-password-prompt (default-value 'comint-output-filter-functions))
+	(add-hook 'comint-output-filter-functions #'comint-watch-for-password-prompt nil t)))
     (set-process-query-on-exit-flag proc nil)
     (setenv "GPG_TTY" tty)))
 
