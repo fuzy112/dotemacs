@@ -801,16 +801,11 @@ value for USE-OVERLAYS."
     (when (fboundp 'consult-history)
       (bind-key "M-r" #'consult-history eshell-hist-mode-map))))
 
-;;;; medit
+;;;; iedit
 
-(use-package medit
+(use-package iedit
   :bind
-  ("M-s %" . medit-dwim)
-  (:map isearch-mode-map
-        ("M-s %" . medit-from-isearch))
-  :config
-  (with-eval-after-load 'embark
-    (bind-key "%" #'medit-dwim embark-identifier-map)))
+  ("C-;" . iedit-mode))
 
 ;;;; text-mode
 
