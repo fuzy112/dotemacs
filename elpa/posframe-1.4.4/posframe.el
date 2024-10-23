@@ -125,7 +125,8 @@ effect.")
   (and (>= emacs-major-version 26)
        (not (or noninteractive
                 emacs-basic-display
-                (not (display-graphic-p))
+		(and (not (featurep 'tty-child-frames))
+                     (not (display-graphic-p)))
                 (eq (frame-parameter (selected-frame) 'minibuffer) 'only)))))
 
 ;;;###autoload
