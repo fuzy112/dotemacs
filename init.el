@@ -1114,7 +1114,11 @@ Otherwise use `consult-xref'."
 ;;;; rust-mode
 
 (use-package rust-mode
-  :defer t)
+  :defer t
+  :config
+  (define-advice rust--compile (:around (&rest args) project-prefix-buffer-name)
+    (let ((compilation-buffer-name-function #'project-prefixed-buffer-name))
+      (apply args))))
 
 ;;;; ruby
 
