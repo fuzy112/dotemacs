@@ -289,6 +289,7 @@ ARGS: see `completion-read-multiple'."
     (add-to-list 'savehist-additional-variables 'corfu-history)))
 
 (use-package corfu-terminal
+  :unless (featurep 'tty-child-frames)
   :after corfu
   :hook
   (tty-setup . corfu-terminal-mode)
