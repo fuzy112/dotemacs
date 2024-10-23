@@ -4,7 +4,7 @@
 
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Keywords: convenience
-;; Version: 0.4.5
+;; Version: 0.4.6
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -42,7 +42,8 @@
     "JENKINS_PASS=\\([a-zA-Z0-9]+\\)"
     "\\_<\\[Pp]assword:[[:space:]]+\\([^[:space:]]+\\)")
   "Regexp to match a password."
-  :type '(repeat string))
+  :type '(repeat string)
+  :safe #'list-of-strings-p)
 
 (defconst hide-pass-mask (propertize "****" 'face 'font-lock-doc-face)
   "The string to display on a overlay to hide secrets.")
