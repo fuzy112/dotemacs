@@ -32,16 +32,13 @@
                    site-lisp-directory
                    "\\.el\\'")))))
 
+(defvar site-lisp-ignore-regexps
+  '("/\\.git" "tests?\\'" "CMakeFiles\\'" "scripts?\\'" "data\\'" "build\\'" "assets\\'"
+    "images\\'"))
+
 (defun site-lisp--dir-p (file)
-  (let ((basename (file-name-nondirectory file)))
-    (and (file-directory-p file)
-	 (not (string-prefix-p "." basename))
-	 (not (string-match-p "tests?\\'" file))
-	 (not (string-match-p "CMakeFiles\\'" file))
-	 (not (string-match-p "scripts?\\'" file))
-	 (not (string-match-p "data\\'" file))
-	 (not (string-match-p "build\\'" file))
-	 (not (string-match-p "assets\\'" file)))))
+  (and (file-directory-p file)
+       (not (seq-some (lambda (re) (string-match-p re file)) site-lisp-ignore-regexps))))
 
 (defun site-lisp-dirs ()
   (cons site-lisp-directory
@@ -78,6 +75,12 @@
       (setq site-lisp-dirs (site-lisp-dirs))
       (setq load-path (append site-lisp-dirs load-path))
       (site-lisp-load-autoloads))))
+
+;;;###autoload
+(defun site-lisp-initialize ()
+  "Initialize site-lisp."
+  (interactive)
+  (site-lisp-activate t))
 
 (defun site-lisp-quickstart-refresh ()
   (interactive)
