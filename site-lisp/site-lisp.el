@@ -94,7 +94,8 @@
 	  (setq site-lisp-dirs ',(site-lisp-dirs))
 	  (setq load-path (append site-lisp-dirs load-path))))
       (insert "\n\n")
-      (insert-file-contents site-lisp-autoload-file))
+      (insert-file-contents site-lisp-autoload-file)
+      (elisp-enable-lexical-binding))
     (byte-recompile-file site-lisp-quickstart-file t)))
 
 (provide 'site-lisp)
