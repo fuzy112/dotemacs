@@ -239,7 +239,9 @@ ARGS: see `completion-read-multiple'."
           (symbol . ((styles . (orderless+flex))))
           (symbol-help . ((styles . (orderless+flex))))
           (command . ((styles . (orderless+initialism))))
-          (variable . ((styles . (orderless+initialism))))))
+          (variable . ((styles . (orderless+initialism))))
+          (eglot . ((styles . (orderless))))
+          (eglot-capf . ((styles . (orderless))))))
 
 
   (defun +orderless--consult-suffix ()
@@ -267,19 +269,24 @@ ARGS: see `completion-read-multiple'."
 (use-package corfu
   :defer 20
   :init
-  (setq completion-cycle-threshold 3
-        tab-always-indent 'complete
-        text-mode-ispell-word-completion nil
-        read-extended-command-predicate #'command-completion-default-include-p)
   (defun +corfu--load (&rest _)
     (require 'corfu))
   (advice-add 'completion-in-region :before #'+corfu--load)
   :bind
   (:map corfu-map
         ("C-q" . corfu-quick-insert)
-        ("M-q" . corfu-quick-complete))
+        ("M-q" . corfu-quick-complete)
+        ("TAB" . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ("<backtab" . corfu-previous))
   :config
   (remove-hook 'completion-in-region #'+corfu--load)
+  (setq completion-cycle-threshold 0
+        tab-always-indent 'complete
+        text-mode-ispell-word-completion nil
+        read-extended-command-predicate #'command-completion-default-include-p)
+  (setq corfu-cycle t
+        corfu-preselect 'prompt)
   (setq corfu-quick1 "aoeuip"
         corfu-quick2 "dhtnslm")
   (global-corfu-mode)
@@ -874,7 +881,17 @@ value for USE-OVERLAYS."
   :defer t
   :config
   (setq eglot-autoshutdown t
-        eglot-extend-to-xref t))
+        eglot-extend-to-xref t)
+  (when (fboundp 'cape-wrap-buster)
+    (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
+
+  (when (and (fboundp 'cape-capf-super) (fboundp 'cape-file) (fboundp 'tempel-expand))
+    (defun +eglot--capf ()
+      (setq-local completion-at-point-functions
+                  (list (cape-capf-super #'eglot-completion-at-point
+                                         #'tempel-expand
+                                         #'cape-file))))
+    (add-hook 'eglot-managed-mode-hook #'+eglot--capf)))
 
 ;;;; xref
 
