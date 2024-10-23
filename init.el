@@ -487,9 +487,6 @@ value for USE-OVERLAYS."
   ;; This adds thin lines, sorting and hides the mode line of the window.
   (advice-add #'register-preview :override #'consult-register-window)
 
-  ;; Use Consult to select xref locations with preview
-  (setq xref-show-definitions-function #'consult-xref)
-
   (defun +consult--read-file-name-function (prompt &optional dir _default mustmatch initial pred)
     (let* ((default-directory (abbreviate-file-name (or dir default-directory)))
            (minibuffer-completing-file-name t)
@@ -616,7 +613,7 @@ value for USE-OVERLAYS."
                                    "\\*Warnings\\*"
                                    "\\*Compile-Log\\*"
                                    "\\*vc-git : "
-                                   "\\*xref\\*"
+                                   xref--xref-buffer-mode
                                    help-mode compilation-mode
                                    flymake-diagnostics-buffer-mode))
   (defun +popper--popup-p (buffer-or-name &optional arg)
@@ -888,10 +885,22 @@ value for USE-OVERLAYS."
   ("C-<mouse-1>" . xref-find-definitions-at-mouse)
   ("C-M-<mouse-1>" . xref-find-references-at-mouse)
   :config
+  (defvar +xref--max-definitions-in-buffer 5)
+
+  (defun +xref--show-definition (fetcher alist)
+    "Use `xref-show-definitions-buffer' if the candidates are few.
+Otherwise use `consult-xref'."
+    (let ((xrefs (funcall fetcher)))
+      (if (length< xrefs +xref--max-definitions-in-buffer)
+          (xref-show-definitions-buffer fetcher alist)
+        (consult-xref fetcher alist))))
+
   (setq xref-search-program
         (cond ((executable-find "rg") 'ripgrep)
               ((executable-find "ugrep") 'ugrep)
-              (t 'grep))))
+              (t 'grep))
+        xref-show-definitions-function #'+xref--show-definition
+        xref-auto-jump-to-first-definition t))
 
 ;;;; ctags
 
