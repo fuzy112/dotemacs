@@ -9,5 +9,5 @@ find -name "*.elc" -delete
 rm -f package-quickstart.el
 rm -f site-lisp-quickstart.el
 
-emacs -batch -l init.el -f package-recompile-all
-emacs -batch -l init.el -f site-lisp-byte-compile-all
+emacs -batch -l early-init.el -f package-recompile-all
+emacs -batch -l early-init.el -f site-lisp-byte-compile-all

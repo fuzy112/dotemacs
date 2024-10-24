@@ -31,11 +31,11 @@
 
 ;;;; pre-init
 
-(defvar pre-init--file (locate-user-emacs-file "pre-init.el")
+(defvar pre-init-file (locate-user-emacs-file "pre-init.el")
   "The file to load before the init file.")
 
-(when (file-exists-p pre-init--file)
-  (load pre-init--file nil t))
+(when (file-exists-p pre-init-file)
+  (load pre-init-file nil t))
 
 
 ;;;; faces
