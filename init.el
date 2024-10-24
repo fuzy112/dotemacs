@@ -278,7 +278,7 @@ ARGS: see `completion-read-multiple'."
         ("M-q" . corfu-quick-complete)
         ("TAB" . corfu-next)
         ("S-TAB" . corfu-previous)
-        ("<backtab" . corfu-previous))
+        ("<backtab>" . corfu-previous))
   :config
   (remove-hook 'completion-in-region #'+corfu--load)
   (setq completion-cycle-threshold 0
