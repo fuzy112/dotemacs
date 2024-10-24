@@ -41,6 +41,10 @@
 (cl-defmethod ctags-xref-c--macro-name (&context (major-mode c-ts-base-mode))
   (c-ts-mode--emacs-current-defun-name))
 
+(cl-defmethod ctags-xref-c--defun-name :around ()
+  (and-let* ((name (cl-call-next-method)))
+    (replace-regexp-in-string "[[:space:]]+" "" name)))
+
 (defvar ctags-xref-c-annotate-score t)
 
 
