@@ -93,9 +93,17 @@
   (interactive)
   (let ((value (eval (macroexpand-all
 		      (eval-sexp-add-defvars
-		       (elisp--eval-defun-1 (macroexpand (elisp--preceding-sexp)))))
+		       (elisp--eval-defun-1 (macroexpand (pp-last-sexp)))))
 		     lexical-binding)))
     (pp-posframe-display-value value lexical-binding)))
+
+;;;###autoload
+(defun pp-posframe-macroexpand-last-sexp ()
+  "Macroexpand the sexp before point; display the result in a posframe."
+  (interactive)
+  (pp-posframe-display-value
+   (macroexpand-1 (pp-last-sexp))
+   lexical-binding))
 
 (provide 'pp-posframe)
 ;;; pp-posframe.el ends here

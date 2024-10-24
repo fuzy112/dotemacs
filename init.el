@@ -1017,7 +1017,9 @@ Otherwise use `consult-xref'."
 
 (use-package pp-posframe
   :bind
-  ("C-x C-e" . pp-posframe-eval-last-sexp))
+  ("C-x C-e" . pp-posframe-eval-last-sexp)
+  (:map emacs-lisp-mode-map
+        ("C-c M-e" . pp-posframe-macroexpand-last-sexp)))
 
 ;;;; find-func
 
