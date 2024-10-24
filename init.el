@@ -617,7 +617,7 @@ value for USE-OVERLAYS."
                                    "\\*Async Shell Command\\*"
                                    "-eat\\*$"
                                    "-vterm\\*$"
-                                   "\\*Warnings\\*"
+                                   ;; "\\*Warnings\\*"
                                    "\\*Compile-Log\\*"
                                    "\\*vc-git : "
                                    xref--xref-buffer-mode
@@ -644,6 +644,7 @@ value for USE-OVERLAYS."
   (add-to-list 'display-buffer-alist `(+popper--popup-p (+popper--display)))
   :config
   (delq '+popper--puppup-p display-buffer-alist)
+  (setq popper-group-function #'popper-group-by-project)
   (popper-mode)
   (popper-echo-mode))
 
