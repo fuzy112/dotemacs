@@ -1287,7 +1287,7 @@ Otherwise use `consult-xref'."
   (defun +term-keys--tty-setup (&optional terminal)
     ;; TERMINAL: nil means the current terminal
     (when (and (eq (framep-on-display terminal) t)
-               (not term-keys-mode))
+               (not (bound-and-true-p term-keys-mode)))
       (with-selected-frame (car (frames-on-display-list terminal))
         (define-key input-decode-map term-keys/prefix '+term-keys--autoload))))
 
