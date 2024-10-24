@@ -24,7 +24,7 @@
 
 ;;; Code:
 
-(require 'early-init nil t)
+(require 'early-init (locate-user-emacs-file "early-init.el") t)
 
 (eval-when-compile
   (require 'use-package))
