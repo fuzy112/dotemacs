@@ -73,7 +73,7 @@
 (use-package nerd-icons-ibuffer
   :delight
   :hook
-  (ibuffer-mode . nerd-icons-ibuffer))
+  (ibuffer-mode . nerd-icons-ibuffer-mode))
 
 (use-package nerd-icons-dired
   :delight
