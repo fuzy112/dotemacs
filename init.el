@@ -1008,10 +1008,15 @@ Otherwise use `consult-xref'."
   (setq-default elisp-flymake-byte-compile-load-path load-path)
   :bind
   (:map emacs-lisp-mode-map
-        ("C-M-x" . compile-defun)
         ("C-c C-l" . emacs-lisp-native-compile-and-load))
   (:map lisp-interaction-mode-map
         ("C-c C-j" . eval-print-last-sexp)))
+
+;;;; pp
+
+(use-package pp
+  :bind
+  ("M-:" . pp-eval-expression))
 
 ;;;; pp-posframe
 
@@ -1019,6 +1024,7 @@ Otherwise use `consult-xref'."
   :bind
   ("C-x C-e" . pp-posframe-eval-last-sexp)
   (:map emacs-lisp-mode-map
+        ("C-M-x" . pp-posframe-compile-defun)
         ("C-c M-e" . pp-posframe-macroexpand-last-sexp)))
 
 ;;;; find-func

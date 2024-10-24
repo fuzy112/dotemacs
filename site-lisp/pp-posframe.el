@@ -105,5 +105,30 @@
    (macroexpand-1 (pp-last-sexp))
    lexical-binding))
 
+;;;###autoload
+(defun pp-posframe-compile-defun ()
+  "Compile and evaluate the current top-level form.
+Display the result in a posframe."
+  (interactive)
+  (save-excursion
+    (end-of-defun)
+    (beginning-of-defun)
+    (let* ((byte-compile-current-file (current-buffer) )
+	   (byte-compile-current-buffer (current-buffer))
+	   (start-read-position (point))
+	   (byte-compile-last-warned-form 'nothing)
+	   (symbols-with-pos-enabled t)
+	   (value (eval
+		   (displaying-byte-compile-warnings
+		    (byte-compile-sexp
+		     (let ((form (read-positioning-symbols (current-buffer))))
+		       (push form byte-compile-form-stack)
+		       (eval-sexp-add-defvars
+			form
+			start-read-position))))
+		   lexical-binding)))
+      (end-of-defun)
+      (pp-posframe-display-value value lexical-binding))))
+
 (provide 'pp-posframe)
 ;;; pp-posframe.el ends here
