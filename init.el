@@ -1013,73 +1013,11 @@ Otherwise use `consult-xref'."
   (:map lisp-interaction-mode-map
         ("C-c C-j" . eval-print-last-sexp)))
 
-;;;; pp
+;;;; pp-posframe
 
-(use-package pp
+(use-package pp-posframe
   :bind
-  ("C-x C-e" . pp-eval-last-sexp)
-  :config
-  (defvar +pp--popon nil)
-  (defvar +pp--output-buffer nil)
-
-  (defun +pp--post-command ()
-    (and (poponp +pp--popon)
-         (not (memq this-command '(pp-eval-last-sexp
-                                   pp-eval-expression
-                                   pp-macroexpand-last-sexp
-                                   pp-macroexpand-expression)))
-         (popon-kill +pp--popon)))
-  (add-hook 'post-command-hook #'+pp--post-command)
-
-  (defun +pp--copy-output-as-kill ()
-    (interactive)
-    (kill-new (substring-no-properties (popon-text +pp--popon))))
-
-  (defun +pp--insert-output ()
-    (interactive)
-    (insert (substring-no-properties (popon-text +pp--popon))))
-
-  (defun +pp--show-buffer ()
-    (interactive)
-    (display-buffer +pp--output-buffer))
-
-  (defvar-keymap +pp--output-map
-    "w" #'+pp--copy-output-as-kill
-    "M-w" #'+pp--copy-output-as-kill
-    "i" #'+pp--insert-output
-    "b" #'+pp--show-buffer
-    "q" #'ignore)
-
-  (define-advice pp-display-expression
-      (:override (expression out-buffer-name &optional lisp) popon)
-    (let* ((lexical lexical-binding)
-           (temp-buffer-show-function
-            (lambda (buf)
-              (with-current-buffer (window-buffer (selected-window))
-                (let ((text (with-current-buffer buf (string-trim-right (buffer-string))))
-                      (pos (popon-x-y-at-pos (point)))
-                      width)
-                  (setq width (+ 4 (apply #'max (mapcar #'length (string-lines text)))))
-                  (put-text-property 0 1 'display (concat (propertize " => " 'face 'shadow)
-                                                          (substring text 0 1))
-                                     text)
-                  (when (poponp +pp--popon) (popon-kill +pp--popon))
-                  (setq +pp--popon (popon-create (cons text width) pos))
-                  (message "")          ; clear the message
-                  (setq +pp--output-buffer out-buffer-name)
-                  (set-transient-map +pp--output-map))))))
-      (with-output-to-temp-buffer out-buffer-name
-        (if lisp
-            (with-current-buffer standard-output
-              (pp-emacs-lisp-code expression))
-          (pp expression))
-        (with-current-buffer standard-output
-          (delay-mode-hooks
-            (emacs-lisp-mode)
-            (setq lexical-binding lexical)
-            (setq buffer-read-only nil)
-            (setq-local font-lock-verbose nil)
-            (font-lock-ensure)))))))
+  ("C-x C-e" . pp-posframe-eval-last-sexp))
 
 ;;;; find-func
 
