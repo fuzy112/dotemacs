@@ -641,9 +641,9 @@ value for USE-OVERLAYS."
   (defun +popper--display (buffer alist)
     (funcall popper-display-function buffer alist))
 
-  (add-to-list 'display-buffer-alist `(+popper--popup-p (+popper--display)))
+  (add-to-list 'display-buffer-alist '(+popper--popup-p (+popper--display)))
   :config
-  (delq '+popper--puppup-p display-buffer-alist)
+  (setq display-buffer-alist (assq-delete-all '+popper--popup-p display-buffer-alist))
   (setq popper-group-function #'popper-group-by-project)
   (popper-mode)
   (popper-echo-mode))
