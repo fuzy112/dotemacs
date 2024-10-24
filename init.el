@@ -1343,13 +1343,6 @@ Otherwise use `consult-xref'."
   :config
   (global-clipetty-mode))
 
-;;;; which-key
-
-(use-package which-key
-  :disabled
-  :config
-  (which-key-mode))
-
 ;;;; repeat
 
 (use-package repeat
