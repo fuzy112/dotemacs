@@ -644,6 +644,17 @@ value for USE-OVERLAYS."
   (add-to-list 'display-buffer-alist '(+popper--popup-p (+popper--display)))
   :config
   (setq display-buffer-alist (assq-delete-all '+popper--popup-p display-buffer-alist))
+
+  ;; delay select-window to post-command-hook
+  (defvar +popper--delayed-window nil)
+  (defun +popper--select-delayed-window ()
+    (when +popper--delayed-window
+      (select-window +popper--delayed-window)
+      (setq +popper--delayed-window nil)))
+  (add-hook 'post-command-hook '+popper--select-delayed-window 90)
+  (defun +popper--select-popup-delayed (buf alist)
+    (setq +popper--delayed-window (popper-display-popup-at-bottom buf alist)))
+  (setq popper-display-function '+popper--select-popup-delayed)
   (setq popper-group-function #'popper-group-by-project)
   (popper-mode)
   (popper-echo-mode))
