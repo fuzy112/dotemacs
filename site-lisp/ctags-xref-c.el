@@ -50,6 +50,7 @@
 
 (defun ctags-xref-c--filter (identifier items)
   "Filter and sort definition ITEMS of IDENTIFIER based on the context."
+  (ctags-xref--message "")
   (ctags-xref--message "ctags-xref-filter-tags")
   (save-excursion
     (when (not (looking-at (regexp-quote identifier)))
@@ -74,7 +75,6 @@
         (let* ((loc (xref-item-location item))
                (tag (ctags-xref-location-tag loc))
                (score 0))
-
           (pcase tag
             ((cl-struct ctags-xref-tag
                         (language (or "C" "C++" "QtMoc"))
@@ -114,7 +114,7 @@
                       (when (equal scope class-scope)
                         (cl-incf score 2)))
                   (cl-incf score 2)))
-               ((or "f" "function")
+               ((or "f" "function" "m" "macro")
                 (if (string-prefix-p "class:" scope)
                     (if is-member
                         (cl-incf score 2)
@@ -130,7 +130,7 @@
                ((or "h" "header" "file")
                 (when is-header
                   (cl-incf score 5))))))
-
+          (ctags-xref--message "tag: %S, score: %S" tag score)
           (puthash item score scores)))
 
       (setq items (seq-filter (lambda (item) (> (gethash item scores) 0)) items))

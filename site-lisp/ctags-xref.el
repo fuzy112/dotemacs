@@ -125,18 +125,13 @@ The `hint' slot of LOCATION is used to find the position."
       (require 'ctags-xref)
       'ctags)))
 
-(defvar ctags-xref-debug nil)
+(defvar ctags-xref-debug t)
 
-(defun ctags-xref--message (&rest args)
+(defun ctags-xref--message (fmt &rest args)
   (if ctags-xref-debug
-      (apply #'message args)))
-
-(defvar ctags-xref-filter-functions nil)
-
-(defun ctags-xref-filter (identifier tags)
-  (dolist (fn ctags-xref-filter-functions)
-    (setq tags (funcall fn identifier tags)))
-  tags)
+      (let ((msg (apply #'format-message (concat fmt "\n") args)))
+	(with-current-buffer (get-buffer-create " *ctags-xref-debug*")
+	  (insert msg)))))
 
 (cl-defmethod xref-backend-definitions ((_backend (eql 'ctags)) identifier)
   (let ((xrefs)
