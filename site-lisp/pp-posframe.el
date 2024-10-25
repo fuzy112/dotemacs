@@ -40,6 +40,10 @@
   "A list of commands to ignore when hiding the posframe."
   :type '(repeat symbol))
 
+(defcustom pp-posframe-parameters ()
+  "A plist of parameters used to show the posframe."
+  :type '(plist :key-type symbol))
+
 (defun pp-posframe--pre-command ()
   "Hide the posframe if `this-command' is not in `pp-posframe--pre-command'."
   (unless (memq this-command pp-posframe-hide-ignore-commands)
@@ -82,9 +86,7 @@
       (setq lexical-binding lexical)
       (font-lock-ensure))
     (add-text-properties 1 2 `(display ,(concat "=> " (buffer-substring 1 2)))))
-  (posframe-show pp-posframe-buffer-name
-		 :position (point)
-		 :border-width 1)
+  (apply #'posframe-show pp-posframe-buffer-name pp-posframe-parameters)
   (set-transient-map pp-posframe-map))
 
 ;;;###autoload

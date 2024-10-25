@@ -1037,7 +1037,11 @@ Otherwise use `consult-xref'."
   ("C-x C-e" . pp-posframe-eval-last-sexp)
   (:map emacs-lisp-mode-map
         ("C-M-x" . pp-posframe-compile-defun)
-        ("C-c M-e" . pp-posframe-macroexpand-last-sexp)))
+        ("C-c M-e" . pp-posframe-macroexpand-last-sexp))
+  :config
+  (setq pp-posframe-parameters `( :border-width 2
+                                  :boredr-color ,(modus-themes-get-color-value 'border)
+                                  :background-color ,(modus-themes-get-color-value 'bg-dim))))
 
 ;;;; find-func
 
