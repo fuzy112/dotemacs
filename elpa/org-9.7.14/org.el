@@ -9,7 +9,7 @@
 ;; URL: https://orgmode.org
 ;; Package-Requires: ((emacs "26.1"))
 
-;; Version: 9.7.13
+;; Version: 9.7.14
 
 ;; This file is part of GNU Emacs.
 ;;
@@ -8269,7 +8269,19 @@ See the docstring of `org-open-file' for details."
   (mouse-set-point ev)
   (when (eq major-mode 'org-agenda-mode)
     (org-agenda-copy-local-variable 'org-link-abbrev-alist-local))
-  (org-open-at-point))
+  ;; FIXME: This feature is actually unreliable - if we are in non-Org
+  ;; buffer and the link happens to be inside what Org parser
+  ;; recognizes as verbarim (for exampe, src block),
+  ;; `org-open-at-point' will do nothing.
+  ;; We might have used `org-open-at-point-global' instead, but it is
+  ;; not exactly the same. For example, it will have no way to open
+  ;; link abbreviations. So, suppressing parser complains about
+  ;; non-Org buffer to keep the feature working at least to the extent
+  ;; it did before.
+  (let ((warning-suppress-types
+         (cons '(org-element org-element-parser)
+               warning-suppress-types)))
+    (org-open-at-point)))
 
 (defvar org-window-config-before-follow-link nil
   "The window configuration before following a link.
@@ -21657,10 +21669,10 @@ When TO-HEADING is non-nil, go to the next heading or `point-max'."
   "Skip planning line and properties drawer in current entry.
 
 When optional argument FULL is t, also skip planning information,
-clocking lines and any kind of drawer.
+clocking lines, any kind of drawer, and blank lines
 
 When FULL is non-nil but not t, skip planning information,
-properties, clocking lines and logbook drawers."
+properties, clocking lines, logbook drawers, and blank lines."
   (org-back-to-heading t)
   (forward-line)
   ;; Skip planning information.
@@ -21675,7 +21687,7 @@ properties, clocking lines and logbook drawers."
       (let ((end (save-excursion (outline-next-heading) (point)))
 	    (re (concat "[ \t]*$" "\\|" org-clock-line-re)))
 	(while (not (eobp))
-	  (cond ;; Skip clock lines.
+	  (cond ;; Skip clock lines and blank lines.
 	   ((looking-at-p re) (forward-line))
 	   ;; Skip logbook drawer.
 	   ((looking-at-p org-logbook-drawer-re)
