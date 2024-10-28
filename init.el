@@ -620,7 +620,7 @@ value for USE-OVERLAYS."
                                    ;; "\\*Warnings\\*"
                                    "\\*Compile-Log\\*"
                                    "\\*vc-git : "
-                                   xref--xref-buffer-mode
+                                   ;;xref--xref-buffer-mode
                                    help-mode compilation-mode
                                    flymake-diagnostics-buffer-mode))
   (defun +popper--popup-p (buffer-or-name &optional arg)
@@ -921,7 +921,7 @@ value for USE-OVERLAYS."
 Otherwise use `consult-xref'."
     (let ((xrefs (funcall fetcher)))
       (if (length< xrefs +xref--max-definitions-in-buffer)
-          (xref-show-definitions-buffer fetcher alist)
+          (xref-show-definitions-buffer-at-bottom fetcher alist)
         (consult-xref fetcher alist))))
 
   (setq xref-search-program
