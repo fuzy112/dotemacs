@@ -340,7 +340,7 @@ going down SGR-LIST one element at a time."
                   (eq 2 (cl-second SGR-list)))          ; Truecolor (24-bit) FG color
              :skip 5)
             (when xterm-color--support-truecolor
-              (if-let ((r (cl-third SGR-list))
+              (if-let* ((r (cl-third SGR-list))
                        (g (cl-fourth SGR-list))
                        (b (cl-fifth SGR-list)))
                   (if (or (> r 255) (> g 255) (> b 255))
@@ -352,7 +352,7 @@ going down SGR-LIST one element at a time."
     (:match ((and (eq 38 (cl-first SGR-list))
                   (eq 5 (cl-second SGR-list)))
              :skip 3)                                   ; XTERM 256 FG color
-            (if-let ((color (cl-third SGR-list)))
+            (if-let* ((color (cl-third SGR-list)))
                 (if (> color 255)
                     (xterm-color--message "SGR 38;5;%s exceeds range" color)
                   (set-f! color))
@@ -363,7 +363,7 @@ going down SGR-LIST one element at a time."
                   (eq 2 (cl-second SGR-list)))          ; Truecolor (24-bit) BG color
              :skip 5)
             (when xterm-color--support-truecolor
-              (if-let ((r (cl-third SGR-list))
+              (if-let* ((r (cl-third SGR-list))
                        (g (cl-fourth SGR-list))
                        (b (cl-fifth SGR-list)))
                   (if (or (> r 255) (> g 255) (> b 255))
@@ -376,7 +376,7 @@ going down SGR-LIST one element at a time."
     (:match ((and (eq 48 (cl-first SGR-list))
                   (eq 5 (cl-second SGR-list)))
              :skip 3)                                   ; XTERM 256 BG color
-            (if-let ((color (cl-third SGR-list)))
+            (if-let* ((color (cl-third SGR-list)))
                 (if (> color 255)
                     (xterm-color--message "SGR 48;5;%s exceeds range" color)
                   (set-b! color))

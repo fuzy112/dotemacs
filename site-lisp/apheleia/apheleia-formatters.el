@@ -941,7 +941,7 @@ cmd is to be run."
       (when (memq 'npx command)
         (setq command (remq 'npx command))
         (when remote-match
-          (when-let ((project-dir
+          (when-let* ((project-dir
                       (locate-dominating-file default-directory
                                               "node_modules")))
             (let ((binary
@@ -980,7 +980,7 @@ machine from the machine file is available on"))
       (when (or (memq 'input command) (memq 'inplace command))
         (let ((input-fname (apheleia--make-temp-file
                             run-on-remote "apheleia" nil
-                            (when-let ((file-name
+                            (when-let* ((file-name
                                         (or buffer-file-name
                                             (apheleia--safe-buffer-name))))
                               (file-name-extension file-name 'period)))))
@@ -1031,7 +1031,7 @@ or list of strings: %S" arg)))
       ;; command executable is a script that contains a shebang. Parse
       ;; the shebang and insert the binary into the command.
       (when (member system-type '(ms-dos windows-nt))
-        (when-let ((arg1-file (locate-file (car command) exec-path)))
+        (when-let* ((arg1-file (locate-file (car command) exec-path)))
           (with-temp-buffer
             (insert-file-contents arg1-file nil 0 2)
             (when (string= (buffer-string) "#!")
@@ -1063,7 +1063,7 @@ purposes."
   ;; resolve for the whole formatting process (for example
   ;; `apheleia--current-process').
   (with-current-buffer buffer
-    (when-let ((exec-path
+    (when-let* ((exec-path
                 (append `(,(expand-file-name
                             "scripts/formatters"
                             (file-name-directory
@@ -1082,7 +1082,7 @@ purposes."
            (lambda (err stdout)
              (if err
                  (funcall callback err stdout)
-               (when-let
+               (when-let*
                    ((output-fname (apheleia-formatter--output-fname ctx)))
                  ;; Load output-fname contents into the stdout buffer.
                  (with-current-buffer stdout
@@ -1302,7 +1302,7 @@ even if a formatter is configured."
                        (formatters unset)
                        (mode major-mode))
                   (cl-dolist (pred apheleia-mode-predicates)
-                    (when-let ((new-mode (funcall pred)))
+                    (when-let* ((new-mode (funcall pred)))
                       (setq mode new-mode)
                       (cl-return)))
                   (cl-dolist (entry apheleia-mode-alist

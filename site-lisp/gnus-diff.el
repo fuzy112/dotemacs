@@ -21,7 +21,7 @@
 (defun gnus-article-highlight-diffs ()
   "Highlight the accessible part of the buffer using `delta (1)'."
   (interactive nil gnus-article-mode)
-  (when-let ((delta-program (executable-find "delta"))
+  (when-let* ((delta-program (executable-find "delta"))
              (start (point-min))
              (article-buffer (current-buffer))
              (color-buffer (get-buffer-create " *delta-color*")))

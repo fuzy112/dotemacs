@@ -137,7 +137,7 @@ The `hint' slot of LOCATION is used to find the position."
   (let ((xrefs)
         (tags (ctags-xref-tag-readtags "-PEne" "-" identifier)))
     (dolist (tag tags)
-      (when-let ((xref (ctags-xref-make-item tag)))
+      (when-let* ((xref (ctags-xref-make-item tag)))
         (push xref xrefs)))
     (nreverse xrefs)))
 

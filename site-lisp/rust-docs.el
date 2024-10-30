@@ -1931,7 +1931,7 @@ Extracted by using
 (cl-defmethod rust-docs--shr-tag-pre (dom)
   "Fontify DOM as rust code block."
   (let ((start (point)))
-    (if-let ((mode (and rust-docs-fontify-code-blocks
+    (if-let* ((mode (and rust-docs-fontify-code-blocks
 			(or (and (fboundp 'rust-mode) 'rust-mode)
 			    (and (fboundp 'rust-ts-mode) 'rust-ts-mode)))))
 	(insert

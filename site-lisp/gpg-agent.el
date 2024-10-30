@@ -33,7 +33,7 @@
   ;; Unset GPG_TTY to prevent the pinentry from messing up emacs UI.
   (setenv "GPG_TTY")
 
-  (when-let ((proc (get-buffer-process " *gpg-tty*")))
+  (when-let* ((proc (get-buffer-process " *gpg-tty*")))
     (set-process-buffer proc nil)
     (kill-process proc))
 

@@ -225,7 +225,7 @@ possess the same signature as `consult-find'."
       (cl-remove-if     (lambda (cand) (bookmark-get-handler cand)))
       (cl-remove-if-not (lambda (cand)
                           (let ((bm (bookmark-get-bookmark-record cand)))
-                            (when-let ((file (alist-get 'filename bm)))
+                            (when-let* ((file (alist-get 'filename bm)))
                               (if (file-remote-p file)
                                   (string-suffix-p "/" file)
                                 (file-directory-p file))))))
@@ -269,7 +269,7 @@ REFRESH is non-nil force the hash to be rebuilt."
 
 (defun consult-dir--project-dirs ()
   "Return list of project directories."
-  (when-let ((projects (consult-dir--project-list-make)))
+  (when-let* ((projects (consult-dir--project-list-make)))
     (hash-table-keys projects)))
 
 (defun consult-dir--recentf-dirs ()

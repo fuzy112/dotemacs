@@ -89,7 +89,7 @@
               ;; (message "%S" (cons key value))
               (pcase-dolist (`(,mode . ,vars) vi-modeline-known-vars-alist)
 		(when (or (null mode) (derived-mode-p mode))
-                  (when-let ((el-var (alist-get key vars)))
+                  (when-let* ((el-var (alist-get key vars)))
                     ;; (message "mode: %S key: %S el-var: %S value: %S" mode key el-var value)
                     (setf (alist-get el-var file-local-variables-alist) value)
 		    (cl-incf vi-modeline-var-count)))))))))

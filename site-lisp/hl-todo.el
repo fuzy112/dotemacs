@@ -210,7 +210,7 @@ including alphanumeric characters, cannot be used here."
 (defun hl-todo--setup-regexp ()
   "Setup keyword regular expression.
 See the function `hl-todo--regexp'."
-  (when-let ((bomb (assoc "???" hl-todo-keyword-faces)))
+  (when-let* ((bomb (assoc "???" hl-todo-keyword-faces)))
     ;; If the user customized this variable before we started to
     ;; treat the strings as regexps, then the string "???" might
     ;; still be present.  We have to remove it because it results

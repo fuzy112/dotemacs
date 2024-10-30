@@ -63,7 +63,7 @@ always returns nil to defer to the formatter."
               (typescript-ts-mode 'typescript-ts-mode-indent-offset)
               (yaml-mode 'yaml-indent-offset))))
 
-    (when-let ((indent (and indent-var
+    (when-let* ((indent (and indent-var
                             (boundp indent-var)
                             (symbol-value indent-var))))
       (list indent-flag (number-to-string indent))))))
@@ -91,12 +91,12 @@ and `apheleia-formatters-respect-fill-column' return a list of FILL-FLAG and
 Look for a file up recursively from the current directory until FILE-NAME is
 found. If found return a list of FILE-FLAG and the absolute path to the located
 FILE-NAME."
-  (when-let ((file (locate-dominating-file default-directory file-name)))
+  (when-let* ((file (locate-dominating-file default-directory file-name)))
     (list file-flag (concat (expand-file-name file) file-name))))
 
 (defun apheleia-formatters-extension-p (&rest exts)
   "Assert whether current buffer has an extension in EXTS."
-  (when-let ((name buffer-file-name)
+  (when-let* ((name buffer-file-name)
              (ext (file-name-extension name)))
     (cl-find-if (apply-partially #'string-equal ext)
                 exts)))
@@ -117,7 +117,7 @@ FILE-NAME."
   "Get a file-extension based on the current `major-mode'.
 If FLAG is set this function returns a list of FLAG and then the extension.
 Otherwise return the extension only."
-  (when-let ((ext
+  (when-let* ((ext
               (alist-get major-mode apheleia-formatters-mode-extension-assoc)))
     (if flag
         (list flag ext)
@@ -126,8 +126,8 @@ Otherwise return the extension only."
 (defun apheleia-formatters-local-buffer-file-name (&optional file-name)
   "Get FILE-NAME without any remote components.
 FILE-NAME defaults to variable `buffer-file-name'."
-  (when-let ((file-name (or file-name buffer-file-name)))
-    (if-let ((remote (file-remote-p file-name)))
+  (when-let* ((file-name (or file-name buffer-file-name)))
+    (if-let* ((remote (file-remote-p file-name)))
         (substring file-name (length remote))
       file-name)))
 

@@ -131,10 +131,10 @@ and only FIELDS will be extracted."
                                   line pos)
                (let ((slot-name (intern (match-string-no-properties 1 line)))
                      (slot-value (match-string 2 line)))
-                 (when-let ((pos (seq-position ',fields slot-name)))
+                 (when-let* ((pos (seq-position ',fields slot-name)))
                    (setf (aref props (1+ pos)) slot-value)))
                (setq pos (match-end 0)))
-             (if-let ((line-str (,(intern (format "%s-line" name)) props)))
+             (if-let* ((line-str (,(intern (format "%s-line" name)) props)))
                  (setf (,(intern (format "%s-line" name)) props) (string-to-number line-str))
                (if number
                    (setf (,(intern (format "%s-line" name)) props) (string-to-number number))

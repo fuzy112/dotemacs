@@ -116,7 +116,7 @@ to represent the default icon, and must be present."
 
 It receives METADATA, ignores it, and outputs a function that takes a candidate
 and returns the icon."
-  (when-let ((kindfunc (plist-get completion-extra-properties :company-kind)))
+  (when-let* ((kindfunc (plist-get completion-extra-properties :company-kind)))
     (lambda (cand)
       (let* ((kind (funcall kindfunc cand))
              (icon-entry (or (alist-get (or kind t) nerd-icons-corfu-mapping)

@@ -158,7 +158,7 @@
   :init-value #'ctags-menu:-o-init-value)
 
 (defun ctags-menu:-o-init-value (obj)
-  (when-let ((file (ctags-tags-file-path)))
+  (when-let* ((file (ctags-tags-file-path)))
     (setf (oref obj value) (file-relative-name file))))
 
 (transient-define-infix ctags-menu:-I ()

@@ -152,7 +152,7 @@
   "Hash table used by the function `good-doc--cache'.")
 
 (defun good-doc--cache (&rest args)
-  (if-let ((data (gethash args good-doc--cache)))
+  (if-let* ((data (gethash args good-doc--cache)))
       (prog1 (cdr data)
         (timer-set-time (car data) (time-add nil good-doc-cache-timeout)))
     (let ((val (apply args))
@@ -337,9 +337,9 @@ PROMPT is passed to `completing-read'."
       (expand-file-name path (file-name-parent-directory doc)))))
 
 (defun good-doc--filter-doc (doc)
-  (when-let ((body (dom-by-tag doc 'body)))
+  (when-let* ((body (dom-by-tag doc 'body)))
     (dom-set-attributes body nil))
-  (when-let ((nav (dom-by-class doc "navigation")))
+  (when-let* ((nav (dom-by-class doc "navigation")))
     (dom-remove-node (dom-parent doc nav) nav))
   doc)
 

@@ -91,10 +91,10 @@
         (setf .arguments (split-string-shell-command .command)))
     (if (not (listp .arguments))
         (setf .arguments (append .arguments nil)))
-    (when-let ((node (cl-member "-o" .arguments :test #'equal)))
+    (when-let* ((node (cl-member "-o" .arguments :test #'equal)))
       (setf (nth 1 node) "/dev/null")
       (setf output t))
-    (when-let ((node (cl-member-if
+    (when-let* ((node (cl-member-if
                       (lambda (el)
                         (equal (expand-file-name el .directory)
                                .file))

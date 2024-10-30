@@ -101,9 +101,9 @@
 
 (cl-defmethod gtkdoc--parse-xml (url)
   (gtkdoc--with-url-file-handler
-    (with-work-buffer
-      (insert-file-contents url)
-      (libxml-parse-xml-region  nil nil url))))
+   (with-work-buffer
+     (insert-file-contents url)
+     (libxml-parse-xml-region  nil nil url))))
 
 (cl-defmethod gtkdoc--extract-symbols (url)
   (unless (and (file-exists-p gtkdoc-cache-directory)
@@ -205,9 +205,9 @@
 (cl-defmethod gtkdoc--shr-tag-pre (dom)
   "Fontify DOM as code block."
   (let ((start (point)))
-    (if-let ((mode (and gtkdoc-fontify-code-blocks
-			(if (fboundp 'c-ts-mode) 'c-ts-mode
-                          'c-mode))))
+    (if-let* ((mode (and gtkdoc-fontify-code-blocks
+			 (if (fboundp 'c-ts-mode) 'c-ts-mode
+                           'c-mode))))
 	(insert
 	 (with-work-buffer
 	   (shr-tag-pre dom)
@@ -235,7 +235,7 @@
     (setq url-current-object (url-generic-parse-url url))
     (let ((shr-target-id (url-target url-current-object)))
       (goto-char (point-min))
-      (when-let ((match (text-property-search-forward 'shr-target-id shr-target-id #'member)))
+      (when-let* ((match (text-property-search-forward 'shr-target-id shr-target-id #'member)))
         (goto-char (prop-match-beginning match))))
     (current-buffer)))
 

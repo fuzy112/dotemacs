@@ -201,7 +201,7 @@
 		       (handler . ,#'url-bookmark-jump)
 		       (annotation . ,(concat description "\n" notes))))
 	     (name (if (string-empty-p title) url title)))
-	 (if-let ((existing (cl-find url bookmark-alist
+	 (if-let* ((existing (cl-find url bookmark-alist
 				     :key (pcase-lambda (`(,_name . ,data)) (alist-get 'location data))
 				     :test #'equal)))
 	     (progn

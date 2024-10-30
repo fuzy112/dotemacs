@@ -56,7 +56,7 @@ See `ee-start-terminal-function' and
       (setq default-directory dir)
       (let ((inhibit-read-only t))
 	(erase-buffer))
-      (when-let ((p (get-buffer-process (current-buffer))))
+      (when-let* ((p (get-buffer-process (current-buffer))))
 	(delete-process p))
       (unless (eq major-mode #'tui-eat-mode)
 	(tui-eat-mode))

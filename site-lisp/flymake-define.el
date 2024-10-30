@@ -269,7 +269,7 @@ function or a form."
                                `(list ,@(append command nil))))))
              (write-region nil nil tmpfile nil 0)
 
-             (when-let ((cell (memq :input cmd)))
+             (when-let* ((cell (memq :input cmd)))
                (setcar cell file))
 
              (condition-case err
