@@ -1013,6 +1013,13 @@ Otherwise use `consult-xref'."
   (:map paredit-mode-map
         ("M-s" . nil)))
 
+;;;; paren-face
+
+(use-package paren-face
+  :after lisp-mode
+  :config
+  (global-paren-face-mode))
+
 ;;;; elisp-mode
 
 (use-package elisp-mode
