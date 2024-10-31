@@ -1453,15 +1453,17 @@ minibuffer."
     (add-hook hook #'lin-mode))
   :config
   (setq lin-face 'lin-magenta)
-  (lin-global-mode))
+  (lin-global-mode)
 
-(use-package hl-line
-  :defer t
-  :config
-  (defun +hl-line--next-error-h ()
+  (defun +lin-line--next-error-h ()
     (with-current-buffer next-error-buffer
-      (hl-line-highlight)))
-  (add-hook 'next-error-hook '+hl-line--next-error-h))
+      (save-selected-window
+        (when-let* ((win (get-buffer-window (current-buffer))))
+          (select-window win)
+          (recenter))
+        (when lin-mode
+          (hl-line-highlight)))))
+  (add-hook 'next-error-hook '+lin-line--next-error-h))
 
 ;;;; emacs-server
 
