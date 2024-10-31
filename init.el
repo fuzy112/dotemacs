@@ -578,6 +578,17 @@ value for USE-OVERLAYS."
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow))))
 
 
+(use-package embark-consult
+  :defer t
+  :config
+  (defun +embark-consult-export-grep--headings (&rest _)
+    (save-excursion
+      (goto-char (point-max))
+      (let ((inhibit-read-only t))
+        (grep--heading-filter))))
+  (advice-add #'embark-consult-export-grep :after #'+embark-consult-export-grep--headings))
+
+
 (use-package consult-dir
   :bind
   ("C-x C-d" . consult-dir)
