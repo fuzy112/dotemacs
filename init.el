@@ -1018,6 +1018,10 @@ Otherwise use `consult-xref'."
 (use-package paren-face
   :after lisp-mode
   :config
+  (defun +paren-face--update-color ()
+    (set-face-foreground 'parenthesis (modus-themes-get-color-value 'border)))
+  (+paren-face--update-color)
+  (add-hook 'modus-themes-after-load-theme-hook '+paren-face--update-color)
   (global-paren-face-mode))
 
 ;;;; elisp-mode
