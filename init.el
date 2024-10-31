@@ -1455,6 +1455,14 @@ minibuffer."
   (setq lin-face 'lin-magenta)
   (lin-global-mode))
 
+(use-package hl-line
+  :defer t
+  :config
+  (defun +hl-line--next-error-h ()
+    (with-current-buffer next-error-buffer
+      (hl-line-highlight)))
+  (add-hook 'next-error-hook '+hl-line--next-error-h))
+
 ;;;; emacs-server
 
 (use-package server
