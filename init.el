@@ -666,7 +666,8 @@ value for USE-OVERLAYS."
   (defun +popper--select-popup-delayed (buf alist)
     (setq +popper--delayed-window (popper-display-popup-at-bottom buf alist)))
   (setq popper-display-function '+popper--select-popup-delayed)
-  (setq popper-group-function #'popper-group-by-project)
+  (with-eval-after-load 'project
+    (setq popper-group-function #'popper-group-by-project))
   (popper-mode)
   (popper-echo-mode))
 
