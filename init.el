@@ -570,7 +570,10 @@ value for USE-OVERLAYS."
     (setq input (cdr (orderless-compile input)))
     (cons
      (mapcar (lambda (r) (consult--convert-regexp r type)) input)
-     (lambda (str) (orderless--highlight input t str))))
+     (lambda (str)
+       (let ((orderless-match-faces orderless-match-faces))
+         (setq orderless-match-faces (vconcat '(consult-highlight-match) orderless-match-faces))
+         (orderless--highlight input t str)))))
 
   (setq-default consult--regexp-compiler #'+consult--orderless-regexp-compiler)
 
