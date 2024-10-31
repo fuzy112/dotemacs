@@ -2,7 +2,7 @@
 ;; Copyright © 2024  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
-;; Version: 0.1.3
+;; Version: 0.1.4
 ;; Keywords: tools
 
 ;; This file is NOT part of GNU Emacs.
@@ -98,7 +98,7 @@
 
 (defun ctags-menu--args ()
   (let* ((default-directory ctags-menu--directory)
-         (args (transient-get-value)))
+         (args (transient-args 'ctags-menu)))
     (append (seq-filter #'atom args)
             (and-let* ((pseudo-tags (assoc "--pseudo-tags=" args)))
               (list (concat "--pseudo-tags=" (string-join (cdr pseudo-tags) ","))))
@@ -145,8 +145,10 @@
 
 (defun ctags-menu--read-files (prompt initial-input hist)
   (let ((default-directory ctags-menu--directory))
-    (completing-read-multiple prompt (directory-files-recursively "." "." t)
-                              #'file-exists-p t initial-input hist)))
+    (mapcar #'substitute-in-file-name
+            (completing-read-multiple prompt
+                                      #'completion-file-name-table
+                                      #'file-exists-p t initial-input hist))))
 
 (transient-define-infix ctags-menu:-o ()
   :key "-o"
@@ -217,7 +219,7 @@
   :key "RET"
   (interactive (list (ctags-menu--args)))
   (let ((default-directory ctags-menu--directory))
-    (compilation-start (concat "ctags " (mapconcat #'shell-quote-argument args " "))
+    (compilation-start (concat "ctags " (combine-and-quote-strings args " "))
                        nil #'ctags-menu--buffer-native)))
 
 (transient-define-suffix ctags-menu:edit-and-run (args)
@@ -225,7 +227,8 @@
   :key "!"
   (interactive (list (ctags-menu--args)))
   (let* ((default-directory ctags-menu--directory)
-         (command (read-shell-command "Run ctags: " (concat "ctags " (combine-and-quote-strings args " ")))))
+         (default-command (concat "ctags " (combine-and-quote-strings args " ")))
+         (command (read-shell-command "Run ctags: " default-command)))
     (compilation-start command nil #'ctags-menu--buffer-native)))
 
 
