@@ -2,7 +2,7 @@
 ;; Copyright © 2024  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
-;; Version: 0.1.4
+;; Version: 0.1.5
 ;; Keywords: tools
 
 ;; This file is NOT part of GNU Emacs.
@@ -43,7 +43,7 @@
      ("-m" "Specify maxium recursion depth" "--maxdepth=" :level 5)
      ("-R" "Recurse into directories supplied on command line" ("-R" "--recurse") :level 2)
      ("-L" "A list of input file name is read from the specified file" "-L"
-      :class transient-option :level 4
+      :class transient-option :level 4 :reader ctags-menu--read-file
       :unsavable t)
      ("-a" "Append the tags to an existing tag file" ("-a" "--append") :level 5)
      (ctags-menu:-o)]
@@ -150,6 +150,13 @@
                                       #'completion-file-name-table
                                       #'file-exists-p t initial-input hist))))
 
+(defun ctags-menu--read-file (prompt initial-input hist)
+  (let ((default-directory ctags-menu--directory))
+    (substitute-in-file-name
+     (completing-read prompt
+                      #'completion-file-name-table
+                      nil t initial-input hist))))
+
 (transient-define-infix ctags-menu:-o ()
   :key "-o"
   :description "Write tags to specified file."
@@ -157,7 +164,8 @@
   :shortarg "-f"
   :class 'transient-option
   :unsavable t
-  :init-value #'ctags-menu:-o-init-value)
+  :init-value #'ctags-menu:-o-init-value
+  :reader #'ctags-menu--read-file)
 
 (defun ctags-menu:-o-init-value (obj)
   (when-let* ((file (ctags-tags-file-path)))
