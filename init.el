@@ -1208,6 +1208,7 @@ Otherwise use `consult-xref'."
 With non-nil prefix-argument ARG, the directory will be read from the
 minibuffer."
     (interactive "P")
+    (require 'eat)
     (let ((dir (if arg
                    (expand-file-name (read-directory-name "Run eat in directory:"))
                  default-directory)))
