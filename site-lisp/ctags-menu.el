@@ -148,7 +148,7 @@
     (mapcar #'substitute-in-file-name
             (completing-read-multiple prompt
                                       #'completion-file-name-table
-                                      #'file-exists-p t initial-input hist))))
+                                      nil t initial-input hist))))
 
 (defun ctags-menu--read-file (prompt initial-input hist)
   (let ((default-directory ctags-menu--directory))
