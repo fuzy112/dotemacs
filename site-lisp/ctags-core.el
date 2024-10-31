@@ -214,6 +214,8 @@ For the meaning of NAME, see `ctags-define-tag'."
                  (cond ((equal tag-name  "!_TAG_PROC_CWD")
                         (setq default-directory
                               (concat (file-remote-p dir)  (,(intern (format "%s-input" name)) tag))))
+		       ;; FIXME: handle other pseudo tags
+		       ;; _TAG_KIND_DESCRIPTION, etc.
                        ((string-prefix-p "!_" tag-name))
                        (t (push tag tags)))))
              (nreverse tags)))))))
