@@ -1202,11 +1202,24 @@ Otherwise use `consult-xref'."
   :init
   (with-eval-after-load 'project
     (add-to-list 'project-switch-commands '(eat-project "Eat") t))
+
+  (defun +eat/here (&optional arg)
+    "Run `eat' in the current directory.
+With non-nil prefix-argument ARG, the directory will be read from the
+minibuffer."
+    (interactive "P")
+    (let ((dir (if arg
+                   (expand-file-name (read-directory-name "Run eat in directory:"))
+                 default-directory)))
+      (let ((default-directory dir)
+            (eat-buffer-name (concat "*" dir "-eat*")))
+        (eat nil nil))))
+  (bind-key "C-c s" '+eat/here)
   :config
   (setq eat-kill-buffer-on-exit t)
 
   (with-eval-after-load 'project
-    (when-let ((cell (assq 'project-shell project-switch-commands)))
+    (when-let* ((cell (assq 'project-shell project-switch-commands)))
       (setcar cell #'eat-project))
     (bind-key "s" #'eat-project-other-window project-other-window-map))
 
