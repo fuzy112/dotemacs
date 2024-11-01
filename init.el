@@ -583,6 +583,7 @@ value for USE-OVERLAYS."
 (use-package embark-consult
   :defer t
   :config
+  (require 'grep)
   (static-if (fboundp 'grep--heading-filter)
       (progn
         (defun +embark-consult-export-grep--headings (&rest _)
