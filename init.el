@@ -603,6 +603,7 @@ value for USE-OVERLAYS."
   :straight t
   :defer t
   :config
+  (require 'grep)
   (static-if (fboundp 'grep--heading-filter)
       (progn
         (defun +embark-consult-export-grep--headings (&rest _)
