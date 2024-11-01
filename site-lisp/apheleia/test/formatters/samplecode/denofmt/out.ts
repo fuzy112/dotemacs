@@ -1,1 +1,0 @@
-../denofmt-ts/out.ts

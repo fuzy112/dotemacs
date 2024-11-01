@@ -56,26 +56,31 @@
 ;;;; nerd-icons
 
 (use-package nerd-icons
+  :straight t
   :config
   (when (display-graphic-p)
     (nerd-icons-set-font)))
 
 (use-package nerd-icons-corfu
+  :straight t
   :defer t
   :init
   (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 (use-package nerd-icons-completion
+  :straight t
   :delight
   :hook
   (marginalia-mode . nerd-icons-completion-marginalia-setup))
 
 (use-package nerd-icons-ibuffer
+  :straight t
   :delight
   :hook
   (ibuffer-mode . nerd-icons-ibuffer-mode))
 
 (use-package nerd-icons-dired
+  :straight t
   :delight
   :hook
   (dired-mode . nerd-icons-dired-mode))
@@ -123,6 +128,7 @@
 ;;;; breadcrumb
 
 (use-package breadcrumb
+  :straight t
   :defer t
   :init
   (defun +breadcrumb--prog-mode ()
@@ -139,6 +145,7 @@
 ;;;; vertico
 
 (use-package vertico
+  :straight t
   :autoload
   (vertico--advice)
   :init
@@ -167,6 +174,7 @@
 ;;;; marginalia
 
 (use-package marginalia
+  :straight t
   :hook
   (minibuffer-setup . marginalia--minibuffer-setup)
   :bind
@@ -208,6 +216,7 @@ ARGS: see `completion-read-multiple'."
 ;;;; pulsar
 
 (use-package pulsar
+  :straight t
   :demand t
   :config
   (pulsar-global-mode)
@@ -217,6 +226,7 @@ ARGS: see `completion-read-multiple'."
 ;;;; goggles
 
 (use-package goggles
+  :straight t
   :delight
   :hook
   (prog-mode . goggles-mode)
@@ -225,6 +235,7 @@ ARGS: see `completion-read-multiple'."
 ;;;; orderless
 
 (use-package orderless
+  :straight t
   :after (:any vertico corfu consult)
   :config
   (setq completion-styles '(orderless basic))
@@ -267,6 +278,7 @@ ARGS: see `completion-read-multiple'."
 ;;;; corfu
 
 (use-package corfu
+  :straight t
   :defer 20
   :init
   (defun +corfu--load (&rest _)
@@ -296,6 +308,7 @@ ARGS: see `completion-read-multiple'."
     (add-to-list 'savehist-additional-variables 'corfu-history)))
 
 (use-package corfu-terminal
+  :straight t
   :unless (featurep 'tty-child-frames)
   :after corfu
   :hook
@@ -307,6 +320,7 @@ ARGS: see `completion-read-multiple'."
 ;;;; cape
 
 (use-package cape
+  :straight t
   :init
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'completion-at-point-functions #'cape-file)
@@ -333,6 +347,7 @@ ARGS: see `completion-read-multiple'."
 ;;;; tempel
 
 (use-package tempel
+  :straight t
   :functions
   tempel--templates
   :bind
@@ -359,7 +374,10 @@ ARGS: see `completion-read-multiple'."
 
 ;;;; embark
 
+(straight-use-package 'xterm-color)
+
 (use-package embark
+  :straight t
   :bind
   ("C-." . embark-act)
   :init
@@ -422,6 +440,7 @@ value for USE-OVERLAYS."
 ;;;; consult
 
 (use-package consult
+  :straight t
   ;; Replace bindings. Lazily loaded by `use-package'.
   :bind (;; C-c bindings in `mode-specific-map'
          ("C-c M-x" . consult-mode-command)
@@ -431,31 +450,31 @@ value for USE-OVERLAYS."
          ("C-c i" . consult-info)
          ([remap Info-search] . consult-info)
          ;; C-x bindings in `ctl-x-map'
-         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+         ("C-x M-:" . consult-complex-command) ;; orig. repeat-complex-command
+         ("C-x b" . consult-buffer) ;; orig. switch-to-buffer
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-         ("C-x t b" . consult-buffer-other-tab)    ;; orig. switch-to-buffer-other-tab
-         ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-         ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+         ("C-x 5 b" . consult-buffer-other-frame) ;; orig. switch-to-buffer-other-frame
+         ("C-x t b" . consult-buffer-other-tab) ;; orig. switch-to-buffer-other-tab
+         ("C-x r b" . consult-bookmark)         ;; orig. bookmark-jump
+         ("C-x p b" . consult-project-buffer) ;; orig. project-switch-to-buffer
          ;; Custom M-# bindings for fast register access
          ("M-#" . consult-register-load)
-         ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+         ("M-'" . consult-register-store) ;; orig. abbrev-prefix-mark (unrelated)
          ("C-M-#" . consult-register)
          ;; Other custom bindings
-         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+         ("M-y" . consult-yank-pop) ;; orig. yank-pop
          ;; M-g bindings in `goto-map'
          ("M-g e" . consult-compile-error)
-         ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
-         ("M-g g" . consult-goto-line)             ;; orig. goto-line
-         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+         ("M-g f" . consult-flymake) ;; Alternative: consult-flycheck
+         ("M-g g" . consult-goto-line)   ;; orig. goto-line
+         ("M-g M-g" . consult-goto-line) ;; orig. goto-line
+         ("M-g o" . consult-outline) ;; Alternative: consult-org-heading
          ("M-g m" . consult-mark)
          ("M-g k" . consult-global-mark)
          ("M-g i" . consult-imenu)
          ("M-g I" . consult-imenu-multi)
          ;; M-s bindings in `search-map'
-         ("M-s d" . consult-find)                  ;; Alternative: consult-fd
+         ("M-s d" . consult-find) ;; Alternative: consult-fd
          ("M-s c" . consult-locate)
          ("M-s g" . consult-grep)
          ("M-s G" . consult-git-grep)
@@ -467,13 +486,13 @@ value for USE-OVERLAYS."
          ;; Isearch integration
          ("M-s e" . consult-isearch-history)
          :map isearch-mode-map
-         ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
-         ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
-         ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-         ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
+         ("M-e" . consult-isearch-history) ;; orig. isearch-edit-string
+         ("M-s e" . consult-isearch-history) ;; orig. isearch-edit-string
+         ("M-s l" . consult-line) ;; needed by consult-line to detect isearch
+         ("M-s L" . consult-line-multi) ;; needed by consult-line to detect isearch
          ;; Minibuffer history
          :map minibuffer-local-map
-         ("M-s" . consult-history)                 ;; orig. next-matching-history-element
+         ("M-s" . consult-history) ;; orig. next-matching-history-element
          ("M-r" . consult-history))                ;; orig. previous-matching-history-element
 
   ;; Enable automatic preview at point in the *Completions* buffer. This is
@@ -581,6 +600,7 @@ value for USE-OVERLAYS."
 
 
 (use-package embark-consult
+  :straight t
   :defer t
   :config
   (static-if (fboundp 'grep--heading-filter)
@@ -594,11 +614,17 @@ value for USE-OVERLAYS."
 
 
 (use-package consult-dir
+  :straight t
   :bind
   ("C-x C-d" . consult-dir)
   (:map minibuffer-local-map
         ("C-x C-d" . consult-dir)
         ("C-x C-j" . consult-dir-jump-file)))
+
+(static-if (eq system-type 'windows-nt)
+    (straight-use-package '(consult-everything
+                            :host github
+                            :repo "jthaman/consult-everything")))
 
 ;;;; windmove
 
@@ -620,6 +646,7 @@ value for USE-OVERLAYS."
 ;;;; popper
 
 (use-package popper
+  :straight t
   :bind
   ("C-`" . popper-toggle)
   ("M-`" . popper-cycle)
@@ -684,6 +711,7 @@ value for USE-OVERLAYS."
 ;;;; avy
 
 (use-package avy
+  :straight t
   :bind
   ("C-:" . avy-goto-char)
   ("C-'" . avy-goto-char-timer)
@@ -696,6 +724,7 @@ value for USE-OVERLAYS."
 ;;;; ace-window
 
 (use-package ace-window
+  :straight t
   :bind
   ("M-o" . ace-window)
   :config
@@ -704,6 +733,7 @@ value for USE-OVERLAYS."
 ;;;; apheleia
 
 (use-package apheleia
+  :straight t
   :bind
   ("C-x x /" . apheleia-format-buffer)
   :config
@@ -713,6 +743,7 @@ value for USE-OVERLAYS."
 ;;;; ws-butler
 
 (use-package ws-butler
+  :straight t
   :delight
   :hook
   (find-file . ws-butler-mode))
@@ -720,6 +751,7 @@ value for USE-OVERLAYS."
 ;;;; activities
 
 (use-package activities
+  :straight t
   :bind
   (("C-x C-a C-n" . activities-new)
    ("C-x C-a C-d" . activities-define)
@@ -837,6 +869,7 @@ value for USE-OVERLAYS."
 ;;;; iedit
 
 (use-package iedit
+  :straight t
   :bind
   ("C-;" . iedit-mode))
 
@@ -863,12 +896,14 @@ value for USE-OVERLAYS."
 ;;;; outline
 
 (use-package outline-minor-faces
+  :straight t
   :hook
   (outline-minor-mode . outline-minor-faces-mode))
 
 ;;;; adaptive-wrap or visual-wrap
 
 (use-package adaptive-wrap
+  :straight t
   :unless (fboundp 'visual-wrap-prefix-mode)
   :hook
   (visual-line-mode . adaptive-wrap-prefix-mode))
@@ -881,6 +916,7 @@ value for USE-OVERLAYS."
 ;;;; hl-todo
 
 (use-package hl-todo
+  :straight t
   :hook
   ((prog-mode conf-mode) . hl-todo-mode)
   :bind
@@ -906,6 +942,7 @@ value for USE-OVERLAYS."
 ;;;; eglot
 
 (use-package eglot
+  :straight t
   :defer t
   :config
   (setq eglot-autoshutdown t
@@ -924,6 +961,7 @@ value for USE-OVERLAYS."
 ;;;; xref
 
 (use-package xref
+  :straight t
   :bind
   ("C-<down-mouse-1>" . nil)
   ("C-M-<down-mouse-1>" . nil)
@@ -978,6 +1016,7 @@ Otherwise use `consult-xref'."
 ;;;; devdocs
 
 (use-package devdocs
+  :straight t
   :bind
   ("C-c d d" . devdocs-lookup)
   ("C-c d i" . devdocs-install)
@@ -1022,6 +1061,7 @@ Otherwise use `consult-xref'."
 ;;;; paredit
 
 (use-package paredit
+  :straight t
   :delight
   :hook
   (lisp-data-mode . paredit-mode)
@@ -1032,6 +1072,7 @@ Otherwise use `consult-xref'."
 ;;;; paren-face
 
 (use-package paren-face
+  :straight t
   :after lisp-mode
   :config
   (defun +paren-face--update-color ()
@@ -1058,7 +1099,7 @@ Otherwise use `consult-xref'."
   ("M-:" . pp-eval-expression))
 
 ;;;; pp-posframe
-
+(straight-use-package 'posframe)
 (use-package pp-posframe
   :bind
   ("C-x C-e" . pp-posframe-eval-last-sexp)
@@ -1099,10 +1140,14 @@ Otherwise use `consult-xref'."
     (add-hook 'flymake-diagnostics-functions #'flymake-clang-tidy nil t))
   (add-hook 'c-mode-common-hook '+cc-mode--hook))
 
+(use-package vala-mode
+  :straight t
+  :defer t)
 
 ;;;; rust-mode
 
 (use-package rust-mode
+  :straight t
   :defer t
   :config
   (define-advice rust--compile (:around (&rest args) project-prefix-buffer-name)
@@ -1150,6 +1195,7 @@ Otherwise use `consult-xref'."
 
 ;;;; buffer-env
 (use-package buffer-env
+  :straight t
   :hook
   (hack-local-variables . buffer-env-update)
   (comint-mode . buffer-env-update)
@@ -1177,6 +1223,7 @@ Otherwise use `consult-xref'."
 ;;;; magit
 
 (use-package magit
+  :straight t
   :bind
   ("C-x g" . magit-status)
   ("C-x M-g" . magit-dispatch)
@@ -1199,6 +1246,7 @@ Otherwise use `consult-xref'."
 ;;;; diff-hl
 
 (use-package diff-hl
+  :straight t
   :after vc
   :hook
   (tty-setup . diff-hl-margin-mode)
@@ -1209,6 +1257,7 @@ Otherwise use `consult-xref'."
 
 ;;;; eat
 (use-package eat
+  :straight t
   :unless (memq system-type '(windows-nt ms-dos))
   :hook
   (eshell-load . eat-eshell-mode)
@@ -1253,6 +1302,7 @@ minibuffer."
 ;;;; with-editor
 
 (use-package with-editor
+  :straight t
   :bind
   ("<remap> <async-shell-command>" . with-editor-async-shell-command)
   ("<remap> <shell-command>" . with-editor-shell-command)
@@ -1263,22 +1313,23 @@ minibuffer."
     (require 'with-editor)
     (if with-editor-emacsclient-executable
         (with-editor
-          (with-editor--setup)
-          (while (accept-process-output proc 1 nil t))
-          (when-let ((v (getenv "EDITOR")))
-            (eat-term-send-string eat-terminal (format " export EDITOR=%S" v))
-            (eat-self-input 1 'return))
-          (when-let ((v (getenv "EMACS_SERVER_FILE")))
-            (eat-term-send-string eat-terminal (format " export EMACS_SERVER_FILE=%S" v))
-            (eat-self-input 1 'return))
-          (eat-term-send-string eat-terminal " clear")
-          (eat-self-input 1 'return))
+         (with-editor--setup)
+         (while (accept-process-output proc 1 nil t))
+         (when-let* ((v (getenv "EDITOR")))
+           (eat-term-send-string eat-terminal (format " export EDITOR=%S" v))
+           (eat-self-input 1 'return))
+         (when-let* ((v (getenv "EMACS_SERVER_FILE")))
+           (eat-term-send-string eat-terminal (format " export EMACS_SERVER_FILE=%S" v))
+           (eat-self-input 1 'return))
+         (eat-term-send-string eat-terminal " clear")
+         (eat-self-input 1 'return))
       (error "Cannot use sleeping editor in this buffer")))
   (add-hook 'eat-exec-hook '+with-editor--export-editor-to-eat))
 
 ;;;; pyim
 
 (use-package pyim
+  :straight t
   :defer t
   :functions
   pyim-cregexp-build
@@ -1312,6 +1363,7 @@ minibuffer."
   (add-hook 'pyim-deactivate-hook '+pyim--deactivate))
 
 (use-package pyim-basedict
+  :straight t
   :after pyim
   :config
   (pyim-basedict-enable))
@@ -1326,6 +1378,7 @@ minibuffer."
 ;;;; term-keys
 
 (use-package term-keys
+  :straight '(:host github :repo "CyberShadow/term-keys")
   :defer t
   :defines
   term-keys/prefix
@@ -1390,6 +1443,7 @@ minibuffer."
 ;;;; clipetty
 
 (use-package clipetty
+  :straight t
   :delight
   :hook
   (tty-setup . clipetty-mode)
@@ -1437,9 +1491,12 @@ minibuffer."
   :config
   (auth-source-pass-enable))
 
+(straight-use-package 'password-store)
+
 ;;;; lin
 
 (use-package lin
+  :straight t
   :defer t
   :init
   (setq lin-mode-hooks
@@ -1522,10 +1579,12 @@ minibuffer."
 ;;;; gptel
 
 (use-package gptel
+  :straight t
   :bind
   ("C-c g" . gptel-send))
 
 (use-package gptel-quick
+  :straight '(:host github :repo "karthink/gptel-quick")
   :defer t
   :init
   (with-eval-after-load 'embark
@@ -1534,6 +1593,7 @@ minibuffer."
 ;;;; logos
 
 (use-package logos
+  :straight t
   :bind
   ("<f8>" . logos-focus-mode)
   ("<remap> <narrow-to-region>" . logos-narrow-dwim)
@@ -1587,7 +1647,7 @@ minibuffer."
       (let ((inhibit-read-only t))
         (save-excursion
           (goto-char (point-min))
-          (when-let ((match (text-property-search-forward 'shr-target-id "page-header-title" 'member)))
+          (when-let* ((match (text-property-search-forward 'shr-target-id "page-header-title" 'member)))
             (delete-region (point-min) (prop-match-beginning match)))))))
 
   (defun eww+kagi-trim ()
@@ -1595,7 +1655,7 @@ minibuffer."
       (let ((inhibit-read-only t))
         (save-excursion
           (goto-char (point-min))
-          (when-let ((match (text-property-search-forward 'shr-target-id "tonav" #'member)))
+          (when-let* ((match (text-property-search-forward 'shr-target-id "tonav" #'member)))
             (delete-region (prop-match-beginning match) (prop-match-end match)))
           ))))
 
@@ -1630,6 +1690,8 @@ minibuffer."
   ("C-x r u" . url-bookmark-add))
 
 ;;;; org
+
+(straight-use-package 'org)
 
 (use-package org
   :bind
@@ -1666,6 +1728,7 @@ minibuffer."
                           "/Entered on/ %U\n" "\n" "%?"))))
 
 (use-package org-modern
+  :straight t
   :hook
   (org-mode . org-modern-mode)
   (org-agenda-finalize . org-modern-agenda))
@@ -1673,6 +1736,7 @@ minibuffer."
 ;;;; denote
 
 (use-package denote
+  :straight t
   :bind
   ("C-c n n" . denote)
   ("C-c n c" . denote-region)           ; "contents" mnemonic
@@ -1704,6 +1768,7 @@ minibuffer."
 ;;;; copilot
 
 (use-package copilot
+  :straight t
   :bind
   (:map copilot-mode-map
         ("<tab>" . copilot-accept-completion)
@@ -1712,6 +1777,7 @@ minibuffer."
 ;;;; browser-hist
 
 (use-package browser-hist
+  :straight t
   :bind
   ("M-s b" . browser-hist-search)
   :config
@@ -1725,9 +1791,15 @@ minibuffer."
 ;;;; vundo
 
 (use-package vundo
+  :straight t
   :defer
   :config
   (setq vundo-glyph-alist vundo-unicode-symbols))
+
+;;;; debian
+
+(straight-use-package 'debian-el)
+(straight-use-package 'dpkg-dev-el)
 
 
 ;;;; post-init

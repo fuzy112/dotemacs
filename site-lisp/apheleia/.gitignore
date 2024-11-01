@@ -1,5 +1,0 @@
-*.elc
-.log
-.tmp
-auto
-vendor/buttercup-*/

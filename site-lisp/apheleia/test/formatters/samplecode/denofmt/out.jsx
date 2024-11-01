@@ -1,1 +1,0 @@
-../denofmt-jsx/out.jsx

@@ -1,1 +1,0 @@
-../prettier-javascript/out.js

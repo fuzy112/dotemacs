@@ -1,1 +1,0 @@
-../prettier-markdown/in.md

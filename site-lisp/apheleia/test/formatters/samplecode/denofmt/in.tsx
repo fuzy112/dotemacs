@@ -1,1 +1,0 @@
-../denofmt-tsx/in.tsx

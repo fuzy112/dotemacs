@@ -33,6 +33,29 @@
   (load pre-early-init-file nil t))
 
 
+(setq package-enable-at-startup nil)
+
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(straight-use-package 'use-package)
+(straight-use-package 'delight)
+(straight-use-package 's)
+(straight-use-package 'f)
+(straight-use-package 'dash)
 
 ;;;; use-package
 
@@ -62,21 +85,11 @@
   (setq default-frame-alist `((vertical-scroll-bars . nil)
                               (horizontal-scroll-bars . nil)
                               (font . "Iosevka SS04-14")
-                              (width . 174)
-                              (height . 46)
+                              (width . 157)
+                              (height . 38)
                               (alpha-background . 80)
                               (alpha . 80))))
 
-;;;; package
-
-(use-package package
-  :defer
-  :init
-  (package-activate-all)
-  :config
-  (setq package-install-upgrade-built-in t)
-  (package-initialize)
-  (add-hook 'kill-emacs-hook #'package-quickstart-refresh -50))
 
 ;;;; Site lisp
 
@@ -107,6 +120,7 @@
 ;;;; modus-theme
 
 (use-package modus-themes
+  :straight t
   :defer t
   :bind
   ("<f9>" . modus-themes-toggle)
