@@ -1802,6 +1802,11 @@ minibuffer."
 (straight-use-package 'debian-el)
 (straight-use-package 'dpkg-dev-el)
 
+;;;; other major modes
+
+(straight-use-package 'yaml-mode)
+(straight-use-package 'toml-mode)
+
 
 ;;;; post-init
 
