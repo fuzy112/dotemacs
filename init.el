@@ -622,10 +622,9 @@ value for USE-OVERLAYS."
         ("C-x C-d" . consult-dir)
         ("C-x C-j" . consult-dir-jump-file)))
 
-(when (eq system-type 'windows-nt)
-  (straight-use-package '(consult-everything
-                          :host github
-                          :repo "jthaman/consult-everything")))
+(straight-use-package '(consult-everything
+                        :host github
+                        :repo "jthaman/consult-everything"))
 
 ;;;; windmove
 
@@ -1802,10 +1801,12 @@ minibuffer."
 (straight-use-package 'debian-el)
 (straight-use-package 'dpkg-dev-el)
 
-;;;; other major modes
+;;;; other packages
 
 (straight-use-package 'yaml-mode)
 (straight-use-package 'toml-mode)
+(straight-use-package 'colorful-mode)
+(straight-use-package 'autocrypt)
 
 
 ;;;; post-init
