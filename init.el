@@ -1377,6 +1377,16 @@ minibuffer."
   :config
   (pyim-basedict-enable))
 
+
+;;;; rime
+
+(use-package rime
+  :straight t
+  :defer t
+  :config
+  (setq rime-show-candidate (if (posframe-workable-p) 'posframe
+                              'popup)))
+
 ;;;; kinsoku
 
 (use-package kinsoku
