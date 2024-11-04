@@ -1811,6 +1811,24 @@ minibuffer."
 (straight-use-package 'autocrypt)
 (straight-use-package 'markdown-mode)
 
+;;;; Site lisp
+
+(use-package site-lisp
+  :load-path "site-lisp"
+  :config
+  (site-lisp-activate))
+
+
+(defun find-early-init-file ()
+  "Find `early-init-file'."
+  (interactive)
+  (find-file early-init-file))
+
+(defun find-user-init-file ()
+  "Find `user-init-file'."
+  (interactive)
+  (find-file user-init-file))
+
 
 ;;;; post-init
 

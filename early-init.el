@@ -90,25 +90,6 @@
                               (alpha-background . 80)
                               (alpha . 80))))
 
-
-;;;; Site lisp
-
-(use-package site-lisp
-  :load-path "site-lisp"
-  :config
-  (site-lisp-activate))
-
-
-(defun find-early-init-file ()
-  "Find `early-init-file'."
-  (interactive)
-  (find-file early-init-file))
-
-(defun find-user-init-file ()
-  "Find `user-init-file'."
-  (interactive)
-  (find-file user-init-file))
-
 (use-package files
   :config
   (setq confirm-kill-emacs 'y-or-n-p)
