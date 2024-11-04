@@ -1346,13 +1346,13 @@ minibuffer."
     (add-to-list 'orderless-affix-dispatch-alist
                  '(?` . +orderless-pinyin)))
 
-  ;; Set the default input method of Chinese language environments to `pyim'.
-  (set-language-info "Chinese-GB18030" 'input-method "pyim")
-  (set-language-info "Chinese-GBK" 'input-method "pyim")
-  (set-language-info "Chinese-GB" 'input-method "pyim")
+  ;; ;; Set the default input method of Chinese language environments to `pyim'.
+  ;; (set-language-info "Chinese-GB18030" 'input-method "pyim")
+  ;; (set-language-info "Chinese-GBK" 'input-method "pyim")
+  ;; (set-language-info "Chinese-GB" 'input-method "pyim")
 
-  ;; UTF-8 is preferred on Unix-like systems.
-  (set-language-info "UTF-8" 'input-method "pyim")
+  ;; ;; UTF-8 is preferred on Unix-like systems.
+  ;; (set-language-info "UTF-8" 'input-method "pyim")
 
   :config
   (defvar +pyim--corfu nil)
