@@ -1005,6 +1005,8 @@ Otherwise use `consult-xref'."
   (with-eval-after-load 'cc-mode
     (require 'ctags-xref-c)))
 
+(straight-use-package 'transient)       ; for ctags-menu
+
 ;;;; gtags
 
 (use-package gtags
