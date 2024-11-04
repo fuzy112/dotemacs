@@ -76,7 +76,7 @@
 
 (defun pp-posframe-display-value (value lexical)
   "Display VALUE in a posframe."
-  (with-current-buffer (get-buffer-create "*Pp Eval Output*")
+  (with-current-buffer (get-buffer-create pp-posframe-buffer-name)
     (erase-buffer)
     (delay-mode-hooks
       (unless (derived-mode-p 'emacs-lisp-mode)
