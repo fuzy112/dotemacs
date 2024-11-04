@@ -1809,6 +1809,7 @@ minibuffer."
 (straight-use-package 'toml-mode)
 (straight-use-package 'colorful-mode)
 (straight-use-package 'autocrypt)
+(straight-use-package 'markdown-mode)
 
 
 ;;;; post-init
