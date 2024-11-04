@@ -706,7 +706,7 @@ value for USE-OVERLAYS."
 
 (use-package ibuffer
   :bind
-  ("<remap> <list-buffers>" . #'ibuffer))
+  ("<remap> <list-buffers>" . ibuffer))
 
 ;;;; avy
 
