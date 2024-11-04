@@ -1212,7 +1212,12 @@ Otherwise use `consult-xref'."
     (interactive)
     (clrhash buffer-env--cache)))
 
-;;;; vc-svn
+;;;; vc
+
+(use-package vc
+  :defer t
+  :config
+  (setq vc-follow-symlinks t))
 
 (use-package vc-svn
   :defer t
