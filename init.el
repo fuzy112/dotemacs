@@ -1266,7 +1266,7 @@ Otherwise use `consult-xref'."
 
 ;;;; eat
 (use-package eat
-  :straight t
+  :straight `(:files (,@straight-default-files-directive "integration" "term" "terminfo"))
   :unless (memq system-type '(windows-nt ms-dos))
   :hook
   (eshell-load . eat-eshell-mode)
