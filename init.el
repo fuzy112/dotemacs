@@ -1266,7 +1266,7 @@ Otherwise use `consult-xref'."
 
 ;;;; eat
 (use-package eat
-  :straight t
+  :straight `(:files (,@straight-default-files-directive "integration" "term" "terminfo"))
   :unless (memq system-type '(windows-nt ms-dos))
   :hook
   (eshell-load . eat-eshell-mode)
@@ -1566,7 +1566,9 @@ minibuffer."
           (recenter))
         (when lin-mode
           (hl-line-highlight)))))
-  (add-hook 'next-error-hook '+lin-line--next-error-h))
+  (add-hook 'next-error-hook '+lin-line--next-error-h)
+
+  (add-hook 'gnus-visual-mark-article-hook #'hl-line-highlight))
 
 ;;;; emacs-server
 
