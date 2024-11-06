@@ -1566,7 +1566,9 @@ minibuffer."
           (recenter))
         (when lin-mode
           (hl-line-highlight)))))
-  (add-hook 'next-error-hook '+lin-line--next-error-h))
+  (add-hook 'next-error-hook '+lin-line--next-error-h)
+
+  (add-hook 'gnus-visual-mark-article-hook #'hl-line-highlight))
 
 ;;;; emacs-server
 
