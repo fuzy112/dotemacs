@@ -63,6 +63,7 @@
  ("paredit" . "037b9b8acbca75151f133b6c0f7f3ff97d9042e5")
  ("paren-face" . "9d369e6da2638702ce617a4ae4cf8d05cdc50d0b")
  ("password-store" . "b5e965a838bb68c1227caa2cdd874ba496f10149")
+ ("pcre2el" . "b4d846d80dddb313042131cf2b8fbf647567e000")
  ("persist" . "a368929c78ddd2f98a4a4e62e80b0f19aa5946a7")
  ("popon" . "bf8174cb7e6e8fe0fe91afe6b01b6562c4dc39da")
  ("popper" . "66b47699975fd47541c50959af47a48bb4f938cf")
