@@ -439,6 +439,8 @@ value for USE-OVERLAYS."
 
 ;;;; consult
 
+(straight-use-package 'pcre2el)
+
 (use-package consult
   :straight t
   ;; Replace bindings. Lazily loaded by `use-package'.
