@@ -34,6 +34,7 @@
 
 
 (setq package-enable-at-startup nil)
+(setq straight-use-version-specific-build-dir t)
 
 (defvar bootstrap-version)
 (let ((bootstrap-file

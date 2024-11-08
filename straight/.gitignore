@@ -1,4 +1,5 @@
 /build
 /links
 /repos
-*-cache.el
+/build-*/
+/*-cache.el
