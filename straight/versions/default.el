@@ -1,7 +1,7 @@
 (("ace-window" . "77115afc1b0b9f633084cf7479c767988106c196")
  ("activities" . "6ccc1d38493f50aa263ab8836bc240b5d3fb26e6")
  ("adaptive-wrap" . "d75665b9c88e65f91dadd1e5880905bbdb7c09b7")
- ("apheleia" . "429daf5f28859c265aaf8e0e27682785a3f506a2")
+ ("apheleia" . "543f6d651d11322f26665f017f051fbcfc21ceb0")
  ("autocrypt" . "6a142c5b6cd43883e59da8ff87dcfae2b7a36472")
  ("avy" . "be612110cb116a38b8603df367942e2bb3d9bdbe")
  ("breadcrumb" . "6273c633c0ff6dba083278ddc5da6b0e7b25f7b1")
