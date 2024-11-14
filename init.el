@@ -1386,8 +1386,6 @@ minibuffer."
   :straight t
   :defer t
   :config
-  (setq rime-show-candidate 'posframe)
-
   (define-advice rime--posframe-display-content (:override (content))
     "Display CONTENT with posframe."
     (if (and (featurep 'posframe) (posframe-workable-p))
