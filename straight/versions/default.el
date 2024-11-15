@@ -73,7 +73,7 @@
  ("project" . "6addab8636e88d0a0737d513ab475d6c2169e4cd")
  ("pulsar" . "b2b08c51f877527befa68439581083bc09178649")
  ("pyim" . "f22c20f2e6af55b3a758defabe4c842fb94cde2b")
- ("pyim-basedict" . "55d9b324831b0fc79ff62f1c6f21aad72341a114")
+ ("pyim-cangjiedict" . "d17e3d32a6480939b350a91a915ebe8e6efad819")
  ("rust-mode" . "3bd0863f28414e629ca15ad2852a429a126226c5")
  ("s.el" . "dda84d38fffdaf0c9b12837b504b402af910d01d")
  ("seq" . "da86da9bf111f68fb81efd466d76d53af5aebc00")
