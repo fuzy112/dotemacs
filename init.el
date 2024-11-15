@@ -439,6 +439,8 @@ value for USE-OVERLAYS."
 
 ;;;; consult
 
+(straight-use-package 'pcre2el)
+
 (use-package consult
   :straight t
   ;; Replace bindings. Lazily loaded by `use-package'.
@@ -1384,10 +1386,6 @@ minibuffer."
   :straight t
   :defer t
   :config
-  (setq rime-popup-style 'vertical
-        rime-posframe-style 'vertical)
-  (setq rime-show-candidate 'posframe)
-
   (define-advice rime--posframe-display-content (:override (content))
     "Display CONTENT with posframe."
     (if (and (featurep 'posframe) (posframe-workable-p))
