@@ -1339,11 +1339,8 @@ minibuffer."
 
 ;;;; pyim
 
-(straight-use-package 'pyim)
-(straight-use-package 'pyim-cangjiedict)
-(straight-use-package 'pyim-basedict)
-
 (use-package pyim
+  :straight t
   :defer t
   :functions
   pyim-cregexp-build
@@ -1374,10 +1371,14 @@ minibuffer."
     (when (boundp 'corfu-auto)
       (setq-local corfu-auto +pyim--corfu)))
   (add-hook 'pyim-activate-hook '+pyim--activate)
-  (add-hook 'pyim-deactivate-hook '+pyim--deactivate)
+  (add-hook 'pyim-deactivate-hook '+pyim--deactivate))
 
-  (pyim-cangjie5dict-enable)
-  (setq pyim-default-scheme 'cangjie))
+(use-package pyim-basedict
+  :straight t
+  :after pyim
+  :config
+  (pyim-basedict-enable))
+
 
 ;;;; rime
 
