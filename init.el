@@ -776,6 +776,14 @@ value for USE-OVERLAYS."
 (setup iedit
   (:global "C-;" iedit-mode))
 
+;;;; mwim
+
+(straight-use-package 'mwim)
+
+(setup mwim
+  (:global "<remap><move-beginning-of-line>" mwim-beginning
+           "<remap><move-end-of-line>" mwim-end))
+
 ;;;; text-mode
 
 (setup text-mode
