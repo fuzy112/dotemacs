@@ -84,9 +84,9 @@
 
 (setup pixel-scroll
   (:with-function (pixel-scroll-up pixel-scroll-down)
-    (:autoload-this)
-    (setq mwheel-scroll-up-function #'pixel-scroll-up
-          mwheel-scroll-down-function #'pixel-scroll-down))
+    (:autoload-this))
+  (setq mwheel-scroll-up-function #'pixel-scroll-up
+        mwheel-scroll-down-function #'pixel-scroll-down)
   (:when-loaded
     (pixel-scroll-mode)))
 
@@ -709,9 +709,9 @@ value for USE-OVERLAYS."
 
 (setup saveplace
   (:with-function (save-place-find-file-hook save-place-dired-hookf)
-    (:autoload-this)
-    (add-hook 'find-file-hook #'save-place-find-file-hook)
-    (add-hook 'dired-initial-position-hook #'save-place-dired-hook))
+    (:autoload-this))
+  (add-hook 'find-file-hook #'save-place-find-file-hook)
+  (add-hook 'dired-initial-position-hook #'save-place-dired-hook)
   (:when-loaded
     (save-place-mode)))
 
