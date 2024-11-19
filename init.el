@@ -693,15 +693,10 @@ value for USE-OVERLAYS."
     (:autoload-this)
     (:hook-into file-file-hook))
   (with-eval-after-load 'consult
-    (defvar +consult--source-recentf-file--items
-      (plist-get consult--source-recent-file :items))
-    (setf (plist-get consult--source-recent-file :enabled) (lambda () t))
-    (setf (plist-get consult--source-recent-file :items)
+    (setf (plist-get consult--source-recent-file :enabled)
           (lambda ()
             (require 'recentf)
-            (unless (bound-and-true-p recentf-mode)
-              (recentf-mode))
-            (funcall +consult--source-recentf-file--items))))
+            recentf-mode)))
   (setq recentf-max-saved-items 128)
   (:when-loaded
     (let ((inhibit-message t))
