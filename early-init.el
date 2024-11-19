@@ -52,21 +52,15 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-(straight-use-package 'use-package)
+(straight-use-package 'setup)
 (straight-use-package 'delight)
 (straight-use-package 's)
 (straight-use-package 'f)
 (straight-use-package 'dash)
 
-;;;; use-package
-
-(setq use-package-enable-imenu-support t)
-(eval-when-compile (require 'use-package))
-
 ;;;; emacs core
 
-(use-package emacs
-  :config
+(setup emacs
   (setq gc-cons-threshold 25600000)
   (setq read-process-output-max (* 256 1024))
   (setq-default cursor-in-non-selected-windows nil)
@@ -91,8 +85,7 @@
                               (alpha-background . 80)
                               (alpha . 80))))
 
-(use-package files
-  :config
+(setup files
   (setq confirm-kill-emacs 'y-or-n-p)
   (setq version-control t
         delete-old-versions t
@@ -101,30 +94,26 @@
 
 ;;;; modus-theme
 
-(use-package modus-themes
-  :straight t
-  :defer t
-  :bind
-  ("<f9>" . modus-themes-toggle)
-  :config
-  (setq modus-themes-to-toggle '(modus-vivendi modus-operandi))
-  (setq modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
-  (setq modus-themes-custom-auto-reload nil
-        modus-themes-mixed-fonts t
-        modus-themes-bold-constructs t
-        modus-themes-italic-constructs t
-        modus-themes-variable-pitch-ui t))
+(straight-use-package 'modus-themes)
+
+(setup modus-themes
+  (:global "<f9>" modus-themes-toggle)
+  (:when-loaded
+    (setq modus-themes-to-toggle '(modus-vivendi modus-operandi))
+    (setq modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
+    (setq modus-themes-mixed-fonts t
+          modus-themes-bold-constructs t
+          modus-themes-slanted-constructs t
+          modus-themes-variable-pitch-ui t)))
 
 ;;;; custom
 
-(use-package custom
-  :init
+(setup custom
   (setq custom-file (locate-user-emacs-file "custom.el"))
-  :config
   (load custom-file nil t)
   (unless custom-enabled-themes
     (require 'modus-themes)
-    (modus-themes-load-theme 'modus-vivendi)))
+    (modus-themes-load-theme (car modus-themes-to-toggle))))
 
 
 ;;;; post-early-init

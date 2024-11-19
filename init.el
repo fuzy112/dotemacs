@@ -26,9 +26,6 @@
 
 (require 'early-init (locate-user-emacs-file "early-init.el") t)
 
-(eval-when-compile
-  (require 'use-package))
-
 ;;;; pre-init
 
 (defvar pre-init-file (locate-user-emacs-file "pre-init.el")
@@ -40,8 +37,7 @@
 
 ;;;; faces
 
-(use-package faces
-  :config
+(setup faces
   (ignore-errors
     (set-fontset-font (frame-parameter nil 'font) 'han "Sarasa Gothic CL"))
   (set-fontset-font t 'han "Sarasa Gothic CL")
@@ -53,84 +49,74 @@
   (add-to-list 'face-font-family-alternatives '("Sarasa UI CL" "Sarasa Gothic CL" "Iosevka SS04"))
   (setopt face-font-family-alternatives (append face-font-family-alternatives nil)))
 
+;;;; delight
+
+(straight-use-package 'delight)
+
+(setup delight
+  (setup-define :delight
+    (lambda (&optional spec value)
+      `(delight ',(or spec (setup-get 'mode)) ,value t))
+    :after-loaded t))
+
 ;;;; nerd-icons
 
-(use-package nerd-icons
-  :straight t
-  :config
+(straight-use-package 'nerd-icons)
+(straight-use-package 'nerd-icons-corfu)
+(straight-use-package 'nerd-icons-completion)
+(straight-use-package 'nerd-icons-ibuffer)
+(straight-use-package 'nerd-icons-dired)
+
+(setup nerd-icons
   (when (display-graphic-p)
-    (nerd-icons-set-font)))
-
-(use-package nerd-icons-corfu
-  :straight t
-  :defer t
-  :init
-  (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
-
-(use-package nerd-icons-completion
-  :straight t
-  :delight
-  :hook
-  (marginalia-mode . nerd-icons-completion-marginalia-setup))
-
-(use-package nerd-icons-ibuffer
-  :straight t
-  :delight
-  :hook
-  (ibuffer-mode . nerd-icons-ibuffer-mode))
-
-(use-package nerd-icons-dired
-  :straight t
-  :delight
-  :hook
-  (dired-mode . nerd-icons-dired-mode))
+    (nerd-icons-set-font))
+  (setup nerd-icons-corfu
+    (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+  (setup nerd-icons-completion
+    (:hook-into marginalia-mode))
+  (setup nerd-icons-ibuffer
+    (:hook-into ibuffer-mode))
+  (setup nerd-icons-dired
+    (:delight)
+    (:hook-into dired-mode)))
 
 ;;;; pixel-scroll
 
-(use-package pixel-scroll
-  :autoload
-  (pixel-scroll-up
-   pixel-scroll-down)
-  :init
-  (setq mwheel-scroll-up-function #'pixel-scroll-up
-        mwheel-scroll-down-function #'pixel-scroll-down)
-  :config
-  (pixel-scroll-mode))
+(setup pixel-scroll
+  (:with-function (pixel-scroll-up pixel-scroll-down)
+    (:autoload-this)
+    (setq mwheel-scroll-up-function #'pixel-scroll-up
+          mwheel-scroll-down-function #'pixel-scroll-down))
+  (:when-loaded
+    (pixel-scroll-mode)))
 
 ;;;; window
 
-(use-package window
-  :bind
-  (:map window-prefix-map
-        ("q" . quit-window))            ; this is default for emacs 30
-  :config
+(setup window
+  (unless (keymap-lookup window-prefix-map "q")
+    (keymap-set window-prefix-map "q" #'quit-window))
   (setq kill-buffer-quit-windows t
         quit-restore-window-no-switch t))
 
-
 ;;;; help
 
-(use-package help
-  :defer t
-  :config
-  (setq help-enable-variable-value-editing t
-        help-enable-completion-autoload nil))
+(setup help
+  (:when-loaded
+    (setq help-enable-variable-value-editing t
+          help-enable-completion-autoload nil)))
 
 ;;;; shortdoc
 
-(use-package shortdoc
-  :defer t
-  :init
+(setup shortdoc
   (when (fboundp 'shortdoc-help-fns-examples-function)
     (add-hook 'help-fns-describe-function-functions
               #'shortdoc-help-fns-examples-function 50)))
 
 ;;;; breadcrumb
 
-(use-package breadcrumb
-  :straight t
-  :defer t
-  :init
+(straight-use-package 'breadcrumb)
+
+(setup breadcrumb
   (defun +breadcrumb--prog-mode ()
     (setq-local header-line-format '((:eval (breadcrumb-project-crumbs))
                                      ": "
@@ -144,216 +130,208 @@
 
 ;;;; vertico
 
-(use-package vertico
-  :straight t
-  :autoload
-  (vertico--advice)
-  :init
-  (advice-add #'completing-read-default :around #'vertico--advice)
-  (advice-add #'completing-read-multiple :around #'vertico--advice)
-  :bind
-  (("M-R" . vertico-repeat)
-   :map vertico-map
-   ("RET" . vertico-directory-enter)
-   ("DEL" . vertico-directory-delete-char)
-   ("M-DEL" . vertico-directory-delete-word)
-   ("C-q" . vertico-quick-insert)
-   ("M-q" . vertico-quick-exit)
-   :map vertico-map
-   ("M-P" . vertico-repeat-previous)
-   ("M-N" . vertico-repeat-next))
-  :hook
-  (rfn-eshadow-update-overlay . vertico-directory-tidy)
-  (minibuffer-setup . vertico-repeat-save)
-  :config
-  (setq enable-recursive-minibuffers t)
-  (setq vertico-quick1 "aoeuip"
-        vertico-quick2 "dhtnslm")
-  (vertico-mode))
+(straight-use-package 'vertico)
+
+(setup vertico
+  (:also-load orderless)
+  (:with-function vertico--advice
+    (:autoload-this)
+    (advice-add #'completing-read-default :around #'vertico--advice)
+    (advice-add #'completing-read-multiple :around #'vertico--advice))
+  (:when-loaded
+    (setq enable-recursive-minibuffers t)
+    (vertico-mode)
+    (:with-feature vertico-repeat
+      (:global "M-R" vertico-repeat)
+      (:with-map vertico-map
+        (:bind "M-P" vertico-repeat-previous
+               "M-N" vertico-repeat-next))
+      (add-hook 'minibuffer-setup-hook #'vertico-repeat-save))
+    (:with-feature vertico-directory
+      (:with-map vertico-map
+        (:bind "RET" vertico-directory-enter
+               "DEL" vertico-directory-delele-char
+               "M-DEL" vertico-directory-delete-word))
+      (add-hook 'rfn-eshadow-update-overlay #'vertico-directory-tidy))
+    (:with-feature vertico-quick
+      (:with-map vertico-map
+        (:bind "C-q" vertico-quick-insert
+               "M-q" vertico-quick-exit))
+      (:when-loaded
+        (setq vertico-quick1 "aoeuip"
+              vertico-quick2 "dhtnslm")))))
 
 ;;;; marginalia
 
-(use-package marginalia
-  :straight t
-  :hook
-  (minibuffer-setup . marginalia--minibuffer-setup)
-  :bind
-  (:map minibuffer-local-map
-        ("M-A" . marginalia-cycle))
-  :config
-  (add-to-list 'marginalia-prompt-categories
-               '("\\<info manuals\\>" . info-manual))
-  (add-to-list 'marginalia-prompt-categories
-               '("\\<manual name\\>" . info-manual))
-  (marginalia-mode))
+(straight-use-package 'marginalia)
+
+(setup marginalia
+  (:with-function marginalia--minibuffer-setup
+    (:autoload-this)
+    (:hook-into minibuffer-setup-hook))
+  (keymap-set minibuffer-local-map "M-A" #'marginalia-cycle)
+  (:when-loaded
+    (add-to-list 'marginalia-prompt-categories
+                 '("\\<info manuals\\>" . info-manual))
+    (add-to-list 'marginalia-prompt-categories
+                 '("\\<manual name\\>" . info-manual))
+    (marginalia-mode)))
 
 ;;;; crm
 
-(use-package crm
-  :defer t
-  :config
-  (define-advice completing-read-multiple
-      (:filter-args (args) show-crm-separator)
-    "Add prompt indicator to `completing-read-multiple'.
+(defvar crm-separator)
+
+(setup crm
+  (:when-loaded
+    (define-advice completing-read-multiple
+        (:filter-args (args) show-crm-separator)
+      "Add prompt indicator to `completing-read-multiple'.
 ARGS: see `completion-read-multiple'."
-    (cons (format "[`CRM': %s]  %s"
-                  (propertize
-                   (replace-regexp-in-string
-                    "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                    crm-separator)
-                   'face 'error)
-                  (car args))
-          (cdr args))))
+      (cons (format "[`CRM': %s]  %s"
+                    (propertize
+                     (replace-regexp-in-string
+                      "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                      crm-separator)
+                     'face 'error)
+                    (car args))
+            (cdr args)))))
 
 ;;;; cursor-sensor
 
-(use-package cursor-sensor
-  :hook
-  (minibuffer-setup . cursor-intangible-mode)
-  :config
-  (setq minibuffer-prompt-properties '(read-only t face minibuffer-prompt cursor-intangible t)))
+(setup cursor-sensor
+  (:with-mode cursor-intangible-mode
+    (:hook-into minibuffer-setup-hook))
+  (:when-loaded
+    (setq minibuffer-prompt-properties '(read-only t face minibuffer-prompt cursor-intangible t))))
 
 ;;;; pulsar
 
-(use-package pulsar
-  :straight t
-  :demand t
-  :config
+(straight-use-package 'pulsar)
+
+(setup pulsar
   (pulsar-global-mode)
   (setq pulse-flag t)
   (add-to-list 'pulsar-pulse-functions #'ace-window))
 
 ;;;; goggles
 
-(use-package goggles
-  :straight t
-  :delight
-  :hook
-  (prog-mode . goggles-mode)
-  (text-mode . goggles-mode))
+(straight-use-package 'goggles)
+
+(setup goggles
+  (:delight)
+  (:hook-into prog-mode text-mode))
 
 ;;;; orderless
 
-(use-package orderless
-  :straight t
-  :after (:any vertico corfu consult)
-  :config
-  (setq completion-styles '(orderless basic))
-  (orderless-define-completion-style orderless+flex
-    (orderless-matching-styles '(orderless-flex)))
-  (orderless-define-completion-style orderless+initialism
-    (orderless-matching-styles '(orderless-initialism
-                                 orderless-literal
-                                 orderless-regexp)))
-  (setq completion-category-overrides
-        '((file . ((styles . (basic partial-completion))))
-          (symbol . ((styles . (orderless+flex))))
-          (symbol-help . ((styles . (orderless+flex))))
-          (command . ((styles . (orderless+initialism))))
-          (variable . ((styles . (orderless+initialism))))
-          (eglot . ((styles . (orderless))))
-          (eglot-capf . ((styles . (orderless))))))
+(straight-use-package 'orderless)
 
+(setup orderless
+  (:when-loaded
+    (setq completion-styles '(orderless basic))
+    (orderless-define-completion-style orderless+flex
+      (orderless-matching-styles '(orderless-flex)))
+    (orderless-define-completion-style orderless+initialism
+      (orderless-matching-styles '(orderless-initialism
+                                   orderless-literal
+                                   orderless-regexp)))
+    (setq completion-category-overrides
+          '((file . ((styles . (basic partial-completion))))
+            (symbol . ((styles . (orderless+flex))))
+            (symbol-help . ((styles . (orderless+flex))))
+            (command . ((styles . (orderless+initialism))))
+            (variable . ((styles . (orderless+initialism))))
+            (eglot . ((styles . (orderless))))
+            (eglot-capf . ((styles . (orderless))))))
 
-  (defun +orderless--consult-suffix ()
-    "Regexp which matches the end of string with Consult tofu support."
-    (if (and (boundp 'consult--tofu-char) (boundp 'consult--tofu-range))
-        (format "[%c-%c]*$" consult--tofu-char
-                (+ consult--tofu-char consult--tofu-range -1))
-      "$"))
+    (defun +orderless--consult-suffix ()
+      "Regexp which matches the end of string with Consult tofu support."
+      (if (and (boundp 'consult--tofu-char) (boundp 'consult--tofu-range))
+          (format "[%c-%c]*$" consult--tofu-char
+                  (+ consult--tofu-char consult--tofu-range -1))
+        "$"))
 
-  (defun +orderless--consult-dispatch (word _index _total)
-    (cond
-     ;; Ensure that $ works with consult commands, which add disambiguation suffixes
-     ((string-suffix-p "$" word)
-      `(orderless-regexp . ,(concat (substring word 0 -1) (+orderless--consult-suffix))))
-     ;; File extensions
-     ((and (or minibuffer-completing-file-name
-               (derived-mode-p 'eshell-mode))
-           (string-match-p "\\`\\.." word))
-      `(orderless-regexp . ,(concat "\\." (substring word 1) (+orderless--consult-suffix))))))
+    (defun +orderless--consult-dispatch (word _index _total)
+      (cond
+       ;; Ensure that $ works with consult commands, which add disambiguation suffixes
+       ((string-suffix-p "$" word)
+        `(orderless-regexp . ,(concat (substring word 0 -1) (+orderless--consult-suffix))))
+       ;; File extensions
+       ((and (or minibuffer-completing-file-name
+                 (derived-mode-p 'eshell-mode))
+             (string-match-p "\\`\\.." word))
+        `(orderless-regexp . ,(concat "\\." (substring word 1) (+orderless--consult-suffix))))))
 
-  (add-to-list 'orderless-style-dispatchers #'+orderless--consult-dispatch))
+    (add-to-list 'orderless-style-dispatchers #'+orderless--consult-dispatch)))
 
 ;;;; corfu
 
-(use-package corfu
-  :straight t
-  :defer 20
-  :init
-  (defun +corfu--load (&rest _)
-    (require 'corfu))
-  (advice-add 'completion-in-region :before #'+corfu--load)
-  :bind
-  (:map corfu-map
-        ("C-q" . corfu-quick-insert)
-        ("M-q" . corfu-quick-complete)
-        ("TAB" . corfu-next)
-        ("S-TAB" . corfu-previous)
-        ("<backtab>" . corfu-previous))
-  :config
-  (remove-hook 'completion-in-region #'+corfu--load)
-  (setq completion-cycle-threshold 0
-        tab-always-indent 'complete
-        text-mode-ispell-word-completion nil
-        read-extended-command-predicate #'command-completion-default-include-p)
-  (setq corfu-cycle t
-        corfu-preselect 'prompt)
-  (setq corfu-quick1 "aoeuip"
-        corfu-quick2 "dhtnslm")
-  (global-corfu-mode)
-  (corfu-history-mode)
-  (corfu-popupinfo-mode)
-  (with-eval-after-load 'savehist
-    (add-to-list 'savehist-additional-variables 'corfu-history)))
+(straight-use-package 'corfu)
+(straight-use-package 'corfu-terminal)
 
-(use-package corfu-terminal
-  :straight t
-  :unless (featurep 'tty-child-frames)
-  :after corfu
-  :hook
-  (tty-setup . corfu-terminal-mode)
-  :init
+(setup corfu
+  (:also-load orderless)
+  (define-advice completion-in-region (:before (&rest _) corfu)
+    (require 'corfu))
+  (:when-loaded
+    (advice-remove 'completion-in-region #'completion-in-region@corfu)
+    (setq completion-cycle-threshold 0
+          tab-always-indent 'complete
+          text-mode-ispell-word-completion nil
+          read-extended-command-predicate #'command-completion-default-include-p)
+    (setq corfu-cycle t
+          corfu-preselect 'prompt)
+    (setq corfu-quick1 "aoeuip"
+          corfu-quick2 "dhtnslm")
+    (global-corfu-mode)
+    (corfu-history-mode)
+    (corfu-popupinfo-mode)
+    (with-eval-after-load 'savehist
+      (add-to-list 'savehist-additional-variables 'corfu-history))
+
+    (:with-map corfu-map
+      (:bind "C-q" corfu-quick-insert
+             "M-q" corfu-quick-complete
+             "TAB" corfu-next
+             "S-TAB" corfu-previous
+             "<backtab>" corfu-previous))))
+
+(setup corfu-terminal
+  (:only-if (not (featurep 'tty-child-frames)))
+  (:hook-into tty-setup-hook)
   (unless (display-graphic-p)
     (corfu-terminal-mode)))
 
 ;;;; cape
 
-(use-package cape
-  :straight t
-  :init
+(straight-use-package 'cape)
+
+(setup cape
+  (:global "C-c p" cape-prefix-map)
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'completion-at-point-functions #'cape-file)
-  (add-hook 'completion-at-point-functions #'cape-elisp-block)
-  :bind
-  ("C-c p" . cape-prefix-map))
+  (add-hook 'completion-at-point-functions #'cape-elisp-block))
 
 ;;;; dabbrev
 
-(use-package dabbrev
-  :defer t
-  :config
-  (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
-  (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
-  (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
-  (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode))
+(setup dabbrev
+  (:when-loaded
+    (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
+    (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
+    (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
+    (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode)))
 
 ;;;; abbrev
 
-(use-package abbrev
-  :defer t
+(setup abbrev
   :delight)
 
 ;;;; tempel
 
-(use-package tempel
-  :straight t
-  :functions
-  tempel--templates
-  :bind
-  ("M-+" . tempel-complete)
-  ("M-*" . tempel-insert)
-  :init
+(straight-use-package 'tempel)
+
+(setup tempel
+  (:global "M-+" tempel-complete
+           "M-*" tempel-insert)
   (defun tempel-setup-capf ()
     (setq-local completion-at-point-functions
                 (cons #'tempel-expand
@@ -361,157 +339,143 @@ ARGS: see `completion-read-multiple'."
   (add-hook 'conf-mode-hook 'tempel-setup-capf)
   (add-hook 'prog-mode-hook 'tempel-setup-capf)
   (add-hook 'text-mode-hook 'tempel-setup-capf)
-  :config
-  (setq tempel-path (concat user-emacs-directory "/templates/*.eld"))
-
-  (defun tempel-include (elt)
-    (when (eq (car-safe elt) 'i)
-      (if-let* ((template (alist-get (cadr elt) (tempel--templates))))
-          (cons 'l template)
-        (message "Template %s not found" (cadr elt))
-        nil)))
-  (add-to-list 'tempel-user-elements #'tempel-include))
+  (:when-loaded
+    (setq tempel-path (concat user-emacs-directory "/templates/*.eld"))
+    (defun tempel-include (elt)
+      (when (eq (car-safe elt) 'i)
+        (if-let* ((template (alist-get (cadr elt) (tempel--templates))))
+            (cons 'l template)
+          (message "Template %s not found" (cadr elt))
+          nil)))
+    (add-to-list 'tempel-user-elements #'tempel-include)))
 
 ;;;; embark
 
 (straight-use-package 'xterm-color)
 
-(use-package embark
-  :straight t
-  :bind
-  ("C-." . embark-act)
-  :init
+(straight-use-package 'embark)
+
+(setup embark
+  (:global "C-." embark-act)
   (setq prefix-help-command #'embark-prefix-help-command)
-  :config
-  (setq embark-mixed-indicator-delay 3)
+  (:when-loaded
+    (setq embark-mixed-indicator-delay 3)
 
-  (defun +embark/find-file-as-root (file)
-    "Find FILE as root."
-    (interactive "fFind file as root: ")
-    (let* ((absolute-file-name (expand-file-name file))
-           (remote (file-remote-p absolute-file-name))
-           sudo-file-name)
-      (cond (remote
-             (let ((method (file-remote-p absolute-file-name 'method))
-                   (user (file-remote-p absolute-file-name 'user))
-                   (host (file-remote-p absolute-file-name 'host))
-                   (localname (file-remote-p absolute-file-name 'localname)))
-               (when (equal method "scp")
-                 (setq method "ssh"))
-               (if (or (equal user "root") (equal method "sudo"))
-                   (setq sudo-file-name absolute-file-name)
-                 (setq sudo-file-name (concat "/" method ":" user "@" host "|sudo::" localname)))))
-            (t (setq sudo-file-name (concat "/sudo::" absolute-file-name))))
-      (find-file sudo-file-name)))
+    (defun +embark/find-file-as-root (file)
+      "Find FILE as root."
+      (interactive "fFind file as root: ")
+      (let* ((absolute-file-name (expand-file-name file))
+             (remote (file-remote-p absolute-file-name))
+             sudo-file-name)
+        (cond (remote
+               (let ((method (file-remote-p absolute-file-name 'method))
+                     (user (file-remote-p absolute-file-name 'user))
+                     (host (file-remote-p absolute-file-name 'host))
+                     (localname (file-remote-p absolute-file-name 'localname)))
+                 (when (equal method "scp")
+                   (setq method "ssh"))
+                 (if (or (equal user "root") (equal method "sudo"))
+                     (setq sudo-file-name absolute-file-name)
+                   (setq sudo-file-name (concat "/" method ":" user "@" host "|sudo::" localname)))))
+              (t (setq sudo-file-name (concat "/sudo::" absolute-file-name))))
+        (find-file sudo-file-name)))
 
-  (defun +embark/eww-open-bookmark (bookmark)
-    "Open BOOKMARK with `eww'."
-    (eww (or (bookmark-prop-get bookmark 'location)
-             (bookmark-prop-get bookmark 'filename)
-             (user-error "Bookmark `%s' doesn't have a location" bookmark))))
+    (defun +embark/eww-open-bookmark (bookmark)
+      "Open BOOKMARK with `eww'."
+      (eww (or (bookmark-prop-get bookmark 'location)
+               (bookmark-prop-get bookmark 'filename)
+               (user-error "Bookmark `%s' doesn't have a location" bookmark))))
 
-  (defun +embark/browse-url-open-bookmark (bookmark)
-    "Open BOOKMARK with `browse-url'."
-    (browse-url (or (bookmark-prop-get bookmark 'location)
-                    (bookmark-prop-get bookmark 'filename)
-                    (user-error "Bookmark `%s' doesn't have a location" bookmark))))
+    (defun +embark/browse-url-open-bookmark (bookmark)
+      "Open BOOKMARK with `browse-url'."
+      (browse-url (or (bookmark-prop-get bookmark 'location)
+                      (bookmark-prop-get bookmark 'filename)
+                      (user-error "Bookmark `%s' doesn't have a location" bookmark))))
 
-  (defun +embark/apply-ansi-color (beg end &optional use-overlays)
-    "Apply ansi color sequence on region [BEG END).
+    (defun +embark/apply-ansi-color (beg end &optional use-overlays)
+      "Apply ansi color sequence on region [BEG END).
 
 When interactive, prefix-argument means to use overlays instead of text
 properties, if supported.  Elisp code can achieve this with non-nil
 value for USE-OVERLAYS."
-    (interactive "*r\nP")
-    (if (fboundp 'xterm-color-colorize-buffer)
-        (save-restriction
-          (narrow-to-region beg end)
-          (xterm-color-colorize-buffer use-overlays))
-      (let ((ansi-color-apply-face-function
-             (if use-overlays #'ansi-color-apply-overlay-face
-               #'ansi-color-apply-text-property-face)))
-        (ansi-color-apply-on-region beg end))))
+      (interactive "*r\nP")
+      (if (fboundp 'xterm-color-colorize-buffer)
+          (save-restriction
+            (narrow-to-region beg end)
+            (xterm-color-colorize-buffer use-overlays))
+        (let ((ansi-color-apply-face-function
+               (if use-overlays #'ansi-color-apply-overlay-face
+                 #'ansi-color-apply-text-property-face)))
+          (ansi-color-apply-on-region beg end))))
 
-  (bind-key "#" '+embark/find-file-as-root embark-file-map)
-  (bind-key "W" '+embark/eww-open-bookmark embark-bookmark-map)
-  (bind-key "u" '+embark/browse-url-open-bookmark embark-bookmark-map)
-  (bind-key "[" '+embark/apply-ansi-color embark-region-map))
+    (keymap-set embark-file-map "#" '+embark/find-file-as-root)
+    (keymap-set embark-bookmark-map "W" '+embark/eww-open-bookmark)
+    (keymap-set embark-bookmark-map "u" '+embark/browse-url-open-bookmark)
+    (keymap-set embark-region-map "[" '+embark/apply-ansi-color)))
 
 ;;;; consult
 
 (straight-use-package 'pcre2el)
 
-(use-package consult
-  :straight t
-  ;; Replace bindings. Lazily loaded by `use-package'.
-  :bind (;; C-c bindings in `mode-specific-map'
-         ("C-c M-x" . consult-mode-command)
-         ("C-c h" . consult-history)
-         ("C-c k" . consult-kmacro)
-         ("C-c m" . consult-man)
-         ("C-c i" . consult-info)
-         ([remap Info-search] . consult-info)
-         ;; C-x bindings in `ctl-x-map'
-         ("C-x M-:" . consult-complex-command) ;; orig. repeat-complex-command
-         ("C-x b" . consult-buffer) ;; orig. switch-to-buffer
-         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-         ("C-x 5 b" . consult-buffer-other-frame) ;; orig. switch-to-buffer-other-frame
-         ("C-x t b" . consult-buffer-other-tab) ;; orig. switch-to-buffer-other-tab
-         ("C-x r b" . consult-bookmark)         ;; orig. bookmark-jump
-         ("C-x p b" . consult-project-buffer) ;; orig. project-switch-to-buffer
-         ;; Custom M-# bindings for fast register access
-         ("M-#" . consult-register-load)
-         ("M-'" . consult-register-store) ;; orig. abbrev-prefix-mark (unrelated)
-         ("C-M-#" . consult-register)
-         ;; Other custom bindings
-         ("M-y" . consult-yank-pop) ;; orig. yank-pop
-         ;; M-g bindings in `goto-map'
-         ("M-g e" . consult-compile-error)
-         ("M-g f" . consult-flymake) ;; Alternative: consult-flycheck
-         ("M-g g" . consult-goto-line)   ;; orig. goto-line
-         ("M-g M-g" . consult-goto-line) ;; orig. goto-line
-         ("M-g o" . consult-outline) ;; Alternative: consult-org-heading
-         ("M-g m" . consult-mark)
-         ("M-g k" . consult-global-mark)
-         ("M-g i" . consult-imenu)
-         ("M-g I" . consult-imenu-multi)
-         ;; M-s bindings in `search-map'
-         ("M-s d" . consult-find) ;; Alternative: consult-fd
-         ("M-s c" . consult-locate)
-         ("M-s g" . consult-grep)
-         ("M-s G" . consult-git-grep)
-         ("M-s r" . consult-ripgrep)
-         ("M-s l" . consult-line)
-         ("M-s L" . consult-line-multi)
-         ("M-s k" . consult-keep-lines)
-         ("M-s u" . consult-focus-lines)
-         ;; Isearch integration
-         ("M-s e" . consult-isearch-history)
-         :map isearch-mode-map
-         ("M-e" . consult-isearch-history) ;; orig. isearch-edit-string
-         ("M-s e" . consult-isearch-history) ;; orig. isearch-edit-string
-         ("M-s l" . consult-line) ;; needed by consult-line to detect isearch
-         ("M-s L" . consult-line-multi) ;; needed by consult-line to detect isearch
-         ;; Minibuffer history
-         :map minibuffer-local-map
-         ("M-s" . consult-history) ;; orig. next-matching-history-element
-         ("M-r" . consult-history))                ;; orig. previous-matching-history-element
+(setup consult
+  (:global "C-c M-x" consult-mode-command
+           "C-c h" consult-history
+           "C-c k" consult-kmacro
+           "C-c m" consult-man
+           "C-c i" consult-info
+           [remap Info-search] consult-info
+           ;; C-x bindings in `ctl-x-map'
+           "C-x M-:" consult-complex-command ;; orig. repeat-complex-command
+           "C-x b" consult-buffer ;; orig. switch-to-buffer
+           "C-x 4 b" consult-buffer-other-window ;; orig. switch-to-buffer-other-window
+           "C-x 5 b" consult-buffer-other-frame ;; orig. switch-to-buffer-other-frame
+           "C-x t b" consult-buffer-other-tab ;; orig. switch-to-buffer-other-tab
+           "C-x r b" consult-bookmark         ;; orig. bookmark-jump
+           "C-x p b" consult-project-buffer ;; orig. project-switch-to-buffer
+           ;; Custom M-# bindings for fast register access
+           "M-#" consult-register-load
+           "M-'" consult-register-store ;; orig. abbrev-prefix-mark (unrelated)
+           "C-M-#" consult-register
+           ;; Other custom bindings
+           "M-y" consult-yank-pop ;; orig. yank-pop
+           ;; M-g bindings in `goto-map'
+           "M-g e" consult-compile-error
+           "M-g f" consult-flymake ;; Alternative: consult-flycheck
+           "M-g g" consult-goto-line   ;; orig. goto-line
+           "M-g M-g" consult-goto-line ;; orig. goto-line
+           "M-g o" consult-outline ;; Alternative: consult-org-heading
+           "M-g m" consult-mark
+           "M-g k" consult-global-mark
+           "M-g i" consult-imenu
+           "M-g I" consult-imenu-multi
+           ;; M-s bindings in `search-map'
+           "M-s d" consult-find ;; Alternative: consult-fd
+           "M-s c" consult-locate
+           "M-s g" consult-grep
+           "M-s G" consult-git-grep
+           "M-s r" consult-ripgrep
+           "M-s l" consult-line
+           "M-s L" consult-line-multi
+           "M-s k" consult-keep-lines
+           "M-s u" consult-focus-lines
+           ;; Isearch integration
+           "M-s e" consult-isearch-history)
 
-  ;; Enable automatic preview at point in the *Completions* buffer. This is
-  ;; relevant when you use the default completion UI.
-  :hook (completion-list-mode . consult-preview-at-point-mode)
+  (:with-map isearch-mode-map
+    (:bind "M-e" consult-isearch-history
+           "M-s e" consult-isearch-history
+           "M-s l" consult-line
+           "M-s L" consult-line-multi))
 
-  ;; The :init configuration is always executed (Not lazy)
-  :init
+  (:with-map minibuffer-local-map
+    (:bind "M-s" consult-history
+           "M-r" consult-history))
 
-  ;; Optionally configure the register formatting. This improves the register
-  ;; preview for `consult-register', `consult-register-load',
-  ;; `consult-register-store' and the Emacs built-ins.
+  (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
+
   (setq register-preview-delay 0.5
         register-preview-function #'consult-register-format)
 
-  ;; Optionally tweak the register preview window.
-  ;; This adds thin lines, sorting and hides the mode line of the window.
   (advice-add #'register-preview :override #'consult-register-window)
 
   (defun +consult--read-file-name-function (prompt &optional dir _default mustmatch initial pred)
@@ -536,7 +500,6 @@ value for USE-OVERLAYS."
 
   (setq read-file-name-function #'+consult--read-file-name-function)
 
-
   (defun +consult--read-buffer-function (prompt &optional def mustmatch pred)
     (require 'consult)
     ;; Use consult--read-1 instead of consult--read to suppress consult customizations.
@@ -554,75 +517,56 @@ value for USE-OVERLAYS."
 
   (setq read-buffer-function #'+consult--read-buffer-function)
 
-  ;; Configure other variables and modes in the :config section,
-  ;; after lazily loading the package.
-  :config
+  (:when-loaded
 
-  ;; Optionally configure preview. The default value
-  ;; is 'any, such that any key triggers the preview.
-  ;; (setq consult-preview-key 'any)
-  (setq consult-preview-key "M-.")
-  ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
-  ;; For some commands and buffer sources it is useful to configure the
-  ;; :preview-key on a per-command basis using the `consult-customize' macro.
-  ;; (consult-customize
-  ;;  consult-theme :preview-key '(:debounce 0.2 any)
-  ;;  consult-ripgrep consult-git-grep consult-grep
-  ;;  consult-bookmark consult-recent-file consult-xref
-  ;;  consult--source-bookmark consult--source-file-register
-  ;;  consult--source-recent-file consult--source-project-recent-file
-  ;;  :preview-key "M-.")
+    (setq consult-preview-key "M-.")
 
-  (consult-customize
-   consult-xref consult-ripgrep consult-grep consult-git-grep
-   consult-line consult-focus-lines consult-keep-lines
-   consult-imenu
-   :preview-key '(:debounce 0.2 any))
+    (consult-customize
+     consult-xref consult-ripgrep consult-grep consult-git-grep
+     consult-line consult-focus-lines consult-keep-lines
+     consult-imenu
+     :preview-key '(:debounce 0.2 any))
 
-  ;; Optionally configure the narrowing key.
-  ;; Both < and C-+ work reasonably well.
-  (setq consult-narrow-key "<") ;; "C-+"
+    (setq consult-narrow-key "<") ;; "C-+"
 
-  ;; Optionally make narrowing help available in the minibuffer.
-  ;; You may want to use `embark-prefix-help-command' or which-key instead.
-  ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
+    (defun +consult--orderless-regexp-compiler (input type &rest _config)
+      (setq input (cdr (orderless-compile input)))
+      (cons
+       (mapcar (lambda (r) (consult--convert-regexp r type)) input)
+       (lambda (str)
+         (let ((orderless-match-faces orderless-match-faces))
+           (setq orderless-match-faces (vconcat '(consult-highlight-match) orderless-match-faces))
+           (orderless--highlight input t str)))))
 
-  (defun +consult--orderless-regexp-compiler (input type &rest _config)
-    (setq input (cdr (orderless-compile input)))
-    (cons
-     (mapcar (lambda (r) (consult--convert-regexp r type)) input)
-     (lambda (str)
-       (let ((orderless-match-faces orderless-match-faces))
-         (setq orderless-match-faces (vconcat '(consult-highlight-match) orderless-match-faces))
-         (orderless--highlight input t str)))))
+    (setq-default consult--regexp-compiler #'+consult--orderless-regexp-compiler)
 
-  (setq-default consult--regexp-compiler #'+consult--orderless-regexp-compiler)
-
-  (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow))))
+    (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow)))))
 
 
-(use-package embark-consult
-  :straight t
-  :defer t
-  :config
-  (require 'grep)
-  (when (fboundp 'grep--heading-filter)
-    (progn
-      (defun +embark-consult-export-grep--headings (&rest _)
-        (save-excursion
-          (goto-char (point-max))
-          (let ((inhibit-read-only t))
-            (grep--heading-filter))))
-      (advice-add #'embark-consult-export-grep :after #'+embark-consult-export-grep--headings))))
+
+(straight-use-package 'embark-consult)
+
+(setup embark-consult
+  (:also-load grep)
+  (:when-loaded
+    (when (fboundp 'grep--heading-filter)
+      (progn
+        (defun +embark-consult-export-grep--headings (&rest _)
+          (save-excursion
+            (goto-char (point-max))
+            (let ((inhibit-read-only t))
+              (grep--heading-filter))))
+        (advice-add #'embark-consult-export-grep :after #'+embark-consult-export-grep--headings)))))
 
 
-(use-package consult-dir
-  :straight t
-  :bind
-  ("C-x C-d" . consult-dir)
-  (:map minibuffer-local-map
-        ("C-x C-d" . consult-dir)
-        ("C-x C-j" . consult-dir-jump-file)))
+(straight-use-package 'consult-dir)
+
+(setup consult-dir
+  (:global "C-x C-d" consult-dir)
+  (:with-map minibuffer-local-map
+    (:bind "C-x C-d" consult-dir
+           "C-x C-j" consult-dir-jump-file)))
+
 
 (straight-use-package '(consult-everything
                         :host github
@@ -630,33 +574,28 @@ value for USE-OVERLAYS."
 
 ;;;; windmove
 
-(use-package windmove
-  :init
+(setup windmove
   (defun +windmove--autoload ()
     (interactive)
     (require 'windmove)
     (let ((events (mapcar (lambda (ev) (cons t ev))
                           (listify-key-sequence (this-command-keys)))))
       (setq unread-command-events (append events unread-command-events))))
-  (bind-keys ("S-<left>" . +windmove--autoload)
-             ("S-<right>" . +windmove--autoload)
-             ("S-<up>" . +windmove--autoload)
-             ("S-<down>" . +windmove--autoload))
-  :config
-  (windmove-default-keybindings))
+  (:global "S-<left>" +windmove--autoload
+           "S-<right>" +windmove--autoload
+           "S-<up>" +windmove--autoload
+           "S-<down>" +windmove--autoload)
+  (:when-loaded
+    (windmove-default-keybindings)))
 
 ;;;; popper
 
-(use-package popper
-  :straight t
-  :bind
-  ("C-`" . popper-toggle)
-  ("M-`" . popper-cycle)
-  ("C-M-`" . popper-toggle-type)
-  :defines
-  popper-reference-buffers
-  popper-display-function
-  :init
+(straight-use-package 'popper)
+
+(setup popper
+  (:global "C-`" popper-toggle
+           "M-`" popper-cycle
+           "C-M-`" popper-toggle-type)
   (setq popper-reference-buffers '("\\*Messages\\*" "Output\\*$"
                                    "\\*Async Shell Command\\*"
                                    "-eat\\*$"
@@ -686,96 +625,71 @@ value for USE-OVERLAYS."
     (funcall popper-display-function buffer alist))
 
   (add-to-list 'display-buffer-alist '(+popper--popup-p (+popper--display)))
-  :config
-  (setq display-buffer-alist (assq-delete-all '+popper--popup-p display-buffer-alist))
 
-  ;; delay select-window to post-command-hook
-  (defvar +popper--delayed-window nil)
-  (defun +popper--select-delayed-window ()
-    (when +popper--delayed-window
-      (select-window +popper--delayed-window)
-      (setq +popper--delayed-window nil)))
-  (add-hook 'post-command-hook '+popper--select-delayed-window 90)
-  (defun +popper--select-popup-delayed (buf alist)
-    (setq +popper--delayed-window (popper-display-popup-at-bottom buf alist)))
-  (setq popper-display-function '+popper--select-popup-delayed)
-  (with-eval-after-load 'project
-    (setq popper-group-function #'popper-group-by-project))
-  (popper-mode)
-  (popper-echo-mode))
+  (:when-loaded
+    (setq display-buffer-alist (assq-delete-all '+popper--popup-p display-buffer-alist))
+
+    ;; delay select-window to post-command-hook
+    (defvar +popper--delayed-window nil)
+    (defun +popper--select-delayed-window ()
+      (when +popper--delayed-window
+        (select-window +popper--delayed-window)
+        (setq +popper--delayed-window nil)))
+    (add-hook 'post-command-hook '+popper--select-delayed-window 90)
+    (defun +popper--select-popup-delayed (buf alist)
+      (setq +popper--delayed-window (popper-display-popup-at-bottom buf alist)))
+    (setq popper-display-function '+popper--select-popup-delayed)
+    (with-eval-after-load 'project
+      (setq popper-group-function #'popper-group-by-project))
+    (popper-mode)
+    (popper-echo-mode)))
 
 ;;;; ibuffer
 
-(use-package ibuffer
-  :bind
-  ("<remap> <list-buffers>" . ibuffer))
+(setup ibuffer
+  (:global "<remap> <list-buffers>" ibuffer))
 
 ;;;; avy
 
-(use-package avy
-  :straight t
-  :bind
-  ("C-:" . avy-goto-char)
-  ("C-'" . avy-goto-char-timer)
-  ("M-g w" . avy-goto-word-1)
-  (:map isearch-mode-map
-        ("C-'" . avy-isearch))
-  :config
+(straight-use-package 'avy)
+
+(setup avy
+  (:global "C-:" avy-goto-char
+           "C-'" avy-goto-char-timer
+           "M-g w" avy-goto-word-1)
+  (:with-map isearch-mode-map
+    (:bind "C-'" avy-isearch))
   (setq avy-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n ?s ?l ?m)))
 
 ;;;; ace-window
 
-(use-package ace-window
-  :straight t
-  :bind
-  ("M-o" . ace-window)
-  :config
+(straight-use-package 'ace-window)
+
+(setup ace-window
+  (:global "M-o" ace-window)
   (setq aw-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n ?s ?l ?m)))
 
 ;;;; apheleia
 
-(use-package apheleia
-  :straight t
-  :bind
-  ("C-x x /" . apheleia-format-buffer)
-  :config
-  (when (memq system-type '(windows-nt ms-dos))
-    (advice-add #'apheleia-format-after-save :override #'ignore)))
+(straight-use-package 'apheleia)
+
+(setup apheleia
+  (:global "C-x x /" apheleia-format-buffer))
 
 ;;;; ws-butler
 
-(use-package ws-butler
-  :straight t
-  :delight
-  :hook
-  (find-file . ws-butler-mode))
+(straight-use-package 'ws-butler)
 
-;;;; activities
-
-(use-package activities
-  :straight t
-  :bind
-  (("C-x C-a C-n" . activities-new)
-   ("C-x C-a C-d" . activities-define)
-   ("C-x C-a C-a" . activities-resume)
-   ("C-x C-a C-s" . activities-suspend)
-   ("C-x C-a C-k" . activities-kill)
-   ("C-x C-a RET" . activities-switch)
-   ("C-x C-a b" . activities-switch-buffer)
-   ("C-x C-a g" . activities-revert)
-   ("C-x C-a l" . activities-list))
-  :config
-  (activities-mode)
-  (activities-tabs-mode))
+(setup ws-butler
+  (:delight)
+  (:hook-into find-file-hook))
 
 ;;;; recentf
 
-(use-package recentf
-  :hook
-  (find-file . recentf-track-opened-file)
-  (kill-buffer . recentf-track-closed-file)
-  :init
-  (add-hook 'write-file-functions #'recentf-track-opened-file)
+(setup recentf
+  (:with-function recentf-track-opened-file
+    (:autoload-this)
+    (:hook-into file-file-hook))
   (with-eval-after-load 'consult
     (defvar +consult--source-recentf-file--items
       (plist-get consult--source-recent-file :items))
@@ -786,100 +700,85 @@ value for USE-OVERLAYS."
             (unless (bound-and-true-p recentf-mode)
               (recentf-mode))
             (funcall +consult--source-recentf-file--items))))
-  :config
   (setq recentf-max-saved-items 128)
-  (let ((inhibit-message t))
-    (recentf-mode)))
+  (:when-loaded
+    (let ((inhibit-message t))
+      (recentf-mode))))
 
 ;;;; saveplace
 
-(use-package saveplace
-  :hook
-  (find-file . save-place-find-file-hook)
-  (dired-initial-position . save-place-dired-hook)
-  :config
-  (save-place-mode))
+(setup saveplace
+  (:with-function (save-place-find-file-hook save-place-dired-hookf)
+    (:autoload-this)
+    (add-hook 'find-file-hook #'save-place-find-file-hook)
+    (add-hook 'dired-initial-position-hook #'save-place-dired-hook))
+  (:when-loaded
+    (save-place-mode)))
 
 ;;;; autorevert
 
-(use-package autorevert
-  :hook
-  (find-file . auto-revert--global-adopt-current-buffer)
-  :config
-  (setq auto-revert-remote-files t)
-  ;; avoid polling when notification is available
-  (setq auto-revert-avoid-polling t)
-  ;; TODO: configure auto-revert-notify-exclude-dir-regexp
-  (global-auto-revert-mode))
+(setup autorevert
+  (:with-function auto-revert--global-adopt-current-buffer
+    (:autoload-this)
+    (:hook-into find-file-hook))
+  (setq auto-revert-remote-files t
+        auto-revert-avoid-polling t)
+  (:when-loaded
+    (global-auto-revert-mode)))
 
 ;;;; dired
 
-(use-package dired
-  :defer t
-  :config
+(setup dired
+  (:hook dired-omit-mode)
   (setq dired-listing-switches "-lah"
-        dired-hide-details-hide-absolute-location t))
-
-;;;; dired-x
-
-(use-package dired-x
-  :hook
-  (dired-mode . dired-omit-mode)
-  :init
-  (setq dired-x-hands-off-my-keys nil))
+        dired-hide-details-hide-absolute-location t
+        dired-x-hands-off-my-keys nil))
 
 ;;;; compile
 
-(use-package compile
-  :defer t
-  :config
+(setup compile
   (setq compilation-always-kill t
         compilation-ask-about-save t
         compilation-scroll-output 'first-error)
 
-  (defun +compile--use-pipe ()
-    (setq-local process-connection-type nil))
+  (:when-loaded
+    (defun +compile--use-pipe ()
+      (setq-local process-connection-type nil))
 
-  (add-hook 'compilation-mode-hook #'+compile--use-pipe))
+    (add-hook 'compilation-mode-hook #'+compile--use-pipe)))
 
 ;;;; comint
 
-(use-package comint
-  :defer t
-  :config
+(setup comint
   (setq comint-prompt-read-only t
         comint-buffer-maximum-size 2048))
 
 ;;;; eshell
 
-(use-package eshell
-  :defer t
-  :defines (eshell-hist-mode-map)
-  :config
-  (setq eshell-scroll-to-bottom-on-input t
-        eshell-history-size 8192
-        eshell-save-history-on-exit t)
-  (add-to-list 'eshell-modules-list 'eshell-tramp)
-  (defun +eshell--capf ()
-    (when (fboundp 'cape-history)
-      (add-hook 'completion-at-point-functions #'cape-history 50 t)))
-  (add-hook 'eshell-mode-hook '+eshell--capf)
-  (with-eval-after-load 'esh-hist
-    (when (fboundp 'consult-history)
-      (bind-key "M-r" #'consult-history eshell-hist-mode-map))))
+(setup eshell
+  (:when-loaded
+    (setq eshell-scroll-to-bottom-on-input t
+          eshell-history-size 8192
+          eshell-save-history-on-exit t)
+    (add-to-list 'eshell-modules-list 'eshell-tramp)
+    (defun +eshell--capf ()
+      (when (fboundp 'cape-history)
+        (add-hook 'completion-at-point-functions #'cape-history 50 t)))
+    (add-hook 'eshell-mode-hook '+eshell--capf)
+    (with-eval-after-load 'esh-hist
+      (when (fboundp 'consult-history)
+        (bind-key "M-r" #'consult-history eshell-hist-mode-map)))))
 
 ;;;; iedit
 
-(use-package iedit
-  :straight t
-  :bind
-  ("C-;" . iedit-mode))
+(straight-use-package 'iedit)
+
+(setup iedit
+  (:global "C-;" iedit-mode))
 
 ;;;; text-mode
 
-(use-package text-mode
-  :defer t
-  :config
+(setup text-mode
   (defun +text-mode--capf ()
     (when (fboundp 'cape-dict)
       (add-hook 'completion-at-point-functions #'cape-dict 90 t)))
@@ -887,344 +786,317 @@ value for USE-OVERLAYS."
 
 ;;;; nxml-mode
 
-(use-package nxml-mode
-  :defer t
-  :config
-  (defun +nxml-mode--flymake ()
-    (when (fboundp 'flymake-xmllint)
-      (add-hook 'flymake-diagnostics-functions nil #'flymake-xmllint)))
-  (add-hook 'nxml-mode-hook #'+nxml-mode--flymake))
+(setup nxml-mode
+  (:when-loaded
+    (defun +nxml-mode--flymake ()
+      (when (fboundp 'flymake-xmllint)
+        (add-hook 'flymake-diagnostics-functions nil #'flymake-xmllint)))
+    (add-hook 'nxml-mode-hook #'+nxml-mode--flymake)))
 
 ;;;; outline
 
-(use-package outline-minor-faces
-  :straight t
-  :hook
-  (outline-minor-mode . outline-minor-faces-mode))
+(straight-use-package 'outline-minor-faces)
+
+(setup outline-minor-faces
+  (:hook-into outline-minor-mode))
 
 ;;;; adaptive-wrap or visual-wrap
 
-(use-package adaptive-wrap
-  :straight t
-  :unless (fboundp 'visual-wrap-prefix-mode)
-  :hook
-  (visual-line-mode . adaptive-wrap-prefix-mode))
+(straight-use-package 'adaptive-wrap)
 
-(use-package visual-wrap
-  :when (locate-library "visual-wrap")
-  :hook
-  (visual-line-mode . visual-wrap-prefix-mode))
+(setup adaptive-wrap
+  (:only-if (not (fboundp 'visual-wrap-prefix-mode)))
+  (:with-mode adaptive-wrap-prefix-mode
+    (:hook-into visual-line-mode)))
+
+(setup visual-wrap
+  (:only-if (locate-library "visual-wrap"))
+  (:with-mode visual-wrap-prefix-mode
+    (:hook-into visual-line-mode)))
 
 ;;;; hl-todo
 
-(use-package hl-todo
-  :straight t
-  :hook
-  ((prog-mode conf-mode) . hl-todo-mode)
-  :bind
-  (:repeat-map +hl-todo--repeat-map
-               ("[" . hl-todo-previous)
-               ("]" . hl-todo-next)
-               :exit
-               ("o" . hl-todo-occur))
-  (:map hl-todo-mode-map
-        ("C-c t [" . hl-todo-previous)
-        ("C-c t ]" . hl-todo-next)
-        ("C-c t o" . hl-todo-occur)
-        ("C-c t i" . hl-todo-insert)))
+(straight-use-package 'hl-todo)
+
+(setup hl-todo
+  (:hook-into prog-mode conf-mode)
+  (:bind "C-c t [" hl-todo-previous
+         "C-c t ]" hl-todo-next
+         "C-c t o" hl-todo-occur
+         "C-c t i" hl-todo-insert)
+  (:when-loaded
+    (let ((map (make-sparse-keymap)))
+      (keymap-set map "[" #'hl-todo-previous)
+      (keymap-set map "]" #'hl-todo-next)
+      (keymap-set map "o" #'hl-todo-occur)
+      (put #'hl-todo-previous 'repeat-map map)
+      (put #'hl-todo-next 'repeat-map map))))
 
 ;;;; display-line-numbers
 
-(use-package display-line-numbers
-  :hook
-  ((prog-mode conf-mode) . display-line-numbers-mode)
-  :config
+(setup display-line-numbers
+  (:hook-into prog-mode conf-mode)
   (setq display-line-numbers-type 'relative))
 
 ;;;; eglot
 
-(use-package eglot
-  :straight t
-  :defer t
-  :config
-  (setq eglot-autoshutdown t
-        eglot-extend-to-xref t)
-  (when (fboundp 'cape-wrap-buster)
-    (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
+(straight-use-package 'eglot)
 
-  (when (and (fboundp 'cape-capf-super) (fboundp 'cape-file) (fboundp 'tempel-expand))
-    (defun +eglot--capf ()
-      (setq-local completion-at-point-functions
-                  (list (cape-capf-super #'eglot-completion-at-point
-                                         #'tempel-expand
-                                         #'cape-file))))
-    (add-hook 'eglot-managed-mode-hook #'+eglot--capf)))
+(setup eglot
+  (:when-loaded
+    (setq eglot-autoshutdown t
+          eglot-extend-to-xref t)
+    (when (fboundp 'cape-wrap-buster)
+      (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
+    (when (and (fboundp 'cape-capf-super) (fboundp 'cape-file) (fboundp 'tempel-expand))
+      (defun +eglot--capf ()
+        (setq-local completion-at-point-functions
+                    (list (cape-capf-super #'eglot-completion-at-point
+                                           #'tempel-expand
+                                           #'cape-file))))
+      (add-hook 'eglot-managed-mode-hook #'+eglot--capf))))
 
 ;;;; xref
 
-(use-package xref
-  :straight t
-  :bind
-  ("C-<down-mouse-1>" . nil)
-  ("C-M-<down-mouse-1>" . nil)
-  ("C-<mouse-1>" . xref-find-definitions-at-mouse)
-  ("C-M-<mouse-1>" . xref-find-references-at-mouse)
-  :config
-  (defvar +xref--max-definitions-in-buffer 5)
+(straight-use-package 'xref)
 
-  (defun +xref--show-definition (fetcher alist)
-    "Use `xref-show-definitions-buffer' if the candidates are few.
+(setup xref
+  (:global "C-<down-mouse-1>" nil
+           "C-<C-M-<down-mouse-1>" nil
+           "C-<mouse-1>" xref-find-definitions-at-mouse
+           "C-M-<mouse-1>" xref-find-references-at-mouse)
+  (:when-loaded
+    (defvar +xref--max-definitions-in-buffer 5)
+
+    (defun +xref--show-definition (fetcher alist)
+      "Use `xref-show-definitions-buffer' if the candidates are few.
 Otherwise use `consult-xref'."
-    (let ((xrefs (funcall fetcher)))
-      (if (length< xrefs +xref--max-definitions-in-buffer)
-          (xref-show-definitions-buffer-at-bottom fetcher alist)
-        (consult-xref fetcher alist))))
+      (let ((xrefs (funcall fetcher)))
+        (if (length< xrefs +xref--max-definitions-in-buffer)
+            (xref-show-definitions-buffer-at-bottom fetcher alist)
+          (consult-xref fetcher alist))))
 
-  (setq xref-search-program
-        (cond ((executable-find "rg") 'ripgrep)
-              ((executable-find "ugrep") 'ugrep)
-              (t 'grep))
-        xref-show-definitions-function #'+xref--show-definition
-        xref-auto-jump-to-first-definition t))
+    (setq xref-search-program
+          (cond ((executable-find "rg") 'ripgrep)
+                ((executable-find "ugrep") 'ugrep)
+                (t 'grep))
+          xref-show-definitions-function #'+xref--show-definition
+          xref-auto-jump-to-first-definition t)))
 
 ;;;; ctags
 
-(use-package ctags-xref
-  :bind
-  ("C-c t m" . ctags-menu)
-  :init
+(setup ctags-xref
+  (:global "C-c t m" ctags-menu)
   (add-hook 'xref-backend-functions #'ctags-xref-backend)
-  :config
-  ;; Override `xref-backend-references' for ctags: if GRTAGS exists,
-  ;; find reference using `gtags' backend.
-  (cl-defmethod xref-backend-references :around ((_backend (eql 'ctags)) identifier)
-    (require 'gtags)
-    (if (and (locate-dominating-file default-directory "GRTAGS")
-             (executable-find "global" t))
-        (xref-backend-references 'gtags identifier)
-      (cl-call-next-method)))
+  (:when-loaded
+    ;; Override `xref-backend-references' for ctags: if GRTAGS exists,
+    ;; find reference using `gtags' backend.
+    (cl-defmethod xref-backend-references :around ((_backend (eql 'ctags)) identifier)
+      (require 'gtags)
+      (if (and (locate-dominating-file default-directory "GRTAGS")
+               (executable-find "global" t))
+          (xref-backend-references 'gtags identifier)
+        (cl-call-next-method)))
 
-  (with-eval-after-load 'cc-mode
-    (require 'ctags-xref-c)))
+    (with-eval-after-load 'cc-mode
+      (require 'ctags-xref-c))))
 
 (straight-use-package 'transient)       ; for ctags-menu
 
 ;;;; gtags
 
-(use-package gtags
-  :bind
-  ("C-c t G" . gtags-update)
-  :hook
-  (after-save . gtags-single-update))
+(setup gtags
+  (:global "C-c t G" gtags-update)
+  (add-hook 'after-save-hook #'gtags-single-update))
 
 ;;;; devdocs
 
-(use-package devdocs
-  :straight t
-  :bind
-  ("C-c d d" . devdocs-lookup)
-  ("C-c d i" . devdocs-install)
-  ("C-c d p" . devdocs-peruse))
+(straight-use-package 'devdocs)
+
+(setup devdocs
+  (:global "C-c d d" devdocs-lookup
+           "C-c d i" devdocs-install
+           "C-c d p" devdocs-peruse))
 
 ;;;; gtkdoc
 
-(use-package good-doc
-  :bind
-  ("C-c d g" . good-doc-lookup))
+(setup good-doc
+  (:global "C-c d g" good-doc-lookup))
 
 ;;;; rust-docs
 
-(use-package rust-docs
-  :bind
-  ("C-c d r" . rust-docs-lookup))
+(setup rust-docs
+  (:global "C-c d r" rust-docs-lookup))
 
 ;;;; javascript
 
-(use-package js
-  :defer t
-  :config
-  (define-advice js-jsx-enable (:after () comments)
-    (setq-local comment-region-function #'js-jsx--comment-region))
+(setup js
+  (:when-loaded
+    (define-advice js-jsx-enable (:after () comments)
+      (setq-local comment-region-function #'js-jsx--comment-region))
 
-  (define-advice js-jsx-enable (:after () sgml)
-    (require 'sgml-mode)
-    (keymap-set-many (current-local-map)
-      "C-c C-b" sgml-skip-tag-backward
-      "C-c C-d" sgml-delete-tag
-      "C-c C-e" sgml-close-tag
-      "C-c C-f" sgml-skip-tag-forward
-      "C-c C-o" sgml-tag
-      "C-c C-t" sgml-tag)))
+    (define-advice js-jsx-enable (:after () sgml)
+      (require 'sgml-mode)
+      (keymap-set-many (current-local-map)
+        "C-c C-b" sgml-skip-tag-backward
+        "C-c C-d" sgml-delete-tag
+        "C-c C-e" sgml-close-tag
+        "C-c C-f" sgml-skip-tag-forward
+        "C-c C-o" sgml-tag
+        "C-c C-t" sgml-tag))))
 
 ;;;; lisp-mode
 
-(use-package lisp-mode
-  :hook
-  (lisp-data-mode . electric-pair-local-mode))
+(straight-use-package 'paredit)
+(straight-use-package 'paren-face)
+
+(setup lisp-mode
+  (:with-mode lisp-data-mode
+    (:hook electric-pair-local-mode
+           paredit-mode
+           paren-face-mode)))
 
 ;;;; paredit
 
-(use-package paredit
-  :straight t
-  :delight
-  :hook
-  (lisp-data-mode . paredit-mode)
-  :bind
-  (:map paredit-mode-map
-        ("M-s" . nil)))
+(setup paredit
+  (:delight)
+  (:bind "M-s" nil))
 
 ;;;; paren-face
 
-(use-package paren-face
-  :straight t
-  :after lisp-mode
-  :config
-  (defun +paren-face--update-color ()
-    (set-face-foreground 'parenthesis (modus-themes-get-color-value 'border)))
-  (+paren-face--update-color)
-  (add-hook 'modus-themes-after-load-theme-hook '+paren-face--update-color)
-  (global-paren-face-mode))
+(setup paren-face
+  (:when-loaded
+    (defun +paren-face--update-color ()
+      (set-face-foreground 'parenthesis (modus-themes-get-color-value 'border)))
+    (+paren-face--update-color)
+    (add-hook 'modus-themes-after-load-theme-hook '+paren-face--update-color)))
 
 ;;;; elisp-mode
 
-(use-package elisp-mode
-  :config
-  (setq-default elisp-flymake-byte-compile-load-path load-path)
-  :bind
-  (:map emacs-lisp-mode-map
-        ("C-c C-l" . emacs-lisp-native-compile-and-load))
-  (:map lisp-interaction-mode-map
-        ("C-c C-j" . eval-print-last-sexp)))
+(setup elisp-mode
+  (:with-mode emacs-lisp-mode
+    (:and (native-comp-available-p)
+          (:bind "C-c C-l" emacs-lisp-native-compile-and-load)))
+  (:with-mode lisp-interaction-mode
+    (:bind "C-c C-j" eval-print-last-sexp))
+  (defvaralias 'elisp-flymake-byte-compile-load-path 'load-path))
 
 ;;;; pp
 
-(use-package pp
-  :bind
-  ("M-:" . pp-eval-expression))
+(setup pp
+  (:global "M-:" pp-eval-expression))
 
 ;;;; pp-posframe
 (straight-use-package 'posframe)
-(use-package pp-posframe
-  :bind
-  ("C-x C-e" . pp-posframe-eval-last-sexp)
-  (:map emacs-lisp-mode-map
-        ("C-M-x" . pp-posframe-compile-defun)
-        ("C-c M-e" . pp-posframe-macroexpand-last-sexp))
-  :config
-  (defun +pp-posframe--set-color ()
+(setup pp-posframe
+  (:global "C-x C-e" pp-posframe-eval-last-sexp)
+  (:with-map emacs-lisp-mode-map
+    (:bind "C-M-x" pp-posframe-compile-defun
+           "C-c M-e" pp-posframe-macroexpand-last-sexp))
+  (:when-loaded
+    (defun +pp-posframe--set-color ()
       (setq pp-posframe-parameters `( :boredr-color ,(modus-themes-get-color-value 'border)
                                       :background-color ,(modus-themes-get-color-value 'bg-dim))))
-  (add-hook 'modus-themes-after-load-theme-hook #'+pp-posframe--set-color)
-  (+pp-posframe--set-color))
+    (add-hook 'modus-themes-after-load-theme-hook #'+pp-posframe--set-color)
+    (+pp-posframe--set-color)))
 
 ;;;; find-func
 
-(use-package find-func
-  :bind
-  ("C-x F" . find-function)
-  ("C-x V" . find-variable)
-  ("C-x K" . find-function-on-key)
-  ("C-x L" . find-library))
+(setup find-func
+  (:global "C-x F" find-function
+           "C-x V" find-variable
+           "C-x K" find-function-on-key
+           "C-x L" find-library))
 
 ;;;; eldoc
 
-(use-package eldoc
-  :defer t
-  :delight)
+(setup eldoc
+  (:delight))
 
 ;;;; cc-mode
 
-(use-package cc-mode
-  :defer t
-  :config
-  (setq c-tab-always-indent nil
-        c-insert-tab-function #'completion-at-point)
-  (setq-default c-auto-newline t
-                c-hungry-delete-key t)
-  (defun +cc-mode--hook ()
-    (electric-pair-local-mode)
-    (add-hook 'flymake-diagnostics-functions #'flymake-clang-tidy nil t))
-  (add-hook 'c-mode-common-hook '+cc-mode--hook))
+(setup cc-mode
+  (:when-loaded
+    (setq c-tab-always-indent nil
+          c-insert-tab-function #'completion-at-point)
+    (setq-default c-auto-newline t
+                  c-hungry-delete-key t)
+    (defun +cc-mode--hook ()
+      (electric-pair-local-mode)
+      (add-hook 'flymake-diagnostics-functions #'flymake-clang-tidy nil t))
+    (add-hook 'c-mode-common-hook '+cc-mode--hook)))
 
-(use-package vala-mode
-  :straight t
-  :defer t)
+(straight-use-package 'vala-mode)
 
 ;;;; rust-mode
 
-(use-package rust-mode
-  :straight t
-  :defer t
-  :config
-  (define-advice rust--compile (:around (&rest args) project-prefix-buffer-name)
-    (let ((compilation-buffer-name-function #'project-prefixed-buffer-name))
-      (apply args))))
+(straight-use-package 'rust-mode)
+
+(setup rust-mode
+  (:when-loaded
+    (define-advice rust--compile (:around (&rest args) project-prefix-buffer-name)
+      (let ((compilation-buffer-name-function #'project-prefixed-buffer-name))
+        (apply args)))))
 
 ;;;; ruby
 
-(use-package ruby-mode
-  :defer t)
+(straight-use-package 'ruby-mode)
 
 ;;;; sh-script
 
-(use-package sh-script
-  :hook
-  (sh-mode . sh-electric-here-document-mode)
-  (sh-mode . electric-pair-local-mode)
-  (sh-mode . executable-make-buffer-file-executable-if-script-p))
+(setup sh-script
+  (:with-mode sh-mode
+    (:hook sh-electric-here-document-mode
+           electric-pair-local-mode)
+    (:local-hook save-file-hook #'executable-make-buffer-file-executable-if-script-p)))
 
 ;;;; project
 
-(use-package project
-  :defer t
-  :config
-  (dolist (file '(".project-root" "configure.ac" ".dir-locals.el"
-                  "Cargo.toml" "package.json"))
-    (add-to-list 'project-vc-extra-root-markers file))
+(setup project
+  (:when-loaded
+    (dolist (file '(".project-root" "configure.ac" ".dir-locals.el"
+                    "Cargo.toml" "package.json"))
+      (add-to-list 'project-vc-extra-root-markers file))
 
-  (defun +project--external-roots ()
-    (and-let* ((project (project-current))
-               (root (project-root project))
-               (project-root-file (expand-file-name ".project-root" root))
-               ((file-exists-p project-root-file)))
-      (with-work-buffer
-        (insert-file-contents project-root-file)
-        (let ((default-directory root))
-          (mapcar #'expand-file-name
-                  (string-lines (buffer-string) t nil))))))
+    (defun +project--external-roots ()
+      (and-let* ((project (project-current))
+                 (root (project-root project))
+                 (project-root-file (expand-file-name ".project-root" root))
+                 ((file-exists-p project-root-file)))
+        (with-work-buffer
+          (insert-file-contents project-root-file)
+          (let ((default-directory root))
+            (mapcar #'expand-file-name
+                    (string-lines (buffer-string) t nil))))))
 
-  (setq-default project-vc-external-roots-function #'+project--external-roots)
+    (setq-default project-vc-external-roots-function #'+project--external-roots)
 
-  (setq project-compilation-buffer-name-function #'project-prefixed-buffer-name)
+    (setq project-compilation-buffer-name-function #'project-prefixed-buffer-name)
 
-  (add-to-list 'project-switch-commands '(project-compile "Compile") t))
+    (add-to-list 'project-switch-commands '(project-compile "Compile") t)))
 
 ;;;; buffer-env
-(use-package buffer-env
-  :straight t
-  :hook
-  (hack-local-variables . buffer-env-update)
-  (comint-mode . buffer-env-update)
-  :config
-  (add-to-list 'buffer-env-command-alist '("/\\.nvmrc\\'" . "~/.nvm/nvm-exec env -0"))
-  (setq buffer-env-script-name '(".envrc" ".nvmrc" ".env"))
 
-  (defun +buffer-env/clear-cache ()
-    "Clear buffer-env cache."
-    (interactive)
-    (clrhash buffer-env--cache)))
+(straight-use-package 'buffer-env)
+
+(setup buffer-env
+  (:with-function buffer-env-update
+    (:hook-into hack-local-variables-hook comint-mode-hook))
+  (:when-loaded
+    (add-to-list 'buffer-env-command-alist '("/\\.nvmrc\\'" . "~/.nvm/nvm-exec env -0"))
+    (setq buffer-env-script-name '(".envrc" ".nvmrc" ".env"))
+    (defun +buffer-env/clear-cache ()
+      "Clear buffer-env cache."
+      (interactive)
+      (clrhash buffer-env--cache))))
 
 ;;;; vc
 
-(use-package vc
-  :defer t
-  :config
-  (setq vc-follow-symlinks t))
+(setup vc
+  (setq vc-follow-symlinks t)
+  (:also-load diff-hl))
 
-(use-package vc-svn
-  :defer t
-  :config
-
+(setup vc-svn
   ;; Use pinentry to enter SVN credentials.  A GUI-based pinentry is needed.
   (setq vc-svn-global-switches
         '("--force-interactive"
@@ -1233,49 +1105,45 @@ Otherwise use `consult-xref'."
 
 ;;;; magit
 
-(use-package magit
-  :straight t
-  :bind
-  ("C-x g" . magit-status)
-  ("C-x M-g" . magit-dispatch)
-  ("C-c M-g" . magit-file-dispatch)
-  ("C-x p m" . magit-project-status)
-  :defines (magit-credential-cache-daemon-process)
-  :init
+(straight-use-package 'magit)
+
+(setup magit
+  (:global "C-x g" magit-status
+           "C-x M-g" magit-dispatch
+           "C-c M-g" magit-file-dispatch
+           "C-x p m" magit-project-status)
   (with-eval-after-load 'project
     (add-to-list 'project-switch-commands '(magit-project-status "Magit") t))
-  :config
-  (defun +magit--ccdp-no-query ()
-    "Avoid query process status on exit."
-    (when magit-credential-cache-daemon-process
-      (set-process-query-on-exit-flag
-       magit-credential-cache-daemon-process nil)))
-  (advice-add #'magit-maybe-start-credential-cache-daemon :after '+magit--ccdp-no-query)
-  (setq magit-wip-mode-lighter "")
-  (magit-wip-mode))
+  (:when-loaded
+    (defun +magit--ccdp-no-query ()
+      "Avoid query process status on exit."
+      (when magit-credential-cache-daemon-process
+        (set-process-query-on-exit-flag
+         magit-credential-cache-daemon-process nil)))
+    (advice-add #'magit-maybe-start-credential-cache-daemon :after '+magit--ccdp-no-query)
+    (setq magit-wip-mode-lighter "")
+    (magit-wip-mode)))
 
 ;;;; diff-hl
 
-(use-package diff-hl
-  :straight t
-  :after vc
-  :hook
-  (tty-setup . diff-hl-margin-mode)
-  (magit-pre-refresh . diff-hl-magit-pre-refresh)
-  (magit-post-refresh . diff-hl-magit-post-refresh)
-  :config
-  (global-diff-hl-mode))
+(straight-use-package 'diff-hl)
+
+(setup diff-hl
+  (add-hook 'tty-setup-hook #'diff-hl-margin-mode)
+  (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
+  (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
+  (:when-loaded
+    (global-diff-hl-mode)))
 
 ;;;; eat
-(use-package eat
-  :straight `(:files (,@straight-default-files-directive "integration" "term" "terminfo"))
-  :unless (memq system-type '(windows-nt ms-dos))
-  :hook
-  (eshell-load . eat-eshell-mode)
-  (eshell-load . eat-eshell-visual-command-mode)
-  :bind
-  ("C-x p s" . eat-project)
-  :init
+
+(straight-use-package `(eat :files (,@straight-default-files-directive "integration" "term" "terminfo")))
+
+(setup eat
+  (:only-if (not (memq system-type '(windows-nt ms-dos))))
+  (:with-function (eat-eshell-mode eat-eshell-visual-command-mode)
+    (:hook-into eshell-load-hook))
+  (:global "C-x p s" eat-project)
   (with-eval-after-load 'project
     (add-to-list 'project-switch-commands '(eat-project "Eat") t))
 
@@ -1291,35 +1159,34 @@ minibuffer."
       (let ((default-directory dir)
             (eat-buffer-name (concat "*" dir "-eat*")))
         (eat nil nil))))
-  (bind-key "C-c s" '+eat/here)
-  :config
-  (setq eat-kill-buffer-on-exit t)
+  (keymap-global-set "C-c s" '+eat/here)
+  (:when-loaded
+    (setq eat-kill-buffer-on-exit t)
 
-  (with-eval-after-load 'project
-    (when-let* ((cell (assq 'project-shell project-switch-commands)))
-      (setcar cell #'eat-project))
-    (bind-key "s" #'eat-project-other-window project-other-window-map))
+    (with-eval-after-load 'project
+      (when-let* ((cell (assq 'project-shell project-switch-commands)))
+        (setcar cell #'eat-project))
+      (bind-key "s" #'eat-project-other-window project-other-window-map))
 
-  (defun eat-send-pass ()
-    (interactive)
-    (unless eat-terminal
-      (user-error "Process not running"))
-    (require 'password-store)
-    (eat-term-send-string
-     eat-terminal
-     (password-store-get (password-store--completing-read t)))
-    (eat-self-input 1 'return)))
+    (defun eat-send-pass ()
+      (interactive)
+      (unless eat-terminal
+        (user-error "Process not running"))
+      (require 'password-store)
+      (eat-term-send-string
+       eat-terminal
+       (password-store-get (password-store--completing-read t)))
+      (eat-self-input 1 'return))))
 
 ;;;; with-editor
 
-(use-package with-editor
-  :straight t
-  :bind
-  ("<remap> <async-shell-command>" . with-editor-async-shell-command)
-  ("<remap> <shell-command>" . with-editor-shell-command)
-  :hook
-  ((eshell-mode shell-mode term-exec vterm-mode) . with-editor-export-editor)
-  :init
+(straight-use-package 'with-editor)
+
+(setup with-editor
+  (:global "<remap> <async-shell-command>" with-editor-async-shell-command)
+  (:global "<remap> <shell-command>" with-editor-shell-command)
+  (:with-function with-editor-export-editor
+    (:hook-into eshell-mode shell-mode term-exec-hook vterm-mode))
   (defun +with-editor--export-editor-to-eat (proc)
     (require 'with-editor)
     (if with-editor-emacsclient-executable
@@ -1339,12 +1206,10 @@ minibuffer."
 
 ;;;; pyim
 
-(use-package pyim
-  :straight t
-  :defer t
-  :functions
-  pyim-cregexp-build
-  :init
+(straight-use-package 'pyim)
+(straight-use-package 'pyim-basedict)
+
+(setup pyim
   (defun +orderless-pinyin (component)
     (require 'pyim)
     (pyim-cregexp-build component 3 t))
@@ -1361,68 +1226,59 @@ minibuffer."
   ;; ;; UTF-8 is preferred on Unix-like systems.
   ;; (set-language-info "UTF-8" 'input-method "pyim")
 
-  :config
-  (defvar +pyim--corfu nil)
-  (defun +pyim--activate ()
-    (when (boundp 'corfu-auto)
-      (setq-local +pyim--corfu corfu-auto)
-      (setq-local corfu-auto nil)))
-  (defun +pyim--deactivate ()
-    (when (boundp 'corfu-auto)
-      (setq-local corfu-auto +pyim--corfu)))
-  (add-hook 'pyim-activate-hook '+pyim--activate)
-  (add-hook 'pyim-deactivate-hook '+pyim--deactivate))
+  (:when-loaded
+    (defvar +pyim--corfu nil)
+    (defun +pyim--activate ()
+      (when (boundp 'corfu-auto)
+        (setq-local +pyim--corfu corfu-auto)
+        (setq-local corfu-auto nil)))
+    (defun +pyim--deactivate ()
+      (when (boundp 'corfu-auto)
+        (setq-local corfu-auto +pyim--corfu)))
+    (add-hook 'pyim-activate-hook '+pyim--activate)
+    (add-hook 'pyim-deactivate-hook '+pyim--deactivate)
 
-(use-package pyim-basedict
-  :straight t
-  :after pyim
-  :config
-  (pyim-basedict-enable))
+    (pyim-basedict-enable)))
 
 
 ;;;; rime
 
-(use-package rime
-  :straight t
-  :defer t
-  :config
-  (define-advice rime--posframe-display-content (:override (content))
-    "Display CONTENT with posframe."
-    (if (and (featurep 'posframe) (posframe-workable-p))
-        (if (string-blank-p content)
-            (posframe-hide rime-posframe-buffer)
-          (let*
-              ((preedit (rime--current-preedit))
-               (x (cond
-                   ((not rime-posframe-fixed-position) 0)
-                   ((not preedit) 0)
-                   ((not (overlayp rime--preedit-overlay)) 0)
-                   (t (rime--string-pixel-width preedit)))))
-            (apply #'posframe-show rime-posframe-buffer
-                   :string content
-                   :x-pixel-offset (- x)
-                   :background-color (face-attribute 'rime-default-face :background nil t)
-                   :foreground-color (face-attribute 'rime-default-face :foreground nil t)
-                   rime-posframe-properties)))
-      ;; Fallback to popup when not available.
-      (rime--popup-display-content content))))
+(straight-use-package 'rime)
+
+(setup rime
+  (:when-loaded
+    (define-advice rime--posframe-display-content (:override (content))
+      "Display CONTENT with posframe."
+      (if (and (featurep 'posframe) (posframe-workable-p))
+          (if (string-blank-p content)
+              (posframe-hide rime-posframe-buffer)
+            (let*
+                ((preedit (rime--current-preedit))
+                 (x (cond
+                     ((not rime-posframe-fixed-position) 0)
+                     ((not preedit) 0)
+                     ((not (overlayp rime--preedit-overlay)) 0)
+                     (t (rime--string-pixel-width preedit)))))
+              (apply #'posframe-show rime-posframe-buffer
+                     :string content
+                     :x-pixel-offset (- x)
+                     :background-color (face-attribute 'rime-default-face :background nil t)
+                     :foreground-color (face-attribute 'rime-default-face :foreground nil t)
+                     rime-posframe-properties)))
+        ;; Fallback to popup when not available.
+        (rime--popup-display-content content)))))
 
 ;;;; kinsoku
 
-(use-package kinsoku
-  :defer t
-  :config
+(setup kinsoku
   (setq word-wrap-by-category t))
 
 ;;;; term-keys
 
-(use-package term-keys
-  :straight '(:host github :repo "CyberShadow/term-keys")
-  :defer t
-  :defines
-  term-keys/prefix
-  :init
-  (setq term-keys/prefix "\033\035")      ; ^[^]
+(straight-use-package '(term-keys :host github :repo "CyberShadow/term-keys"))
+
+(setup term-keys
+  (setq term-keys/prefix "\033\035")    ; ^[^]
 
   (defun +term-keys--autoload (_prompt)
     (require 'term-keys)
@@ -1442,60 +1298,55 @@ minibuffer."
   (add-hook 'tty-setup-hook '+term-keys--tty-setup)
   (mapc '+term-keys--tty-setup (terminal-list))
 
-  :config
-  (remove-hook 'tty-setup-hook '+term-keys--tty-setup)
-  ;; (fmakunbound '+term-keys--tty-setup)
-  ;; (fmakunbound '+term-keys--autoload)
-  (dolist (terminal (terminal-list))
-    (when (eq (framep-on-display terminal) t)
-      (with-selected-frame (car (frames-on-display-list terminal))
-        (define-key input-decode-map term-keys/prefix nil))))
-  (term-keys-mode)
-  (dolist (terminal (terminal-list))
-    (when (eq (framep-on-display terminal) t)
-      (with-selected-frame (car (frames-on-display-list terminal))
-        (term-keys/init))))
+  (:when-loaded
+    (remove-hook 'tty-setup-hook '+term-keys--tty-setup)
+    ;; (fmakunbound '+term-keys--tty-setup)
+    ;; (fmakunbound '+term-keys--autoload)
+    (dolist (terminal (terminal-list))
+      (when (eq (framep-on-display terminal) t)
+        (with-selected-frame (car (frames-on-display-list terminal))
+          (define-key input-decode-map term-keys/prefix nil))))
+    (term-keys-mode)
+    (dolist (terminal (terminal-list))
+      (when (eq (framep-on-display terminal) t)
+        (with-selected-frame (car (frames-on-display-list terminal))
+          (term-keys/init))))
 
-  (with-eval-after-load 'eat
-    (unless (member [?\e ?\C-\]] eat-semi-char-non-bound-keys)
-      (setopt eat-semi-char-non-bound-keys
-              (cons [?\e ?\C-\]] eat-semi-char-non-bound-keys)))))
+    (with-eval-after-load 'eat
+      (unless (member [?\e ?\C-\]] eat-semi-char-non-bound-keys)
+        (setopt eat-semi-char-non-bound-keys
+                (cons [?\e ?\C-\]] eat-semi-char-non-bound-keys))))))
 
 ;;;; xterm
 
-(use-package term/xterm
-  :defer t
-  :config
+(setup term/xterm
   (setq xterm-set-window-title t))
 
 ;;;; xt-mouse
 
-(use-package xt-mouse
-  :hook
-  (tty-setup . xterm-mouse-mode)
-  :init
+(setup xt-mouse
+  (:with-mode xterm-mouse-mode
+    (:hook-into tty-setup-hook))
   (when (eq (framep-on-display) t)
     (require 'xt-mouse))
-  :config
-  (xterm-mouse-mode))
+  (:when-loaded
+    (xterm-mouse-mode)))
 
 ;;;; clipetty
 
-(use-package clipetty
-  :straight t
-  :delight
-  :hook
-  (tty-setup . clipetty-mode)
-  :init
+(straight-use-package 'clipetty)
+
+(setup clipetty
+  (:delight)
+  (:hook-into tty-setup-hook)
   (when (eq (framep-on-display) t)
     (require 'clipetty))
-  :config
-  (global-clipetty-mode))
+  (:when-loaded
+    (global-clipetty-mode)))
 
 ;;;; repeat
 
-(use-package repeat
-  :defer t
+(setup repeat
   :init
   (defun +repeat--post-command ()
     (when (function-get this-command 'repeat-map)
@@ -1503,41 +1354,33 @@ minibuffer."
       (require 'repeat)
       (repeat-post-hook)))
   (add-hook 'post-command-hook '+repeat--post-command)
-  :config
-  (remove-hook 'post-command-hook '+repeat--post-command)
-  (repeat-mode))
+  (:when-loaded
+    (remove-hook 'post-command-hook '+repeat--post-command)
+    (repeat-mode)))
 
 ;;;; savehist
 
-(use-package savehist
-  :hook
-  (minibuffer-setup . savehist-minibuffer-hook)
-  (kill-emacs . savehist-autosave)
-  :config
-  (savehist-mode))
+(setup savehist
+  (:with-function savehist-minibuffer-hook
+    (:autoload-this)
+    (:hook-into minibuffer-setup-hook))
+  (:when-loaded
+    (savehist-mode)))
 
 ;;;; auth-sources
 
-(use-package auth-source
-  :defer t
-  :init
+(setup auth-source
   (setq auth-sources '("~/.authinfo.gpg"))
-  :config
-  (auth-source-forget-all-cached))
-
-(use-package auth-source-pass
-  :after auth-source
-  :config
-  (auth-source-pass-enable))
+  (:when-loaded
+    (auth-source-pass-enable)))
 
 (straight-use-package 'password-store)
 
 ;;;; lin
 
-(use-package lin
-  :straight t
-  :defer t
-  :init
+(straight-use-package 'lin)
+
+(setup lin
   (setq lin-mode-hooks
         '( gnus-group-mode-hook gnus-server-mode-hook
            gnus-summary-mode-hook mu4e-main-mode-hook magit-mode-hook
@@ -1552,196 +1395,183 @@ minibuffer."
            tabulated-list-mode-hook tar-mode-hook))
   (dolist (hook lin-mode-hooks)
     (add-hook hook #'lin-mode))
-  :config
-  (setq lin-face 'lin-magenta)
-  (lin-global-mode)
+  (:when-loaded
+    (setq lin-face 'lin-magenta)
+    (lin-global-mode)
 
-  (defun +lin-line--next-error-h ()
-    (with-current-buffer next-error-buffer
-      (save-selected-window
-        (when-let* ((win (get-buffer-window (current-buffer))))
-          (select-window win)
-          (recenter))
-        (when lin-mode
-          (hl-line-highlight)))))
-  (add-hook 'next-error-hook '+lin-line--next-error-h)
+    (defun +lin-line--next-error-h ()
+      (with-current-buffer next-error-buffer
+        (save-selected-window
+          (when-let* ((win (get-buffer-window (current-buffer))))
+            (select-window win)
+            (recenter))
+          (when lin-mode
+            (hl-line-highlight)))))
+    (add-hook 'next-error-hook '+lin-line--next-error-h)
 
-  (add-hook 'gnus-visual-mark-article-hook #'hl-line-highlight))
+    (add-hook 'gnus-visual-mark-article-hook #'hl-line-highlight)))
 
 ;;;; emacs-server
 
-(use-package server
-  :defer 30
-  :config
-  ;; Workaround windows encoding issue
-  (when (memq system-type '(windows-nt ms-dos))
-    (defun +server--process-filter-coding-system (&rest args)
-      (let ((file-name-coding-system locale-coding-system))
-        (apply args)))
-    (add-hook #'server-process-filter :around '+server--process-filter-coding-system))
+(setup server
+  (:when-loaded
+    ;; Workaround windows encoding issue
+    (when (memq system-type '(windows-nt ms-dos))
+      (defun +server--process-filter-coding-system (&rest args)
+        (let ((file-name-coding-system locale-coding-system))
+          (apply args)))
+      (add-hook #'server-process-filter :around '+server--process-filter-coding-system))
 
-  (unless (server-running-p)
-    (server-start)))
-
-;;;; org-protocol
-
-(use-package org-protocol
-  :after server)
+    (unless (server-running-p)
+      (server-start)))
+  (:also-load org-protocol))
 
 ;;;; epg
 
-(use-package epg
-  :defer t
-  :config
+(setup epg
   (setq epg-pinentry-mode 'loopback))
 
-(use-package epa
-  :defer t
-  :config
+(setup epa
   (setq epa-keys-select-method 'minibuffer))
 
 ;;;; tui
 
-(use-package tui
-  :unless (memq system-type '(ms-dos windows-nt))
-  :bind
-  ("C-c t t" .  tui-run)
-  ("C-c t r" .  tui-rg)
-  ("C-c t g" .  tui-ugrep)
-  ("C-c t y" .  tui-yazi)
-  ("C-c t k" .  tui-kill)
-  ("C-c t l" .  tui-line)
-  ("C-c t f" .  tui-find)
-  ("C-c t d" .  tui-locate)
-  :config
-  (setf (alist-get "^\\*tui-" display-buffer-alist nil nil #'equal)
-        '((display-buffer-same-window))))
+(setup tui
+  (:only-if (not (memq system-type '(ms-dos windows-nt))))
+  (:global "C-c t t" tui-run
+           "C-c t r" tui-rg
+           "C-c t g" tui-ugrep
+           "C-c t y" tui-yazi
+           "C-c t k" tui-kill
+           "C-c t l" tui-line
+           "C-c t f" tui-find
+           "C-c t d" tui-locate)
+  (:when-loaded
+    (setf (alist-get "^\\*tui-" display-buffer-alist nil nil #'equal)
+          '((display-buffer-same-window)))))
 
 ;;;; gptel
 
-(use-package gptel
-  :straight t
-  :bind
-  ("C-c g" . gptel-send))
+(straight-use-package 'gptel)
+(straight-use-package '(gptel-quick :host github :repo "karthink/gptel-quick"))
 
-(use-package gptel-quick
-  :straight '(:host github :repo "karthink/gptel-quick")
-  :defer t
-  :init
+(setup gptel
+  (:global "C-c g" gptel-send))
+
+(setup gptel-quick
   (with-eval-after-load 'embark
     (bind-key "?" #'gptel-quick embark-general-map)))
 
 ;;;; logos
 
-(use-package logos
-  :straight t
-  :bind
-  ("<f8>" . logos-focus-mode)
-  ("<remap> <narrow-to-region>" . logos-narrow-dwim)
-  ("<remap> <forward-page>" . logos-forward-page-dwim)
-  ("<remap> <backward-page>" . logos-backward-page-dwim)
-  (:map logos-focus-mode-map
-        ("<left>" . logos-backward-page-dwim)
-        ("<right>" . logos-forward-page-dwim))
-  :config
-  (setq logos-outlines-are-pages t)
+(straight-use-package 'logos)
 
-  (setq-default logos-hide-cursor nil
-                logos-hide-mode-line t
-                logos-hide-header-line t
-                logos-hide-buffer-boundaries t
-                logos-hide-fringe t
-                logos-buffer-read-only nil
-                logos-scroll-lock nil
-                logos-olivetti nil)
+(setup logos
+  (:global "<f8>" logos-focus-mode
+           "<remap> <narrow-to-region>" logos-narrow-dwim
+           "<remap> <forward-page>" logos-forward-page-dwim
+           "<remap> <backward-page>" logos-backward-page-dwim)
+  (:with-map logos-focus-mode-map
+        (:bind "<left>" logos-backward-page-dwim
+               "<right>" logos-forward-page-dwim))
+  (:when-loaded 
+    (setq logos-outlines-are-pages t)
 
-  (defun logos-focus--narrow ()
-    (when logos-focus-mode
-      (logos--narrow-to-page 0)
-      (make-local-variable 'logos--restore)
-      (push #'widen logos--restore)))
+    (setq-default logos-hide-cursor nil
+                  logos-hide-mode-line t
+                  logos-hide-header-line t
+                  logos-hide-buffer-boundaries t
+                  logos-hide-fringe t
+                  logos-buffer-read-only nil
+                  logos-scroll-lock nil
+                  logos-olivetti nil)
 
-  (add-hook 'logos-focus-mode-hook #'logos-focus--narrow)
+    (defun logos-focus--narrow ()
+      (when logos-focus-mode
+        (logos--narrow-to-page 0)
+        (make-local-variable 'logos--restore)
+        (push #'widen logos--restore)))
 
-  (add-hook 'enable-theme-functions #'logos-update-fringe-in-buffers)
+    (add-hook 'logos-focus-mode-hook #'logos-focus--narrow)
 
-  (setq logos-outline-regexp-alist
-        `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos-page-delimiter))
-          (org-mode . ,(format "\\(^\\*+ +\\|^-\\{5\\}$\\|%s\\)" logos-page-delimiter)))))
+    (add-hook 'enable-theme-functions #'logos-update-fringe-in-buffers)
+
+    (setq logos-outline-regexp-alist
+          `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos-page-delimiter))
+            (org-mode . ,(format "\\(^\\*+ +\\|^-\\{5\\}$\\|%s\\)" logos-page-delimiter))))))
 
 ;;;; gpg-agent
 
-(use-package gpg-agent
-  :unless (memq system-type '(ms-dos windows-nt))
-  :after (:any vc magit comint)
-  :config
-  (gpg-agent-terminal-start))
+(setup gpg-agent
+  (:only-if (not (memq system-type '(ms-dos windows-nt))))
+  (let ((load-this (lambda () (require 'gpg-agent))))
+    (eval-after-load 'vc load-this)
+    (eval-after-load 'magit load-this)
+    (eval-after-load 'comint load-this))
+  (:when-loaded
+    (gpg-agent-terminal-start)))
 
 ;;;; eww
 
-(use-package eww
-  :defer t
-  :config
+(setup eww
+  (:when-loaded
+    (defun eww+miniflux-trim ()
+      (when (string-match-p "^https://miniflux\\." (eww-current-url))
+        (let ((inhibit-read-only t))
+          (save-excursion
+            (goto-char (point-min))
+            (when-let* ((match (text-property-search-forward 'shr-target-id "page-header-title" 'member)))
+              (delete-region (point-min) (prop-match-beginning match)))))))
 
-  (defun eww+miniflux-trim ()
-    (when (string-match-p "^https://miniflux\\." (eww-current-url))
-      (let ((inhibit-read-only t))
-        (save-excursion
-          (goto-char (point-min))
-          (when-let* ((match (text-property-search-forward 'shr-target-id "page-header-title" 'member)))
-            (delete-region (point-min) (prop-match-beginning match)))))))
+    (defun eww+kagi-trim ()
+      (when (string-match-p "^https://kagi\\.com" (eww-current-url))
+        (let ((inhibit-read-only t))
+          (save-excursion
+            (goto-char (point-min))
+            (when-let* ((match (text-property-search-forward 'shr-target-id "tonav" #'member)))
+              (delete-region (prop-match-beginning match) (prop-match-end match)))
+            ))))
 
-  (defun eww+kagi-trim ()
-    (when (string-match-p "^https://kagi\\.com" (eww-current-url))
-      (let ((inhibit-read-only t))
-        (save-excursion
-          (goto-char (point-min))
-          (when-let* ((match (text-property-search-forward 'shr-target-id "tonav" #'member)))
-            (delete-region (prop-match-beginning match) (prop-match-end match)))
-          ))))
+    (defun eww-reset-current-bookmark ()
+      (when (and bookmark-current-bookmark
+                 (not (equal (eww-current-url) (bookmark-location bookmark-current-bookmark))))
+        (setq bookmark-current-bookmark nil)))
 
-  (defun eww-reset-current-bookmark ()
-    (when (and bookmark-current-bookmark
-               (not (equal (eww-current-url) (bookmark-location bookmark-current-bookmark))))
-      (setq bookmark-current-bookmark nil)))
+    (add-hook 'eww-after-render-hook 'eww+miniflux-trim)
+    (add-hook 'eww-after-render-hook 'eww+kagi-trim)
 
-  (add-hook 'eww-after-render-hook 'eww+miniflux-trim)
-  (add-hook 'eww-after-render-hook 'eww+kagi-trim)
-
-  (with-eval-after-load 'bookmark
-    (add-hook 'eww-after-render-hook 'eww-reset-current-bookmark)))
+    (with-eval-after-load 'bookmark
+      (add-hook 'eww-after-render-hook 'eww-reset-current-bookmark))))
 
 ;;;; bookmark
 
 (defvar pp-default-function)
 
-(use-package bookmark
-  :defer t
-  :config
-  (setq bookmark-save-flag 1
-        bookmark-watch-bookmark-file 'silent
-        bookmark-version-control t)
-  (defun +bookmark--pp-28 (&rest args)
-    (let ((pp-default-function 'pp-28))
-      (apply args)))
-  (advice-add #'bookmark-write-file :around '+bookmark--pp-28))
+(setup bookmark
+  (:when-loaded
+    (setq bookmark-save-flag 1
+          bookmark-watch-bookmark-file 'silent
+          bookmark-version-control t)
+    (defun +bookmark--pp-28 (&rest args)
+      (let ((pp-default-function 'pp-28))
+        (apply args)))
+    (advice-add #'bookmark-write-file :around '+bookmark--pp-28)))
 
-(use-package bookmark-extras
-  :bind
-  ("C-x r u" . url-bookmark-add))
+(setup bookmark-extras
+  (:global "C-x r u" url-bookmark-add))
 
 ;;;; org
 
 (straight-use-package 'org)
+(straight-use-package 'org-modern)
 
-(use-package org
-  :bind
-  ("C-c l" . org-store-link))
+(setup org
+  (:global "C-c l" org-store-link)
+  (:hook org-modern-mode))
 
-(use-package org-agenda
-  :bind
-  ("C-c a" . org-agenda)
-  :config
+(setup org-agenda
+  (:global "C-c a" org-agenda)
+  (:hook org-modern-agenda)
   (setq org-agenda-hide-tags-regexp ".")
   (setq org-agenda-prefix-format
         '((agenda . " %i %-12:c%?-12t% s")
@@ -1749,93 +1579,53 @@ minibuffer."
           (tags   . " %i %-12:c")
           (search . " %i %-12:c"))))
 
-(use-package org-capture
-  :bind
-  ("C-c c" . org-capture)
-  :config
-  (add-to-list 'org-capture-templates
-               `("i" "Inbox" entry (file "inbox.org")
-                 ,(concat "* TODO %?\n"
-                          "/Entered on/ %U")))
+(setup org-capture
+  (:global "C-c c" org-capture)
+  (:when-loaded
+    (add-to-list 'org-capture-templates
+                 `("i" "Inbox" entry (file "inbox.org")
+                   ,(concat "* TODO %?\n"
+                            "/Entered on/ %U")))
 
-  (add-to-list 'org-capture-templates
-               `("m" "Meeting" entry (file+headline "agenda.org" "Future")
-                 ,(concat "* %? :meeting:\n"
-                          "<%<%Y-%m-%d %a %H:00>>")))
+    (add-to-list 'org-capture-templates
+                 `("m" "Meeting" entry (file+headline "agenda.org" "Future")
+                   ,(concat "* %? :meeting:\n"
+                            "<%<%Y-%m-%d %a %H:00>>")))
 
-  (add-to-list 'org-capture-templates
-               `("n" "Note" entry (file "notes.org")
-                 ,(concat "* Note (%a)\n"
-                          "/Entered on/ %U\n" "\n" "%?"))))
-
-(use-package org-modern
-  :straight t
-  :hook
-  (org-mode . org-modern-mode)
-  (org-agenda-finalize . org-modern-agenda))
-
-;;;; denote
-
-(use-package denote
-  :straight t
-  :bind
-  ("C-c n n" . denote)
-  ("C-c n c" . denote-region)           ; "contents" mnemonic
-  ("C-c n N" . denote-type)
-  ("C-c n d" . denote-date)
-  ("C-c n z" . denote-signature)
-  ("C-c n s" . denote-subdirectory)
-  ("C-c n t" . denote-template)
-  ("C-c n o" . denote-open-or-create)
-  ("C-c n O" . denote-open-or-create-with-command)
-
-  ("C-c n i" . denote-link)
-  ("C-c n I" . denote-add-links)
-  ("C-c n b" . denote-backlinks)
-  ("C-c n f f" . denote-find-link)
-  ("C-c n f b" . denote-find-backlink)
-
-  ("C-c n r" . denote-rename-file)
-  ("C-c n R" . denote-rename-file-using-front-matter)
-
-  :config
-  (with-eval-after-load 'dired
-    (bind-keys :map dired-mode-map
-               ("C-c C-d C-i" . denote-link-dired-marked-notes)
-               ("C-c C-d C-r" . denote-dired-rename-files)
-               ("C-c C-d C-k" . denote-dired-rename-marked-files-with-keywords)
-               ("C-c C-d C-R" . denote-dired-rename-marked-files-using-front-matter))))
+    (add-to-list 'org-capture-templates
+                 `("n" "Note" entry (file "notes.org")
+                   ,(concat "* Note (%a)\n"
+                            "/Entered on/ %U\n" "\n" "%?")))))
 
 ;;;; copilot
 
-(use-package copilot
-  :straight t
-  :bind
-  (:map copilot-mode-map
-        ("<tab>" . copilot-accept-completion)
-        ("C-<tab>" . copilot-accept-completion-by-word)))
+(straight-use-package 'copilot)
+
+(setup copilot
+  (:bind "<tab>" copilot-accept-completion
+         "C-<tab>" copilot-accept-completion-by-word))
 
 ;;;; browser-hist
 
-(use-package browser-hist
-  :straight t
-  :bind
-  ("M-s b" . browser-hist-search)
-  :config
-  (setf (alist-get 'zen browser-hist-db-paths nil t)
-        (cond ((memq system-type '(cygwin windows-nt ms-dos))
-               "$APPDATA/zen/Profiles/*/places.sqlite")))
-  (setf (alist-get 'zen browser-hist--db-fields)
-        '("title" "url" "moz_places" "ORDER BY last_visit_date desc"))
-  (setq browser-hist-default-browser 'zen))
+(straight-use-package 'browser-hist)
+
+(setup browser-hist
+  (:global "M-s b" browser-hist-search)
+  (:when-loaded
+    (setf (alist-get 'zen browser-hist-db-paths nil t)
+          (cond ((memq system-type '(cygwin windows-nt ms-dos))
+                 "$APPDATA/zen/Profiles/*/places.sqlite")))
+    (setf (alist-get 'zen browser-hist--db-fields)
+          '("title" "url" "moz_places" "ORDER BY last_visit_date desc"))
+    (setq browser-hist-default-browser 'zen)))
 
 ;;;; vundo
 
-(use-package vundo
-  :straight t
-  :defer
-  :config
-  (setq vundo-glyph-alist vundo-unicode-symbols))
+(straight-use-package 'vundo)
+
+(setup vundo
+  (:when-loaded
+    (setq vundo-glyph-alist vundo-unicode-symbols)))
 
 ;;;; debian
 
@@ -1852,9 +1642,9 @@ minibuffer."
 
 ;;;; Site lisp
 
-(use-package site-lisp
-  :load-path "site-lisp"
-  :config
+(load (locate-user-emacs-file "site-lisp/site-lisp.el"))
+
+(setup site-lisp
   (site-lisp-activate))
 
 
