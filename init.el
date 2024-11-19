@@ -359,7 +359,9 @@ ARGS: see `completion-read-multiple'."
   (:global "C-." embark-act)
   (setq prefix-help-command #'embark-prefix-help-command)
   (:when-loaded
-    (setq embark-mixed-indicator-delay 3)
+    (setq embark-indicators '(embark-minimal-indicator
+                              embark-highlight-indicator
+                              embark-isearch-highlight-indicator))
 
     (defun +embark/find-file-as-root (file)
       "Find FILE as root."
