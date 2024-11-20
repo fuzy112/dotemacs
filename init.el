@@ -68,8 +68,6 @@
 (straight-use-package 'nerd-icons-dired)
 
 (setup nerd-icons
-  (when (display-graphic-p)
-    (nerd-icons-set-font))
   (setup nerd-icons-corfu
     (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
   (setup nerd-icons-completion
@@ -78,7 +76,10 @@
     (:hook-into ibuffer-mode))
   (setup nerd-icons-dired
     (:delight)
-    (:hook-into dired-mode)))
+    (:hook-into dired-mode))
+  (:only-if (display-graphic-p))
+  (require 'nerd-icons)
+  (nerd-icons-set-font))
 
 ;;;; pixel-scroll
 
@@ -1131,6 +1132,9 @@ Otherwise use `consult-xref'."
 (straight-use-package 'diff-hl)
 
 (setup diff-hl
+  (:with-function (diff-hl-magit-pre-refresh
+                   diff-hl-magit-post-refresh)
+    (:autoload-this))
   (add-hook 'tty-setup-hook #'diff-hl-margin-mode)
   (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
   (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
@@ -1641,6 +1645,7 @@ minibuffer."
 (straight-use-package 'colorful-mode)
 (straight-use-package 'autocrypt)
 (straight-use-package 'markdown-mode)
+(straight-use-package '(cmake-mode :host github :repo "emacsmirror/cmake-mode" :files ("*.el")))
 (straight-use-package 'systemd)
 
 ;;;; Site lisp
