@@ -1641,6 +1641,7 @@ minibuffer."
 (straight-use-package 'colorful-mode)
 (straight-use-package 'autocrypt)
 (straight-use-package 'markdown-mode)
+(straight-use-package 'systemd)
 
 ;;;; Site lisp
 
