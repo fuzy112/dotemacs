@@ -141,25 +141,22 @@
   (:when-loaded
     (setq enable-recursive-minibuffers t)
     (vertico-mode)
-    (:with-feature vertico-repeat
-      (:global "M-R" vertico-repeat)
-      (:with-map vertico-map
-        (:bind "M-P" vertico-repeat-previous
-               "M-N" vertico-repeat-next))
-      (add-hook 'minibuffer-setup-hook #'vertico-repeat-save))
-    (:with-feature vertico-directory
-      (:with-map vertico-map
-        (:bind "RET" vertico-directory-enter
-               "DEL" vertico-directory-delele-char
-               "M-DEL" vertico-directory-delete-word))
-      (add-hook 'rfn-eshadow-update-overlay #'vertico-directory-tidy))
-    (:with-feature vertico-quick
-      (:with-map vertico-map
-        (:bind "C-q" vertico-quick-insert
-               "M-q" vertico-quick-exit))
-      (:when-loaded
-        (setq vertico-quick1 "aoeuip"
-              vertico-quick2 "dhtnslm")))))
+    (:global "M-R" vertico-repeat)
+    (:with-map vertico-map
+      (:bind "M-P" vertico-repeat-previous
+             "M-N" vertico-repeat-next))
+    (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
+    (:with-map vertico-map
+      (:bind "RET" vertico-directory-enter
+             "DEL" vertico-directory-delete-char
+             "M-DEL" vertico-directory-delete-word))
+    (add-hook 'rfn-eshadow-update-overlay #'vertico-directory-tidy)
+    (:with-map vertico-map
+      (:bind "C-q" vertico-quick-insert
+             "M-q" vertico-quick-exit))
+    (:when-loaded
+      (setq vertico-quick1 "aoeuip"
+            vertico-quick2 "dhtnslm"))))
 
 ;;;; marginalia
 
