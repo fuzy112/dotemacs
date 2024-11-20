@@ -702,7 +702,7 @@ value for USE-OVERLAYS."
 ;;;; saveplace
 
 (setup saveplace
-  (:with-function (save-place-find-file-hook save-place-dired-hookf)
+  (:with-function (save-place-find-file-hook save-place-dired-hook)
     (:autoload-this))
   (add-hook 'find-file-hook #'save-place-find-file-hook)
   (add-hook 'dired-initial-position-hook #'save-place-dired-hook)
