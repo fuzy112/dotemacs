@@ -1252,27 +1252,8 @@ minibuffer."
 (straight-use-package 'rime)
 
 (setup rime
-  (:when-loaded
-    (define-advice rime--posframe-display-content (:override (content))
-      "Display CONTENT with posframe."
-      (if (and (featurep 'posframe) (posframe-workable-p))
-          (if (string-blank-p content)
-              (posframe-hide rime-posframe-buffer)
-            (let*
-                ((preedit (rime--current-preedit))
-                 (x (cond
-                     ((not rime-posframe-fixed-position) 0)
-                     ((not preedit) 0)
-                     ((not (overlayp rime--preedit-overlay)) 0)
-                     (t (rime--string-pixel-width preedit)))))
-              (apply #'posframe-show rime-posframe-buffer
-                     :string content
-                     :x-pixel-offset (- x)
-                     :background-color (face-attribute 'rime-default-face :background nil t)
-                     :foreground-color (face-attribute 'rime-default-face :foreground nil t)
-                     rime-posframe-properties)))
-        ;; Fallback to popup when not available.
-        (rime--popup-display-content content)))))
+  (define-advice toggle-input-method (:before (&rest _) rime)
+    (setq default-input-method "rime")))
 
 ;;;; kinsoku
 
