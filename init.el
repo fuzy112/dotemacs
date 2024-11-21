@@ -1628,6 +1628,7 @@ minibuffer."
 (straight-use-package 'markdown-mode)
 (straight-use-package '(cmake-mode :host github :repo "emacsmirror/cmake-mode" :files ("*.el")))
 (straight-use-package 'systemd)
+(straight-use-package 'colorful-mode)
 
 ;;;; Site lisp
 
