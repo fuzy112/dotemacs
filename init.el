@@ -888,9 +888,17 @@ Otherwise use `consult-xref'."
 
 ;;;; ctags
 
+(straight-use-package 'transient)       ; for ctags-menu
+
+(setup ctags-menu
+  (:with-function ctags-menu
+    (:autoload-this nil t)
+    (:bind-to "C-c t m")))
+
 (setup ctags-xref
-  (:global "C-c t m" ctags-menu)
-  (add-hook 'xref-backend-functions #'ctags-xref-backend)
+  (:with-function ctags-xref-backend
+    (:autoload-this)
+    (add-hook 'xref-backend-functions #'ctags-xref-backend))
   (:when-loaded
     ;; Override `xref-backend-references' for ctags: if GRTAGS exists,
     ;; find reference using `gtags' backend.
@@ -904,11 +912,11 @@ Otherwise use `consult-xref'."
     (with-eval-after-load 'cc-mode
       (require 'ctags-xref-c))))
 
-(straight-use-package 'transient)       ; for ctags-menu
-
 ;;;; gtags
 
 (setup gtags
+  (:with-function (gtags-update gtags-single-update)
+    (:autoload-this nil t))
   (:global "C-c t G" gtags-update)
   (add-hook 'after-save-hook #'gtags-single-update))
 
@@ -924,12 +932,16 @@ Otherwise use `consult-xref'."
 ;;;; gtkdoc
 
 (setup good-doc
-  (:global "C-c d g" good-doc-lookup))
+  (:with-function good-doc-lookup
+    (:autoload-this nil t)
+    (:bind-to "C-c d g")))
 
 ;;;; rust-docs
 
 (setup rust-docs
-  (:global "C-c d r" rust-docs-lookup))
+  (:with-function rust-docs-lookup
+    (:autoload-this nil t)
+    (:bind-to "C-c d r")))
 
 ;;;; javascript
 
@@ -992,6 +1004,10 @@ Otherwise use `consult-xref'."
 ;;;; pp-posframe
 (straight-use-package 'posframe)
 (setup pp-posframe
+  (:with-function (pp-posframe-eval-last-sexp
+                   pp-posframe-compile-defun
+                   pp-posframe-macroexpand-last-sexp)
+    (:autoload-this))
   (:global "C-x C-e" pp-posframe-eval-last-sexp)
   (:with-map emacs-lisp-mode-map
     (:bind "C-M-x" pp-posframe-compile-defun
@@ -1424,6 +1440,9 @@ minibuffer."
 
 (setup tui
   (:only-if (not (memq system-type '(ms-dos windows-nt))))
+  (:with-function ( tui-run tui-rg tui-ugrep tui-yazi tui-kill tui-line
+                    tui-find tui-locate)
+    (:autoload-this nil t))
   (:global "C-c t t" tui-run
            "C-c t r" tui-rg
            "C-c t g" tui-ugrep
@@ -1544,7 +1563,11 @@ minibuffer."
     (advice-add #'bookmark-write-file :around '+bookmark--pp-28)))
 
 (setup bookmark-extras
-  (:global "C-x r u" url-bookmark-add))
+  (:with-function url-bookmark-add
+    (:autoload-this nil t)
+    (:bind-to "C-x r u"))
+  (with-eval-after-load 'bookmark
+    (require 'bookmark-extras)))
 
 ;;;; org
 
@@ -1628,13 +1651,6 @@ minibuffer."
 (straight-use-package '(cmake-mode :host github :repo "emacsmirror/cmake-mode" :files ("*.el")))
 (straight-use-package 'systemd)
 (straight-use-package 'colorful-mode)
-
-;;;; Site lisp
-
-(load (locate-user-emacs-file "site-lisp/site-lisp.el"))
-
-(setup site-lisp
-  (site-lisp-activate))
 
 
 (defun find-early-init-file ()

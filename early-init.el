@@ -106,6 +106,12 @@
           modus-themes-slanted-constructs t
           modus-themes-variable-pitch-ui t)))
 
+;;;; site-lisp
+
+(add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
+(add-to-list 'load-path (locate-user-emacs-file "site-lisp/tui"))
+
+
 ;;;; custom
 
 (setup custom
