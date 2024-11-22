@@ -1057,8 +1057,7 @@ Otherwise use `consult-xref'."
 
 (setup project
   (:when-loaded
-    (dolist (file '(".project-root" "configure.ac" ".dir-locals.el"
-                    "Cargo.toml" "package.json"))
+    (dolist (file '(".project-root" "configure.ac" "Cargo.toml" "package.json"))
       (add-to-list 'project-vc-extra-root-markers file))
 
     (defun +project--external-roots ()
