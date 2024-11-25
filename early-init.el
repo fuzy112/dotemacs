@@ -116,7 +116,8 @@
 
 (setup custom
   (setq custom-file (locate-user-emacs-file "custom.el"))
-  (load custom-file nil t)
+  (when (file-exists-p custom-file)
+    (load custom-file nil t))
   (unless custom-enabled-themes
     (require 'modus-themes)
     (modus-themes-load-theme (car modus-themes-to-toggle))))
