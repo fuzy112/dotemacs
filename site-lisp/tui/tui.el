@@ -2,7 +2,7 @@
 ;; Copyright © 2024  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu
-;; Version:  0.1.0
+;; Version:  0.1.1
 ;; Keywords: tools
 
 ;;; Commentary:
@@ -14,9 +14,9 @@
   "TUI tools support."
   :group 'tools)
 
-(declare-function tui-eat-exec "tui-eat" (name command callback))
-(declare-function tui-vterm-exec "tui-vterm" (name command callback))
-(declare-function tui-term-exec "tui-term" (name command callback))
+(autoload 'tui-eat-exec "tui-eat.el")
+(autoload 'tui-vterm-exec "tui-vterm.el")
+(autoload 'tui-term-exec "tui-term.el")
 
 (defcustom tui-external-terminal-program "x-terminal-emulator"
   "The default external terminal terminal emulator."
