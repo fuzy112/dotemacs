@@ -1178,7 +1178,7 @@ minibuffer."
                    (expand-file-name (read-directory-name "Run eat in directory:"))
                  default-directory)))
       (let ((default-directory dir)
-            (eat-buffer-name (concat "*" dir "-eat*")))
+            (eat-buffer-name (concat "*" dir " : eat*")))
         (eat nil nil))))
   (keymap-global-set "C-c s" '+eat/here)
   (:when-loaded
