@@ -684,6 +684,14 @@ value for USE-OVERLAYS."
   (:delight)
   (:hook-into find-file-hook))
 
+;;;; whitespace
+
+(setup whitespace
+  (:delight)
+  (:hook-into prog-mode conf-mode yaml-mode)
+  (:when-loaded
+    (setq whitespace-style '(face trailing empty indentation space-before-tab space-after-tab))))
+
 ;;;; recentf
 
 (setup recentf
