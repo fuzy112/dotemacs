@@ -975,6 +975,10 @@ Otherwise use `consult-xref'."
   (:with-mode lisp-data-mode
     (:hook paren-face-mode)))
 
+;;;; sly
+
+(straight-use-package 'sly)
+
 ;;;; paren-face
 
 (setup paren-face

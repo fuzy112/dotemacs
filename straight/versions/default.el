@@ -77,6 +77,7 @@
  ("s.el" . "dda84d38fffdaf0c9b12837b504b402af910d01d")
  ("seq" . "da86da9bf111f68fb81efd466d76d53af5aebc00")
  ("setup" . "7ec5779b41cb2bfc59b5849d2ecbaab7942829d8")
+ ("sly" . "742355f7554ab6c46e5c1c9bdb89068f55359eaa")
  ("straight.el" . "33fb4695066781c634ff1c3c81ba96e880deccf7")
  ("systemd-mode" . "8742607120fbc440821acbc351fda1e8e68a8806")
  ("tempel" . "5a5b48cc13dd7ec6b98cf01759b1338ab1db5826")
