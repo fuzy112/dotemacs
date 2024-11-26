@@ -989,10 +989,8 @@ Otherwise use `consult-xref'."
 
 (straight-use-package 'puni)
 (setup puni
-  (puni-global-mode)
-  (:hook electric-pair-local-mode)
-  (:with-function puni-disable-puni-mode
-    (:hook-into term vterm eat)))
+  (:hook-into prog-mode conf-mode)
+  (:hook electric-pair-local-mode))
 
 ;;;; elisp-mode
 
