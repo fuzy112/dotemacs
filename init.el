@@ -962,20 +962,11 @@ Otherwise use `consult-xref'."
 
 ;;;; lisp-mode
 
-(straight-use-package 'paredit)
 (straight-use-package 'paren-face)
 
 (setup lisp-mode
   (:with-mode lisp-data-mode
-    (:hook electric-pair-local-mode
-           paredit-mode
-           paren-face-mode)))
-
-;;;; paredit
-
-(setup paredit
-  (:delight)
-  (:bind "M-s" nil))
+    (:hook paren-face-mode)))
 
 ;;;; paren-face
 
@@ -985,6 +976,15 @@ Otherwise use `consult-xref'."
       (set-face-foreground 'parenthesis (modus-themes-get-color-value 'border)))
     (+paren-face--update-color)
     (add-hook 'modus-themes-after-load-theme-hook '+paren-face--update-color)))
+
+;;;; puni
+
+(straight-use-package 'puni)
+(setup puni
+  (puni-global-mode)
+  (:hook electric-pair-local-mode)
+  (:with-function puni-disable-puni-mode
+    (:hook-into term vterm eat)))
 
 ;;;; elisp-mode
 
@@ -1041,7 +1041,6 @@ Otherwise use `consult-xref'."
     (setq-default c-auto-newline t
                   c-hungry-delete-key t)
     (defun +cc-mode--hook ()
-      (electric-pair-local-mode)
       (add-hook 'flymake-diagnostics-functions #'flymake-clang-tidy nil t))
     (add-hook 'c-mode-common-hook '+cc-mode--hook)))
 
@@ -1065,8 +1064,7 @@ Otherwise use `consult-xref'."
 
 (setup sh-script
   (:with-mode sh-mode
-    (:hook sh-electric-here-document-mode
-           electric-pair-local-mode)
+    (:hook sh-electric-here-document-mode)
     (:local-hook save-file-hook #'executable-make-buffer-file-executable-if-script-p)))
 
 ;;;; project
