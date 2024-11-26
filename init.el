@@ -1606,6 +1606,12 @@ minibuffer."
                    ,(concat "* Note (%a)\n"
                             "/Entered on/ %U\n" "\n" "%?")))))
 
+;;;; rcirc
+
+(setup rcirc
+  (:when-loaded
+    (rcirc-track-minor-mode)))
+
 ;;;; copilot
 
 (straight-use-package 'copilot)
