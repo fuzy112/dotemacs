@@ -657,8 +657,7 @@ value for USE-OVERLAYS."
   (:global "C-:" avy-goto-char
            "C-'" avy-goto-char-timer
            "M-g w" avy-goto-word-1)
-  (:with-map isearch-mode-map
-    (:bind "C-'" avy-isearch))
+  (keymap-set isearch-mode-map "C-'" #'avy-isearch)
   (setq avy-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n ?s ?l ?m)))
 
 ;;;; ace-window
