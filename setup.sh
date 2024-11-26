@@ -10,7 +10,7 @@ git config diff.cpp.xfuncname \
 ^((::[[:space:]]*)?[A-Za-z_][A-Za-z_0-9]*[[:space:]]*\(.*)$
 ^((#define[[:space:]]|DEFUN).*)$'
 git config diff.elisp.xfuncname \
-           '^\([^[:space:]]*def[^[:space:]]+[[:space:]]+([^()[:space:]]+)'
+           '^\([^[:space:]]*(def[^[:space:]]+[[:space:]]+([^()[:space:]]+)|setup[[:space:]]+([^[:space:]]+))'
 git config 'diff.m4.xfuncname' '^((m4_)?define|A._DEFUN(_ONCE)?)\([^),]*'
 git config 'diff.make.xfuncname' \
 	   '^([$.[:alnum:]_].*:|[[:alnum:]_]+[[:space:]]*([*:+]?[:?]?|!?)=|define .*)'
