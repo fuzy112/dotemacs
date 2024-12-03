@@ -1718,6 +1718,50 @@ minibuffer."
   (:when-loaded
     (rcirc-track-minor-mode)))
 
+;;;; erc
+
+(setup erc
+  (:when-loaded
+    ;; This enables displaying servers and channels in side windows,
+    ;; which can be toggled by C-x w s.
+    (setopt erc-modules
+	    (seq-union '(sasl nicks bufbar nickbar scrolltobottom track)
+		       erc-modules)))
+
+  ;; protect me from accidentally sending excess lines.
+  (setq erc-inhibit-multiline-input t
+	erc-send-whitespace-lines t
+	erc-ask-about-multiline-input t)
+  ;; scroll all windows to prompt when submitting input.
+  (setq erc-scrolltobottom-all t)
+
+  ;; reconnect automatically using a fancy strategy.
+  (setq erc-server-reconnect-function
+	#'erc-server-delayed-check-reconnect
+	erc-server-reconnect-timeout 30)
+
+  ;; show new buffers in the current window instead of a split.
+  (setq erc-interactive-display 'buffer)
+
+  ;; insert a newline when I hit <RET> at the prompt, and prefer
+  ;; something more deliberate for actually send messages.
+  (:bind "RET" nil
+	 "C-c C-c" erc-send-current-line)
+
+  ;; prefer one message line without continuation indicators.
+  (:with-feature erc-fill
+    (setq erc-fill-function #'erc-fill-wrap
+	  erc-fill-static-center 18)
+    (:with-mode erc-fill-wrap-mode
+      (:bind "C-c =" erc-fill-wrap-nudge)))
+
+  ;; prevent JOINs and PARTs from lighting up the mode-line.
+  (:with-feature erc-track
+    (:when-loaded
+      (setopt erc-track-faces-priority-list (remq 'erc-notice-face
+						  erc-track-faces-priority-list)))
+    (setq erc-track-priority-faces-only 'all)))
+
 ;;;; copilot
 
 (straight-use-package 'copilot)
