@@ -141,7 +141,8 @@
            "C-c S B" straight-rebuild-all
            "C-c S v" straight-freeze-versions
            "C-c S V" straight-thaw-versions
-           "C-c S u" straight-use-package))
+           "C-c S u" straight-use-package
+           "C-c S d" straight-visit-package))
 
 
 ;;;; faces
@@ -1613,6 +1614,7 @@ minibuffer."
 
 (setup gpg-agent
   (:only-if (not (memq system-type '(ms-dos windows-nt))))
+  (:only-if (not (display-graphic-p)))
   (let ((load-this (lambda () (require 'gpg-agent))))
     (eval-after-load 'vc load-this)
     (eval-after-load 'magit load-this)
