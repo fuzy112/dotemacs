@@ -1179,7 +1179,7 @@ Otherwise use `consult-xref'."
 ;;;; project
 
 (setup project
-  (keymap-set mode-specific-map "P" project-prefix-map)
+  (keymap-set mode-specific-map "p" project-prefix-map)
   (:when-loaded
     (dolist (file '(".project-root" "configure.ac" "Cargo.toml" "package.json"))
       (add-to-list 'project-vc-extra-root-markers file))
