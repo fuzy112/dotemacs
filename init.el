@@ -1071,6 +1071,11 @@ Otherwise use `consult-xref'."
 
 (straight-use-package 'sly)
 
+;;;; geiser
+
+(straight-use-package 'geiser)
+(straight-use-package 'geiser-chicken)
+
 ;;;; paren-face
 
 (setup paren-face
