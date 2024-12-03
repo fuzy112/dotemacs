@@ -420,8 +420,7 @@ ARGS: see `completion-read-multiple'."
 (straight-use-package 'cape)
 
 (setup cape
-  ;; TODO: bind C-c p to project-prefix-map
-  (:global "C-c p" cape-prefix-map)
+  (:global "C-c TAB" cape-prefix-map)
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'completion-at-point-functions #'cape-elisp-block))
