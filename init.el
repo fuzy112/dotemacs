@@ -1586,6 +1586,7 @@ minibuffer."
 ;;;; logos
 
 (straight-use-package 'logos)
+(straight-use-package 'olivetti)
 
 (setup logos
   (:global "<f8>" logos-focus-mode
@@ -1605,7 +1606,7 @@ minibuffer."
                   logos-hide-fringe t
                   logos-buffer-read-only nil
                   logos-scroll-lock nil
-                  logos-olivetti nil)
+                  logos-olivetti t)
 
     (defun logos-focus--narrow ()
       (when logos-focus-mode
