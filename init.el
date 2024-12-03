@@ -1074,7 +1074,9 @@ Otherwise use `consult-xref'."
 ;;;; geiser
 
 (straight-use-package 'geiser)
+(straight-use-package 'geiser-chez)
 (straight-use-package 'geiser-chicken)
+(straight-use-package 'geiser-guile)
 
 ;;;; paren-face
 
