@@ -47,7 +47,7 @@
 (defun pp-posframe--pre-command ()
   "Hide the posframe if `this-command' is not in `pp-posframe--pre-command'."
   (unless (memq this-command pp-posframe-hide-ignore-commands)
-    (posframe-hide pp-posframe-buffer-name)))
+    (pp-posframe-mode -1)))
 
 (add-hook 'pre-command-hook #'pp-posframe--pre-command)
 
@@ -55,12 +55,13 @@
   "Save the evaluation result into the kill ring."
   (interactive)
   (with-current-buffer pp-posframe-buffer-name
-    (kill-region (point-min) (point-max))))
+    (set-text-properties (point-min) (point-max) nil)
+    (copy-region-as-kill (point-min) (point-max))))
 
 (defun pp-posframe-yank ()
   "Yank the evaluation result into the current buffer."
   (interactive)
-  (insert-buffer-substring-no-properties pp-posframe-buffer-name))
+  (insert-buffer-substring pp-posframe-buffer-name))
 
 (defun pp-posframe-buffer ()
   "Pop to the evaluation result buffer."
@@ -71,8 +72,16 @@
   :doc "The transient keymap to use when displaying the posframe."
   "M-w" #'pp-posframe-save
   "C-y" #'pp-posframe-yank
-  "b" #'pp-posframe-buffer
+  "M-o" #'pp-posframe-buffer
   "q" #'ignore)
+
+(define-minor-mode pp-posframe-mode
+  "Temporary minor mode for manipulating pp-posframe."
+  :keymap pp-posframe-map
+  :global t
+  (if pp-posframe-mode
+      (apply #'posframe-show pp-posframe-buffer-name pp-posframe-parameters)
+    (posframe-hide pp-posframe-buffer-name)))
 
 (defun pp-posframe-display-value (value lexical)
   "Display VALUE in a posframe."
@@ -81,13 +90,14 @@
     (delay-mode-hooks
       (unless (derived-mode-p 'emacs-lisp-mode)
 	(emacs-lisp-mode))
-      (let ((pp-default-function 'pp-emacs-lisp-code))
+      (let ((pp-default-function 'pp-fill))
 	(pp value (current-buffer)))
       (setq lexical-binding lexical)
       (font-lock-ensure))
     (add-text-properties 1 2 `(display ,(concat "=> " (buffer-substring 1 2)))))
-  (apply #'posframe-show pp-posframe-buffer-name pp-posframe-parameters)
-  (set-transient-map pp-posframe-map))
+  (when (posframe-workable-p)
+    (pp-posframe-mode))
+  (message "=> %S" value))
 
 ;;;###autoload
 (defun pp-posframe-eval-last-sexp ()
