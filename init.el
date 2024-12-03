@@ -40,6 +40,110 @@
 (setq straight-current-profile nil)
 
 
+;;;; meow-edit
+
+(straight-use-package 'meow)
+
+(setup meow
+  (require 'meow)
+  (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
+  (meow-leader-define-key
+   '("1" . meow-digit-argument)
+   '("2" . meow-digit-argument)
+   '("3" . meow-digit-argument)
+   '("4" . meow-digit-argument)
+   '("5" . meow-digit-argument)
+   '("6" . meow-digit-argument)
+   '("7" . meow-digit-argument)
+   '("8" . meow-digit-argument)
+   '("9" . meow-digit-argument)
+   '("0" . meow-digit-argument)
+   '("/" . meow-keypad-describe-key)
+   '("?" . meow-cheatsheet)
+   '("b" . "C-x b"))
+  (meow-motion-overwrite-define-key
+   '("<escape>" . ignore))
+  (meow-normal-define-key
+   '("0" . meow-expand-0)
+   '("9" . meow-expand-9)
+   '("8" . meow-expand-8)
+   '("7" . meow-expand-7)
+   '("6" . meow-expand-6)
+   '("5" . meow-expand-5)
+   '("4" . meow-expand-4)
+   '("3" . meow-expand-3)
+   '("2" . meow-expand-2)
+   '("1" . meow-expand-1)
+   '("-" . negative-argument)
+   '(";" . meow-reverse)
+   '("," . meow-inner-of-thing)
+   '("." . meow-bounds-of-thing)
+   '("<" . meow-beginning-of-thing)
+   '(">" . meow-end-of-thing)
+   '("a" . meow-append)
+   '("A" . meow-open-below)
+   '("b" . meow-back-word)
+   '("B" . meow-back-symbol)
+   '("c" . meow-change)
+   '("d" . meow-delete)
+   '("D" . meow-backward-delete)
+   '("e" . meow-line)
+   '("E" . meow-goto-line)
+   '("f" . meow-find)
+   '("g" . meow-cancel-selection)
+   '("G" . meow-grab)
+   '("h" . meow-left)
+   '("H" . meow-left-expand)
+   '("i" . meow-insert)
+   '("I" . meow-open-above)
+   '("j" . meow-join)
+   '("k" . meow-kill)
+   '("l" . meow-till)
+   '("m" . meow-mark-word)
+   '("M" . meow-mark-symbol)
+   '("n" . meow-next)
+   '("N" . meow-next-expand)
+   '("o" . meow-block)
+   '("O" . meow-to-block)
+   '("p" . meow-prev)
+   '("P" . meow-prev-expand)
+   '("q" . meow-quit)
+   '("Q" . meow-goto-line)
+   '("r" . meow-replace)
+   '("R" . meow-swap-grab)
+   '("s" . meow-search)
+   '("t" . meow-right)
+   '("T" . meow-right-expand)
+   '("u" . meow-undo)
+   '("U" . meow-undo-in-selection)
+   '("v" . meow-visit)
+   '("w" . meow-next-word)
+   '("W" . meow-next-symbol)
+   '("x" . meow-save)
+   '("X" . meow-sync-grab)
+   '("y" . meow-yank)
+   '("z" . meow-pop-selection)
+   '("'" . repeat)
+   '("<escape>" . ignore))
+  (meow-global-mode))
+
+
+;;;; straight
+
+(setup straight
+  (:global "C-c S c" straight-check-package
+           "C-c S C" straight-check-all
+           "C-c S p" straight-pull-package
+           "C-c S P" straight-pull-all
+           "C-c S f" straight-fetch-package
+           "C-c S F" straight-fetch-all
+           "C-c S b" straight-rebuild-package
+           "C-c S B" straight-rebuild-all
+           "C-c S v" straight-freeze-versions
+           "C-c S V" straight-thaw-versions
+           "C-c S u" straight-use-package))
+
+
 ;;;; faces
 
 (setup faces
@@ -62,7 +166,8 @@
   (setup-define :delight
     (lambda (&optional spec value)
       `(delight ',(or spec (setup-get 'mode)) ,value t))
-    :after-loaded t))
+    :after-loaded t
+    :documentation "Hide the mode lighter."))
 
 ;;;; nerd-icons
 
@@ -99,8 +204,6 @@
 ;;;; window
 
 (setup window
-  (unless (keymap-lookup window-prefix-map "q")
-    (keymap-set window-prefix-map "q" #'quit-window))
   (setq kill-buffer-quit-windows t
         quit-restore-window-no-switch t))
 
@@ -116,7 +219,7 @@
 (setup backup
   (:with-function (list-backups backup-list-backups)
     (:autoload-this nil t))
-  (:global "C-c b l" list-backups))
+  (:global "C-c B" list-backups))
 
 ;;;; shortdoc
 
@@ -316,6 +419,7 @@ ARGS: see `completion-read-multiple'."
 (straight-use-package 'cape)
 
 (setup cape
+  ;; TODO: bind C-c p to project-prefix-map
   (:global "C-c p" cape-prefix-map)
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'completion-at-point-functions #'cape-file)
@@ -366,7 +470,8 @@ ARGS: see `completion-read-multiple'."
 (straight-use-package 'embark)
 
 (setup embark
-  (:global "C-." embark-act)
+  (:global "C-." embark-act
+           "C-c a" embark-act)
   (setq prefix-help-command #'embark-prefix-help-command)
   (:when-loaded
     (setq embark-indicators '(embark-minimal-indicator
@@ -661,31 +766,13 @@ value for USE-OVERLAYS."
 (setup ibuffer
   (:global "<remap> <list-buffers>" ibuffer))
 
-;;;; avy
-
-(straight-use-package 'avy)
-
-(setup avy
-  (:global "C-:" avy-goto-char
-           "C-'" avy-goto-char-timer
-           "M-g w" avy-goto-word-1)
-  (keymap-set isearch-mode-map "C-'" #'avy-isearch)
-  (setq avy-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n ?s ?l ?m)))
-
-;;;; ace-window
-
-(straight-use-package 'ace-window)
-
-(setup ace-window
-  (:global "M-o" ace-window)
-  (setq aw-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n ?s ?l ?m)))
-
 ;;;; apheleia
 
 (straight-use-package 'apheleia)
 
 (setup apheleia
-  (:global "C-x x /" apheleia-format-buffer))
+  (:global "C-x x /" apheleia-format-buffer
+           "C-c C-/" apheleia-format-buffer))
 
 ;;;; ws-butler
 
@@ -783,21 +870,6 @@ value for USE-OVERLAYS."
       (when (fboundp 'consult-history)
         (bind-key "M-r" #'consult-history eshell-hist-mode-map)))))
 
-;;;; iedit
-
-(straight-use-package 'iedit)
-
-(setup iedit
-  (:global "C-;" iedit-mode))
-
-;;;; mwim
-
-(straight-use-package 'mwim)
-
-(setup mwim
-  (:global "<remap><move-beginning-of-line>" mwim-beginning
-           "<remap><move-end-of-line>" mwim-end))
-
 ;;;; text-mode
 
 (setup text-mode
@@ -842,10 +914,10 @@ value for USE-OVERLAYS."
 
 (setup hl-todo
   (:hook-into prog-mode conf-mode)
-  (:bind "C-c t [" hl-todo-previous
-         "C-c t ]" hl-todo-next
-         "C-c t o" hl-todo-occur
-         "C-c t i" hl-todo-insert)
+  (:global "C-c t [" hl-todo-previous
+           "C-c t ]" hl-todo-next
+           "C-c t o" hl-todo-occur
+           "C-c t i" hl-todo-insert)
   (:when-loaded
     (let ((map (make-sparse-keymap)))
       (keymap-set map "[" #'hl-todo-previous)
@@ -972,12 +1044,12 @@ Otherwise use `consult-xref'."
     (define-advice js-jsx-enable (:after () sgml)
       (require 'sgml-mode)
       (keymap-set-many (current-local-map)
-        "C-c C-b" sgml-skip-tag-backward
-        "C-c C-d" sgml-delete-tag
-        "C-c C-e" sgml-close-tag
-        "C-c C-f" sgml-skip-tag-forward
-        "C-c C-o" sgml-tag
-        "C-c C-t" sgml-tag))))
+                       "C-c C-b" sgml-skip-tag-backward
+                       "C-c C-d" sgml-delete-tag
+                       "C-c C-e" sgml-close-tag
+                       "C-c C-f" sgml-skip-tag-forward
+                       "C-c C-o" sgml-tag
+                       "C-c C-t" sgml-tag))))
 
 ;;;; lisp-mode
 
@@ -1046,7 +1118,15 @@ Otherwise use `consult-xref'."
   (:global "C-x F" find-function
            "C-x V" find-variable
            "C-x K" find-function-on-key
-           "C-x L" find-library))
+           "C-x L" find-library
+           "C-x 4 F" find-function-other-window
+           "C-x 4 V" find-variable-other-window
+           "C-x 4 K" find-function-on-key-other-window
+           "C-x 4 L" find-library-other-window
+           "C-x 5 F" find-function-other-frame
+           "C-x 5 V" find-variable-other-frame
+           "C-x 5 K" find-function-on-key-other-frame
+           "C-x 5 L" find-library-other-frame))
 
 ;;;; eldoc
 
@@ -1091,6 +1171,7 @@ Otherwise use `consult-xref'."
 ;;;; project
 
 (setup project
+  (keymap-set mode-specific-map "P" project-prefix-map)
   (:when-loaded
     (dolist (file '(".project-root" "configure.ac" "Cargo.toml" "package.json"))
       (add-to-list 'project-vc-extra-root-markers file))
@@ -1199,7 +1280,7 @@ minibuffer."
       (let ((default-directory dir)
             (eat-buffer-name (concat "*" dir " : eat*")))
         (eat nil nil))))
-  (keymap-global-set "C-c s" '+eat/here)
+  (keymap-global-set "C-c t s" '+eat/here)
   (:when-loaded
     (setq eat-kill-buffer-on-exit t)
 
@@ -1231,16 +1312,16 @@ minibuffer."
     (require 'with-editor)
     (if with-editor-emacsclient-executable
         (with-editor
-         (with-editor--setup)
-         (while (accept-process-output proc 1 nil t))
-         (when-let* ((v (getenv "EDITOR")))
-           (eat-term-send-string eat-terminal (format " export EDITOR=%S" v))
-           (eat-self-input 1 'return))
-         (when-let* ((v (getenv "EMACS_SERVER_FILE")))
-           (eat-term-send-string eat-terminal (format " export EMACS_SERVER_FILE=%S" v))
-           (eat-self-input 1 'return))
-         (eat-term-send-string eat-terminal " clear")
-         (eat-self-input 1 'return))
+          (with-editor--setup)
+          (while (accept-process-output proc 1 nil t))
+          (when-let* ((v (getenv "EDITOR")))
+            (eat-term-send-string eat-terminal (format " export EDITOR=%S" v))
+            (eat-self-input 1 'return))
+          (when-let* ((v (getenv "EMACS_SERVER_FILE")))
+            (eat-term-send-string eat-terminal (format " export EMACS_SERVER_FILE=%S" v))
+            (eat-self-input 1 'return))
+          (eat-term-send-string eat-terminal " clear")
+          (eat-self-input 1 'return))
       (error "Cannot use sleeping editor in this buffer")))
   (add-hook 'eat-exec-hook '+with-editor--export-editor-to-eat))
 
@@ -1286,6 +1367,10 @@ minibuffer."
 (straight-use-package 'rime)
 
 (setup rime
+  (setq rime-disable-predicates '(meow-normal-mode-p
+                                  meow-keypad-mode-p
+                                  meow-motion-mode-p
+                                  meow-beacon-mode-p))
   (define-advice toggle-input-method (:before (&rest _) rime)
     (setq default-input-method "rime")))
 
@@ -1496,9 +1581,9 @@ minibuffer."
            "<remap> <forward-page>" logos-forward-page-dwim
            "<remap> <backward-page>" logos-backward-page-dwim)
   (:with-map logos-focus-mode-map
-        (:bind "<left>" logos-backward-page-dwim
-               "<right>" logos-forward-page-dwim))
-  (:when-loaded 
+    (:bind "<left>" logos-backward-page-dwim
+           "<right>" logos-forward-page-dwim))
+  (:when-loaded
     (setq logos-outlines-are-pages t)
 
     (setq-default logos-hide-cursor nil
@@ -1594,11 +1679,11 @@ minibuffer."
 (straight-use-package 'org-modern)
 
 (setup org
-  (:global "C-c l" org-store-link)
+  (:global "C-c L" org-store-link)
   (:hook org-modern-mode))
 
 (setup org-agenda
-  (:global "C-c a" org-agenda)
+  (:global "C-c A" org-agenda)
   (:hook org-modern-agenda)
   (setq org-agenda-hide-tags-regexp ".")
   (setq org-agenda-prefix-format
@@ -1608,7 +1693,7 @@ minibuffer."
           (search . " %i %-12:c"))))
 
 (setup org-capture
-  (:global "C-c c" org-capture)
+  (:global "C-c C" org-capture)
   (:when-loaded
     (add-to-list 'org-capture-templates
                  `("i" "Inbox" entry (file "inbox.org")
