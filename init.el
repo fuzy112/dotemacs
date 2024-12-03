@@ -1797,13 +1797,21 @@ minibuffer."
 (straight-use-package 'debian-el)
 (straight-use-package 'dpkg-dev-el)
 
+;;;; markdown
+
+(straight-use-package 'markdown-mode)
+
+(setup markdown-mode
+  (:bind "C-x C-q" markdown-view-mode)
+  (:with-mode markdown-view-mode
+    (:bind "C-x C-q" markdown-mode)))
+
 ;;;; other packages
 
 (straight-use-package 'yaml-mode)
 (straight-use-package 'toml-mode)
 (straight-use-package 'colorful-mode)
 (straight-use-package 'autocrypt)
-(straight-use-package 'markdown-mode)
 (straight-use-package '(cmake-mode :host github :repo "emacsmirror/cmake-mode" :files ("*.el")))
 (straight-use-package 'systemd)
 (straight-use-package 'colorful-mode)
