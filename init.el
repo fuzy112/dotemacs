@@ -111,6 +111,13 @@
     (setq help-enable-variable-value-editing t
           help-enable-completion-autoload nil)))
 
+;;;; backup
+
+(setup backup
+  (:with-function (list-backups backup-list-backups)
+    (:autoload-this nil t))
+  (:global "C-c b l" list-backups))
+
 ;;;; shortdoc
 
 (setup shortdoc
