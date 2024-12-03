@@ -1835,6 +1835,7 @@ minibuffer."
 (straight-use-package '(cmake-mode :host github :repo "emacsmirror/cmake-mode" :files ("*.el")))
 (straight-use-package 'systemd)
 (straight-use-package 'colorful-mode)
+(straight-use-package 'show-font)
 
 
 (defun find-early-init-file ()
