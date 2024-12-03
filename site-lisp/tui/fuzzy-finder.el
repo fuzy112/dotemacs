@@ -104,7 +104,8 @@
 
 (defvar fuzzy-finder-default-class
   (cond ((executable-find "sk") 'fuzzy-finder-skim)
-	((executable-find "fzf") 'fuzzy-finder-fzf))
+	((executable-find "fzf") 'fuzzy-finder-fzf)
+	(t (warn "Please install `fzf' or `skim'")))
   "Default fuzzy-finder command builder to use when not specified.")
 
 ;;;###autoload
