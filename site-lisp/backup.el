@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2024  Zhengyi Fu
 
-;; Package-Version: 0.7.2
+;; Package-Version: 0.7.3
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Keywords: convenience
 
@@ -87,14 +87,17 @@ If NOCONFIRM is non-nil, do not ask for confirmation."
       (revert-buffer t t))))
 
 (defun backup-list--revert-buffer (&rest _)
-  (let ((inhibit-read-only t))
+  (let ((inhibit-read-only t)
+	(saved-point (line-beginning-position)))
     (erase-buffer)
     (let ((backup-files (file-backup-file-names backup-real-file)))
       (if backup-files
 	  (insert "Backup files for " backup-real-file ?\n ?\n)
 	(insert "No backup files for " backup-real-file ?\n))
       (dolist (backup-file backup-files)
-	(backup--insert-entry backup-real-file backup-file)))))
+	(backup--insert-entry backup-real-file backup-file)))
+    (goto-char saved-point)
+    nil))
 
 (defun backup-list--bookmark-handler (bookmark)
   (let ((file (alist-get 'real-file bookmark)))
@@ -112,7 +115,9 @@ If NOCONFIRM is non-nil, do not ask for confirmation."
   "=" #'backup-diff
   "e" #'backup-ediff
   "r" #'backup-restore
-  "d" #'backup-delete)
+  "d" #'backup-delete
+  "p" #'previous-line
+  "n" #'next-line)
 
 ;;;###autoload
 (define-derived-mode backup-list-mode special-mode "Backup list mode"
