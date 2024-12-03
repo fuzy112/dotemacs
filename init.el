@@ -24,7 +24,9 @@
 
 ;;; Code:
 
-(require 'early-init (locate-user-emacs-file "early-init.el") t)
+(if (featurep 'init)
+    (load early-init-file)
+  (require 'early-init early-init-file t))
 
 ;;;; pre-init
 
@@ -32,7 +34,10 @@
   "The file to load before the init file.")
 
 (when (file-exists-p pre-init-file)
-  (load pre-init-file nil t))
+  (let ((straight-current-profile 'user))
+    (load pre-init-file nil t)))
+
+(setq straight-current-profile nil)
 
 
 ;;;; faces
@@ -1682,7 +1687,12 @@ minibuffer."
 (defvar post-init-file (locate-user-emacs-file "post-init.el"))
 
 (when (file-exists-p post-init-file)
-  (load post-init-file nil t))
+  (let ((straight-current-profile 'user))
+    (load post-init-file nil t)))
+
+;;;; _
+
+(provide 'init)
 
 ;; Local Variables:
 ;; eval: (outline-minor-mode)

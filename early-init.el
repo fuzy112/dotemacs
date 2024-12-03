@@ -35,6 +35,10 @@
 
 (setq package-enable-at-startup nil)
 (setq straight-use-version-specific-build-dir t)
+(setq straight-current-profile nil)
+(setq straight-profiles '((nil . "default.el")
+                          (user . "user.el")
+                          (custom . "custom.el")))
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -117,7 +121,8 @@
 (setup custom
   (setq custom-file (locate-user-emacs-file "custom.el"))
   (when (file-exists-p custom-file)
-    (load custom-file nil t))
+    (let ((straight-current-profile 'custom))
+      (load custom-file nil t)))
   (unless custom-enabled-themes
     (require 'modus-themes)
     (modus-themes-load-theme (car modus-themes-to-toggle))))
@@ -129,7 +134,8 @@
   "The file to load after `early-init'.")
 
 (when (file-exists-p post-early-init-file)
-  (load post-early-init-file nil t))
+  (let ((straight-current-profile 'user))
+    (load post-early-init-file nil t)))
 
 
 (provide 'early-init)
