@@ -1078,7 +1078,11 @@ Otherwise use `consult-xref'."
 (straight-use-package 'puni)
 (setup puni
   (:hook-into prog-mode conf-mode)
-  (:hook electric-pair-local-mode))
+  (:hook electric-pair-local-mode)
+  (:bind "C-)" puni-slurp-forward
+         "C-(" puni-slurp-backward
+         "C-}" puni-barf-forward
+         "C-{" puni-barf-backward))
 
 ;;;; elisp-mode
 
