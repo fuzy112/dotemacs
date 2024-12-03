@@ -1121,7 +1121,7 @@ Otherwise use `consult-xref'."
   (:with-function (pp-posframe-eval-last-sexp
                    pp-posframe-compile-defun
                    pp-posframe-macroexpand-last-sexp)
-    (:autoload-this))
+    (:autoload-this nil t))
   (:global "C-x C-e" pp-posframe-eval-last-sexp)
   (:with-map emacs-lisp-mode-map
     (:bind "C-M-x" pp-posframe-compile-defun
