@@ -152,8 +152,9 @@
 ;;;; faces
 
 (setup faces
-  (ignore-errors
-    (set-fontset-font (frame-parameter nil 'font) 'han "Sarasa Gothic CL"))
+  (with-demoted-errors "Failed to setup fonts for Chinese characters: %S"
+    (set-fontset-font (frame-parameter nil 'font) 'han "Sarasa Gothic CL")
+    (set-fontset-font (frame-parameter nil 'font) 'cjk-misc "Sarasa Gothic CL"))
   (set-fontset-font t 'han "Sarasa Gothic CL")
   (set-face-attribute 'default nil :family "Iosevka SS04")
   (set-face-attribute 'fixed-pitch nil :family "Iosevka SS04")
