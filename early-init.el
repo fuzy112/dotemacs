@@ -86,8 +86,7 @@
                               (font . "Iosevka SS04-14")
                               (width . 157)
                               (height . 38)
-                              (alpha-background . 80)
-                              (alpha . 80))))
+                              (alpha-background . 80))))
 
 (setup files
   (setq confirm-kill-emacs 'y-or-n-p)
