@@ -1106,7 +1106,9 @@ Otherwise use `consult-xref'."
           (:bind "C-c C-l" emacs-lisp-native-compile-and-load)))
   (:with-mode lisp-interaction-mode
     (:bind "C-c C-j" eval-print-last-sexp))
-  (defvaralias 'elisp-flymake-byte-compile-load-path 'load-path))
+  (defun +elisp-mode--setup ()
+    (setq-local elisp-flymake-byte-compile-load-path load-path))
+  (add-hook 'emacs-lisp-mode-hook #'+elisp-mode--setup))
 
 ;;;; pp
 
