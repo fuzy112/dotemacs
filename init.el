@@ -714,6 +714,8 @@ value for USE-OVERLAYS."
 (straight-use-package 'popper)
 
 (setup popper
+  (:with-function popper-toggle-type
+    (:autoload-this nil t))
   (:global "C-`" popper-toggle
            "M-`" popper-cycle
            "C-M-`" popper-toggle-type)
