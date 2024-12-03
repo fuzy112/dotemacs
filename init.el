@@ -47,6 +47,7 @@
 (setup meow
   (require 'meow)
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
+  (setq meow-keypad-leader-dispatch "C-c")
   (meow-leader-define-key
    '("1" . meow-digit-argument)
    '("2" . meow-digit-argument)
