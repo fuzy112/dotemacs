@@ -1629,19 +1629,7 @@ minibuffer."
           `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos-page-delimiter))
             (org-mode . ,(format "\\(^\\*+ +\\|^-\\{5\\}$\\|%s\\)" logos-page-delimiter))))))
 
-;;;; gpg-agent
-
-(setup gpg-agent
-  (:only-if (not (memq system-type '(ms-dos windows-nt))))
-  (:only-if (not (display-graphic-p)))
-  (let ((load-this (lambda () (require 'gpg-agent))))
-    (eval-after-load 'vc load-this)
-    (eval-after-load 'magit load-this)
-    (eval-after-load 'comint load-this))
-  (:when-loaded
-    (gpg-agent-terminal-start)))
-
-;;;; eww
+;;; eww
 
 (setup eww
   (:when-loaded
