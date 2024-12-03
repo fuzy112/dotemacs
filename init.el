@@ -124,7 +124,11 @@
    '("y" . meow-yank)
    '("z" . meow-pop-selection)
    '("'" . repeat)
-   '("<escape>" . ignore))
+   '("<escape>" . ignore)
+   '("(" . meow-backward-slurp)
+   '(")" . meow-forward-slurp)
+   '("{" . meow-backward-barf)
+   '("}" . meow-forward-barf))
   (meow-global-mode))
 
 
