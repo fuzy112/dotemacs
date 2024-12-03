@@ -1731,6 +1731,8 @@ minibuffer."
 
 ;;;; erc
 
+(straight-use-package 'erc)
+
 (setup erc
   (:when-loaded
     ;; This enables displaying servers and channels in side windows,
