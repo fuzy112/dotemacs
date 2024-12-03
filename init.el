@@ -1693,7 +1693,14 @@ minibuffer."
 
 (setup org
   (:global "C-c L" org-store-link)
-  (:hook org-modern-mode))
+  (:hook org-modern-mode)
+
+  (defun +org/toggle-emphasis-markers ()
+    "Toggle the display of emphasis markers."
+    (interactive)
+    (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
+    (font-lock-ensure))
+  (:bind "C-c T M" +org/toggle-emphasis-markers))
 
 (setup org-agenda
   (:global "C-c A" org-agenda)
