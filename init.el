@@ -46,8 +46,8 @@
 
 (setup meow
   (require 'meow)
+  (setq meow-keypad-leader-dispatch "C-c")
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
-  (setq meow-keypad-leader-dispatch "C-x")
   (meow-leader-define-key
    '("1" . meow-digit-argument)
    '("2" . meow-digit-argument)
@@ -425,7 +425,7 @@ ARGS: see `completion-read-multiple'."
 (straight-use-package 'cape)
 
 (setup cape
-  (:global "C-c p" cape-prefix-map)
+  (:global "C-c e" cape-prefix-map)
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'completion-at-point-functions #'cape-elisp-block))
@@ -549,6 +549,7 @@ value for USE-OVERLAYS."
            ;; C-x bindings in `ctl-x-map'
            "C-x M-:" consult-complex-command ;; orig. repeat-complex-command
            "C-x b" consult-buffer ;; orig. switch-to-buffer
+           "C-c b" consult-buffer
            "C-x 4 b" consult-buffer-other-window ;; orig. switch-to-buffer-other-window
            "C-x 5 b" consult-buffer-other-frame ;; orig. switch-to-buffer-other-frame
            "C-x t b" consult-buffer-other-tab ;; orig. switch-to-buffer-other-tab
@@ -1189,7 +1190,7 @@ Otherwise use `consult-xref'."
 ;;;; project
 
 (setup project
-  ;; (keymap-set mode-specific-map "p" project-prefix-map)
+  (:global "C-c p" project-prefix-map)
   (:when-loaded
     (dolist (file '(".project-root" "configure.ac" "Cargo.toml" "package.json"))
       (add-to-list 'project-vc-extra-root-markers file))
@@ -1229,6 +1230,7 @@ Otherwise use `consult-xref'."
 ;;;; vc
 
 (setup vc
+  (:global "C-c v" vc-prefix-map)
   (setq vc-follow-symlinks t)
   (:also-load diff-hl))
 
