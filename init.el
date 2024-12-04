@@ -47,7 +47,7 @@
 (setup meow
   (require 'meow)
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
-  (setq meow-keypad-leader-dispatch "C-c")
+  (setq meow-keypad-leader-dispatch "C-x")
   (meow-leader-define-key
    '("1" . meow-digit-argument)
    '("2" . meow-digit-argument)
@@ -60,8 +60,7 @@
    '("9" . meow-digit-argument)
    '("0" . meow-digit-argument)
    '("/" . meow-keypad-describe-key)
-   '("?" . meow-cheatsheet)
-   '("b" . "C-x b"))
+   '("?" . meow-cheatsheet))
   (meow-motion-overwrite-define-key
    '("<escape>" . ignore))
   (meow-normal-define-key
@@ -426,7 +425,7 @@ ARGS: see `completion-read-multiple'."
 (straight-use-package 'cape)
 
 (setup cape
-  (:global "C-c TAB" cape-prefix-map)
+  (:global "C-c p" cape-prefix-map)
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'completion-at-point-functions #'cape-elisp-block))
@@ -1190,7 +1189,7 @@ Otherwise use `consult-xref'."
 ;;;; project
 
 (setup project
-  (keymap-set mode-specific-map "p" project-prefix-map)
+  ;; (keymap-set mode-specific-map "p" project-prefix-map)
   (:when-loaded
     (dolist (file '(".project-root" "configure.ac" "Cargo.toml" "package.json"))
       (add-to-list 'project-vc-extra-root-markers file))
