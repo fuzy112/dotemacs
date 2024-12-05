@@ -40,6 +40,21 @@
 (setq straight-current-profile nil)
 
 
+;;;; keymap
+
+(define-prefix-command 'tool-map 'tool-map "Tool")
+(keymap-set mode-specific-map "t" 'tool-map)
+
+(define-prefix-command 'doc-map 'doc-map "Doc")
+(keymap-set mode-specific-map "d" 'doc-map )
+
+(defalias 'search-map search-map)
+(keymap-global-set "M-s" 'search-map)
+
+(defalias 'goto-map goto-map)
+(keymap-global-set "M-g" 'goto-map)
+
+ 
 ;;;; meow-edit
 
 (straight-use-package 'meow)
@@ -135,7 +150,9 @@
 ;;;; straight
 
 (setup straight
-  (:global "C-c S c" straight-check-package
+  (define-prefix-command 'straight-prefix-map nil "Straight")
+  (:global "C-c S" straight-prefix-map
+           "C-c S c" straight-check-package
            "C-c S C" straight-check-all
            "C-c S p" straight-pull-package
            "C-c S P" straight-pull-all
@@ -210,6 +227,10 @@
 ;;;; window
 
 (setup window
+  ;; TODO: maybe this prefix-map is not useful enough to be bound
+  ;; under `mode-specific-map'
+  (fset 'window-prefix-map window-prefix-map)
+  (:global "C-c w" window-prefix-map)
   (setq kill-buffer-quit-windows t
         quit-restore-window-no-switch t))
 
@@ -1190,6 +1211,7 @@ Otherwise use `consult-xref'."
 ;;;; project
 
 (setup project
+  (fset 'project-prefix-map project-prefix-map)
   (:global "C-c p" project-prefix-map)
   (:when-loaded
     (dolist (file '(".project-root" "configure.ac" "Cargo.toml" "package.json"))
