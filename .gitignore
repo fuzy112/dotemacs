@@ -3,7 +3,7 @@
 #*#
 .cache/
 bookmarks
-custom.el
+/custom.el
 eln-cache/
 eshell/
 idlwave/
