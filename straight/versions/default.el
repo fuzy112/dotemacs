@@ -52,6 +52,7 @@
  ("mathjax" . "84e5fd902d83c11460e008de8ed0aef74cb9a62a")
  ("melpa" . "d2b2189ea2d354763dce759dcd5f6482e14024a7")
  ("meow" . "49bfe255e326c0fe2417290c349b41f0f87dcebc")
+ ("meow-tree-sitter" . "d8e80d5ab97c85340b21be125f1e17edec2f21dd")
  ("modus-themes" . "dc0d606e2a7058485913cbb33f27bad8e66c2d7b")
  ("nerd-icons-completion" . "426a1d7c29a04ae8e6ae9b55b0559f11a1e8b420")
  ("nerd-icons-corfu" . "721830b42b35e326a88b338fc53e4752f333fad2")
