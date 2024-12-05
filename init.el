@@ -146,6 +146,11 @@
    '("}" . meow-forward-barf))
   (meow-global-mode))
 
+(straight-use-package 'meow-tree-sitter)
+
+(setup meow-tree-sitter
+  (meow-tree-sitter-register-defaults))
+
 
 ;;;; straight
 
