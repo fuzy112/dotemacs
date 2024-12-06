@@ -168,7 +168,15 @@
            "C-c S v" straight-freeze-versions
            "C-c S V" straight-thaw-versions
            "C-c S u" straight-use-package
-           "C-c S d" straight-visit-package))
+           "C-c S d" straight-visit-package
+           "C-c S w" straight-visit-package-website
+           "C-c S g" +straight/visit-package-repository))
+
+(defun +straight/visit-package-repository (pkg)
+  (interactive (list (straight--select-package "Visit: ")))
+  (let ((repo (plist-get (gethash pkg straight--repo-cache)
+                        :local-repo)))
+    (magit-status-setup-buffer (straight--repos-dir repo))))
 
 (setup straight-x
   (define-prefix-command 'straight-x-prefix-map nil "Straight-X")
