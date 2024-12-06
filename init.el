@@ -170,6 +170,13 @@
            "C-c S u" straight-use-package
            "C-c S d" straight-visit-package))
 
+(setup straight-x
+  (define-prefix-command 'straight-x-prefix-map nil "Straight-X")
+  (:global "C-c S x" straight-x-prefix-map)
+  (:with-function straight-x-fetch-all
+    (:autoload-this nil t)
+    (:bind-to "C-c S x f")))
+
 
 ;;;; faces
 
