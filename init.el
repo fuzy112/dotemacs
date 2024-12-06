@@ -1545,7 +1545,8 @@ minibuffer."
            notmuch-search-mode-hook notmuch-tree-mode-hook
            occur-mode-hook org-agenda-mode-hook
            pdf-outline-buffer-mode-hook proced-mode-hook
-           tabulated-list-mode-hook tar-mode-hook))
+           tabulated-list-mode-hook tar-mode-hook
+           telega-root-mode-hook))
   (dolist (hook lin-mode-hooks)
     (add-hook hook #'lin-mode))
   (:when-loaded
