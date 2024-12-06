@@ -1225,6 +1225,8 @@ Otherwise use `consult-xref'."
 (setup project
   (fset 'project-prefix-map project-prefix-map)
   (:global "C-c p" project-prefix-map)
+  (when (commandp 'project-prefix-or-any-command)
+    (setq project-switch-commands 'project-prefix-or-any-command))
   (:when-loaded
     (dolist (file '(".project-root" "configure.ac" "Cargo.toml" "package.json"))
       (add-to-list 'project-vc-extra-root-markers file))
