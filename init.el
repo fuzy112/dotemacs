@@ -1237,7 +1237,9 @@ Otherwise use `consult-xref'."
 
     (setq project-compilation-buffer-name-function #'project-prefixed-buffer-name)
 
-    (add-to-list 'project-switch-commands '(project-compile "Compile") t)))
+    (when (and (not (functionp project-switch-commands))
+               (consp project-switch-commands))
+      (add-to-list 'project-switch-commands '(project-compile "Compile") t))))
 
 ;;;; buffer-env
 
@@ -1278,7 +1280,8 @@ Otherwise use `consult-xref'."
            "C-c M-g" magit-file-dispatch
            "C-x p m" magit-project-status)
   (with-eval-after-load 'project
-    (add-to-list 'project-switch-commands '(magit-project-status "Magit") t))
+    (when (consp project-switch-commands)
+      (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)))
   (:when-loaded
     (defun +magit--ccdp-no-query ()
       "Avoid query process status on exit."
@@ -1312,9 +1315,13 @@ Otherwise use `consult-xref'."
   (:with-function (eat-eshell-mode eat-eshell-visual-command-mode)
     (:hook-into eshell-load-hook))
   (:global "C-x p s" eat-project)
-  (with-eval-after-load 'project
-    (add-to-list 'project-switch-commands '(eat-project "Eat") t))
-
+  (:with-feature project
+    (:with-map project-other-window-map
+      (:bind "s" eat-project-other-window))
+    (:when-loaded
+      (when (consp project-switch-commands)
+        (setq project-switch-commands (assq-delete-all 'project-shell project-switch-commands))
+        (add-to-list 'project-switch-commands '(eat-project "Eat") t))))
   (defun +eat/here (&optional arg)
     "Run `eat' in the current directory.
 With non-nil prefix-argument ARG, the directory will be read from the
@@ -1330,12 +1337,6 @@ minibuffer."
   (keymap-global-set "C-c t s" '+eat/here)
   (:when-loaded
     (setq eat-kill-buffer-on-exit t)
-
-    (with-eval-after-load 'project
-      (when-let* ((cell (assq 'project-shell project-switch-commands)))
-        (setcar cell #'eat-project))
-      (bind-key "s" #'eat-project-other-window project-other-window-map))
-
     (defun eat-send-pass ()
       (interactive)
       (unless eat-terminal
