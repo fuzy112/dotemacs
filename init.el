@@ -886,6 +886,9 @@ value for USE-OVERLAYS."
 (setup (:straight outline-minor-faces)
   (:hook-into outline-minor-mode))
 
+(setup outline-minor-mode
+  (:bind-to "C-c T o"))
+
 ;;;; adaptive-wrap or visual-wrap
 
 (setup (:straight adaptive-wrap)
@@ -898,10 +901,14 @@ value for USE-OVERLAYS."
   (:with-mode visual-wrap-prefix-mode
     (:hook-into visual-line-mode)))
 
+(setup visual-line-mode
+  (:bind-to "C-c T v"))
+
 ;;;; hl-todo
 
 (setup (:straight hl-todo)
   (:hook-into prog-mode conf-mode)
+  (:bind-to "C-c T t")
   (:global "C-c t [" hl-todo-previous
            "C-c t ]" hl-todo-next
            "C-c t o" hl-todo-occur
@@ -917,12 +924,14 @@ value for USE-OVERLAYS."
 ;;;; display-line-numbers
 
 (setup display-line-numbers
+  (:bind-to "C-c T l")
   (:hook-into prog-mode conf-mode)
   (setq display-line-numbers-type 'relative))
 
 ;;;; eglot
 
 (setup (:straight eglot)
+  (:global "C-c T e" eglot)
   (:when-loaded
     (setq eglot-autoshutdown t
           eglot-extend-to-xref t)
@@ -1536,7 +1545,8 @@ minibuffer."
 ;;;; gptel
 
 (setup (:straight gptel)
-  (:global "C-c g" gptel-send))
+  (:global "C-c T g" gptel
+           "C-c g" gptel-send))
 
 (setup (:straight (gptel-quick :host github :repo "karthink/gptel-quick"))
   (with-eval-after-load 'embark
@@ -1641,7 +1651,8 @@ minibuffer."
     (interactive)
     (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
     (font-lock-ensure))
-  (:bind "C-c T M" +org/toggle-emphasis-markers))
+  (:bind "C-c T M" +org/toggle-emphasis-markers
+         "C-c T m" org-modern-mode))
 
 (setup org-agenda
   (:global "C-c A" org-agenda)
@@ -1742,6 +1753,7 @@ minibuffer."
 ;;;; vundo
 
 (setup (:straight vundo)
+  (:global "C-c T u" vundo)
   (:when-loaded
     (setq vundo-glyph-alist vundo-unicode-symbols)))
 
