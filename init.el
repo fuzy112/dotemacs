@@ -58,7 +58,7 @@
 ;;;; meow-edit
 
 (setup (:straight meow)
-  (require 'meow)
+  (:require meow)
   (setq meow-keypad-leader-dispatch "C-c")
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
   (meow-leader-define-key
@@ -201,17 +201,17 @@
 
 (setup (:straight nerd-icons nerd-icons-corfu nerd-icons-completion
                   nerd-icons-ibuffer nerd-icons-dired)
-  (setup nerd-icons-corfu
+  (:with-feature nerd-icons-corfu
     (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
-  (setup nerd-icons-completion
+  (:with-feature nerd-icons-completion
     (:hook-into marginalia-mode))
-  (setup nerd-icons-ibuffer
+  (:with-feature nerd-icons-ibuffer
     (:hook-into ibuffer-mode))
-  (setup nerd-icons-dired
+  (:with-feature nerd-icons-dired
     (:delight)
     (:hook-into dired-mode))
   (:only-if (display-graphic-p))
-  (require 'nerd-icons)
+  (:require nerd-icons)
   (nerd-icons-set-font))
 
 ;;;; pixel-scroll
@@ -1410,20 +1410,20 @@ minibuffer."
 (setup xt-mouse
   (:with-mode xterm-mouse-mode
     (:hook-into tty-setup-hook))
-  (when (eq (framep-on-display) t)
-    (require 'xt-mouse))
   (:when-loaded
-    (xterm-mouse-mode)))
+    (xterm-mouse-mode))
+  (:only-if (eq (framep-on-display) t))
+  (:require xt-mouse))
 
 ;;;; clipetty
 
 (setup (:straight clipetty)
   (:delight)
   (:hook-into tty-setup-hook)
-  (when (eq (framep-on-display) t)
-    (require 'clipetty))
   (:when-loaded
-    (global-clipetty-mode)))
+    (global-clipetty-mode))
+  (:only-if (eq (framep-on-display) t))
+  (:require clipetty))
 
 ;;;; repeat
 
