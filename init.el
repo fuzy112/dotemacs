@@ -57,9 +57,7 @@
  
 ;;;; meow-edit
 
-(straight-use-package 'meow)
-
-(setup meow
+(setup (:straight meow)
   (require 'meow)
   (setq meow-keypad-leader-dispatch "C-c")
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
@@ -146,9 +144,7 @@
    '("}" . meow-forward-barf))
   (meow-global-mode))
 
-(straight-use-package 'meow-tree-sitter)
-
-(setup meow-tree-sitter
+(setup (:straight meow-tree-sitter)
   (meow-tree-sitter-register-defaults))
 
 
@@ -201,26 +197,10 @@
   (add-to-list 'face-font-family-alternatives '("Sarasa UI CL" "Sarasa Gothic CL" "Iosevka SS04"))
   (setopt face-font-family-alternatives (append face-font-family-alternatives nil)))
 
-;;;; delight
-
-(straight-use-package 'delight)
-
-(setup delight
-  (setup-define :delight
-    (lambda (&optional spec value)
-      `(delight ',(or spec (setup-get 'mode)) ,value t))
-    :after-loaded t
-    :documentation "Hide the mode lighter."))
-
 ;;;; nerd-icons
 
-(straight-use-package 'nerd-icons)
-(straight-use-package 'nerd-icons-corfu)
-(straight-use-package 'nerd-icons-completion)
-(straight-use-package 'nerd-icons-ibuffer)
-(straight-use-package 'nerd-icons-dired)
-
-(setup nerd-icons
+(setup (:straight nerd-icons nerd-icons-corfu nerd-icons-completion
+                  nerd-icons-ibuffer nerd-icons-dired)
   (setup nerd-icons-corfu
     (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
   (setup nerd-icons-completion
@@ -276,10 +256,7 @@
               #'shortdoc-help-fns-examples-function 50)))
 
 ;;;; breadcrumb
-
-(straight-use-package 'breadcrumb)
-
-(setup breadcrumb
+(setup (:straight breadcrumb)
   (defun +breadcrumb--prog-mode ()
     (setq-local header-line-format '((:eval (breadcrumb-project-crumbs))
                                      ": "
@@ -293,9 +270,7 @@
 
 ;;;; vertico
 
-(straight-use-package 'vertico)
-
-(setup vertico
+(setup (:straight vertico orderless)
   (:also-load orderless)
   (:with-function vertico--advice
     (:autoload-this)
@@ -323,9 +298,7 @@
 
 ;;;; marginalia
 
-(straight-use-package 'marginalia)
-
-(setup marginalia
+(setup (:straight marginalia)
   (:with-function marginalia--minibuffer-setup
     (:autoload-this)
     (:hook-into minibuffer-setup-hook))
@@ -365,27 +338,20 @@ ARGS: see `completion-read-multiple'."
     (setq minibuffer-prompt-properties '(read-only t face minibuffer-prompt cursor-intangible t))))
 
 ;;;; pulsar
-
-(straight-use-package 'pulsar)
-
-(setup pulsar
+(setup (:straight pulsar)
   (pulsar-global-mode)
   (setq pulse-flag t)
   (add-to-list 'pulsar-pulse-functions #'ace-window))
 
 ;;;; goggles
 
-(straight-use-package 'goggles)
-
-(setup goggles
+(setup (:straight goggles)
   (:delight)
   (:hook-into prog-mode text-mode))
 
 ;;;; orderless
 
-(straight-use-package 'orderless)
-
-(setup orderless
+(setup (:straight orderless)
   (:when-loaded
     (setq completion-styles '(orderless basic))
     (orderless-define-completion-style orderless+flex
@@ -425,10 +391,7 @@ ARGS: see `completion-read-multiple'."
 
 ;;;; corfu
 
-(straight-use-package 'corfu)
-(straight-use-package 'corfu-terminal)
-
-(setup corfu
+(setup (:straight corfu)
   (:also-load orderless)
   (define-advice completion-in-region (:before (&rest _) corfu)
     (require 'corfu))
@@ -455,7 +418,7 @@ ARGS: see `completion-read-multiple'."
              "S-TAB" corfu-previous
              "<backtab>" corfu-previous))))
 
-(setup corfu-terminal
+(setup (:straight corfu-terminal)
   (:only-if (not (featurep 'tty-child-frames)))
   (:hook-into tty-setup-hook)
   (unless (display-graphic-p)
@@ -463,9 +426,7 @@ ARGS: see `completion-read-multiple'."
 
 ;;;; cape
 
-(straight-use-package 'cape)
-
-(setup cape
+(setup (:straight cape)
   (:global "C-c e" cape-prefix-map)
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'completion-at-point-functions #'cape-file)
@@ -487,9 +448,7 @@ ARGS: see `completion-read-multiple'."
 
 ;;;; tempel
 
-(straight-use-package 'tempel)
-
-(setup tempel
+(setup (:straight tempel)
   (:global "M-+" tempel-complete
            "M-*" tempel-insert)
   (defun tempel-setup-capf ()
@@ -513,9 +472,7 @@ ARGS: see `completion-read-multiple'."
 
 (straight-use-package 'xterm-color)
 
-(straight-use-package 'embark)
-
-(setup embark
+(setup (:straight embark)
   (:global "C-." embark-act
            "C-c a" embark-act)
   (setq prefix-help-command #'embark-prefix-help-command)
@@ -578,9 +535,7 @@ value for USE-OVERLAYS."
 
 ;;;; consult
 
-(straight-use-package 'pcre2el)
-
-(setup consult
+(setup (:straight consult pcre2el)
   (:global "C-c M-x" consult-mode-command
            "C-c h" consult-history
            "C-c k" consult-kmacro
@@ -708,9 +663,7 @@ value for USE-OVERLAYS."
 
 
 
-(straight-use-package 'embark-consult)
-
-(setup embark-consult
+(setup (:straight embark-consult)
   (:also-load grep)
   (:when-loaded
     (when (fboundp 'grep--heading-filter)
@@ -723,9 +676,7 @@ value for USE-OVERLAYS."
         (advice-add #'embark-consult-export-grep :after #'+embark-consult-export-grep--headings)))))
 
 
-(straight-use-package 'consult-dir)
-
-(setup consult-dir
+(setup (:straight consult-dir)
   (:global "C-x C-d" consult-dir)
   (:with-map minibuffer-local-map
     (:bind "C-x C-d" consult-dir
@@ -754,9 +705,7 @@ value for USE-OVERLAYS."
 
 ;;;; popper
 
-(straight-use-package 'popper)
-
-(setup popper
+(setup (:straight popper)
   (:with-function popper-toggle-type
     (:autoload-this nil t))
   (:global "C-`" popper-toggle
@@ -817,17 +766,13 @@ value for USE-OVERLAYS."
 
 ;;;; apheleia
 
-(straight-use-package 'apheleia)
-
-(setup apheleia
+(setup (:straight apheleia)
   (:global "C-x x /" apheleia-format-buffer
            "C-c C-/" apheleia-format-buffer))
 
 ;;;; ws-butler
 
-(straight-use-package 'ws-butler)
-
-(setup ws-butler
+(setup (:straight ws-butler)
   (:delight)
   (:hook-into find-file-hook))
 
@@ -938,16 +883,12 @@ value for USE-OVERLAYS."
 
 ;;;; outline
 
-(straight-use-package 'outline-minor-faces)
-
-(setup outline-minor-faces
+(setup (:straight outline-minor-faces)
   (:hook-into outline-minor-mode))
 
 ;;;; adaptive-wrap or visual-wrap
 
-(straight-use-package 'adaptive-wrap)
-
-(setup adaptive-wrap
+(setup (:straight adaptive-wrap)
   (:only-if (not (fboundp 'visual-wrap-prefix-mode)))
   (:with-mode adaptive-wrap-prefix-mode
     (:hook-into visual-line-mode)))
@@ -959,9 +900,7 @@ value for USE-OVERLAYS."
 
 ;;;; hl-todo
 
-(straight-use-package 'hl-todo)
-
-(setup hl-todo
+(setup (:straight hl-todo)
   (:hook-into prog-mode conf-mode)
   (:global "C-c t [" hl-todo-previous
            "C-c t ]" hl-todo-next
@@ -983,9 +922,7 @@ value for USE-OVERLAYS."
 
 ;;;; eglot
 
-(straight-use-package 'eglot)
-
-(setup eglot
+(setup (:straight eglot)
   (:when-loaded
     (setq eglot-autoshutdown t
           eglot-extend-to-xref t)
@@ -1001,9 +938,7 @@ value for USE-OVERLAYS."
 
 ;;;; xref
 
-(straight-use-package 'xref)
-
-(setup xref
+(setup (:straight xref)
   (:global "C-<down-mouse-1>" nil
            "C-<C-M-<down-mouse-1>" nil
            "C-<mouse-1>" xref-find-definitions-at-mouse
@@ -1028,9 +963,8 @@ Otherwise use `consult-xref'."
 
 ;;;; ctags
 
-(straight-use-package 'transient)       ; for ctags-menu
-
 (setup ctags-menu
+  (:straight transient)
   (:with-function ctags-menu
     (:autoload-this nil t)
     (:bind-to "C-c t m")))
@@ -1062,9 +996,7 @@ Otherwise use `consult-xref'."
 
 ;;;; devdocs
 
-(straight-use-package 'devdocs)
-
-(setup devdocs
+(setup (:straight devdocs)
   (:global "C-c d d" devdocs-lookup
            "C-c d i" devdocs-install
            "C-c d p" devdocs-peruse))
@@ -1102,9 +1034,8 @@ Otherwise use `consult-xref'."
 
 ;;;; lisp-mode
 
-(straight-use-package 'paren-face)
-
 (setup lisp-mode
+  (:straight paren-face)
   (:with-mode lisp-data-mode
     (:hook paren-face-mode)))
 
@@ -1121,7 +1052,7 @@ Otherwise use `consult-xref'."
 
 ;;;; paren-face
 
-(setup paren-face
+(setup (:straight paren-face)
   (:when-loaded
     (defun +paren-face--update-color ()
       (set-face-foreground 'parenthesis (modus-themes-get-color-value 'border)))
@@ -1130,8 +1061,7 @@ Otherwise use `consult-xref'."
 
 ;;;; puni
 
-(straight-use-package 'puni)
-(setup puni
+(setup (:straight puni)
   (:hook-into prog-mode conf-mode)
   (:hook electric-pair-local-mode)
   (:bind "C-)" puni-slurp-forward
@@ -1157,8 +1087,8 @@ Otherwise use `consult-xref'."
   (:global "M-:" pp-eval-expression))
 
 ;;;; pp-posframe
-(straight-use-package 'posframe)
 (setup pp-posframe
+  (:straight posframe)
   (:with-function (pp-posframe-eval-last-sexp
                    pp-posframe-compile-defun
                    pp-posframe-macroexpand-last-sexp)
@@ -1209,9 +1139,7 @@ Otherwise use `consult-xref'."
 
 ;;;; rust-mode
 
-(straight-use-package 'rust-mode)
-
-(setup rust-mode
+(setup (:straight rust-mode)
   (:when-loaded
     (define-advice rust--compile (:around (&rest args) project-prefix-buffer-name)
       (let ((compilation-buffer-name-function #'project-prefixed-buffer-name))
@@ -1260,9 +1188,7 @@ Otherwise use `consult-xref'."
 
 ;;;; buffer-env
 
-(straight-use-package 'buffer-env)
-
-(setup buffer-env
+(setup (:straight buffer-env)
   (:with-function buffer-env-update
     (:hook-into hack-local-variables-hook comint-mode-hook))
   (:when-loaded
@@ -1289,9 +1215,7 @@ Otherwise use `consult-xref'."
 
 ;;;; magit
 
-(straight-use-package 'magit)
-
-(setup magit
+(setup (:straight magit)
   (:global "C-x g" magit-status
            "C-x M-g" magit-dispatch
            "C-c M-g" magit-file-dispatch
@@ -1311,9 +1235,7 @@ Otherwise use `consult-xref'."
 
 ;;;; diff-hl
 
-(straight-use-package 'diff-hl)
-
-(setup diff-hl
+(setup (:straight diff-hl)
   (:with-function (diff-hl-magit-pre-refresh
                    diff-hl-magit-post-refresh)
     (:autoload-this))
@@ -1326,7 +1248,6 @@ Otherwise use `consult-xref'."
 ;;;; eat
 
 (straight-use-package `(eat :files (,@straight-default-files-directive "integration" "term" "terminfo")))
-
 (setup eat
   (:only-if (not (memq system-type '(windows-nt ms-dos))))
   (:with-function (eat-eshell-mode eat-eshell-visual-command-mode)
@@ -1366,9 +1287,7 @@ minibuffer."
 
 ;;;; with-editor
 
-(straight-use-package 'with-editor)
-
-(setup with-editor
+(setup (:straight with-editor)
   (:global "<remap> <async-shell-command>" with-editor-async-shell-command)
   (:global "<remap> <shell-command>" with-editor-shell-command)
   (:with-function with-editor-export-editor
@@ -1391,11 +1310,8 @@ minibuffer."
   (add-hook 'eat-exec-hook '+with-editor--export-editor-to-eat))
 
 ;;;; pyim
-
-(straight-use-package 'pyim)
-(straight-use-package 'pyim-basedict)
-
-(setup pyim
+(setup (:straight pyim pyim-basedict)
+  (:straight orderless)
   (defun +orderless-pinyin (component)
     (require 'pyim)
     (pyim-cregexp-build component 3 t))
@@ -1429,9 +1345,7 @@ minibuffer."
 
 ;;;; rime
 
-(straight-use-package 'rime)
-
-(setup rime
+(setup (:straight rime)
   (setq rime-disable-predicates '(meow-normal-mode-p
                                   meow-keypad-mode-p
                                   meow-motion-mode-p
@@ -1446,9 +1360,7 @@ minibuffer."
 
 ;;;; term-keys
 
-(straight-use-package '(term-keys :host github :repo "CyberShadow/term-keys"))
-
-(setup term-keys
+(setup (:straight (term-keys :host github :repo "CyberShadow/term-keys"))
   (setq term-keys/prefix "\033\035")    ; ^[^]
 
   (defun +term-keys--autoload (_prompt)
@@ -1505,9 +1417,7 @@ minibuffer."
 
 ;;;; clipetty
 
-(straight-use-package 'clipetty)
-
-(setup clipetty
+(setup (:straight clipetty)
   (:delight)
   (:hook-into tty-setup-hook)
   (when (eq (framep-on-display) t)
@@ -1549,9 +1459,7 @@ minibuffer."
 
 ;;;; lin
 
-(straight-use-package 'lin)
-
-(setup lin
+(setup (:straight lin)
   (setq lin-mode-hooks
         '( gnus-group-mode-hook gnus-server-mode-hook
            gnus-summary-mode-hook mu4e-main-mode-hook magit-mode-hook
@@ -1627,22 +1535,15 @@ minibuffer."
 
 ;;;; gptel
 
-(straight-use-package 'gptel)
-(straight-use-package '(gptel-quick :host github :repo "karthink/gptel-quick"))
-
-(setup gptel
+(setup (:straight gptel)
   (:global "C-c g" gptel-send))
 
-(setup gptel-quick
+(setup (:straight (gptel-quick :host github :repo "karthink/gptel-quick"))
   (with-eval-after-load 'embark
     (bind-key "?" #'gptel-quick embark-general-map)))
 
 ;;;; logos
-
-(straight-use-package 'logos)
-(straight-use-package 'olivetti)
-
-(setup logos
+(setup (:straight logos olivetti)
   (:global "<f8>" logos-focus-mode
            "<remap> <narrow-to-region>" logos-narrow-dwim
            "<remap> <forward-page>" logos-forward-page-dwim
@@ -1731,10 +1632,7 @@ minibuffer."
 
 ;;;; org
 
-(straight-use-package 'org)
-(straight-use-package 'org-modern)
-
-(setup org
+(setup (:straight org org-modern)
   (:global "C-c L" org-store-link)
   (:hook org-modern-mode)
 
@@ -1781,9 +1679,7 @@ minibuffer."
 
 ;;;; erc
 
-(straight-use-package 'erc)
-
-(setup erc
+(setup (:straight erc)
   (:when-loaded
     ;; This enables displaying servers and channels in side windows,
     ;; which can be toggled by C-x w s.
@@ -1827,17 +1723,13 @@ minibuffer."
 
 ;;;; copilot
 
-(straight-use-package 'copilot)
-
-(setup copilot
+(setup (:straight copilot)
   (:bind "<tab>" copilot-accept-completion
          "C-<tab>" copilot-accept-completion-by-word))
 
 ;;;; browser-hist
 
-(straight-use-package 'browser-hist)
-
-(setup browser-hist
+(setup (:straight browser-hist)
   (:global "M-s b" browser-hist-search)
   (:when-loaded
     (setf (alist-get 'zen browser-hist-db-paths nil t)
@@ -1849,9 +1741,7 @@ minibuffer."
 
 ;;;; vundo
 
-(straight-use-package 'vundo)
-
-(setup vundo
+(setup (:straight vundo)
   (:when-loaded
     (setq vundo-glyph-alist vundo-unicode-symbols)))
 
@@ -1862,9 +1752,7 @@ minibuffer."
 
 ;;;; markdown
 
-(straight-use-package 'markdown-mode)
-
-(setup markdown-mode
+(setup (:straight markdown-mode)
   (:bind "C-x C-q" markdown-view-mode)
   (:with-mode markdown-view-mode
     (:bind "C-x C-q" markdown-mode)))
