@@ -174,8 +174,8 @@
 
 (defun +straight/visit-package-repository (pkg)
   (interactive (list (straight--select-package "Visit: ")))
-  (let ((repo (plist-get (gethash pkg straight--repo-cache)
-                        :local-repo)))
+  (let ((repo (plist-get (gethash pkg straight--recipe-cache)
+                         :local-repo)))
     (magit-status-setup-buffer (straight--repos-dir repo))))
 
 (setup straight-x
