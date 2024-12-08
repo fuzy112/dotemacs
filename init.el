@@ -232,6 +232,8 @@
   ;; under `mode-specific-map'
   (fset 'window-prefix-map window-prefix-map)
   (:global "C-c w" window-prefix-map)
+  (:with-map window-prefix-map
+    (:bind "q" quit-windows-on))
   (setq kill-buffer-quit-windows t
         quit-restore-window-no-switch t))
 
@@ -1563,8 +1565,8 @@ minibuffer."
 ;;;; gptel
 
 (setup (:straight gptel)
-  (:global "C-c T g" gptel
-           "C-c g" gptel-send))
+  (:global "C-c t A" gptel
+           "C-c t a" gptel-send))
 
 (setup (:straight (gptel-quick :host github :repo "karthink/gptel-quick"))
   (with-eval-after-load 'embark
