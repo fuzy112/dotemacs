@@ -928,6 +928,12 @@ value for USE-OVERLAYS."
   (:hook-into prog-mode conf-mode)
   (setq display-line-numbers-type 'relative))
 
+;;;; display-fill-column-indicator-mode
+
+(setup display-fill-column-indicator
+  (:bind-to "C-c T f")
+  (:hook-into prog-mode))
+
 ;;;; eglot
 
 (setup (:straight eglot)
