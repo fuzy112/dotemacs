@@ -1443,7 +1443,6 @@ minibuffer."
 ;;;; repeat
 
 (setup repeat
-  :init
   (defun +repeat--post-command ()
     (when (function-get this-command 'repeat-map)
       (message "Command %S has a `repeat-map'" this-command)
