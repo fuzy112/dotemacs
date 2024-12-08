@@ -1796,6 +1796,16 @@ minibuffer."
     (:autoload-this nil t)
     (:bind-to "C-c t p")))
 
+;;;; debug
+
+(setup debug
+  (:global "C-c T d e" toggle-debug-on-error
+           "C-c T d q" toggle-debug-on-quit
+           "C-c T d f" debug-on-entry
+           "C-c T d v" debug-on-variable-change
+           "C-c T d c f" cancel-debug-on-entry
+           "C-c T d c v" cancel-debug-on-variable-change))
+
 ;;;; other packages
 
 (straight-use-package 'yaml-mode)
