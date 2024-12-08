@@ -1775,6 +1775,13 @@ minibuffer."
   (:with-mode markdown-view-mode
     (:bind "C-x C-q" markdown-mode)))
 
+;;;; p-search
+(setup (:straight (p-search :host github :repo "zkry/p-search"))
+  (:also-load psx-info)
+  (:with-function p-search
+    (:autoload-this nil t)
+    (:bind-to "C-c t p")))
+
 ;;;; other packages
 
 (straight-use-package 'yaml-mode)
