@@ -185,9 +185,10 @@
 ;;;; faces
 
 (setup faces
-  (with-demoted-errors "Failed to setup fonts for Chinese characters: %S"
-    (set-fontset-font (frame-parameter nil 'font) 'han "Sarasa Gothic CL")
-    (set-fontset-font (frame-parameter nil 'font) 'cjk-misc "Sarasa Gothic CL"))
+  (unless (eq (framep-on-display) t)
+    (with-demoted-errors "Failed to setup fonts for Chinese characters: %S"
+      (set-fontset-font (frame-parameter nil 'font) 'han "Sarasa Gothic CL")
+      (set-fontset-font (frame-parameter nil 'font) 'cjk-misc "Sarasa Gothic CL")))
   (set-fontset-font t 'han "Sarasa Gothic CL")
   (set-face-attribute 'default nil :family "Iosevka SS04")
   (set-face-attribute 'fixed-pitch nil :family "Iosevka SS04")
@@ -932,7 +933,18 @@ value for USE-OVERLAYS."
 
 (setup display-fill-column-indicator
   (:bind-to "C-c T f")
-  (:hook-into prog-mode))
+  (:hook-into prog-mode)
+  ;; TODO change fill-column-indicator for tty frame
+  ;; only when modus-themes applied
+  (defun update-fill-column-indicator--on-one-frame (frame)
+    (when (memq (framep frame) '(t w32))
+      (set-face-background 'fill-column-indicator nil frame)))
+  (defun update-fill-column-indicator--on-every-frames (&optional _theme)
+    (dolist (frame (frame-list))
+      (update-fill-column-indicator--on-one-frame frame)))
+  (add-hook 'modus-themes-after-load-theme-hook #'update-fill-column-indicator--on-every-frames)
+  (add-hook 'after-make-frame-functions #'update-fill-column-indicator--on-one-frame)
+  (update-fill-column-indicator--on-every-frames))
 
 ;;;; eglot
 
@@ -1071,7 +1083,8 @@ Otherwise use `consult-xref'."
   (:when-loaded
     (defun +paren-face--update-color ()
       (set-face-foreground 'parenthesis (modus-themes-get-color-value 'border)))
-    (+paren-face--update-color)
+    (when (featurep 'modus-themtes)
+      (+paren-face--update-color))
     (add-hook 'modus-themes-after-load-theme-hook '+paren-face--update-color)))
 
 ;;;; puni
