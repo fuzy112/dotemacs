@@ -1124,9 +1124,10 @@ Otherwise use `consult-xref'."
                    pp-posframe-macroexpand-last-sexp)
     (:autoload-this nil t))
   (:global "C-x C-e" pp-posframe-eval-last-sexp)
-  (:with-map emacs-lisp-mode-map
-    (:bind "C-M-x" pp-posframe-compile-defun
-           "C-c M-e" pp-posframe-macroexpand-last-sexp))
+  (:with-feature elisp-mode
+    (:with-map emacs-lisp-mode-map
+      (:bind "C-M-x" pp-posframe-compile-defun
+             "C-c M-e" pp-posframe-macroexpand-last-sexp)))
   (:when-loaded
     (defun +pp-posframe--set-color ()
       (setq pp-posframe-parameters `( :boredr-color ,(modus-themes-get-color-value 'border)
