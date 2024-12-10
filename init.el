@@ -895,7 +895,10 @@ value for USE-OVERLAYS."
 ;;;; outline
 
 (setup (:straight outline-minor-faces)
-  (:hook-into outline-minor-mode))
+  (defun +outline-minor-faces ()
+    (unless (derived-mode-p 'help-mode)
+      (outline-minor-faces-mode)))
+  (add-hook 'outline-minor-mode-hook '+outline-minor-faces))
 
 (setup outline-minor-mode
   (:bind-to "C-c T o"))
