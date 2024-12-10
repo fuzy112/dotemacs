@@ -1178,7 +1178,8 @@ Otherwise use `consult-xref'."
 
 ;;;; ruby
 
-(straight-use-package 'ruby-mode)
+(setup (:straight ruby-mode))
+(setup (:straight inf-ruby))
 
 ;;;; sh-script
 
