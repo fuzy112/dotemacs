@@ -1747,6 +1747,11 @@ minibuffer."
 						  erc-track-faces-priority-list)))
     (setq erc-track-priority-faces-only 'all)))
 
+;;;; gnus
+
+(setup gnus
+  (:global "C-c T G" gnus))
+
 ;;;; copilot
 
 (setup (:straight copilot)
