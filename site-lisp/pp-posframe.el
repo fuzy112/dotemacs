@@ -20,7 +20,8 @@
 
 ;;; Commentary:
 
-;;
+;; This package provides commands to eval and macroexpand expressions
+;; and display the results in a posframe.
 
 ;;; Code:
 
@@ -87,22 +88,25 @@
   "Display VALUE in a posframe."
   (with-current-buffer (get-buffer-create pp-posframe-buffer-name)
     (erase-buffer)
-    (delay-mode-hooks
-      (unless (derived-mode-p 'emacs-lisp-mode)
-	(emacs-lisp-mode))
-      (let ((pp-default-function 'pp-fill))
-	(pp value (current-buffer)))
-      (setq lexical-binding lexical)
-      (font-lock-ensure))
+    (let ((standard-output (current-buffer)))
+      (delay-mode-hooks
+	(unless (derived-mode-p 'emacs-lisp-mode)
+	  (emacs-lisp-mode))
+	(let ((pp-default-function 'pp-fill))
+	  (pp value))
+	(setq lexical-binding lexical)
+	(font-lock-ensure)))
     (add-text-properties 1 2 `(display ,(concat "=> " (buffer-substring 1 2)))))
   (when (posframe-workable-p)
     (pp-posframe-mode))
-  (message "=> %S" value))
+  (message "=> %S" value)
+  (redisplay))
 
 ;;;###autoload
 (defun pp-posframe-eval-last-sexp ()
   "Evaluate sexp before point; display the value in a posframe."
   (interactive)
+  (redisplay)
   (let ((value (eval (macroexpand-all
 		      (eval-sexp-add-defvars
 		       (elisp--eval-defun-1 (macroexpand (pp-last-sexp)))))
