@@ -128,7 +128,13 @@ The first PACKAGE can be used to deduce the feature context."
     (setq modus-themes-mixed-fonts t
           modus-themes-bold-constructs t
           modus-themes-slanted-constructs t
-          modus-themes-variable-pitch-ui t)))
+          modus-themes-variable-pitch-ui t)
+    (defun +modus-theme-custom-faces (&rest _)
+      (modus-themes-with-colors
+        (custom-set-faces
+         `(parenthesis ((,c :foreground ,border)))
+         `(fill-column-indicator ((,c :height 1.0 :foreground ,bg-active :background unspecified))))))
+    (add-hook 'modus-themes-after-load-theme-hook #'+modus-theme-custom-faces)))
 
 ;;;; site-lisp
 

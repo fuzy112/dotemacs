@@ -946,18 +946,7 @@ value for USE-OVERLAYS."
 
 (setup display-fill-column-indicator
   (:bind-to "C-c T f")
-  (:hook-into prog-mode)
-  ;; TODO change fill-column-indicator for tty frame
-  ;; only when modus-themes applied
-  (defun update-fill-column-indicator--on-one-frame (frame)
-    (when (memq (framep frame) '(t w32))
-      (set-face-background 'fill-column-indicator nil frame)))
-  (defun update-fill-column-indicator--on-every-frames (&optional _theme)
-    (dolist (frame (frame-list))
-      (update-fill-column-indicator--on-one-frame frame)))
-  (add-hook 'modus-themes-after-load-theme-hook #'update-fill-column-indicator--on-every-frames)
-  (add-hook 'after-make-frame-functions #'update-fill-column-indicator--on-one-frame)
-  (update-fill-column-indicator--on-every-frames))
+  (:hook-into prog-mode))
 
 ;;;; eglot
 
@@ -1093,12 +1082,7 @@ Otherwise use `consult-xref'."
 ;;;; paren-face
 
 (setup (:straight paren-face)
-  (:when-loaded
-    (defun +paren-face--update-color ()
-      (set-face-foreground 'parenthesis (modus-themes-get-color-value 'border)))
-    (when (featurep 'modus-themtes)
-      (+paren-face--update-color))
-    (add-hook 'modus-themes-after-load-theme-hook '+paren-face--update-color)))
+  (:hook-into lisp-data-mode scheme-mode))
 
 ;;;; puni
 
@@ -1141,7 +1125,7 @@ Otherwise use `consult-xref'."
              "C-c M-e" pp-posframe-macroexpand-last-sexp)))
   (:when-loaded
     (defun +pp-posframe--set-color ()
-      (setq pp-posframe-parameters `( :boredr-color ,(modus-themes-get-color-value 'border)
+      (setq pp-posframe-parameters `( :border-color ,(modus-themes-get-color-value 'border)
                                       :background-color ,(modus-themes-get-color-value 'bg-dim))))
     (add-hook 'modus-themes-after-load-theme-hook #'+pp-posframe--set-color)
     (+pp-posframe--set-color)))
