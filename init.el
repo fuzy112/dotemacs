@@ -1344,14 +1344,13 @@ minibuffer."
 ;;;; pyim
 (setup (:straight pyim pyim-basedict)
   (:straight orderless)
-  (defun +orderless-pinyin (component)
-    (require 'pyim)
-    (pyim-cregexp-build component 3 t))
-
-  (with-eval-after-load 'orderless
-    (add-to-list 'orderless-affix-dispatch-alist
-                 '(?` . +orderless-pinyin)))
-
+  (:with-feature orderless
+    (:when-loaded
+      (defun +orderless-pinyin (component)
+        (require 'pyim)
+        (pyim-cregexp-build component 3 t))
+      (add-to-list 'orderless-affix-dispatch-alist
+                   '(?` . +orderless-pinyin))))
   ;; ;; Set the default input method of Chinese language environments to `pyim'.
   ;; (set-language-info "Chinese-GB18030" 'input-method "pyim")
   ;; (set-language-info "Chinese-GBK" 'input-method "pyim")
@@ -1359,7 +1358,6 @@ minibuffer."
 
   ;; ;; UTF-8 is preferred on Unix-like systems.
   ;; (set-language-info "UTF-8" 'input-method "pyim")
-
   (:when-loaded
     (defvar +pyim--corfu nil)
     (defun +pyim--activate ()
@@ -1371,9 +1369,7 @@ minibuffer."
         (setq-local corfu-auto +pyim--corfu)))
     (add-hook 'pyim-activate-hook '+pyim--activate)
     (add-hook 'pyim-deactivate-hook '+pyim--deactivate)
-
     (pyim-basedict-enable)))
-
 
 ;;;; rime
 
