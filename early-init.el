@@ -56,6 +56,10 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+(setq straight-default-files-directive
+      (seq-union straight-default-files-directive
+                 '("docs/dir" "docs/*.info" "docs/*.texi" "docs/*.texinfo")))
+
 ;;;; setup
 
 (straight-use-package 'setup)
