@@ -1605,7 +1605,7 @@ minibuffer."
           `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos-page-delimiter))
             (org-mode . ,(format "\\(^\\*+ +\\|^-\\{5\\}$\\|%s\\)" logos-page-delimiter))))))
 
-;;; eww
+;;;; eww
 
 (setup eww
   (:when-loaded
@@ -1623,8 +1623,7 @@ minibuffer."
           (save-excursion
             (goto-char (point-min))
             (when-let* ((match (text-property-search-forward 'shr-target-id "tonav" #'member)))
-              (delete-region (prop-match-beginning match) (prop-match-end match)))
-            ))))
+              (delete-region (prop-match-beginning match) (prop-match-end match)))))))
 
     (defun eww-reset-current-bookmark ()
       (when (and bookmark-current-bookmark
