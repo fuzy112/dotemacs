@@ -48,6 +48,12 @@
 (define-prefix-command 'doc-map 'doc-map "Doc")
 (keymap-set mode-specific-map "d" 'doc-map )
 
+(define-prefix-command 'toggle-map 'toggle-map "Toggle")
+(keymap-set mode-specific-map "T" 'toggle-map)
+
+(define-prefix-command 'file-map 'file-map "File")
+(keymap-set mode-specific-map "f" 'file-map)
+
 (defalias 'search-map search-map)
 (keymap-global-set "M-s" 'search-map)
 
@@ -593,7 +599,8 @@ value for USE-OVERLAYS."
     (:bind "M-s" consult-history
            "M-r" consult-history))
 
-  (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
+  (:with-mode consult-previet-at-point-mode
+    (:hook-into completion-list-mode))
 
   (setq register-preview-delay 0.5
         register-preview-function #'consult-register-format)
@@ -790,6 +797,7 @@ value for USE-OVERLAYS."
 ;;;; recentf
 
 (setup recentf
+  (:global "C-c f R" recentf-open)
   (:with-function recentf-track-opened-file
     (:autoload-this)
     (:hook-into file-file-hook))
@@ -1243,7 +1251,8 @@ Otherwise use `consult-xref'."
   (setq vc-svn-global-switches
         '("--force-interactive"
           "--config-option"
-          "config:auth:password-stores=gpg-agent")))
+          "config:auth:password-stores=gpg-agent")
+        vc-svn-diff-switches '("-x" "-u -p")))
 
 ;;;; magit
 
@@ -1805,6 +1814,19 @@ minibuffer."
            "C-c T d c f" cancel-debug-on-entry
            "C-c T d c v" cancel-debug-on-variable-change))
 
+(setup gdb-mi
+  (:when-loaded
+    (setopt gdb-many-windows t)
+    (define-advice gdb (:after (_) gud-find-file)
+      (setq-local gud-file-file #'identity))))
+
+;;;; copyright
+
+(setup copyright
+  (setq copyright-year-ranges t)
+  (:with-function copyright-update
+    (:hook-into before-save-hook)))
+
 ;;;; other packages
 
 (straight-use-package 'yaml-mode)
@@ -1826,6 +1848,11 @@ minibuffer."
   "Find `user-init-file'."
   (interactive)
   (find-file user-init-file))
+
+(keymap-global-set "C-c f e" #'find-early-init-file)
+(keymap-global-set "C-c f i" #'find-user-init-file)
+
+(keymap-global-set "C-c f r" #'ff-find-related-file)
 
 
 ;;;; post-init
