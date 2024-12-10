@@ -1482,7 +1482,9 @@ minibuffer."
   (:when-loaded
     (auth-source-pass-enable)))
 
-(straight-use-package 'password-store)
+(setup (:straight password-store))
+
+(setup (:straight pass))
 
 ;;;; lin
 
