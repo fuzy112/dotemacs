@@ -93,6 +93,9 @@ The first PACKAGE can be used to deduce the feature context."
   (setq bidi-paragraph-direction 'left-to-right
         bidi-inhibit-bpa t)
 
+  ;; workaround WSL wayland clipboard issue
+  (setq select-active-regions 'only)
+
   (setq menu-bar-mode nil)
   (setq tool-bar-mode nil)
 
