@@ -485,6 +485,7 @@ ARGS: see `completion-read-multiple'."
   (:global "C-." embark-act
            "C-c a" embark-act)
   (setq prefix-help-command #'embark-prefix-help-command)
+  (setq embark-cycle-key ".")
   (:when-loaded
     (setq embark-indicators '(embark-minimal-indicator
                               embark-highlight-indicator
