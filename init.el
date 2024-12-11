@@ -1858,6 +1858,7 @@ minibuffer."
 (keymap-global-set "C-c f e" #'find-early-init-file)
 (keymap-global-set "C-c f i" #'find-user-init-file)
 
+(keymap-global-set "C-c f a" #'ffap)
 (keymap-global-set "C-c f r" #'ff-find-related-file)
 
 
