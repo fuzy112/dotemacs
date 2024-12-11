@@ -65,21 +65,24 @@
 
 (straight-use-package 'setup)
 (require 'setup)
-(setup-define :straight
-  (lambda (package)
-    `(straight-use-package ',package))
-  :documentation "Install PACKAGE with `straight'.
+
+(eval-and-compile
+  (setup-define :straight
+    (lambda (package)
+      `(straight-use-package ',package))
+    :documentation "Install PACKAGE with `straight'.
 The first PACKAGE can be used to deduce the feature context."
-  :repeatable t
-  :shorthand (lambda (package) (or (car-safe (cadr package)) (cadr package))))
+    :repeatable t
+    :shorthand (lambda (package) (or (car-safe (cadr package)) (cadr package)))))
 
 ;;;; delight
-(setup (:straight delight)
-  (setup-define :delight
-    (lambda (&optional spec value)
-      `(delight ',(or spec (setup-get 'mode)) ,value t))
-    :after-loaded t
-    :documentation "Hide the mode lighter."))
+(eval-and-compile
+  (setup (:straight delight)
+    (setup-define :delight
+      (lambda (&optional spec value)
+        `(delight ',(or spec (setup-get 'mode)) ,value t))
+      :after-loaded t
+      :documentation "Hide the mode lighter.")))
 
 ;;;; emacs core
 
