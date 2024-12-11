@@ -1149,7 +1149,13 @@ Otherwise use `consult-xref'."
 ;;;; eldoc
 
 (setup eldoc
-  (:delight))
+  (:delight)
+  (:when-loaded
+    (eldoc-add-command
+     'magit-next-line 'magit-previous-line
+     'magit-section-forward 'magit-section-backward
+     'magit-section-forward-sibling 'magit-section-backward-sibling
+     'magit-blame-next-chunk 'magit-blame-previous-chunk)))
 
 ;;;; cc-mode
 
@@ -1272,6 +1278,13 @@ Otherwise use `consult-xref'."
   (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
   (:when-loaded
     (global-diff-hl-mode)))
+
+;;;; eldoc-diffstat
+
+(setup (:straight '(eldoc-diffstat :host github
+				   :repo "kljohann/eldoc-diffstat"))
+  (:with-function eldoc-diffstat-setup
+    (:hook-into magit-blame-mode vc-annotate-mode)))
 
 ;;;; eat
 

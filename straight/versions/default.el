@@ -28,6 +28,7 @@
  ("eglot" . "81eb273965be82cd56d7502cccd68b5231a8fbab")
  ("el-get" . "847901f07bdf67763fa3a6c0fb057048cd58603b")
  ("eldoc" . "91a8ae2fa66ac09f45337f9eca6c7aa643a063f4")
+ ("eldoc-diffstat" . "99b49c9793f9bfa1680c5cf3a7db8d44b3f0e13f")
  ("emacs-async" . "b99658e831bc7e7d20ed4bb0a85bdb5c7dd74142")
  ("emacs-rime" . "8837e4b86d3cef73079a3f4ad6d3c79885236aa5")
  ("emacsmirror-mirror" . "216a0bdaa7a0c5c43a797d0c8fece1c9af220300")
