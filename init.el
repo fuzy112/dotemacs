@@ -33,6 +33,7 @@
 (defvar pre-init-file (locate-user-emacs-file "pre-init.el")
   "The file to load before the init file.")
 
+(defvar straight-current-profile)
 (when (file-exists-p pre-init-file)
   (let ((straight-current-profile 'user))
     (load pre-init-file nil t)))
@@ -522,6 +523,7 @@ ARGS: see `completion-read-multiple'."
                       (bookmark-prop-get bookmark 'filename)
                       (user-error "Bookmark `%s' doesn't have a location" bookmark))))
 
+    (defvar ansi-color-apply-face-function)
     (defun +embark/apply-ansi-color (beg end &optional use-overlays)
       "Apply ansi color sequence on region [BEG END).
 
@@ -659,6 +661,7 @@ value for USE-OVERLAYS."
 
     (setq consult-narrow-key "<") ;; "C-+"
 
+    (defvar orderless-match-faces)
     (defun +consult--orderless-regexp-compiler (input type &rest _config)
       (setq input (cdr (orderless-compile input)))
       (cons
@@ -1302,6 +1305,7 @@ Otherwise use `consult-xref'."
       (when (consp project-switch-commands)
         (setq project-switch-commands (assq-delete-all 'project-shell project-switch-commands))
         (add-to-list 'project-switch-commands '(eat-project "Eat") t))))
+  (defvar eat-buffer-name)
   (defun +eat/here (&optional arg)
     "Run `eat' in the current directory.
 With non-nil prefix-argument ARG, the directory will be read from the
@@ -1657,6 +1661,7 @@ minibuffer."
     (setq bookmark-save-flag 1
           bookmark-watch-bookmark-file 'silent
           bookmark-version-control t)
+    (defvar pp-default-function)
     (defun +bookmark--pp-28 (&rest args)
       (let ((pp-default-function 'pp-28))
         (apply args)))

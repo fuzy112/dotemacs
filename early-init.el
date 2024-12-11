@@ -35,6 +35,7 @@
 
 (setq package-enable-at-startup nil)
 (setq straight-use-version-specific-build-dir t)
+(defvar straight-current-profile)
 (setq straight-current-profile nil)
 (setq straight-profiles '((nil . "default.el")
                           (user . "user.el")
