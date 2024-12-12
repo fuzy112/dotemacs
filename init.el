@@ -1684,7 +1684,7 @@ minibuffer."
     "Toggle the display of emphasis markers."
     (interactive)
     (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
-    (font-lock-ensure))
+    (font-lock-flush))
   (:bind "C-c T M" +org/toggle-emphasis-markers
          "C-c T m" org-modern-mode))
 
