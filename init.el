@@ -24,9 +24,10 @@
 
 ;;; Code:
 
-(if (featurep 'init)
-    (load early-init-file)
-  (require 'early-init early-init-file t))
+(require 'early-init early-init-file t)
+
+(when (featurep 'init)
+  (load early-init-file))
 
 ;;;; pre-init
 
