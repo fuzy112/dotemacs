@@ -1,4 +1,5 @@
 (("adaptive-wrap" . "d75665b9c88e65f91dadd1e5880905bbdb7c09b7")
+ ("anaphora" . "a755afa7db7f3fa515f8dd2c0518113be0b027f6")
  ("apheleia" . "543f6d651d11322f26665f017f051fbcfc21ceb0")
  ("autocrypt" . "6a142c5b6cd43883e59da8ff87dcfae2b7a36472")
  ("breadcrumb" . "6273c633c0ff6dba083278ddc5da6b0e7b25f7b1")

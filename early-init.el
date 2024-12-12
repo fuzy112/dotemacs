@@ -140,12 +140,21 @@ The first PACKAGE can be used to deduce the feature context."
          `(fill-column-indicator ((,c :height 1.0 :foreground ,bg-active :background unspecified))))))
     (add-hook 'modus-themes-after-load-theme-hook #'+modus-theme-custom-faces)))
 
-;;;; site-lisp
-
+;;;; libraries
 (straight-use-package 's)
 (straight-use-package 'f)
-(straight-use-package 'dash)
+(setup (:straight dash)
+  (:when-loaded
+    (global-dash-fontify-mode)
+    (eval-after-load 'info-look #'dash-register-info-lookup)))
 (straight-use-package 'transducers)
+(setup (:straight anaphora)
+  (:when-loaded
+    (:with-feature lisp-mode
+      (:when-loaded
+        (anaphorra-install-font-lock-keywords)))))
+
+;;;; site-lisp
 
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp/tui"))
