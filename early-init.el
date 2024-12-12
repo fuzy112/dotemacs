@@ -145,6 +145,7 @@ The first PACKAGE can be used to deduce the feature context."
 (straight-use-package 's)
 (straight-use-package 'f)
 (straight-use-package 'dash)
+(straight-use-package 'transducers)
 
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp/tui"))

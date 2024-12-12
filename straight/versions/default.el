@@ -95,6 +95,7 @@
  ("term-keys" . "5677d06daad83bdf355ad2746c4582475cd0d3f8")
  ("toml-mode.el" . "f6c61817b00f9c4a3cab1bae9c309e0fc45cdd06")
  ("track-changes" . "76b59473e80aa365484712ba7bd04d327b7703a3")
+ ("transducers.el" . "f8f46db6ddba6641669160fffb3f98213ab5b213")
  ("transient" . "dbe18e3f5e0812b8d086f92ca776935e41fafc75")
  ("vala-mode" . "d696a8177e94c81ea557ad364a3b3dcc3abbc50f")
  ("vertico" . "d2cc65ee37557d9d23300b238b60aeae4a975229")
