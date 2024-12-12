@@ -208,17 +208,16 @@
 
 ;;;; nerd-icons
 
-(setup (:straight nerd-icons nerd-icons-corfu nerd-icons-completion
-                  nerd-icons-ibuffer nerd-icons-dired)
+(setup (:straight nerd-icons nerd-icons-corfu nerd-icons-completion nerd-icons-ibuffer
+                  (nerd-icons-multimodal :host github :repo "abougouffa/nerd-icons-multimodal"))
   (:with-feature nerd-icons-corfu
     (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
   (:with-feature nerd-icons-completion
     (:hook-into marginalia-mode))
   (:with-feature nerd-icons-ibuffer
     (:hook-into ibuffer-mode))
-  (:with-feature nerd-icons-dired
-    (:delight)
-    (:hook-into dired-mode))
+  (:with-feature nerd-icons-multimodal
+    (:hook-into dired-mode archive-mode tar-mode))
   (:only-if (display-graphic-p))
   (:require nerd-icons)
   (nerd-icons-set-font))
