@@ -38,6 +38,7 @@
 (defvar straight-current-profile)
 (setq straight-current-profile nil)
 (setq straight-profiles '((nil . "default.el")
+                          (dotemacs . "dotemacs.el")
                           (user . "user.el")
                           (custom . "custom.el")))
 
@@ -47,7 +48,8 @@
         "straight/repos/straight.el/bootstrap.el"
         (or (bound-and-true-p straight-base-dir)
             user-emacs-directory)))
-      (bootstrap-version 7))
+      (bootstrap-version 7)
+      (straight-current-profile nil))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
         (url-retrieve-synchronously
@@ -60,6 +62,8 @@
 (setq straight-default-files-directive
       (seq-union straight-default-files-directive
                  '("docs/dir" "docs/*.info" "docs/*.texi" "docs/*.texinfo")))
+
+(setq straight-current-profile 'dotemacs)
 
 ;;;; setup
 

@@ -39,7 +39,7 @@
   (let ((straight-current-profile 'user))
     (load pre-init-file nil t)))
 
-(setq straight-current-profile nil)
+(setq straight-current-profile 'dotemacs)
 
 
 ;;;; keymap
