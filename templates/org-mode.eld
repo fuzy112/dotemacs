@@ -9,3 +9,5 @@ org-mode
 (src "#+begin_src " (p "lang") n
      p n
      "#+end_src" n)
+
+(kbd "{{{kbd(" p ")}}}")

@@ -62,7 +62,7 @@
 (defalias 'goto-map goto-map)
 (keymap-global-set "M-g" 'goto-map)
 
- 
+
 ;;;; meow-edit
 
 (setup (:straight meow)
@@ -1679,18 +1679,20 @@ minibuffer."
 (setup (:straight org org-modern)
   (:global "C-c L" org-store-link)
   (:hook org-modern-mode)
-
   (defun +org/toggle-emphasis-markers ()
     "Toggle the display of emphasis markers."
     (interactive)
     (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
     (font-lock-flush))
   (:bind "C-c T M" +org/toggle-emphasis-markers
-         "C-c T m" org-modern-mode))
+         "C-c T m" org-modern-mode)
+  (:when-loaded
+    (setopt org-export-backends '(html latex texinfo))))
 
 (setup org-agenda
   (:global "C-c A" org-agenda)
-  (:hook org-modern-agenda)
+  (:with-hook org-agenda-finalize-hook
+    (:hook org-modern-agenda))
   (setq org-agenda-hide-tags-regexp ".")
   (setq org-agenda-prefix-format
         '((agenda . " %i %-12:c%?-12t% s")
