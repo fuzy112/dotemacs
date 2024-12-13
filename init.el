@@ -1107,6 +1107,8 @@ Otherwise use `consult-xref'."
   (:with-mode lisp-interaction-mode
     (:bind "C-c C-j" eval-print-last-sexp))
   (defun +elisp-mode--setup ()
+    (setq prettify-symbols-alist '(("lambda" . ?λ)))
+    (prettify-symbols-mode)
     (setq-local elisp-flymake-byte-compile-load-path load-path))
   (add-hook 'emacs-lisp-mode-hook #'+elisp-mode--setup))
 
