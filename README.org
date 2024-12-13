@@ -1,0 +1,187 @@
+#+title: Dotemacs
+#+subtitle: Personal Emacs Configuration
+#+macro: kbd (eval (org-texinfo-kbd-macro $1))
+
+This is my personal Emacs configuration.
+
+* Keybindings
+#+cindex: Keybindings
+
+** ~mode-specific-map~
+  #+FINDEX: mode-specific-map
+
+  This keymap is usually bound to {{{kbd(C-c)}}}.  When using Meow,
+  single letter bindings under this keymap such as {{{kbd(C-c n)}}}
+  can be accessed with {{{kbd(<leader> <n>)}}}.
+
+  | {{{kbd(A)}}}   | ~org-agenda~             |
+  | {{{kbd(B)}}}   | ~list-backups~           |
+  | {{{kbd(C)}}}   | ~org-capture~            |
+  | {{{kbd(L)}}}   | ~org-store-link~         |
+  | {{{kbd(T)}}}   | ~toggle-map~             |
+  | {{{kbd(a)}}}   | ~embark-act~             |
+  | {{{kbd(d)}}}   | ~doc-map~                |
+  | {{{kbd(e)}}}   | ~cape-prefix-map~        |
+  | {{{kbd(f)}}}   | ~file-map~               |
+  | {{{kbd(h)}}}   | ~consult-history~        |
+  | {{{kbd(i)}}}   | ~consult-info~           |
+  | {{{kbd(k)}}}   | ~consult-kmacro~         |
+  | {{{kbd(m)}}}   | ~consult-man~            |
+  | {{{kbd(n)}}}   |                        |
+  | {{{kbd(o)}}}   |                        |
+  | {{{kbd(p)}}}   | ~project-prefix-map~     |
+  | {{{kbd(S)}}}   | ~straight-prefix-map~    |
+  | {{{kbd(s)}}}   | ~rg-dwim~                |
+  | {{{kbd(t)}}}   | ~tool-map~               |
+  | {{{kbd(v)}}}   | ~vc-prefix-map~          |
+  | {{{kbd(w)}}}   | ~window-prefix-map~      |
+  | {{{kbd(u)}}}   |                        |
+  | {{{kbd(C-/)}}} | ~apheleia-format-buffer~ |
+
+** ~doc-map~
+  #+FINDEX: doc-map
+
+  Keymap for documentation.
+
+  | {{{kbd(d)}}} | ~devdocs-lookup~   |
+  | {{{kbd(g)}}} | ~good-doc-lookup~  |
+  | {{{kbd(i)}}} | ~devdocs-install~  |
+  | {{{kbd(p)}}} | ~devdocs-peruse~   |
+  | {{{kbd(i)}}} | ~rust-docs-lookup~ |
+  
+** ~tool-map~
+  #+FINDEX: tool-map
+
+  TUI tools and other tools.
+
+  | {{{kbd(A)}}} | ~gptel~            |
+  | {{{kbd(G)}}} | ~gtags-update~     |
+  | {{{kbd([)}}} | ~hl-todo-previous~ |
+  | {{{kbd(])}}} | ~hl-todo-next~     |
+  | {{{kbd(a)}}} | ~gptel-send~       |
+  | {{{kbd(d)}}} | ~tui-locate~       |
+  | {{{kbd(f)}}} | ~tui-find~         |
+  | {{{kbd(g)}}} | ~tui-ugrep~        |
+  | {{{kbd(i)}}} | ~hl-todo-insert~   |
+  | {{{kbd(k)}}} | ~tui-kill~         |
+  | {{{kbd(l)}}} | ~tui-line~         |
+  | {{{kbd(m)}}} | ~ctags-menu~       |
+  | {{{kbd(o)}}} | ~hl-todo-occur~    |
+  | {{{kbd(p)}}} | ~p-search~         |
+  | {{{kbd(r)}}} | ~tui-rg~           |
+  | {{{kbd(s)}}} | ~+eat/here~        |
+  | {{{kbd(t)}}} | ~tui-run~          |
+  | {{{kbd(y)}}} | ~tui-yazi~         |
+
+** ~toggle-map~
+  #+findex: toggle-map
+
+  Commands for toggling features.
+
+  | {{{kbd(G)}}}     | ~gnus~                               |
+  | {{{kbd(T)}}}     | ~telega~                             |
+  | {{{kbd(f)}}}     | ~display-fill-column-indicator-mode~ |
+  | {{{kbd(l)}}}     | ~display-line-numbers-mode~          |
+  | {{{kbd(o)}}}     | ~outline-minor-mode~                 |
+  | {{{kbd(t)}}}     | ~+toggle-transparent~                |
+  | {{{kbd(u)}}}     | ~vundo~                              |
+  | {{{kbd(v)}}}     | ~visual-line-mode~                   |
+  | {{{kbd(d e)}}}   | ~toggle-debug-on-error~              |
+  | {{{kbd(d f)}}}   | ~debug-on-entry~                     |
+  | {{{kbd(d q)}}}   | ~toggle-debug-on-quit~               |
+  | {{{kbd(d v)}}}   | ~debug-on-variable-change~           |
+  | {{{kbd(d c f)}}} | ~cancel-debug-on-entry~              |
+  | {{{kbd(d c v)}}} | ~cancel-debug-on-variable-change~    |
+
+** ~file-map~
+  #+findex: file-map
+
+  Commands for quickly opening files.
+
+  | {{{kbd(R)}}} | ~recentf-open~         |
+  | {{{kbd(a)}}} | ~ffap~                 |
+  | {{{kbd(e)}}} | ~find-early-init-file~ |
+  | {{{kbd(i)}}} | ~find-user-init-file~  |
+  | {{{kbd(r)}}} | ~ff-find-related-file~ |
+
+** ~straight-prefix-map~
+  #+findex: straight-prefix-map
+
+  ~straight-prefix-map~ contains commands from the =straight= package.
+
+  | {{{kbd(B)}}}   | ~straight-rebuild-all~               |
+  | {{{kbd(C)}}}   | ~straight-check-all~                 |
+  | {{{kbd(F)}}}   | ~straight-fetch-all~                 |
+  | {{{kbd(P)}}}   | ~straight-pull-all~                  |
+  | {{{kbd(V)}}}   | ~straight-thaw-versions~             |
+  | {{{kbd(b)}}}   | ~straight-rebuild-package~           |
+  | {{{kbd(c)}}}   | ~straight-check-package~             |
+  | {{{kbd(d)}}}   | ~straight-visit-package~             |
+  | {{{kbd(f)}}}   | ~straight-fetch-package~             |
+  | {{{kbd(g)}}}   | ~+straight/visit-package-repository~ |
+  | {{{kbd(p)}}}   | ~straight-pull-package~              |
+  | {{{kbd(u)}}}   | ~straight-use-package~               |
+  | {{{kbd(v)}}}   | ~straight-visit-package-website~     |
+  | {{{kbd(x f)}}} | ~straight-x-fetch-all~               |
+
+
+* Custom Commands
+#+cindex: Custom Commands
+
+** ~+eat/here~
+  #+findex: +eat/here
+
+  Open a new EAT terminal in the ~default-directory~.
+
+** ~find-user-init-file~
+  #+findex: find-user-init-file
+
+  Open the =~/.emacs.d/init.el= file.
+
+** ~find-early-init-file~
+  #+findex: find-early-init-file
+
+  Open the =~/.emacs.d/early-init.el= file.
+
+** ~+toggle-transparent~
+  #+findex: +toggle-transparent
+
+  Toggle background transparency.
+
+** ~+straight/visit-package-repository~
+  #+findex: +straight/visit-package-repository
+
+  Run ~magit-dispatch~ in the package repository.
+
+* Custom Packages
+#+cindex: Custom Packages
+
++ ~tui~: A package for integrating TUI applications in Emacs.
+
++ ~flymake-define~: Simple interface for defining ~flymake~ backends.
+
++ ~ctags~: =ctags= integration.
+
++ ~gtags~: =ctags= integration.
+
++ ~gtkdoc~: Package for viewing Gtk documentations. Not maintained anymore.
+
++ ~good-doc~: Rewrite of ~gtkdoc~.
+
++ ~rust-doc~: A simple package for looking up Rust documentation.
+
++ ~hide-pass~: A package for hiding plain-text credentials in buffers.
+
++ ~pp-posframe~: An alternative to ~eval-last-sexp~ which shows the result
+  in a ~posframe~.
+
+* Function Index
+:PROPERTIES:
+:INDEX:    fn
+:END:
+
+* COMMENT File Local Variables
+
+# Local Variables:
+# org-hide-emphasis-markers: t
+# End:
