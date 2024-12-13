@@ -1867,11 +1867,29 @@ minibuffer."
   (interactive)
   (find-file user-init-file))
 
+(defvar +toggle-transparent-alpha 80)
+
+(defun +toggle-transparent (&optional arg)
+  (interactive "p")
+  (let ((current-alpha (frame-parameter nil 'alpha-background)))
+    (when (and (numberp current-alpha) (< current-alpha 100))
+        (setq +toggle-transparent-alpha current-alpha))
+    (cond ((= arg 1)
+           (if (and (numberp current-alpha) (< current-alpha 100))
+               (modify-frame-parameters nil '((alpha-background . nil)))
+             (modify-frame-parameters nil `((alpha-background . ,+toggle-transparent-alpha)))))
+          ((= arg 4)
+           (modify-frame-parameters nil `((alpha-background . ,+toggle-transparent-alpha))))
+          (t
+           (modify-frame-parameters nil `((alpha-background . nil)))))))
+
 (keymap-global-set "C-c f e" #'find-early-init-file)
 (keymap-global-set "C-c f i" #'find-user-init-file)
 
 (keymap-global-set "C-c f a" #'ffap)
 (keymap-global-set "C-c f r" #'ff-find-related-file)
+
+(keymap-global-set "C-c T x" #'+toggle-transparent)
 
 
 ;;;; post-init
