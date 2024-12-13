@@ -1576,6 +1576,11 @@ minibuffer."
     (setf (alist-get "^\\*tui-" display-buffer-alist nil nil #'equal)
           '((display-buffer-same-window)))))
 
+;;;; deadgrep
+
+(setup (:straight deadgrep)
+  (:global "C-c s" deadgrep))
+
 ;;;; gptel
 
 (setup (:straight gptel)

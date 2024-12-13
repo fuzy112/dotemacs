@@ -31,7 +31,7 @@ This is my personal Emacs configuration.
   | {{{kbd(o)}}}   |                        |
   | {{{kbd(p)}}}   | ~project-prefix-map~     |
   | {{{kbd(S)}}}   | ~straight-prefix-map~    |
-  | {{{kbd(s)}}}   | ~rg-dwim~                |
+  | {{{kbd(s)}}}   | ~deadgrep~               |
   | {{{kbd(t)}}}   | ~tool-map~               |
   | {{{kbd(v)}}}   | ~vc-prefix-map~          |
   | {{{kbd(w)}}}   | ~window-prefix-map~      |
