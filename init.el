@@ -1284,7 +1284,7 @@ Otherwise use `consult-xref'."
 (setup (:straight '(eldoc-diffstat :host github
 				   :repo "kljohann/eldoc-diffstat"))
   (:with-function eldoc-diffstat-setup
-    (:hook-into magit-mode vc-annotate-mode)))
+    (:hook-into magit-mode magit-blame-mode vc-annotate-mode)))
 
 ;;;; eat
 
