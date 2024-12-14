@@ -1024,7 +1024,6 @@ Otherwise use `consult-xref'."
 (setup gtags
   (:with-function (gtags-update gtags-single-update)
     (:autoload-this nil t))
-  (:global "C-c t G" gtags-update)
   (add-hook 'after-save-hook #'gtags-single-update))
 
 ;;;; devdocs
@@ -1772,7 +1771,7 @@ minibuffer."
 ;;;; gnus
 
 (setup gnus
-  (:global "C-c T G" gnus))
+  (:global "C-c t G" gnus))
 
 ;;;; copilot
 
