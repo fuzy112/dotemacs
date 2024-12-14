@@ -244,6 +244,11 @@
   (setq kill-buffer-quit-windows t
         quit-restore-window-no-switch t))
 
+;;;; quick-window
+
+(setup quick-window
+  (:global "M-o" quick-window-jump))
+
 ;;;; help
 
 (setup help
