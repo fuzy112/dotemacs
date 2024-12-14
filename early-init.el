@@ -127,7 +127,6 @@ The first PACKAGE can be used to deduce the feature context."
 ;;;; modus-theme
 
 (straight-use-package 'modus-themes)
-
 (setup modus-themes
   (:global "<f9>" modus-themes-toggle)
   (:when-loaded
@@ -136,13 +135,11 @@ The first PACKAGE can be used to deduce the feature context."
     (setq modus-themes-mixed-fonts t
           modus-themes-bold-constructs t
           modus-themes-slanted-constructs t
-          modus-themes-variable-pitch-ui t)
-    (defun +modus-theme-custom-faces (&rest _)
-      (modus-themes-with-colors
-        (custom-set-faces
-         `(parenthesis ((,c :foreground ,border)))
-         `(fill-column-indicator ((,c :height 1.0 :foreground ,bg-active :background unspecified))))))
-    (add-hook 'modus-themes-after-load-theme-hook #'+modus-theme-custom-faces)))
+          modus-themes-variable-pitch-ui t)))
+
+;;;; doom-modeline
+(setup (:straight doom-modeline)
+  (doom-modeline-mode))
 
 ;;;; libraries
 (straight-use-package 's)
@@ -166,13 +163,26 @@ The first PACKAGE can be used to deduce the feature context."
 ;;;; custom
 
 (setup custom
+  (defun +custom-faces (&optional theme)
+    (unless (eq theme 'user)
+      (setq pp-posframe-parameters `( :border-color ,(face-background 'border t '(shadow))
+                                      :background-color ,(face-background 'default t '(shadow))))
+      (custom-set-faces
+       `(fill-column-indicator ((t :height 1.0 :foreground ,(face-background 'shadow) :background unspecified)))
+       `(parenthesis ((t :foreground ,(face-foreground 'shadow))))
+       `(mode-line-active ((t :background ,(face-background 'default) :overline ,(face-foreground 'default)
+                              :box (:line-width 6 :color ,(face-background 'default) :style nil))))
+       `(mode-line-inactive ((t :background ,(face-background 'default) :overline ,(face-foreground 'shadow)
+                                :box (:line-width 6 :color ,(face-background 'default) :style nil)))))))
+  (add-hook 'enable-theme-functions #'+custom-faces t)
   (setq custom-file (locate-user-emacs-file "custom.el"))
   (when (file-exists-p custom-file)
     (let ((straight-current-profile 'custom))
       (load custom-file nil t)))
   (unless custom-enabled-themes
     (require 'modus-themes)
-    (modus-themes-load-theme (car modus-themes-to-toggle))))
+    (modus-themes-load-theme (car modus-themes-to-toggle)))
+  (eval-after-load 'init #'+custom-faces))
 
 
 ;;;; post-early-init

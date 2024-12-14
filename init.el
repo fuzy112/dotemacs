@@ -1128,13 +1128,7 @@ Otherwise use `consult-xref'."
   (:with-feature elisp-mode
     (:with-map emacs-lisp-mode-map
       (:bind "C-M-x" pp-posframe-compile-defun
-             "C-c M-e" pp-posframe-macroexpand-last-sexp)))
-  (:when-loaded
-    (defun +pp-posframe--set-color ()
-      (setq pp-posframe-parameters `( :border-color ,(modus-themes-get-color-value 'border)
-                                      :background-color ,(modus-themes-get-color-value 'bg-dim))))
-    (add-hook 'modus-themes-after-load-theme-hook #'+pp-posframe--set-color)
-    (+pp-posframe--set-color)))
+             "C-c M-e" pp-posframe-macroexpand-last-sexp))))
 
 ;;;; find-func
 
