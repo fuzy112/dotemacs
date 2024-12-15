@@ -1842,12 +1842,6 @@ minibuffer."
            "C-c T d c f" cancel-debug-on-entry
            "C-c T d c v" cancel-debug-on-variable-change))
 
-(setup gdb-mi
-  (:when-loaded
-    (setopt gdb-many-windows t)
-    (define-advice gdb (:after (_) gud-find-file)
-      (setq-local gud-file-file #'identity))))
-
 ;;;; copyright
 
 (setup copyright
