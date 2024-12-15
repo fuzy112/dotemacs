@@ -871,6 +871,13 @@ value for USE-OVERLAYS."
 ;;;; eshell
 
 (setup eshell
+  (defun +eshell/here ()
+    (interactive)
+    (defvar eshell-buffer-name)
+    (let ((eshell-buffer-name (format "*%s : eshell*" (abbreviate-file-name default-directory)))
+          (display-comint-buffer-action '(() (inhibit-same-window . t))))
+      (eshell)))
+  (:global "C-c t e" #'+eshell/here)
   (:when-loaded
     (setq eshell-scroll-to-bottom-on-input t
           eshell-history-size 8192
