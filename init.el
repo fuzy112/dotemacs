@@ -737,7 +737,7 @@ value for USE-OVERLAYS."
                                    "-eat\\*$"
                                    "-vterm\\*$"
                                    ;; "\\*Warnings\\*"
-                                   "\\*Compile-Log\\*"
+                                   ;; "\\*Compile-Log\\*"
                                    "\\*vc-git : "
                                    ;;xref--xref-buffer-mode
                                    help-mode compilation-mode
