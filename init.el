@@ -773,7 +773,9 @@ value for USE-OVERLAYS."
         (setq +popper--delayed-window nil)))
     (add-hook 'post-command-hook '+popper--select-delayed-window 90)
     (defun +popper--select-popup-delayed (buf alist)
-      (setq +popper--delayed-window (popper-display-popup-at-bottom buf alist)))
+      (if this-command
+          (setq +popper--delayed-window (popper-display-popup-at-bottom buf alist))
+        (select-window (popper-display-popup-at-bottom buf alist))))
     (setq popper-display-function '+popper--select-popup-delayed)
     (with-eval-after-load 'project
       (setq popper-group-function #'popper-group-by-project))
