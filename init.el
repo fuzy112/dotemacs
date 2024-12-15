@@ -247,7 +247,9 @@
 ;;;; quick-window
 
 (setup quick-window
-  (:global "M-o" quick-window-jump))
+  (:with-function quick-window-jump
+    (:autoload-this nil t)
+    (:bind-to "M-o")))
 
 ;;;; help
 
@@ -966,13 +968,14 @@ value for USE-OVERLAYS."
 
 ;;;; eglot
 
-(setup (:straight eglot)
+(setup (:straight eglot eglot-tempel)
   (:global "C-c T e" eglot)
   (:when-loaded
     (setq eglot-autoshutdown t
           eglot-extend-to-xref t)
     (when (fboundp 'cape-wrap-buster)
       (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
+    (eglot-tempel-mode)
     (when (and (fboundp 'cape-capf-super) (fboundp 'cape-file) (fboundp 'tempel-expand))
       (defun +eglot--capf ()
         (setq-local completion-at-point-functions
