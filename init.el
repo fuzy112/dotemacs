@@ -1213,7 +1213,7 @@ Otherwise use `consult-xref'."
   (:when-loaded
     (dolist (file '(".project-root" "configure.ac" "Cargo.toml" "package.json"))
       (add-to-list 'project-vc-extra-root-markers file))
-
+    (require 'compat)
     (defun +project--external-roots ()
       (and-let* ((project (project-current))
                  (root (project-root project))
