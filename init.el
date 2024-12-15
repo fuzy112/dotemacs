@@ -29,6 +29,9 @@
 (when (featurep 'init)
   (load early-init-file))
 
+(require 'straight)
+(require 'setup)
+
 ;;;; pre-init
 
 (defvar pre-init-file (locate-user-emacs-file "pre-init.el")
@@ -1073,6 +1076,7 @@ Otherwise use `consult-xref'."
 
     (define-advice js-jsx-enable (:after () sgml)
       (require 'sgml-mode)
+      (eval-and-compile (require 'keymap+))
       (keymap-set-many (current-local-map)
                        "C-c C-b" sgml-skip-tag-backward
                        "C-c C-d" sgml-delete-tag
@@ -1297,10 +1301,9 @@ Otherwise use `consult-xref'."
 
 ;;;; eldoc-diffstat
 
-(setup (:straight '(eldoc-diffstat :host github
+(setup (:straight (eldoc-diffstat :host github
 				   :repo "kljohann/eldoc-diffstat"))
-  (:with-function eldoc-diffstat-setup
-    (:hook-into magit-mode magit-blame-mode vc-annotate-mode)))
+  (:hook-into magit-mode magit-blame-mode vc-annotate-mode))
 
 ;;;; eat
 
@@ -1850,6 +1853,12 @@ minibuffer."
   (setq copyright-year-ranges t)
   (:with-function copyright-update
     (:hook-into before-save-hook)))
+
+;;;; sftp
+
+(setup sftp
+  (:with-function (sftp)
+    (:autoload-this nil t)))
 
 ;;;; other packages
 

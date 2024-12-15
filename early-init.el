@@ -70,23 +70,21 @@
 (straight-use-package 'setup)
 (require 'setup)
 
-(eval-and-compile
-  (setup-define :straight
-    (lambda (package)
-      `(straight-use-package ',package))
-    :documentation "Install PACKAGE with `straight'.
+(setup-define :straight
+  (lambda (package)
+    `(straight-use-package ',package))
+  :documentation "Install PACKAGE with `straight'.
 The first PACKAGE can be used to deduce the feature context."
-    :repeatable t
-    :shorthand (lambda (package) (or (car-safe (cadr package)) (cadr package)))))
+  :repeatable t
+  :shorthand (lambda (package) (or (car-safe (cadr package)) (cadr package))))
 
 ;;;; delight
-(eval-and-compile
-  (setup (:straight delight)
-    (setup-define :delight
-      (lambda (&optional spec value)
-        `(delight ',(or spec (setup-get 'mode)) ,value t))
-      :after-loaded t
-      :documentation "Hide the mode lighter.")))
+(setup (:straight delight)
+  (setup-define :delight
+    (lambda (&optional spec value)
+      `(delight ',(or spec (setup-get 'mode)) ,value t))
+    :after-loaded t
+    :documentation "Hide the mode lighter."))
 
 ;;;; emacs core
 
@@ -153,7 +151,7 @@ The first PACKAGE can be used to deduce the feature context."
   (:when-loaded
     (:with-feature lisp-mode
       (:when-loaded
-        (anaphorra-install-font-lock-keywords)))))
+        (anaphora-install-font-lock-keywords)))))
 
 ;;;; site-lisp
 
