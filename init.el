@@ -43,6 +43,8 @@
 
 ;;;; keymap
 
+(eval-when-compile (require 'keymap+))
+
 (define-prefix-command 'tool-map 'tool-map "Tool")
 (keymap-set mode-specific-map "t" 'tool-map)
 
@@ -139,10 +141,6 @@
 (when (treesit-available-p)
   (meow-tree-sitter-register-defaults))
 
-;;;; keymap+
-
-(eval-when-compile (require 'keymap+))
-
 
 ;;;; straight
 
@@ -189,10 +187,6 @@
 (add-to-list 'face-font-family-alternatives '("Sarasa Gothic CL" "Iosevka SS04"))
 (add-to-list 'face-font-family-alternatives '("Sarasa UI CL" "Sarasa Gothic CL" "Iosevka SS04"))
 (setopt face-font-family-alternatives (append face-font-family-alternatives nil))
-
-;;;; delight
-
-(straight-use-package 'delight)
 
 ;;;; nerd-icons
 
@@ -384,7 +378,6 @@ ARGS: see `completion-read-multiple'."
 ;;;; goggles
 
 (straight-use-package 'goggles)
-(delight 'goggles-mode nil "goggles.el")
 (add-hook 'prog-mode-hook #'goggles-mode)
 (add-hook 'text-mode-hook #'goggles-mode)
 
@@ -439,10 +432,6 @@ ARGS: see `completion-read-multiple'."
   (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
   (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
   (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode))
-
-;;;; abbrev
-
-(delight 'abbrev-mode nil "abbrev.el")
 
 ;;;; tempel
 
@@ -773,7 +762,7 @@ value for USE-OVERLAYS."
 
 ;;;; ibuffer
 
-(keymap-global-set "<remap> <list-buffers>" #'ibuffer)
+(keymap-global-set "<remap> <list-buffers>" #'ibuffer-jump)
 
 ;;;; apheleia
 
@@ -785,12 +774,10 @@ value for USE-OVERLAYS."
 ;;;; ws-butler
 
 (straight-use-package 'ws-butler)
-(delight 'ws-butler-mode nil "ws-butler.el")
 (add-hook 'find-file-hook #'ws-butler-mode)
 
 ;;;; whitespace
 
-(delight 'whitespace-mode nil "whitespace.el")
 (dolist (hook '(prog-mode-hook conf-mode-hook yaml-mode-hook))
   (add-hook hook #'whitespace-mode))
 (setq whitespace-style '(face trailing empty indentation space-before-tab space-after-tab))
@@ -813,14 +800,14 @@ value for USE-OVERLAYS."
 ;;;; saveplace
 
 (autoload 'save-place-find-file-hook "saveplace.el"
-"Function added to ‘find-file-hook’ by ‘save-place-mode’.
+  "Function added to ‘find-file-hook’ by ‘save-place-mode’.
 It runs the hook ‘save-place-after-find-file-hook’.
 
 This function has :after advice: ‘org-bookmark-jump-unhide’.
 
 (fn)" )
 (autoload 'save-place-dired-hook "saveplace.el"
-"Position point in a Dired buffer according to its saved place.
+  "Position point in a Dired buffer according to its saved place.
 This is run via ‘dired-initial-position-hook’, which see." )
 (add-hook 'find-file-hook #'save-place-find-file-hook)
 (add-hook 'dired-initial-position-hook #'save-place-dired-hook)
@@ -958,12 +945,12 @@ This is run via ‘dired-initial-position-hook’, which see." )
     (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
   (eglot-tempel-mode)
   (when (and (fboundp 'cape-capf-super) (fboundp 'cape-file) (fboundp 'tempel-expand))
-      (defun +eglot--capf ()
-        (setq-local completion-at-point-functions
-                    (list (cape-capf-super #'eglot-completion-at-point
-                                           #'tempel-expand
-                                           #'cape-file))))
-      (add-hook 'eglot-managed-mode-hook #'+eglot--capf)))
+    (defun +eglot--capf ()
+      (setq-local completion-at-point-functions
+                  (list (cape-capf-super #'eglot-completion-at-point
+                                         #'tempel-expand
+                                         #'cape-file))))
+    (add-hook 'eglot-managed-mode-hook #'+eglot--capf)))
 
 ;;;; xref
 
@@ -1101,9 +1088,9 @@ Otherwise use `consult-xref'."
 ;;;; pp-posframe
 
 (autoload 'pp-posframe-eval-last-sexp "pp-posframe.el"
-"Evaluate sexp before point; display the value in a posframe." t)
+  "Evaluate sexp before point; display the value in a posframe." t)
 (autoload 'pp-posframe-compile-defun "pp-posframe.el"
-"Compile and evaluate the current top-level form.
+  "Compile and evaluate the current top-level form.
 Display the result in a posframe." t)
 (autoload 'pp-posframe-macroexpand-last-sexp "pp-posframe.el"
   "Macroexpand the sexp before point; display the result in a posframe." t)
@@ -1131,7 +1118,7 @@ Display the result in a posframe." t)
 
 ;;;; eldoc
 
-(delight 'eldoc-mode nil "eldoc.el")
+
 (with-eval-after-load 'eldoc
   (eldoc-add-command
    'magit-next-line 'magit-previous-line
@@ -1430,7 +1417,6 @@ minibuffer."
 ;;;; clipetty
 
 (straight-use-package 'clipetty)
-(delight 'clipetty-mode nil "clipetty.el")
 (add-hook 'tty-setup-hook #'clipetty-mode)
 (with-eval-after-load 'clipetty
   (global-clipetty-mode))
@@ -1528,17 +1514,17 @@ minibuffer."
 
 (keymap-global-set-many
   "C-c t t" tui-run
-         "C-c t r" tui-rg
-         "C-c t g" tui-ugrep
-         "C-c t y" tui-yazi
-         "C-c t k" tui-kill
-         "C-c t l" tui-line
-         "C-c t f" tui-find
-         "C-c t d" tui-locate)
+  "C-c t r" tui-rg
+  "C-c t g" tui-ugrep
+  "C-c t y" tui-yazi
+  "C-c t k" tui-kill
+  "C-c t l" tui-line
+  "C-c t f" tui-find
+  "C-c t d" tui-locate)
 
 (with-eval-after-load 'tui
-    (setf (alist-get "^\\*tui-" display-buffer-alist nil nil #'equal)
-          '((display-buffer-same-window))))
+  (setf (alist-get "^\\*tui-" display-buffer-alist nil nil #'equal)
+        '((display-buffer-same-window))))
 
 ;;;; deadgrep
 
@@ -1552,7 +1538,7 @@ minibuffer."
   "C-c t a" gptel-send)
 
 (straight-use-package
-  '(gptel-quick :host github :repo "karthink/gptel-quick"))
+ '(gptel-quick :host github :repo "karthink/gptel-quick"))
 
 (with-eval-after-load 'embark
   (keymap-set embark-general-map "?" #'gptel-quick))
@@ -1569,11 +1555,11 @@ minibuffer."
   "<remap> <backward-page>" logos-backward-page-dwim)
 
 (with-eval-after-load 'logos
- (keymap-set-many logos-focus-mode-map
+  (keymap-set-many logos-focus-mode-map
     "<left>" logos-backward-page-dwim
     "<right>" logos-forward-page-dwim)
 
- (setq logos-outlines-are-pages t)
+  (setq logos-outlines-are-pages t)
   (setq-default logos-hide-cursor nil
                 logos-hide-mode-line t
                 logos-hide-header-line t
@@ -1709,7 +1695,7 @@ minibuffer."
   (setopt erc-modules
 	  (seq-union '(sasl nicks scrolltobottom track)
 		     erc-modules))
-  
+
   ;; insert a newline when I hit <RET> at the prompt, and prefer
   ;; something more deliberate for actually send messages.
   (keymap-set-many erc-mode-map
@@ -1737,11 +1723,11 @@ minibuffer."
 (with-eval-after-load 'erc-fill
   (keymap-set-many erc-fill-wrap-mode-map
     "C-c =" erc-fill-wrap-nudge))
-  
+
 ;; prevent JOINs and PARTs from lighting up the mode-line.
 (with-eval-after-load 'erc-track
   (setopt erc-track-faces-priority-list (remq 'erc-notice-face
-						erc-track-faces-priority-list)))
+					      erc-track-faces-priority-list)))
 (setq erc-track-priority-faces-only 'all)
 
 ;;;; gnus
