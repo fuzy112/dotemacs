@@ -66,8 +66,8 @@
 
 ;;;; meow-edit
 
-(straight-use-package 'meow)
-(straight-use-package 'meow-tree-sitter)
+(eval-and-compile (straight-use-package 'meow))
+(eval-and-compile (straight-use-package 'meow-tree-sitter))
 
 (require 'meow)
 (setq meow-keypad-leader-dispatch "C-c")
@@ -190,13 +190,13 @@
 
 ;;;; nerd-icons
 
-(straight-use-package 'nerd-icons)
-(straight-use-package 'nerd-icons-corfu)
-(straight-use-package 'nerd-icons-completion)
-(straight-use-package 'nerd-icons-ibuffer)
-(straight-use-package
- '(nerd-icons-multimodal :host github :repo
-                         "abougouffa/nerd-icons-multimodal"))
+(eval-and-compile (straight-use-package 'nerd-icons))
+(eval-and-compile (straight-use-package 'nerd-icons-corfu))
+(eval-and-compile (straight-use-package 'nerd-icons-completion))
+(eval-and-compile (straight-use-package 'nerd-icons-ibuffer))
+(eval-and-compile (straight-use-package
+                   '(nerd-icons-multimodal :host github :repo
+                                           "abougouffa/nerd-icons-multimodal")))
 (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
 (add-hook 'marginalia-mode-hook #'nerd-icons-completion-mode)
 (add-hook 'ibuffer-mode-hook #'nerd-icons-ibuffer-mode)
@@ -245,7 +245,7 @@
 
 ;;;; breadcrumb
 
-(straight-use-package 'breadcrumb)
+(eval-and-compile (straight-use-package 'breadcrumb))
 
 (defun +breadcrumb--prog-mode ()
   (setq-local header-line-format '((:eval (breadcrumb-project-crumbs))
@@ -261,7 +261,7 @@
 
 ;;;; orderless
 
-(straight-use-package 'orderless)
+(eval-and-compile (straight-use-package 'orderless))
 (eval-when-compile (require 'orderless))
 (setq completion-styles '(orderless basic))
 (with-eval-after-load 'orderless
@@ -303,7 +303,7 @@
 
 ;;;; vertico
 
-(straight-use-package 'vertico)
+(eval-and-compile (straight-use-package 'vertico))
 
 (autoload 'vertico--advice "vertico.el")
 (advice-add #'completing-read-default :around #'vertico--advice)
@@ -332,7 +332,7 @@
 
 ;;;; marginalia
 
-(straight-use-package 'marginalia)
+(eval-and-compile (straight-use-package 'marginalia))
 
 (autoload 'marginalia--minibuffer-setup "marginalia.el")
 (add-hook 'minibuffer-setup-hook #'marginalia--minibuffer-setup)
@@ -372,35 +372,36 @@ ARGS: see `completion-read-multiple'."
 
 ;;;; pulsar
 
-(straight-use-package 'pulsar)
+(eval-and-compile (straight-use-package 'pulsar))
 (pulsar-global-mode)
 
 ;;;; goggles
 
-(straight-use-package 'goggles)
+(eval-and-compile (straight-use-package 'goggles))
 (add-hook 'prog-mode-hook #'goggles-mode)
 (add-hook 'text-mode-hook #'goggles-mode)
 
 
 ;;;; corfu
 
-(straight-use-package 'corfu)
-(straight-use-package 'corfu-terminal)
+(eval-and-compile (straight-use-package 'corfu))
+(eval-and-compile (straight-use-package 'corfu-terminal))
 
 (define-advice completion-in-region (:before (&rest _) corfu)
   (require 'corfu))
 
+(defvar corfu-map)
 (with-eval-after-load 'corfu
   (advice-remove 'completion-in-region #'completion-in-region@corfu)
   (require 'orderless)
-  (setq completion-cycle-threshold 0
-        tab-always-indent 'complete
-        text-mode-ispell-word-completion nil
-        read-extended-command-predicate #'command-completion-default-include-p)
-  (setq corfu-cycle t
-        corfu-preselect 'prompt)
-  (setq corfu-quick1 "htnsd"
-        corfu-quick2 "ueoai")
+  (setopt completion-cycle-threshold 0
+          tab-always-indent 'complete
+          text-mode-ispell-word-completion nil
+          read-extended-command-predicate #'command-completion-default-include-p)
+  (setopt corfu-cycle t
+          corfu-preselect 'prompt)
+  (setopt corfu-quick1 "htnsd"
+          corfu-quick2 "ueoai")
   (global-corfu-mode)
   (corfu-history-mode)
   (corfu-popupinfo-mode)
@@ -419,7 +420,7 @@ ARGS: see `completion-read-multiple'."
 
 ;;;; cape
 
-(straight-use-package 'cape)
+(eval-and-compile (straight-use-package 'cape))
 (keymap-global-set "C-c e" #'cape-prefix-map)
 (add-hook 'completion-at-point-functions #'cape-dabbrev)
 (add-hook 'completion-at-point-functions #'cape-file)
@@ -427,6 +428,8 @@ ARGS: see `completion-read-multiple'."
 
 ;;;; dabbrev
 
+(defvar dabbrev-ignored-buffer-regexps)
+(defvar dabbrev-ignored-buffer-modes)
 (with-eval-after-load 'dabbrev
   (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
   (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
@@ -435,7 +438,7 @@ ARGS: see `completion-read-multiple'."
 
 ;;;; tempel
 
-(straight-use-package 'tempel)
+(eval-and-compile (straight-use-package 'tempel))
 (keymap-global-set-many
   "M-+" tempel-complete
   "M-*" tempel-insert)
@@ -446,6 +449,8 @@ ARGS: see `completion-read-multiple'."
 (add-hook 'conf-mode-hook 'tempel-setup-capf)
 (add-hook 'prog-mode-hook 'tempel-setup-capf)
 (add-hook 'text-mode-hook 'tempel-setup-capf)
+(defvar tempel-path)
+(defvar tempel-user-elements)
 (with-eval-after-load 'tempel
   (setq tempel-path (concat user-emacs-directory "/templates/*.eld"))
   (defun tempel-include (elt)
@@ -458,8 +463,12 @@ ARGS: see `completion-read-multiple'."
 
 ;;;; embark
 
-(straight-use-package 'xterm-color)
-(straight-use-package 'embark)
+(eval-and-compile (straight-use-package 'xterm-color))
+(eval-and-compile (straight-use-package 'embark))
+(defvar embark-indicators)
+(defvar embark-file-map)
+(defvar embark-bookmark-map)
+(defvar embark-region-map)
 (keymap-global-set-many
   "C-." embark-act
   "C-c a" embark-act)
@@ -525,8 +534,8 @@ value for USE-OVERLAYS."
 
 ;;;; consult
 
-(straight-use-package 'consult)
-(straight-use-package 'pcre2el)
+(eval-and-compile (straight-use-package 'consult))
+(eval-and-compile (straight-use-package 'pcre2el))
 
 (keymap-global-set-many
   "C-c M-x" consult-mode-command
@@ -630,39 +639,37 @@ value for USE-OVERLAYS."
 (setq read-buffer-function #'+consult--read-buffer-function)
 
 (setq consult-preview-key "M-.")
+(setq consult-narrow-key "<") ;; "C-+"
+
+(defvar orderless-match-faces)
+(defun +consult--orderless-regexp-compiler (input type &rest _config)
+  (setq input (cdr (orderless-compile input)))
+  (cons
+   (mapcar (lambda (r) (consult--convert-regexp r type)) input)
+   (lambda (str)
+     (let ((orderless-match-faces orderless-match-faces))
+       (setq orderless-match-faces (vconcat '(consult-highlight-match) orderless-match-faces))
+       (orderless--highlight input t str)))))
+(setq-default consult--regexp-compiler #'+consult--orderless-regexp-compiler)
+
+(eval-when-compile (require 'consult)) ; for consult-customize
 
 (with-eval-after-load 'consult
-  (eval-when-compile (require 'consult)) ; for consult-customize
-  
   (consult-customize
    consult-xref consult-ripgrep consult-grep consult-git-grep
    consult-line consult-focus-lines consult-keep-lines
    consult-imenu
    :preview-key '(:debounce 0.2 any))
 
-  (setq consult-narrow-key "<") ;; "C-+"
-
-  (defvar orderless-match-faces)
-  (defun +consult--orderless-regexp-compiler (input type &rest _config)
-    (setq input (cdr (orderless-compile input)))
-    (cons
-     (mapcar (lambda (r) (consult--convert-regexp r type)) input)
-     (lambda (str)
-       (let ((orderless-match-faces orderless-match-faces))
-         (setq orderless-match-faces (vconcat '(consult-highlight-match) orderless-match-faces))
-         (orderless--highlight input t str)))))
-
-  (setq-default consult--regexp-compiler #'+consult--orderless-regexp-compiler)
-
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow))))
 
 
+(eval-and-compile (straight-use-package 'embark-consult))
 
-(straight-use-package 'embark-consult)
+(declare-function grep--heading-filter "grep.el")
 
 (with-eval-after-load 'embark-consult
   (require 'grep)
-
   (when (fboundp 'grep--heading-filter)
     (defun +embark-consult-export-grep--headings (&rest _)
       (save-excursion
@@ -672,7 +679,7 @@ value for USE-OVERLAYS."
     (advice-add #'embark-consult-export-grep :after #'+embark-consult-export-grep--headings)))
 
 
-(straight-use-package 'consult-dir)
+(eval-and-compile (straight-use-package 'consult-dir))
 
 (keymap-global-set "C-x C-d" #'consult-dir)
 (keymap-set-many minibuffer-local-map
@@ -680,9 +687,10 @@ value for USE-OVERLAYS."
   "C-x C-j" consult-dir-jump-file)
 
 
-(straight-use-package '(consult-everything
-                        :host github
-                        :repo "jthaman/consult-everything"))
+(eval-and-compile
+  (straight-use-package '(consult-everything
+                          :host github
+                          :repo "jthaman/consult-everything")))
 
 ;;;; windmove
 
@@ -702,7 +710,7 @@ value for USE-OVERLAYS."
 
 ;;;; popper
 
-(straight-use-package 'popper)
+(eval-and-compile (straight-use-package 'popper))
 (autoload 'popper-toggle-type "popper.el" nil t)
 (keymap-global-set-many
   "C-`" popper-toggle
@@ -766,14 +774,14 @@ value for USE-OVERLAYS."
 
 ;;;; apheleia
 
-(straight-use-package 'apheleia)
+(eval-and-compile (straight-use-package 'apheleia))
 (keymap-global-set-many
   "C-x x /" apheleia-format-buffer
   "C-c C-/" apheleia-format-buffer)
 
 ;;;; ws-butler
 
-(straight-use-package 'ws-butler)
+(eval-and-compile (straight-use-package 'ws-butler))
 (add-hook 'find-file-hook #'ws-butler-mode)
 
 ;;;; whitespace
@@ -854,11 +862,12 @@ This is run via ‘dired-initial-position-hook’, which see." )
     (eshell)))
 (keymap-global-set "C-c t e" #'+eshell/here)
 
+(defvar eshell-hist-mode-map)
 (with-eval-after-load 'eshell
-  (setq eshell-scroll-to-bottom-on-input t
-        eshell-history-size 8192
-        eshell-save-history-on-exit t)
-  (add-to-list 'eshell-modules-list 'eshell-tramp)
+  (setopt eshell-scroll-to-bottom-on-input t
+          eshell-history-size 8192
+          eshell-save-history-on-exit t)
+  (setopt eshell-modules-list (seq-union '(eshell-tramp) (symbol-value 'eshell-modules-list)))
   (defun +eshell--capf ()
     (when (fboundp 'cape-history)
       (add-hook 'completion-at-point-functions #'cape-history 50 t)))
@@ -884,7 +893,7 @@ This is run via ‘dired-initial-position-hook’, which see." )
 
 ;;;; outline
 
-(straight-use-package 'outline-minor-faces)
+(eval-and-compile (straight-use-package 'outline-minor-faces))
 (defun +outline-minor-faces ()
   (unless (derived-mode-p 'help-mode)
     (outline-minor-faces-mode)))
@@ -894,7 +903,7 @@ This is run via ‘dired-initial-position-hook’, which see." )
 
 ;;;; adaptive-wrap or visual-wrap
 
-(straight-use-package 'adaptive-wrap)
+(eval-and-compile (straight-use-package 'adaptive-wrap))
 (static-if (locate-library "visual-wrap")
     (add-hook 'visual-line-mode-hook #'visual-wrap-prefix-mode)
   (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode))
@@ -903,7 +912,7 @@ This is run via ‘dired-initial-position-hook’, which see." )
 
 ;;;; hl-todo
 
-(straight-use-package 'hl-todo)
+(eval-and-compile (straight-use-package 'hl-todo))
 (keymap-global-set-many
   "C-c T t" hl-todo-mode
   "C-c t [" hl-todo-previous
@@ -935,12 +944,12 @@ This is run via ‘dired-initial-position-hook’, which see." )
 
 ;;;; eglot
 
-(straight-use-package 'eglot)
-(straight-use-package 'eglot-tempel)
+(eval-and-compile (straight-use-package 'eglot))
+(eval-and-compile (straight-use-package 'eglot-tempel))
 
 (with-eval-after-load 'eglot
-  (setq eglot-autoshutdown t
-        eglot-extend-to-xref t)
+  (setopt eglot-autoshutdown t
+          eglot-extend-to-xref t)
   (when (foundp 'cape-wrap-buster)
     (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
   (eglot-tempel-mode)
@@ -979,7 +988,7 @@ Otherwise use `consult-xref'."
 
 ;;;; ctags
 
-(straight-use-package 'transient)
+(eval-and-compile (straight-use-package 'transient))
 (autoload 'ctags-menu "ctags-menu" nil t)
 (keymap-global-set "C-c t m" #'ctags-menu)
 
@@ -1007,7 +1016,7 @@ Otherwise use `consult-xref'."
 
 ;;;; devdocs
 
-(straight-use-package 'devdocs)
+(eval-and-compile (straight-use-package 'devdocs))
 (keymap-global-set-many
   "C-c d d" devdocs-lookup
   "C-c d i" devdocs-install
@@ -1041,24 +1050,24 @@ Otherwise use `consult-xref'."
 
 ;;;; sly
 
-(straight-use-package 'sly)
+(eval-and-compile (straight-use-package 'sly))
 
 ;;;; geiser
 
-(straight-use-package 'geiser)
-(straight-use-package 'geiser-chez)
-(straight-use-package 'geiser-chicken)
-(straight-use-package 'geiser-guile)
+(eval-and-compile (straight-use-package 'geiser))
+(eval-and-compile (straight-use-package 'geiser-chez))
+(eval-and-compile (straight-use-package 'geiser-chicken))
+(eval-and-compile (straight-use-package 'geiser-guile))
 
 ;;;; paren-face
 
-(straight-use-package 'paren-face)
+(eval-and-compile (straight-use-package 'paren-face))
 (add-hook 'lisp-data-mode-hook #'paren-face-mode)
 (add-hook 'scheme-mode-hook #'paren-face-mode)
 
 ;;;; puni
 
-(straight-use-package 'puni)
+(eval-and-compile (straight-use-package 'puni))
 (add-hook 'prog-mode-hook #'puni-mode)
 (add-hook 'conf-mode-hook #'puni-mode)
 (add-hook 'puni-mode-hook #'electric-pair-local-mode)
@@ -1135,11 +1144,11 @@ Display the result in a posframe." t)
     (add-hook 'flymake-diagnostics-functions #'flymake-clang-tidy nil t))
   (add-hook 'c-mode-common-hook '+cc-mode--hook))
 
-(straight-use-package 'vala-mode)
+(eval-and-compile (straight-use-package 'vala-mode))
 
 ;;;; rust-mode
 
-(straight-use-package 'rust-mode)
+(eval-and-compile (straight-use-package 'rust-mode))
 (with-eval-after-load 'rust-mode
   (define-advice rust--compile (:around (&rest args) project-prefix-buffer-name)
     (let ((compilation-buffer-name-function #'project-prefixed-buffer-name))
@@ -1147,8 +1156,8 @@ Display the result in a posframe." t)
 
 ;;;; ruby
 
-(straight-use-package 'ruby-mode)
-(straight-use-package 'inf-ruby)
+(eval-and-compile (straight-use-package 'ruby-mode))
+(eval-and-compile (straight-use-package 'inf-ruby))
 
 ;;;; sh-script
 
@@ -1186,16 +1195,19 @@ Display the result in a posframe." t)
 
 ;;;; buffer-env
 
-(straight-use-package 'buffer-env)
+(eval-and-compile (straight-use-package 'buffer-env))
 (dolist (hook '(hook-local-variables-hook comint-mode-hook))
   (add-hook hook #'buffer-env-update))
+(defvar buffer-env--cache)
+(defun +buffer-env/clear-cache ()
+  "Clear buffer-env cache."
+  (interactive)
+  (clrhash buffer-env--cache))
 (with-eval-after-load 'buffer-env
-  (add-to-list 'buffer-env-command-alist '("/\\.nvmrc\\'" . "~/.nvm/nvm-exec env -0"))
-  (setq buffer-env-script-name '(".envrc" ".nvmrc" ".env"))
-  (defun +buffer-env/clear-cache ()
-    "Clear buffer-env cache."
-    (interactive)
-    (clrhash buffer-env--cache)))
+  (setopt buffer-env-command-alist
+          (seq-union '("/\\.nvmrc\\'" . "~/.nvm/nvm-exec env -0")
+                     (symbol-value 'buffer-env-command-alist)))
+  (setopt buffer-env-script-name '(".envrc" ".nvmrc" ".env")))
 
 ;;;; vc
 
@@ -1212,7 +1224,7 @@ Display the result in a posframe." t)
 
 ;;;; magit
 
-(straight-use-package 'magit)
+(eval-and-compile (straight-use-package 'magit))
 (keymap-global-set-many
   "C-x g" magit-status
   "C-x M-g" magit-dispatch
@@ -1221,19 +1233,20 @@ Display the result in a posframe." t)
 (with-eval-after-load 'project
   (when (consp project-switch-commands)
     (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)))
+(defvar magit-credential-cache-daemon-process)
+(defun +magit--ccdp-no-query ()
+  "Avoid query process status on exit."
+  (when magit-credential-cache-daemon-process
+    (set-process-query-on-exit-flag
+     magit-credential-cache-daemon-process nil)))
 (with-eval-after-load 'magit
-  (defun +magit--ccdp-no-query ()
-    "Avoid query process status on exit."
-    (when magit-credential-cache-daemon-process
-      (set-process-query-on-exit-flag
-       magit-credential-cache-daemon-process nil)))
   (advice-add #'magit-maybe-start-credential-cache-daemon :after '+magit--ccdp-no-query)
-  (setq magit-wip-mode-lighter "")
+  (setopt magit-wip-mode-lighter "")
   (magit-wip-mode))
 
 ;;;; diff-hl
 
-(straight-use-package 'diff-hl)
+(eval-and-compile (straight-use-package 'diff-hl))
 (setq diff-hl-update-async t)
 (autoload 'diff-hl-magit-post-refresh "diff-hl.el")
 (add-hook 'tty-setup-hook #'diff-hl-margin-mode)
@@ -1243,14 +1256,15 @@ Display the result in a posframe." t)
 
 ;;;; eldoc-diffstat
 
-(straight-use-package
- '(eldoc-diffstat :host github :repo "kljohann/eldoc-diffstat"))
+(eval-and-compile
+  (straight-use-package
+   '(eldoc-diffstat :host github :repo "kljohann/eldoc-diffstat")))
 (add-hook 'magit-mode-hook #'eldoc-diffstat-mode)
 (add-hook 'magit-blame-mode-hook #'eldoc-diffstat-mode)
 (add-hook 'vc-annotate-mode-hook #'eldoc-diffstat-mode)
 
 ;;;; eat
-(straight-use-package `(eat :files (,@straight-default-files-directive "integration" "term" "terminfo")))
+(eval-and-compile (straight-use-package `(eat :files (,@straight-default-files-directive "integration" "term" "terminfo"))))
 (setq eat-semi-char-non-bound-keys
       '(;; default non-bound keys
         [?\C-x] [?\C-\\] [?\C-q] [?\C-g] [?\C-h] [?\e ?\C-c] [?\C-u]
@@ -1313,8 +1327,9 @@ minibuffer."
          (eat-buffer-name (concat "*" dir " : eat*")))
       (eat nil nil))))
 (keymap-global-set "C-c t s" '+eat/here)
+(defvar eat-terminal)
 (with-eval-after-load 'eat
-  (setq eat-kill-buffer-on-exit t)
+  (setopt eat-kill-buffer-on-exit t)
   (defun eat-send-pass nil
     (interactive)
     (if eat-terminal nil
@@ -1328,7 +1343,7 @@ minibuffer."
 
 ;;;; with-editor
 
-(straight-use-package 'with-editor)
+(eval-and-compile (straight-use-package 'with-editor))
 (keymap-global-set "<remap> <async-shell-command>" #'with-editor-async-shell-command)
 (keymap-global-set "<remap> <shell-command>" #'with-editor-shell-command)
 (add-hook 'eshell-mode-hook #'with-editor-export-editor)
@@ -1354,8 +1369,8 @@ minibuffer."
 (add-hook 'eat-exec-hook '+with-editor--export-editor-to-eat)
 
 ;;;; pyim
-(straight-use-package 'pyim)
-(straight-use-package 'pyim-basedict)
+(eval-and-compile (straight-use-package 'pyim))
+(eval-and-compile (straight-use-package 'pyim-basedict))
 (with-eval-after-load 'orderless
   (defun +orderless-pinyin (component)
     (require 'pyim)
@@ -1379,7 +1394,7 @@ minibuffer."
 
 ;;;; rime
 
-(straight-use-package 'rime)
+(eval-and-compile (straight-use-package 'rime))
 (setq rime-disable-predicates '(meow-normal-mode-p
                                 meow-keypad-mode-p
                                 meow-motion-mode-p
@@ -1393,7 +1408,7 @@ minibuffer."
 
 ;;;; term-keys
 
-(straight-use-package '(term-keys :host github :repo "CyberShadow/term-keys"))
+(eval-and-compile (straight-use-package '(term-keys :host github :repo "CyberShadow/term-keys")))
 
 (setq term-keys/prefix "\033\035")    ; ^[^]
 
@@ -1448,7 +1463,7 @@ minibuffer."
 
 ;;;; clipetty
 
-(straight-use-package 'clipetty)
+(eval-and-compile (straight-use-package 'clipetty))
 (add-hook 'tty-setup-hook #'clipetty-mode)
 (with-eval-after-load 'clipetty
   (global-clipetty-mode))
@@ -1478,12 +1493,12 @@ minibuffer."
 (with-eval-after-load 'auth-source
   (auth-source-pass-enable))
 
-(straight-use-package 'password-store)
-(straight-use-package 'pass)
+(eval-and-compile (straight-use-package 'password-store))
+(eval-and-compile (straight-use-package 'pass))
 
 ;;;; lin
 
-(straight-use-package 'lin)
+(eval-and-compile (straight-use-package 'lin))
 (setq lin-mode-hooks
       '( gnus-group-mode-hook gnus-server-mode-hook
          gnus-summary-mode-hook mu4e-main-mode-hook magit-mode-hook
@@ -1500,7 +1515,7 @@ minibuffer."
 (dolist (hook lin-mode-hooks)
   (add-hook hook #'lin-mode))
 (with-eval-after-load 'lin
-  (setq lin-face 'lin-magenta)
+  (setopt lin-face 'lin-magenta)
   (lin-global-mode)
 
   (defun +lin-line--next-error-h ()
@@ -1509,7 +1524,7 @@ minibuffer."
         (when-let* ((win (get-buffer-window (current-buffer))))
           (select-window win)
           (recenter))
-        (when lin-mode
+        (when (symbol-value 'lin-mode)
           (hl-line-highlight)))))
   (add-hook 'next-error-hook '+lin-line--next-error-h)
 
@@ -1560,7 +1575,7 @@ minibuffer."
 
 ;;;; deadgrep
 
-(straight-use-package 'deadgrep)
+(eval-and-compile (straight-use-package 'deadgrep))
 (keymap-global-set "C-c s" #'deadgrep)
 
 ;;;; gptel
@@ -1569,16 +1584,18 @@ minibuffer."
   "C-c t A" gptel
   "C-c t a" gptel-send)
 
-(straight-use-package
- '(gptel-quick :host github :repo "karthink/gptel-quick"))
+(eval-and-compile
+  (straight-use-package
+   '(gptel-quick :host github :repo "karthink/gptel-quick")))
 
+(defvar embark-general-map)
 (with-eval-after-load 'embark
   (keymap-set embark-general-map "?" #'gptel-quick))
 
 ;;;; logos
 
-(straight-use-package 'logos)
-(straight-use-package 'olivetti)
+(eval-and-compile (straight-use-package 'logos))
+(eval-and-compile (straight-use-package 'olivetti))
 
 (keymap-global-set-many
   "<f8>" logos-focus-mode
@@ -1586,12 +1603,14 @@ minibuffer."
   "<remap> <forward-page>" logos-forward-page-dwim
   "<remap> <backward-page>" logos-backward-page-dwim)
 
+(defvar logos-focus-mode-map)
+(defvar logos-page-delimiter)
 (with-eval-after-load 'logos
   (keymap-set-many logos-focus-mode-map
     "<left>" logos-backward-page-dwim
     "<right>" logos-forward-page-dwim)
 
-  (setq logos-outlines-are-pages t)
+  (setopt logos-outlines-are-pages t)
   (setq-default logos-hide-cursor nil
                 logos-hide-mode-line t
                 logos-hide-header-line t
@@ -1602,7 +1621,7 @@ minibuffer."
                 logos-olivetti t)
 
   (defun logos-focus--narrow ()
-    (when logos-focus-mode
+    (when (symbol-value 'logos-focus-mode)
       (logos--narrow-to-page 0)
       (make-local-variable 'logos--restore)
       (push #'widen logos--restore)))
@@ -1611,9 +1630,9 @@ minibuffer."
 
   (add-hook 'enable-theme-functions #'logos-update-fringe-in-buffers)
 
-  (setq logos-outline-regexp-alist
-        `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos-page-delimiter))
-          (org-mode . ,(format "\\(^\\*+ +\\|^-\\{5\\}$\\|%s\\)" logos-page-delimiter)))))
+  (setopt logos-outline-regexp-alist
+          `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos-page-delimiter))
+            (org-mode . ,(format "\\(^\\*+ +\\|^-\\{5\\}$\\|%s\\)" logos-page-delimiter)))))
 
 ;;;; eww
 
@@ -1666,8 +1685,8 @@ minibuffer."
 
 ;;;; org
 
-(straight-use-package 'org)
-(straight-use-package 'org-modern)
+(eval-and-compile (straight-use-package 'org))
+(eval-and-compile (straight-use-package 'org-modern))
 
 (keymap-global-set-many
   "C-c L" org-store-link
@@ -1696,6 +1715,7 @@ minibuffer."
         (tags   . " %i %-12:c")
         (search . " %i %-12:c")))
 
+(defvar org-capture-templates)
 (with-eval-after-load 'org-capture
   (add-to-list 'org-capture-templates
                `("i" "Inbox" entry (file "inbox.org")
@@ -1719,8 +1739,10 @@ minibuffer."
 
 ;;;; erc
 
-(straight-use-package 'erc)
+(eval-and-compile (straight-use-package 'erc))
 
+(defvar erc-modules)
+(defvar erc-mode-map)
 (with-eval-after-load 'erc
   ;; This enables displaying servers and channels in side windows,
   ;; which can be toggled by C-x w s.
@@ -1752,11 +1774,14 @@ minibuffer."
 ;; prefer one message line without continuation indicators.
 (setq erc-fill-function #'erc-fill-wrap
       erc-fill-static-center 18)
+(defvar erc-fill-wrap-mode-map)
 (with-eval-after-load 'erc-fill
+  (require 'erc-fill)
   (keymap-set-many erc-fill-wrap-mode-map
     "C-c =" erc-fill-wrap-nudge))
 
 ;; prevent JOINs and PARTs from lighting up the mode-line.
+(defvar erc-track-faces-priority-list)
 (with-eval-after-load 'erc-track
   (setopt erc-track-faces-priority-list (remq 'erc-notice-face
 					      erc-track-faces-priority-list)))
@@ -1768,39 +1793,47 @@ minibuffer."
 
 ;;;; copilot
 
-(straight-use-package 'copilot)
-(with-eval-after-load 'copilot 
+(eval-and-compile (straight-use-package 'copilot))
+(defvar copilot-mode-map)
+(with-eval-after-load 'copilot
+  (require 'copilot)
   (keymap-set-many copilot-mode-map
     "<tab>" copilot-accept-completion
     "C-<tab>" copilot-accept-completion-by-word))
 
 ;;;; browser-hist
 
-(straight-use-package 'browser-hist)
+(eval-and-compile (straight-use-package 'browser-hist))
 (keymap-global-set "M-s b" #'browser-hist-search)
+(defvar browser-hist-db-paths)
+(defvar browser-hist--db-fields)
 (with-eval-after-load 'browser-hist
   (setf (alist-get 'zen browser-hist-db-paths nil t)
         (cond ((memq system-type '(cygwin windows-nt ms-dos))
                "$APPDATA/zen/Profiles/*/places.sqlite")))
   (setf (alist-get 'zen browser-hist--db-fields)
         '("title" "url" "moz_places" "ORDER BY last_visit_date desc"))
-  (setq browser-hist-default-browser 'zen))
+  (setopt browser-hist-default-browser 'zen))
 
 ;;;; vundo
 
-(straight-use-package 'vundo)
+(eval-and-compile (straight-use-package 'vundo))
 (keymap-global-set "C-c T u" #'vundo)
 (with-eval-after-load 'vundo
-  (setq vundo-glyph-alist vundo-unicode-symbols))
+  (setopt vundo-glyph-alist vundo-unicode-symbols))
 
 ;;;; debian
 
-(straight-use-package 'debian-el)
-(straight-use-package 'dpkg-dev-el)
+(eval-and-compile (straight-use-package 'debian-el))
+(eval-and-compile (straight-use-package 'dpkg-dev-el))
 
 ;;;; markdown
 
-(straight-use-package 'markdown-mode)
+(eval-and-compile (straight-use-package 'markdown-mode))
+(defvar markdown-mode-map)
+(defvar markdown-view-mode-map)
+(defvar gfm-mode-map)
+(defvar gfm-view-mode-map)
 (with-eval-after-load 'markdown-mode
   (keymap-set markdown-mode-map "C-x C-q" #'markdown-view-mode)
   (keymap-set markdown-view-mode-map "C-x C-q" #'markdown-mode)
@@ -1809,7 +1842,7 @@ minibuffer."
 
 ;;;; p-search
 
-(straight-use-package '(p-search :host github :repo "zkry/p-search"))
+(eval-and-compile (straight-use-package '(p-search :host github :repo "zkry/p-search")))
 (with-eval-after-load 'p-search
   (require 'psx-info))
 (autoload 'p-search "p-search" nil t)
@@ -1834,14 +1867,14 @@ minibuffer."
 (autoload 'sftp "sftp" nil t)
 
 ;;;; other packages
-(straight-use-package 'yaml-mode)
-(straight-use-package 'toml-mode)
-(straight-use-package 'colorful-mode)
-(straight-use-package 'autocrypt)
-(straight-use-package '(cmake-mode :host github :repo "emacsmirror/cmake-mode" :files ("*.el")))
-(straight-use-package 'systemd)
-(straight-use-package 'colorful-mode)
-(straight-use-package 'show-font)
+(eval-and-compile (straight-use-package 'yaml-mode))
+(eval-and-compile (straight-use-package 'toml-mode))
+(eval-and-compile (straight-use-package 'colorful-mode))
+(eval-and-compile (straight-use-package 'autocrypt))
+(eval-and-compile (straight-use-package '(cmake-mode :host github :repo "emacsmirror/cmake-mode" :files ("*.el"))))
+(eval-and-compile (straight-use-package 'systemd))
+(eval-and-compile (straight-use-package 'colorful-mode))
+(eval-and-compile (straight-use-package 'show-font))
 
 
 (defun find-early-init-file ()
