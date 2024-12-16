@@ -102,9 +102,9 @@
 
 (setq confirm-kill-emacs 'y-or-n-p)
 (setq version-control t
-        delete-old-versions t
-        kept-old-versions 9
-        kept-new-versions 9)
+      delete-old-versions t
+      kept-old-versions 9
+      kept-new-versions 9)
 
 ;;;; modus-theme
 
