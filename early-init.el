@@ -65,126 +65,104 @@
 
 (setq straight-current-profile 'dotemacs)
 
-;;;; setup
-
-(straight-use-package 'setup)
-(require 'setup)
-
-(setup-define :straight
-  (lambda (package)
-    `(straight-use-package ',package))
-  :documentation "Install PACKAGE with `straight'.
-The first PACKAGE can be used to deduce the feature context."
-  :repeatable t
-  :shorthand (lambda (package) (or (car-safe (cadr package)) (cadr package))))
-
-;;;; delight
-(setup (:straight delight)
-  (setup-define :delight
-    (lambda (&optional spec value)
-      `(delight ',(or spec (setup-get 'mode)) ,value t))
-    :after-loaded t
-    :documentation "Hide the mode lighter."))
-
-;;;; emacs core
-
-(setup emacs
-  (setq gc-cons-threshold 25600000)
-  (setq read-process-output-max (* 256 1024))
-  (setq-default cursor-in-non-selected-windows nil)
-  (setq highlight-nonselected-windows nil)
-  (setq inhibit-compacting-font-caches t)
-  (setq use-file-dialog nil)
-  (setq system-time-locale "C")
-  (setq bidi-paragraph-direction 'left-to-right
-        bidi-inhibit-bpa t)
-
-  ;; workaround WSL wayland clipboard issue
-  (setq select-active-regions 'only)
-
-  (setq menu-bar-mode nil)
-  (setq tool-bar-mode nil)
-
-  (setq inhibit-default-init t
-        inhibit-splash-screen t)
-
-  (setq default-frame-alist `((vertical-scroll-bars . nil)
-                              (horizontal-scroll-bars . nil)
-                              (font . "Iosevka SS04-14")
-                              (width . 157)
-                              (height . 38)
-                              (alpha-background . 80))))
-
-(setup files
-  (setq confirm-kill-emacs 'y-or-n-p)
-  (setq version-control t
-        delete-old-versions t
-        kept-old-versions 9
-        kept-new-versions 9))
-
-;;;; modus-theme
-
-(straight-use-package 'modus-themes)
-(setup modus-themes
-  (:global "<f9>" modus-themes-toggle)
-  (:when-loaded
-    (setq modus-themes-to-toggle '(modus-vivendi modus-operandi))
-    (setq modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
-    (setq modus-themes-mixed-fonts t
-          modus-themes-bold-constructs t
-          modus-themes-slanted-constructs t
-          modus-themes-variable-pitch-ui t)))
-
-;;;; doom-modeline
-(setup (:straight doom-modeline)
-  (doom-modeline-mode))
-
-;;;; libraries
-(straight-use-package 's)
-(straight-use-package 'f)
-(setup (:straight dash)
-  (:when-loaded
-    (global-dash-fontify-mode)
-    (eval-after-load 'info-look #'dash-register-info-lookup)))
-(straight-use-package 'transducers)
-(setup (:straight anaphora)
-  (:when-loaded
-    (:with-feature lisp-mode
-      (:when-loaded
-        (anaphora-install-font-lock-keywords)))))
-
-;;;; site-lisp
+;;;; site lisp
 
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp/tui"))
 
+;;;; emacs core
+
+(setq gc-cons-threshold 25600000)
+(setq read-process-output-max (* 256 1024))
+(setq-default cursor-in-non-selected-windows nil)
+(setq highlight-nonselected-windows nil)
+(setq inhibit-compacting-font-caches t)
+(setq use-file-dialog nil)
+(setq system-time-locale "C")
+(setq bidi-paragraph-direction 'left-to-right
+      bidi-inhibit-bpa t)
+
+;; workaround WSL wayland clipboard issue
+(setq select-active-regions nil)
+
+(setq menu-bar-mode nil)
+(setq tool-bar-mode nil)
+
+(setq inhibit-default-init t
+      inhibit-splash-screen t)
+
+(setq default-frame-alist `((vertical-scroll-bars . nil)
+                            (horizontal-scroll-bars . nil)
+                            (font . "Iosevka SS04-14")
+                            (width . 157)
+                            (height . 38)
+                            (alpha-background . 80)))
+
+;;;; files
+
+(setq confirm-kill-emacs 'y-or-n-p)
+(setq version-control t
+        delete-old-versions t
+        kept-old-versions 9
+        kept-new-versions 9)
+
+;;;; modus-theme
+
+(straight-use-package 'modus-themes)
+(with-eval-after-load 'modus-themes
+  (setq modus-themes-to-toggle '(modus-vivendi modus-operandi))
+  (setq modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
+  (setq modus-themes-mixed-fonts t
+        modus-themes-bold-constructs t
+        modus-themes-slanted-constructs t
+        modus-themes-variable-pitch-ui t))
+
+;;;; doom-modeline
+
+(straight-use-package 'doom-modeline)
+(doom-modeline-mode)
+
+;;;; libraries
+(straight-use-package 's)
+(straight-use-package 'f)
+(straight-use-package 'dash)
+(with-eval-after-load 'dash
+  (global-dash-fontify-mode))
+(with-eval-after-load 'info-look
+  (dash-register-info-lookup))
+(straight-use-package 'transducers)
+(straight-use-package 'anaphora)
+(declare-function anaphora-install-font-lock-keywords "anaphora")
+(with-eval-after-load 'anaphora
+  (with-eval-after-load 'lisp-mode
+    (anaphora-install-font-lock-keywords)))
+
 ;;;; custom
 
-(setup custom
-  (defun +custom-faces (&optional theme)
-    (unless (eq theme 'user)
-      (setq pp-posframe-parameters `( :border-color ,(face-background 'border nil '(shadow))
-                                      :background-color ,(face-background 'default nil '(shadow))))
-      (let ((c '((class color) (min-colors 256)))
-            (bg-color (frame-parameter nil 'background-color))
-            (fg-color (frame-parameter nil 'foreground-color))
-            (shadow-color (face-foreground 'shadow)))
-        (custom-set-faces
-         `(fill-column-indicator ((,c :height 1.0 :foreground ,shadow-color :background unspecified)))
-         `(parenthesis ((,c :foreground ,shadow-color)))
-         `(mode-line-active ((,c :background ,bg-color :overline ,fg-color
-                                 :box (:line-width 6 :color ,bg-color :style nil))))
-         `(mode-line-inactive ((,c :background ,bg-color :overline ,shadow-color
-                                   :box (:line-width 6 :color ,bg-color :style nil))))))))
-  (add-hook 'enable-theme-functions #'+custom-faces t)
-  (setq custom-file (locate-user-emacs-file "custom.el"))
-  (when (file-exists-p custom-file)
-    (let ((straight-current-profile 'custom))
-      (load custom-file nil t)))
-  (unless custom-enabled-themes
-    (require 'modus-themes)
-    (modus-themes-load-theme (car modus-themes-to-toggle)))
-  (eval-after-load 'init #'+custom-faces))
+(defun +custom-faces (&optional theme)
+  (unless (eq theme 'user)
+    (setq pp-posframe-parameters `( :border-color ,(face-background 'border nil '(shadow))
+                                    :background-color ,(face-background 'default nil '(shadow))))
+    (let ((c '((class color) (min-colors 256)))
+          (bg-color (frame-parameter nil 'background-color))
+          (fg-color (frame-parameter nil 'foreground-color))
+          (shadow-color (face-foreground 'shadow)))
+      (custom-set-faces
+       `(fill-column-indicator ((,c :height 1.0 :foreground ,shadow-color :background unspecified)))
+       `(parenthesis ((,c :foreground ,shadow-color)))
+       `(mode-line-active ((,c :background ,bg-color :overline ,fg-color
+                               :box (:line-width 6 :color ,bg-color :style nil))))
+       `(mode-line-inactive ((,c :background ,bg-color :overline ,shadow-color
+                                 :box (:line-width 6 :color ,bg-color :style nil))))))))
+(add-hook 'enable-theme-functions #'+custom-faces t)
+(setq custom-file (locate-user-emacs-file "custom.el"))
+(when (file-exists-p custom-file)
+  (let ((straight-current-profile 'custom))
+    (load custom-file nil t)))
+(unless custom-enabled-themes
+  (require 'modus-themes)
+  (modus-themes-load-theme (car modus-themes-to-toggle)))
+(eval-after-load 'init #'+custom-faces)
 
 
 ;;;; post-early-init

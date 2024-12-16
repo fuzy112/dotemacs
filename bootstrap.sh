@@ -9,4 +9,6 @@ find -name "*.elc" -delete
 rm -f package-quickstart.el
 rm -f site-lisp-quickstart.el
 
-emacs -batch -l early-init.el -l init.el -e straight-thaw-versions
+emacs -batch -l early-init.el -l init.el \
+      -e straight-thaw-versions \
+      -e straight-check-all

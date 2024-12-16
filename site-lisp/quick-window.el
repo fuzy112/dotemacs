@@ -20,6 +20,11 @@
   "Letters used jump to windows."
   :type 'string)
 
+(defface quick-window-label
+  '((((class color) (min-colors 256)) :foreground "white" :background "red" :weight bold)
+    (t :inherit highlight))
+  "Face used to display window labels.")
+
 (defun quick-window--before-p (w1 w2)
   (pcase-let ((`(,left-1 ,top-1 . ,_) (window-edges w1))
 	      (`(,left-2 ,top-2 . ,_) (window-edges w2)))
@@ -31,7 +36,7 @@
 (defun quick-window-jump ()
   "Quickly jump to a window by assigned character labels."
   (interactive)
-  (let ((windows (window-list nil 'no-minibuffer)))
+  (let ((windows (window-list)))
     (if (length< windows 3)
 	(cl-loop for win in windows
 		 with current-win = (selected-window)
@@ -49,9 +54,7 @@
 		       do (push ov overlays)
 		       do (overlay-put ov 'after-string
 				       (propertize (format "[%c]" letter)
-						   'face '( :foreground "white"
-							    :background "blue"
-							    :weight bold)))
+						   'face 'quick-window-label))
 		       do (overlay-put ov 'window win))
 	      (let ((key (read-key "Jump to window: ")))
 		(when-let ((win (plist-get window-map key #'eql)))
