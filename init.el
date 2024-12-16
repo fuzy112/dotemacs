@@ -1251,6 +1251,38 @@ Display the result in a posframe." t)
 
 ;;;; eat
 (straight-use-package `(eat :files (,@straight-default-files-directive "integration" "term" "terminfo")))
+(setq eat-semi-char-non-bound-keys
+      '(;; default non-bound keys
+        [?\C-x] [?\C-\\] [?\C-q] [?\C-g] [?\C-h] [?\e ?\C-c] [?\C-u]
+        [?\e ?x] [?\e ?:] [?\e ?!] [?\e ?&]
+        [C-insert] [M-insert] [S-insert] [C-M-insert]
+        [C-S-insert] [M-S-insert] [C-M-S-insert]
+        [C-delete] [M-delete] [S-delete] [C-M-delete]
+        [C-S-delete] [M-S-delete] [C-M-S-delete]
+        [C-deletechar] [M-deletechar]
+        [S-deletechar] [C-M-deletechar] [C-S-deletechar]
+        [M-S-deletechar] [C-M-S-deletechar]
+        [C-up] [C-down] [C-right] [C-left]
+        [M-up] [M-down] [M-right] [M-left]
+        [S-up] [S-down] [S-right] [S-left]
+        [C-M-up] [C-M-down] [C-M-right] [C-M-left]
+        [C-S-up] [C-S-down] [C-S-right] [C-S-left]
+        [M-S-up] [M-S-down] [M-S-right] [M-S-left]
+        [C-M-S-up] [C-M-S-down] [C-M-S-right] [C-M-S-left]
+        [C-home] [M-home] [S-home] [C-M-home] [C-S-home]
+        [M-S-home] [C-M-S-home]
+        [C-end] [M-end] [S-end] [C-M-end] [C-S-end]
+        [M-S-end] [C-M-S-end]
+        [C-prior] [M-prior] [S-prior] [C-M-prior]
+        [C-S-prior] [M-S-prior] [C-M-S-prior]
+        [C-next] [M-next] [S-next] [C-M-next] [C-S-next]
+        [M-S-next] [C-M-S-next]
+
+        ;; term-keys
+        [?\e ?\C-\]]
+
+        ;; quick-window-jump
+        [?\e ?o]))
 (add-hook 'eshell-load-hook #'eat-eshell-mode)
 (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
 (keymap-global-set "C-x p s" #'eat-project)
