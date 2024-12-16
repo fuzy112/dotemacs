@@ -1247,6 +1247,7 @@ Display the result in a posframe." t)
 ;;;; diff-hl
 
 (straight-use-package 'diff-hl)
+(setq diff-hl-update-async t)
 (autoload 'diff-hl-magit-post-refresh "diff-hl.el")
 (add-hook 'tty-setup-hook #'diff-hl-margin-mode)
 (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
