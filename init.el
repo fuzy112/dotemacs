@@ -64,75 +64,78 @@
 ;;;; meow-edit
 
 (require 'meow)
-(setq meow-keypad-leader-dispatch "C-c")
-(setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
-(meow-leader-define-key
- '("1" . meow-digit-argument)
- '("2" . meow-digit-argument)
- '("3" . meow-digit-argument)
- '("4" . meow-digit-argument)
- '("5" . meow-digit-argument)
- '("6" . meow-digit-argument)
- '("7" . meow-digit-argument)
- '("8" . meow-digit-argument)
- '("9" . meow-digit-argument)
- '("0" . meow-digit-argument)
- '("/" . meow-keypad-describe-key)
- '("?" . meow-cheatsheet))
-(meow-motion-overwrite-define-key '("<escape>" . ignore))
-(meow-normal-define-key
- '("0" . meow-expand-0)
- '("9" . meow-expand-9)
- '("8" . meow-expand-8)
- '("7" . meow-expand-7)
- '("6" . meow-expand-6)
- '("5" . meow-expand-5)
- '("4" . meow-expand-4)
- '("3" . meow-expand-3)
- '("2" . meow-expand-2)
- '("1" . meow-expand-1)
- '("-" . negative-argument)
- '(";" . meow-reverse)
- '("," . meow-inner-of-thing)
- '("." . meow-bounds-of-thing)
- '("<" . meow-beginning-of-thing)
- '(">" . meow-end-of-thing)
- '("a" . meow-append)
- '("A" . meow-open-below)
- '("b" . meow-back-word)
- '("B" . meow-back-symbol)
- '("c" . meow-change) '("d" . meow-delete)
- '("D" . meow-backward-delete)
- '("e" . meow-line) '("E" . meow-goto-line)
- '("f" . meow-find)
- '("g" . meow-cancel-selection)
- '("G" . meow-grab) '("h" . meow-left)
- '("H" . meow-left-expand)
- '("i" . meow-insert)
- '("I" . meow-open-above) '("j" . meow-join)
- '("k" . meow-kill) '("l" . meow-till)
- '("m" . meow-mark-word)
- '("M" . meow-mark-symbol) '("n" . meow-next)
- '("N" . meow-next-expand)
- '("o" . meow-block) '("O" . meow-to-block)
- '("p" . meow-prev) '("P" . meow-prev-expand)
- '("q" . meow-quit) '("Q" . meow-goto-line)
- '("r" . meow-replace)
- '("R" . meow-swap-grab) '("s" . meow-search)
- '("t" . meow-right)
- '("T" . meow-right-expand)
- '("u" . meow-undo)
- '("U" . meow-undo-in-selection)
- '("v" . meow-visit) '("w" . meow-next-word)
- '("W" . meow-next-symbol) '("x" . meow-save)
- '("X" . meow-sync-grab) '("y" . meow-yank)
- '("z" . meow-pop-selection) '("'" . repeat)
- '("<escape>" . ignore)
- '("(" . meow-backward-slurp)
- '(")" . meow-forward-slurp)
- '("{" . meow-backward-barf)
- '("}" . meow-forward-barf))
 
+(defun meow-setup ()
+  (setq meow-keypad-leader-dispatch "C-c")
+  (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
+  (meow-leader-define-key
+   '("1" . meow-digit-argument)
+   '("2" . meow-digit-argument)
+   '("3" . meow-digit-argument)
+   '("4" . meow-digit-argument)
+   '("5" . meow-digit-argument)
+   '("6" . meow-digit-argument)
+   '("7" . meow-digit-argument)
+   '("8" . meow-digit-argument)
+   '("9" . meow-digit-argument)
+   '("0" . meow-digit-argument)
+   '("/" . meow-keypad-describe-key)
+   '("?" . meow-cheatsheet))
+  (meow-motion-overwrite-define-key '("<escape>" . ignore))
+  (meow-normal-define-key
+   '("0" . meow-expand-0)
+   '("9" . meow-expand-9)
+   '("8" . meow-expand-8)
+   '("7" . meow-expand-7)
+   '("6" . meow-expand-6)
+   '("5" . meow-expand-5)
+   '("4" . meow-expand-4)
+   '("3" . meow-expand-3)
+   '("2" . meow-expand-2)
+   '("1" . meow-expand-1)
+   '("-" . negative-argument)
+   '(";" . meow-reverse)
+   '("," . meow-inner-of-thing)
+   '("." . meow-bounds-of-thing)
+   '("<" . meow-beginning-of-thing)
+   '(">" . meow-end-of-thing)
+   '("a" . meow-append)
+   '("A" . meow-open-below)
+   '("b" . meow-back-word)
+   '("B" . meow-back-symbol)
+   '("c" . meow-change) '("d" . meow-delete)
+   '("D" . meow-backward-delete)
+   '("e" . meow-line) '("E" . meow-goto-line)
+   '("f" . meow-find)
+   '("g" . meow-cancel-selection)
+   '("G" . meow-grab) '("h" . meow-left)
+   '("H" . meow-left-expand)
+   '("i" . meow-insert)
+   '("I" . meow-open-above) '("j" . meow-join)
+   '("k" . meow-kill) '("l" . meow-till)
+   '("m" . meow-mark-word)
+   '("M" . meow-mark-symbol) '("n" . meow-next)
+   '("N" . meow-next-expand)
+   '("o" . meow-block) '("O" . meow-to-block)
+   '("p" . meow-prev) '("P" . meow-prev-expand)
+   '("q" . meow-quit) '("Q" . meow-goto-line)
+   '("r" . meow-replace)
+   '("R" . meow-swap-grab) '("s" . meow-search)
+   '("t" . meow-right)
+   '("T" . meow-right-expand)
+   '("u" . meow-undo)
+   '("U" . meow-undo-in-selection)
+   '("v" . meow-visit) '("w" . meow-next-word)
+   '("W" . meow-next-symbol) '("x" . meow-save)
+   '("X" . meow-sync-grab) '("y" . meow-yank)
+   '("z" . meow-pop-selection) '("'" . repeat)
+   '("<escape>" . ignore)
+   '("(" . meow-backward-slurp)
+   '(")" . meow-forward-slurp)
+   '("{" . meow-backward-barf)
+   '("}" . meow-forward-barf)))
+
+(meow-setup)
 (meow-global-mode)
 
 (when (treesit-available-p)
@@ -255,17 +258,6 @@
                                orderless-literal
                                orderless-regexp)))
 
-(setq completion-styles '(orderless basic))
-(setq completion-category-overrides
-      '((file . ((styles . (basic partial-completion))))
-        (symbol . ((styles . (orderless+flex))))
-        (symbol-help . ((styles . (orderless+flex))))
-        (command . ((styles . (orderless+initialism))))
-        (variable . ((styles . (orderless+initialism))))
-        (eglot . ((styles . (orderless))))
-        (eglot-capf . ((styles . (orderless))))
-        (magit-rev . ((styles . (orderless+flex))))))
-
 (defun +orderless--consult-suffix ()
   "Regexp which matches the end of string with Consult tofu support."
   (if (and (boundp 'consult--tofu-char) (boundp 'consult--tofu-range))
@@ -285,6 +277,16 @@
     `(orderless-regexp . ,(concat "\\." (substring word 1) (+orderless--consult-suffix))))))
 
 (with-eval-after-load 'orderless
+  (setq completion-styles '(orderless basic))
+  (setq completion-category-overrides
+        '((file . ((styles . (basic partial-completion))))
+          (symbol . ((styles . (orderless+flex))))
+          (symbol-help . ((styles . (orderless+flex))))
+          (command . ((styles . (orderless+initialism))))
+          (variable . ((styles . (orderless+initialism))))
+          (eglot . ((styles . (orderless))))
+          (eglot-capf . ((styles . (orderless))))
+          (magit-rev . ((styles . (orderless+flex))))))
   (add-to-list 'orderless-style-dispatchers #'+orderless--consult-dispatch))
 
 ;;;; vertico
@@ -295,13 +297,12 @@
 (advice-add #'completing-read-default :around #'vertico--advice)
 (advice-add #'completing-read-multiple :around #'vertico--advice)
 
-(setq vertico-quick1 "htnsd"
-      vertico-quick2 "ueoai")
-(add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
-(add-hook 'rfn-eshadow-update-overlay #'vertico-directory-tidy)
-
 (with-eval-after-load 'vertico
   (require 'orderless)
+  (setq vertico-quick1 "htnsd"
+        vertico-quick2 "ueoai")
+  (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
+  (add-hook 'rfn-eshadow-update-overlay #'vertico-directory-tidy)
   (vertico-mode)
   (bind-key "M-R" #'vertico-repeat)
   (bind-keys :map vertico-map
@@ -1190,38 +1191,38 @@ Display the result in a posframe." t)
 
 ;;;; eat
 
-(setopt eat-semi-char-non-bound-keys
-        '(;; default non-bound keys
-          [?\C-x] [?\C-\\] [?\C-q] [?\C-g] [?\C-h] [?\e ?\C-c] [?\C-u]
-          [?\e ?x] [?\e ?:] [?\e ?!] [?\e ?&]
-          [C-insert] [M-insert] [S-insert] [C-M-insert]
-          [C-S-insert] [M-S-insert] [C-M-S-insert]
-          [C-delete] [M-delete] [S-delete] [C-M-delete]
-          [C-S-delete] [M-S-delete] [C-M-S-delete]
-          [C-deletechar] [M-deletechar]
-          [S-deletechar] [C-M-deletechar] [C-S-deletechar]
-          [M-S-deletechar] [C-M-S-deletechar]
-          [C-up] [C-down] [C-right] [C-left]
-          [M-up] [M-down] [M-right] [M-left]
-          [S-up] [S-down] [S-right] [S-left]
-          [C-M-up] [C-M-down] [C-M-right] [C-M-left]
-          [C-S-up] [C-S-down] [C-S-right] [C-S-left]
-          [M-S-up] [M-S-down] [M-S-right] [M-S-left]
-          [C-M-S-up] [C-M-S-down] [C-M-S-right] [C-M-S-left]
-          [C-home] [M-home] [S-home] [C-M-home] [C-S-home]
-          [M-S-home] [C-M-S-home]
-          [C-end] [M-end] [S-end] [C-M-end] [C-S-end]
-          [M-S-end] [C-M-S-end]
-          [C-prior] [M-prior] [S-prior] [C-M-prior]
-          [C-S-prior] [M-S-prior] [C-M-S-prior]
-          [C-next] [M-next] [S-next] [C-M-next] [C-S-next]
-          [M-S-next] [C-M-S-next]
+(setq eat-semi-char-non-bound-keys
+      '(;; default non-bound keys
+        [?\C-x] [?\C-\\] [?\C-q] [?\C-g] [?\C-h] [?\e ?\C-c] [?\C-u]
+        [?\e ?x] [?\e ?:] [?\e ?!] [?\e ?&]
+        [C-insert] [M-insert] [S-insert] [C-M-insert]
+        [C-S-insert] [M-S-insert] [C-M-S-insert]
+        [C-delete] [M-delete] [S-delete] [C-M-delete]
+        [C-S-delete] [M-S-delete] [C-M-S-delete]
+        [C-deletechar] [M-deletechar]
+        [S-deletechar] [C-M-deletechar] [C-S-deletechar]
+        [M-S-deletechar] [C-M-S-deletechar]
+        [C-up] [C-down] [C-right] [C-left]
+        [M-up] [M-down] [M-right] [M-left]
+        [S-up] [S-down] [S-right] [S-left]
+        [C-M-up] [C-M-down] [C-M-right] [C-M-left]
+        [C-S-up] [C-S-down] [C-S-right] [C-S-left]
+        [M-S-up] [M-S-down] [M-S-right] [M-S-left]
+        [C-M-S-up] [C-M-S-down] [C-M-S-right] [C-M-S-left]
+        [C-home] [M-home] [S-home] [C-M-home] [C-S-home]
+        [M-S-home] [C-M-S-home]
+        [C-end] [M-end] [S-end] [C-M-end] [C-S-end]
+        [M-S-end] [C-M-S-end]
+        [C-prior] [M-prior] [S-prior] [C-M-prior]
+        [C-S-prior] [M-S-prior] [C-M-S-prior]
+        [C-next] [M-next] [S-next] [C-M-next] [C-S-next]
+        [M-S-next] [C-M-S-next]
 
-          ;; term-keys
-          [?\e ?\C-\]]
+        ;; term-keys
+        [?\e ?\C-\]]
 
-          ;; quick-window-jump
-          [?\e ?o]))
+        ;; quick-window-jump
+        [?\e ?o]))
 (add-hook 'eshell-load-hook #'eat-eshell-mode)
 (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
 (bind-key "C-x p s" #'eat-project)
@@ -1408,7 +1409,7 @@ minibuffer."
   (savehist-mode))
 
 ;;;; auth-sources
-(setq auth-sources '("~/.authinfo.gpg"))
+(setq auth-sources '("~/.authinfo.gpg" password-store))
 (with-eval-after-load 'auth-source
   (auth-source-pass-enable))
 
@@ -1589,7 +1590,7 @@ minibuffer."
            ("C-c A" . org-agenda)
            ("C-c C" . org-capture)
            ("C-c T M" . +org/toggle-emphasis-markers)
-           ("C-c T m" . org-modern-mode ))
+           ("C-c T m" . org-modern-mode))
 
 (add-hook 'org-mode-hook #'org-modern-mode)
 
@@ -1611,7 +1612,6 @@ minibuffer."
         (tags   . " %i %-12:c")
         (search . " %i %-12:c")))
 
-(defvar org-capture-templates)
 (with-eval-after-load 'org-capture
   (add-to-list 'org-capture-templates
                `("i" "Inbox" entry (file "inbox.org")
@@ -1648,42 +1648,47 @@ minibuffer."
   ;; something more deliberate for actually send messages.
   (bind-keys :map erc-mode-map
              ("RET" . nil)
-             ("C-c C-c" . erc-send-current-line)))
+             ("C-c C-c" . erc-send-current-line))
 
-;; protect me from accidentally sending excess lines.
-(setq erc-inhibit-multiline-input t
-      erc-send-whitespace-lines t
-      erc-ask-about-multiline-input t)
-;; scroll all windows to prompt when submitting input.
-(setq erc-scrolltobottom-all t)
+  ;; protect me from accidentally sending excess lines.
+  (setq erc-inhibit-multiline-input t
+        erc-send-whitespace-lines t
+        erc-ask-about-multiline-input t)
+  ;; scroll all windows to prompt when submitting input.
+  (setq erc-scrolltobottom-all t)
 
-;; reconnect automatically using a fancy strategy.
-(setq erc-server-reconnect-function
-      #'erc-server-delayed-check-reconnect
-      erc-server-reconnect-timeout 30)
+  ;; reconnect automatically using a fancy strategy.
+  (setq erc-server-reconnect-function
+        #'erc-server-delayed-check-reconnect
+        erc-server-reconnect-timeout 30)
 
-;; show new buffers in the current window instead of a split.
-(setq erc-interactive-display 'buffer)
+  ;; show new buffers in the current window instead of a split.
+  (setq erc-interactive-display 'buffer)
 
-;; prefer one message line without continuation indicators.
-(setq erc-fill-function #'erc-fill-wrap
-      erc-fill-static-center 18)
-(defvar erc-fill-wrap-mode-map)
-(with-eval-after-load 'erc-fill
-  (require 'erc-fill)
-  (bind-keys :map erc-fill-wrap-mode-map
-             ("C-c =" . erc-fill-wrap-nudge)))
+  ;; prefer one message line without continuation indicators.
+  (setq erc-fill-function #'erc-fill-wrap
+        erc-fill-static-center 18)
+  (defvar erc-fill-wrap-mode-map)
+  (with-eval-after-load 'erc-fill
+    (require 'erc-fill)
+    (bind-keys :map erc-fill-wrap-mode-map
+               ("C-c =" . erc-fill-wrap-nudge)))
 
-;; prevent JOINs and PARTs from lighting up the mode-line.
-(defvar erc-track-faces-priority-list)
-(with-eval-after-load 'erc-track
-  (setopt erc-track-faces-priority-list (remq 'erc-notice-face
-					      erc-track-faces-priority-list)))
-(setq erc-track-priority-faces-only 'all)
+  ;; prevent JOINs and PARTs from lighting up the mode-line.
+  (defvar erc-track-faces-priority-list)
+  (with-eval-after-load 'erc-track
+    (setopt erc-track-faces-priority-list (remq 'erc-notice-face
+					        erc-track-faces-priority-list)))
+  (setq erc-track-priority-faces-only 'all))
 
 ;;;; gnus
 
 (bind-key "C-c t G" #'gnus)
+
+;;;; discourse
+
+(add-hook 'discourse-topic-mode-hook #'visual-line-mode)
+(setq discourse-debug nil)
 
 ;;;; copilot
 
@@ -1696,13 +1701,12 @@ minibuffer."
 
 (bind-key "M-s b" #'browser-hist-search)
 (with-eval-after-load 'browser-hist
-  (eval '(pro gn
-           (setf (alist-get 'zen browser-hist-db-paths nil t)
-                 (cond ((memq system-type '(cygwin windows-nt ms-dos))
-                        "$APPDATA/zen/Profiles/*/places.sqlite")))
-           (setf (alist-get 'zen browser-hist--db-fields)
-                 '("title" "url" "moz_places" "ORDER BY last_visit_date desc"))
-           (setopt browser-hist-default-browser 'zen))))
+  (setf (alist-get 'zen browser-hist-db-paths nil t)
+        (cond ((memq system-type '(cygwin windows-nt ms-dos))
+               "$APPDATA/zen/Profiles/*/places.sqlite")))
+  (setf (alist-get 'zen browser-hist--db-fields)
+        '("title" "url" "moz_places" "ORDER BY last_visit_date desc"))
+  (setopt browser-hist-default-browser 'zen))
 
 ;;;; vundo
 
@@ -1710,14 +1714,8 @@ minibuffer."
 (with-eval-after-load 'vundo
   (setopt vundo-glyph-alist vundo-unicode-symbols))
 
-;;;; debian
-
 ;;;; markdown
 
-(defvar markdown-mode-map)
-(defvar markdown-view-mode-map)
-(defvar gfm-mode-map)
-(defvar gfm-view-mode-map)
 (with-eval-after-load 'markdown-mode
   (bind-key "C-x C-q" #'markdown-view-mode markdown-mode-map)
   (bind-key "C-x C-q" #'markdown-mode markdown-view-mode-map)

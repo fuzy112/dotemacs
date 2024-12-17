@@ -1,6 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
 (require 'straight)
+(add-to-list 'straight-built-in-pseudo-packages 'image)
 
 (straight-use-package '(cmake-mode :host github :repo "emacsmirror/cmake-mode" :files ("*.el")))
 (straight-use-package '(consult-everything :host github :repo "jthaman/consult-everything"))
@@ -9,6 +10,7 @@
 (straight-use-package '(term-keys :host github :repo "CyberShadow/term-keys"))
 (straight-use-package 'anaphora)
 (straight-use-package 'apheleia)
+(straight-use-package 'adaptive-wrap)
 (straight-use-package 'breadcrumb)
 (straight-use-package 'browser-hist)
 (straight-use-package 'buffer-env)
@@ -67,3 +69,4 @@
 (straight-use-package 'xterm-color)
 (straight-use-package 'yaml-mode)
 (straight-use-package `(eat :files ("*.el" "*.texi" "*.info" "integration" "term" "terminfo")))
+(straight-use-package '(discourse :host codeberg :repo "glenneth/discourse-emacs"))
