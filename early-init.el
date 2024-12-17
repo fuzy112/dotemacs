@@ -24,6 +24,11 @@
 
 ;;; Code:
 
+;;;; gc
+
+(setq gc-cons-threshold 25600000)
+(setq read-process-output-max (* 256 1024))
+
 ;;;; pre-early-init
 
 (defvar pre-early-init-file (locate-user-emacs-file "pre-early-init.el")
@@ -63,7 +68,8 @@
       (seq-union straight-default-files-directive
                  '("docs/dir" "docs/*.info" "docs/*.texi" "docs/*.texinfo")))
 
-(setq straight-current-profile 'dotemacs)
+(let ((straight-current-profile 'dotemacs))
+  (load (locate-user-emacs-file "packages.el") nil t))
 
 ;;;; site lisp
 
@@ -72,8 +78,6 @@
 
 ;;;; emacs core
 
-(setq gc-cons-threshold 25600000)
-(setq read-process-output-max (* 256 1024))
 (setq-default cursor-in-non-selected-windows nil)
 (setq highlight-nonselected-windows nil)
 (setq inhibit-compacting-font-caches t)
@@ -108,7 +112,6 @@
 
 ;;;; modus-theme
 
-(straight-use-package 'modus-themes)
 (with-eval-after-load 'modus-themes
   (setq modus-themes-to-toggle '(modus-vivendi modus-operandi))
   (setq modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
@@ -119,19 +122,13 @@
 
 ;;;; doom-modeline
 
-(straight-use-package 'doom-modeline)
 (doom-modeline-mode)
 
 ;;;; libraries
-(straight-use-package 's)
-(straight-use-package 'f)
-(straight-use-package 'dash)
 (with-eval-after-load 'dash
   (global-dash-fontify-mode))
 (with-eval-after-load 'info-look
   (dash-register-info-lookup))
-(straight-use-package 'transducers)
-(straight-use-package 'anaphora)
 (declare-function anaphora-install-font-lock-keywords "anaphora")
 (with-eval-after-load 'anaphora
   (with-eval-after-load 'lisp-mode
