@@ -267,6 +267,16 @@
   (orderless-matching-styles '(orderless-initialism
                                orderless-literal
                                orderless-regexp)))
+(setq completion-styles '(orderless basic))
+(setq completion-category-overrides
+      '((file . ((styles . (basic partial-completion))))
+        (symbol . ((styles . (orderless+flex))))
+        (symbol-help . ((styles . (orderless+flex))))
+        (command . ((styles . (orderless+initialism))))
+        (variable . ((styles . (orderless+initialism))))
+        (eglot . ((styles . (orderless))))
+        (eglot-capf . ((styles . (orderless))))
+        (magit-rev . ((styles . (orderless+flex))))))
 
 (defun +orderless--consult-suffix ()
   "Regexp which matches the end of string with Consult tofu support."
@@ -287,16 +297,6 @@
     `(orderless-regexp . ,(concat "\\." (substring word 1) (+orderless--consult-suffix))))))
 
 (with-eval-after-load 'orderless
-  (setq completion-styles '(orderless basic))
-  (setq completion-category-overrides
-        '((file . ((styles . (basic partial-completion))))
-          (symbol . ((styles . (orderless+flex))))
-          (symbol-help . ((styles . (orderless+flex))))
-          (command . ((styles . (orderless+initialism))))
-          (variable . ((styles . (orderless+initialism))))
-          (eglot . ((styles . (orderless))))
-          (eglot-capf . ((styles . (orderless))))
-          (magit-rev . ((styles . (orderless+flex))))))
   (add-to-list 'orderless-style-dispatchers #'+orderless--consult-dispatch))
 
 ;;;; vertico
