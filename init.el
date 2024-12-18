@@ -44,12 +44,12 @@
 
 (eval-when-compile (require 'cl-lib))
 
-(defsubst alist-set! (alist key value &optional testfn)
+(cl-defsubst alist-set! (alist key value &optional testfn)
   "Associate KEY with VALUE in ALIST.
 Equality with KEY is tested by TESTFN, defaulting to `eq'."
   (setf (alist-get key alist nil nil testfn) value))
 
-(defsubst alist-del! (alist key &optional testfn)
+(cl-defsubst alist-del! (alist key &optional testfn)
   "Remove the first element of ALIST whose `car' equals KEY.
 Equality with KEY is tested by TESTFN, defaulting to `eq'."
   (setf (alist-get key alist nil t testfn) t))
@@ -90,25 +90,29 @@ Otherwise, equality is tested by `equal'."
                                   (t #'equal)))))
            keys)))
 
+
 
 ;;;; keymap
 
 (eval-when-compile (require 'bind-key))
 
-(bind-keys :prefix "C-c t"
-           :prefix-map tool-map)
-(bind-keys :prefix "C-c d"
-           :prefix-map doc-map)
-(bind-keys :prefix "C-c f"
-           :prefix-map file-map)
-(bind-keys :prefix "C-c T"
-           :prefix-map toggle-map)
+(defvar-keymap tool-map :prefix 'tool-map :name "Tool map")
+(keymap-global-set "C-c t" #'tool-map)
+
+(defvar-keymap doc-map :prefix 'doc-map :name "Doc map")
+(keymap-global-set "C-c d" #'doc-map)
+
+(defvar-keymap file-map :prefix 'file-map :name "File map")
+(keymap-global-set "C-c f" #'file-map)
+
+(defvar-keymap toggle-map :prefix 'toggle-map :name "Toggle map")
+(keymap-global-set "C-c T" #'toggle-map)
 
 (defalias 'search-map search-map)
-(bind-key "M-s" 'search-map)
+(keymap-global-set "M-s" #'search-map)
 
 (defalias 'goto-map goto-map)
-(bind-key "M-g" 'goto-map)
+(keymap-global-set "M-g" #'goto-map)
 
 
 ;;;; meow-edit
@@ -194,23 +198,27 @@ Otherwise, equality is tested by `equal'."
 
 ;;;; straight
 
-(bind-keys :prefix "C-c S"
-           :prefix-map straight-prefix-map
-           :prefix-docstring "Prefix map for straight.el operations."
-           ("c" . straight-check-package)
-           ("C" . straight-check-all)
-           ("p" . straight-pull-package)
-           ("P" . straight-pull-all)
-           ("f" . straight-fetch-package)
-           ("F" . straight-fetch-all)
-           ("b" . straight-rebuild-package)
-           ("B" . straight-rebuild-all)
-           ("v" . straight-freeze-versions)
-           ("V" . straight-thaw-versions)
-           ("u" . straight-use-package)
-           ("d" . straight-visit-package)
-           ("w" . straight-visit-package-website)
-           ("g" . +straight/visit-package-repository))
+(defvar-keymap straight-prefix-map
+  :doc "Prefix map for straight.el commands."
+  :prefix 'straight-prefix-map
+  :name "Straight map"
+  "c" #'straight-check-package
+  "C" #'straight-check-all
+  "p" #'straight-pull-package
+  "P" #'straight-pull-all
+  "f" #'straight-fetch-package
+  "F" #'straight-fetch-all
+  "b" #'straight-rebuild-package
+  "B" #'straight-rebuild-all
+  "v" #'straight-freeze-versions
+  "V" #'straight-thaw-versions
+  "u" #'straight-use-package
+  "d" #'straight-visit-package
+  "w" #'straight-visit-package-website
+  "g" #'+straight/visit-package-repository
+  "x" #'straight-x-prefix-map)
+
+(keymap-global-set "C-c S" #'straight-prefix-map)
 
 (defvar straight--recipe-cache)
 (defun +straight/visit-package-repository (pkg)
@@ -219,12 +227,12 @@ Otherwise, equality is tested by `equal'."
                          :local-repo)))
     (magit-status-setup-buffer (straight--repos-dir repo))))
 
-(define-prefix-command 'straight-x-prefix-map nil "Straight-X")
 (autoload 'straight-x-fetch-all "straight-x" nil t)
+(defvar-keymap straight-x-prefix-map
+  :prefix 'straight-x-prefix-map
+  :name "straight-x"
+  "f" #'straight-x-fetch-all)
 
-(bind-keys :prefix "C-c S x"
-           :prefix-map straight-x-prefix-map
-           ("f" . straight-x-fetch-all))
 
 ;;;; faces
 (unless (eq (framep-on-display) t)
@@ -259,22 +267,22 @@ Otherwise, equality is tested by `equal'."
   (let ((events (mapcar (lambda (ev) (cons t ev))
                         (listify-key-sequence (this-command-keys)))))
     (setq unread-command-events (append events unread-command-events))))
-(bind-key "<wheel-down>" #'+pixel-scroll--autoload)
+(keymap-global-set "<wheel-down>" #'+pixel-scroll--autoload)
 (with-eval-after-load 'pixel-scroll
-  (unbind-key "<wheel-down>")
+  (keymap-global-unset "<wheel-down>")
   (pixel-scroll-precision-mode))
 
 ;;;; window
-(fset 'window-prefix-map window-prefix-map)
-(bind-key "C-c w" #'window-prefix-map)
-(bind-key "q" #'quit-windows-on window-prefix-map)
+(defalias 'window-prefix-map window-prefix-map)
+(keymap-global-set "C-c w" #'window-prefix-map)
+(keymap-set window-prefix-map "q" #'quit-windows-on)
 (setq kill-buffer-quit-windows t
       quit-restore-window-no-switch t)
 
 ;;;; quick-window
 
 (autoload 'quick-window-jump "quick-window" nil t)
-(bind-key "M-o" #'quick-window-jump)
+(keymap-global-set "M-o" #'quick-window-jump)
 
 ;;;; help
 (setq help-enable-variable-value-editing t
@@ -293,7 +301,7 @@ Otherwise, equality is tested by `equal'."
 
 (autoload 'list-backups "backup" nil t)
 (autoload 'backup-list-backups "backup" nil t)
-(bind-key "C-c B" #'list-backups)
+(keymap-global-set "C-c B" #'list-backups)
 
 ;;;; breadcrumb
 
@@ -364,24 +372,24 @@ Otherwise, equality is tested by `equal'."
   (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
   (add-hook 'rfn-eshadow-update-overlay #'vertico-directory-tidy)
   (vertico-mode)
-  (bind-key "M-R" #'vertico-repeat)
-  (bind-keys :map vertico-map
-             ;; vertico-repeat
-             ("M-P" . vertico-repeat-previous)
-             ("M-N" . vertico-repeat-next)
-             ;; vertico-directory
-             ("RET" . vertico-directory-enter)
-             ("DEL" . vertico-directory-delete-char)
-             ("M-DEL" . vertico-directory-delete-word)
-             ;; vertico-quick
-             ("C-q" . vertico-quick-insert)
-             ("M-q" . vertico-quick-exit)))
+  (keymap-global-set "M-R" #'vertico-repeat)
+  (define-keymap :keymap vertico-map
+    ;; vertico-repeat
+    "M-P" #'vertico-repeat-previous
+    "M-N" #'vertico-repeat-next
+    ;; vertico-directory
+    "RET" #'vertico-directory-enter
+    "DEL" #'vertico-directory-delete-char
+    "M-DEL" #'vertico-directory-delete-word
+    ;; vertico-quick
+    "C-q" #'vertico-quick-insert
+    "M-q" #'vertico-quick-exit))
 
 ;;;; marginalia
 
 (autoload 'marginalia--minibuffer-setup "marginalia.el")
 (add-hook 'minibuffer-setup-hook #'marginalia--minibuffer-setup)
-(bind-key "M-A" #'marginalia-cycle minibuffer-local-map)
+(keymap-set minibuffer-local-map "M-A" #'marginalia-cycle)
 
 (with-eval-after-load 'marginalia
   (alist-setq! marginalia-prompt-categories
@@ -441,12 +449,12 @@ ARGS: see `completion-read-multiple'."
   (global-corfu-mode)
   (corfu-history-mode)
   (corfu-popupinfo-mode)
-  (bind-keys :map corfu-map
-             ("C-q" . corfu-quick-insert)
-             ("M-q" . corfu-quick-complete)
-             ("TAB" . corfu-next)
-             ("S-TAB" . corfu-previous)
-             ("<backtab>" . corfu-previous)))
+  (define-keymap :keymap corfu-map
+    "C-q" #'corfu-quick-insert
+    "M-q" #'corfu-quick-complete
+    "TAB" #'corfu-next
+    "S-TAB" #'corfu-previous
+    "<backtab>" #'corfu-previous))
 
 (with-eval-after-load 'savehist
   (add-to-list 'savehist-additional-variables 'corfu-history))
@@ -458,7 +466,7 @@ ARGS: see `completion-read-multiple'."
 
 ;;;; cape
 
-(bind-key "C-c e" #'cape-prefix-map)
+(keymap-global-set "C-c e" #'cape-prefix-map)
 (add-hook 'completion-at-point-functions #'cape-dabbrev)
 (add-hook 'completion-at-point-functions #'cape-file)
 (add-hook 'completion-at-point-functions #'cape-elisp-block)
@@ -475,8 +483,8 @@ ARGS: see `completion-read-multiple'."
 
 ;;;; tempel
 
-(bind-keys ("M-+" . tempel-complete)
-           ("M-*" . tempel-insert))
+(keymap-global-set "M-+" #'tempel-complete)
+(keymap-global-set "M-*" #'tempel-insert)
 (defun tempel-setup-capf ()
   (setq-local completion-at-point-functions
               (cons #'tempel-expand
@@ -496,8 +504,8 @@ ARGS: see `completion-read-multiple'."
 
 ;;;; embark
 
-(bind-keys ("C-." . embark-act)
-           ("C-c a" . embark-act))
+(keymap-global-set "C-." #'embark-act)
+(keymap-global-set "C-c a" #'embark-act)
 (setq prefix-help-command #'embark-prefix-help-command)
 
 (defun +embark/find-file-as-root (file)
@@ -553,66 +561,68 @@ value for USE-OVERLAYS."
   (setq embark-indicators '(embark-minimal-indicator
                             embark-highlight-indicator
                             embark-isearch-highlight-indicator))
-  (bind-key "#" '+embark/find-file-as-root embark-file-map)
-  (bind-key "W" '+embark/eww-open-bookmark embark-bookmark-map)
-  (bind-key "u" '+embark/browse-url-open-bookmark embark-bookmark-map)
-  (bind-key "[" '+embark/apply-ansi-color embark-region-map))
+  (keymap-set embark-file-map "#" '+embark/find-file-as-root)
+  (keymap-set embark-bookmark-map "W" '+embark/eww-open-bookmark)
+  (keymap-set embark-bookmark-map "u" '+embark/browse-url-open-bookmark)
+  (keymap-set embark-region-map "[" '+embark/apply-ansi-color))
 
 ;;;; consult
 
-(bind-keys ("C-c M-x" . consult-mode-command)
-           ("C-c h" . consult-history)
-           ("C-c k" . consult-kmacro)
-           ("C-c m" . consult-man)
-           ("C-c i" . consult-info)
-           ("<remap> <Info-search>" . consult-info)
-           ;; C-x bindings in `ctl-x-map'
-           ("C-x M-:" . consult-complex-command) ;; orig. repeat-complex-command
-           ("C-x b" . consult-buffer) ;; orig. switch-to-buffer
-           ("C-c b" . consult-buffer)
-           ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-           ("C-x 5 b" . consult-buffer-other-frame) ;; orig. switch-to-buffer-other-frame
-           ("C-x t b" . consult-buffer-other-tab) ;; orig. switch-to-buffer-other-tab
-           ("C-x r b" . consult-bookmark)         ;; orig. bookmark-jump
-           ("C-x p b" . consult-project-buffer) ;; orig. project-switch-to-buffer
-           ;; Custom M-# bindings for fast register access
-           ("M-#" . consult-register-load)
-           ("M-'" . consult-register-store) ;; orig. abbrev-prefix-mark (unrelated)
-           ("C-M-#" . consult-register)
-           ;; Other custom bindings
-           ("M-y" . consult-yank-pop) ;; orig. yank-pop
-           ;; M-g bindings in `goto-map'
-           ("M-g e" . consult-compile-error)
-           ("M-g f" . consult-flymake) ;; Alternative: consult-flycheck
-           ("M-g g" . consult-goto-line)   ;; orig. goto-line
-           ("M-g M-g" . consult-goto-line) ;; orig. goto-line
-           ("M-g o" . consult-outline) ;; Alternative: consult-org-heading
-           ("M-g m" . consult-mark)
-           ("M-g k" . consult-global-mark)
-           ("M-g i" . consult-imenu)
-           ("M-g I" . consult-imenu-multi)
-           ;; M-s bindings in `search-map'
-           ("M-s d" . consult-find) ;; Alternative: consult-fd
-           ("M-s c" . consult-locate)
-           ("M-s g" . consult-grep)
-           ("M-s G" . consult-git-grep)
-           ("M-s r" . consult-ripgrep)
-           ("M-s l" . consult-line)
-           ("M-s L" . consult-line-multi)
-           ("M-s k" . consult-keep-lines)
-           ("M-s u" . consult-focus-lines)
-           ;; Isearch integration
-           ("M-s e" . consult-isearch-history))
+(define-keymap
+  :keymap global-map
+  "C-c M-x" #'consult-mode-command
+  "C-c h" #'consult-history
+  "C-c k" #'consult-kmacro
+  "C-c m" #'consult-man
+  "C-c i" #'consult-info
+  "<remap> <Info-search>" #'consult-info
+  ;; C-x bindings in `ctl-x-map'
+  "C-x M-:" #'consult-complex-command ;; orig. repeat-complex-command
+  "C-x b" #'consult-buffer ;; orig. switch-to-buffer
+  "C-c b" #'consult-buffer
+  "C-x 4 b" #'consult-buffer-other-window ;; orig. switch-to-buffer-other-window
+  "C-x 5 b" #'consult-buffer-other-frame ;; orig. switch-to-buffer-other-frame
+  "C-x t b" #'consult-buffer-other-tab ;; orig. switch-to-buffer-other-tab
+  "C-x r b" #'consult-bookmark         ;; orig. bookmark-jump
+  "C-x p b" #'consult-project-buffer ;; orig. project-switch-to-buffer
+  ;; Custom M-# bindings for fast register access
+  "M-#" #'consult-register-load
+  "M-'" #'consult-register-store ;; orig. abbrev-prefix-mark (unrelated)
+  "C-M-#" #'consult-register
+  ;; Other custom bindings
+  "M-y" #'consult-yank-pop ;; orig. yank-pop
+  ;; M-g bindings in `goto-map'
+  "M-g e" #'consult-compile-error
+  "M-g f" #'consult-flymake ;; Alternative: consult-flycheck
+  "M-g g" #'consult-goto-line   ;; orig. goto-line
+  "M-g M-g" #'consult-goto-line ;; orig. goto-line
+  "M-g o" #'consult-outline ;; Alternative: consult-org-heading
+  "M-g m" #'consult-mark
+  "M-g k" #'consult-global-mark
+  "M-g i" #'consult-imenu
+  "M-g I" #'consult-imenu-multi
+  ;; M-s bindings in `search-map'
+  "M-s d" #'consult-find ;; Alternative: consult-fd
+  "M-s c" #'consult-locate
+  "M-s g" #'consult-grep
+  "M-s G" #'consult-git-grep
+  "M-s r" #'consult-ripgrep
+  "M-s l" #'consult-line
+  "M-s L" #'consult-line-multi
+  "M-s k" #'consult-keep-lines
+  "M-s u" #'consult-focus-lines
+  ;; Isearch integration
+  "M-s e" #'consult-isearch-history)
 
-(bind-keys :map isearch-mode-map
-           ("M-e" . consult-isearch-history)
-           ("M-s e" . consult-isearch-history)
-           ("M-s l" . consult-line)
-           ("M-s L" . consult-line-multi))
+(define-keymap :keymap isearch-mode-map
+  "M-e" #'consult-isearch-history
+  "M-s e" #'consult-isearch-history
+  "M-s l" #'consult-line
+  "M-s L" #'consult-line-multi)
 
-(bind-keys :map minibuffer-local-map
-           ("M-s" . consult-history)
-           ("M-r" . consult-history))
+(define-keymap :keymap minibuffer-local-map
+  "M-s" #'consult-history
+  "M-r" #'consult-history)
 
 (add-hook 'completion-list-mode-hook #'consult-preview-at-point)
 
@@ -698,10 +708,10 @@ value for USE-OVERLAYS."
     (advice-add #'embark-consult-export-grep :after #'+embark-consult-export-grep--headings)))
 
 
-(bind-key "C-x C-d" #'consult-dir)
-(bind-keys :map minibuffer-local-map
-           ("C-x C-d" . consult-dir)
-           ("C-x C-j" . consult-dir-jump-file))
+(keymap-global-set "C-x C-d" #'consult-dir)
+(define-keymap :keymap minibuffer-local-map
+  "C-x C-d" #'consult-dir
+  "C-x C-j" #'consult-dir-jump-file)
 
 ;;;; windmove
 
@@ -711,19 +721,21 @@ value for USE-OVERLAYS."
   (let ((events (mapcar (lambda (ev) (cons t ev))
                         (listify-key-sequence (this-command-keys)))))
     (setq unread-command-events (append events unread-command-events))))
-(bind-keys ("S-<left>" . +windmove--autoload)
-           ("S-<right>" . +windmove--autoload)
-           ("S-<up>" . +windmove--autoload)
-           ("S-<down>" . +windmove--autoload))
+(define-keymap :keymap global-map
+  "S-<left>" #'+windmove--autoload
+  "S-<right>" #'+windmove--autoload
+  "S-<up>" #'+windmove--autoload
+  "S-<down>" #'+windmove--autoload)
 (with-eval-after-load 'windmove
   (windmove-default-keybindings))
 
 ;;;; popper
 
 (autoload 'popper-toggle-type "popper.el" nil t)
-(bind-keys ("C-`" . popper-toggle)
-           ("M-`" . popper-cycle)
-           ("C-M-`" . popper-toggle-type))
+(define-keymap :keymap global-map
+  "C-`" #'popper-toggle
+  "M-`" #'popper-cycle
+  "C-M-`" #'popper-toggle-type)
 (setq popper-reference-buffers '("\\*Messages\\*" "Output\\*$"
                                  "\\*Async Shell Command\\*"
                                  "-eat\\*$"
@@ -778,12 +790,12 @@ value for USE-OVERLAYS."
 
 ;;;; ibuffer
 
-(bind-key "<remap> <list-buffers>" #'ibuffer-jump)
+(keymap-global-set "<remap> <list-buffers>" #'ibuffer-jump)
 
 ;;;; apheleia
 
-(bind-keys ("C-x x /" . apheleia-format-buffer)
-           ("C-c C-/" . apheleia-format-buffer))
+(keymap-global-set "C-x x /" #'apheleia-format-buffer)
+(keymap-global-set "C-c C-/" #'apheleia-format-buffer)
 
 ;;;; ws-butler
 
@@ -811,7 +823,7 @@ value for USE-OVERLAYS."
   (setf (plist-get consult--source-recent-file :enabled)
         (lambda () (require 'recentf) (symbol-value 'recentf-mode))))
 
-(bind-key "C-c f R" #'recentf-open)
+(keymap-global-set "C-c f R" #'recentf-open)
 
 ;;;; saveplace
 
@@ -860,7 +872,7 @@ This is run via ‘dired-initial-position-hook’, which see.")
   (let ((eshell-buffer-name (format "*%s : eshell*" (abbreviate-file-name default-directory)))
         (display-comint-buffer-action '(() (inhibit-same-window . t))))
     (eshell)))
-(bind-key "C-c t e" #'+eshell/here)
+(keymap-global-set "C-c t e" #'+eshell/here)
 
 (defvar eshell-hist-mode-map)
 (with-eval-after-load 'eshell
@@ -874,7 +886,7 @@ This is run via ‘dired-initial-position-hook’, which see.")
   (add-hook 'eshell-mode-hook '+eshell--capf)
   (with-eval-after-load 'esh-hist
     (when (fboundp 'consult-history)
-      (bind-key "M-r" #'consult-history eshell-hist-mode-map))))
+      (keymap-set eshell-hist-mode-map "M-r" #'consult-history))))
 
 ;;;; text-mode
 
@@ -897,7 +909,7 @@ This is run via ‘dired-initial-position-hook’, which see.")
     (outline-minor-faces-mode)))
 (add-hook 'outline-minor-mode-hook '+outline-minor-faces)
 
-(bind-key "C-c T o" #'outline-minor-mode)
+(keymap-global-set "C-c T o" #'outline-minor-mode)
 
 ;;;; adaptive-wrap or visual-wrap
 
@@ -905,15 +917,16 @@ This is run via ‘dired-initial-position-hook’, which see.")
     (add-hook 'visual-line-mode-hook #'visual-wrap-prefix-mode)
   (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode))
 
-(bind-key "C-c T v" #'visual-line-mode)
+(keymap-global-set "C-c T v" #'visual-line-mode)
 
 ;;;; hl-todo
 
-(bind-keys ("C-c T t" . hl-todo-mode)
-           ("C-c t [" . hl-todo-previous)
-           ("C-c t ]" . hl-todo-next)
-           ("C-c t o" . hl-todo-occur)
-           ("C-c t i" . hl-todo-insert))
+(define-keymap :keymap global-map
+  "C-c T t" #'hl-todo-mode
+  "C-c t [" #'hl-todo-previous
+  "C-c t ]" #'hl-todo-next
+  "C-c t o" #'hl-todo-occur
+  "C-c t i" #'hl-todo-insert)
 
 (add-hook 'prog-mode-hook #'hl-todo-mode)
 (add-hook 'conf-mode-hook #'hl-todo-mode)
@@ -927,14 +940,14 @@ This is run via ‘dired-initial-position-hook’, which see.")
 
 ;;;; display-line-numbers
 
-(bind-key "C-c T l" #'display-line-numbers-mode)
+(keymap-global-set "C-c T l" #'display-line-numbers-mode)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'conf-mode-hook #'display-line-numbers-mode)
 (setq display-line-numbers-type 'relative)
 
 ;;;; display-fill-column-indicator-mode
 
-(bind-key "C-c T f" #'display-fill-column-indicator-mode)
+(keymap-global-set "C-c T f" #'display-fill-column-indicator-mode)
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 
 ;;;; eglot
@@ -957,10 +970,10 @@ This is run via ‘dired-initial-position-hook’, which see.")
 
 ;;;; xref
 
-(bind-keys ("C-<down-mouse-1>" . nil)
-           ("C-M-<down-mouse-1>" . nil)
-           ("C-<mouse-1>" . xref-find-definitions-at-mouse)
-           ("C-M-<mouse-1>" . xref-find-references-at-mouse))
+(keymap-global-unset "C-<down-mouse-1>")
+(keymap-global-unset "C-M-<down-mouse-1>")
+(keymap-global-set "C-<mouse-1>" #'xref-find-definitions-at-mouse)
+(keymap-global-set "C-<mouse-1>" #'xref-find-references-at-mouse)
 
 (defvar +xref--max-definitions-in-buffer 5)
 
@@ -983,7 +996,7 @@ Otherwise use `consult-xref'."
 ;;;; ctags
 
 (autoload 'ctags-menu "ctags-menu" nil t)
-(bind-key "C-c t m" #'ctags-menu)
+(keymap-global-set "C-c t m" #'ctags-menu)
 
 (autoload 'ctags-xref-backend "ctags-xref")
 (add-hook 'xref-backend-functions #'ctags-xref-backend)
@@ -1009,19 +1022,20 @@ Otherwise use `consult-xref'."
 
 ;;;; devdocs
 
-(bind-keys ("C-c d d" . devdocs-lookup)
-           ("C-c d i" . devdocs-install)
-           ("C-c d p" . devdocs-peruse))
+(define-keymap :keymap doc-map
+  "d" #'devdocs-lookup
+  "i" #'devdocs-install
+  "p" #'devdocs-peruse)
 
 ;;;; gtkdoc
 
 (autoload 'good-doc-lookup "good-doc" nil t)
-(bind-key "C-c d g" #'good-doc-lookup)
+(keymap-global-set "C-c d g" #'good-doc-lookup)
 
 ;;;; rust-docs
 
 (autoload 'rust-docs-lookup "rust-docs" nil t)
-(bind-key "C-c d r" #'rust-docs-lookup)
+(keymap-global-set "C-c d r" #'rust-docs-lookup)
 
 ;;;; javascript
 
@@ -1053,11 +1067,11 @@ Otherwise use `consult-xref'."
 (add-hook 'prog-mode-hook #'puni-mode)
 (add-hook 'conf-mode-hook #'puni-mode)
 (add-hook 'puni-mode-hook #'electric-pair-local-mode)
-(bind-keys :map puni-mode-map
-           ("C-)" . puni-slurp-forward)
-           ("C-(" . puni-slurp-backward)
-           ("C-}" . puni-barf-forward)
-           ("C-{" . puni-barf-backward))
+(define-keymap :keymap puni-mode-map
+  "C-)" #'puni-slurp-forward
+  "C-(" #'puni-slurp-backward
+  "C-}" #'puni-barf-forward
+  "C-{" #'puni-barf-backward)
 
 ;;;; elisp-mode
 
@@ -1069,12 +1083,12 @@ Otherwise use `consult-xref'."
 
 (with-eval-after-load 'elisp-mode
   (static-if (native-comp-available-p)
-      (bind-key "C-c C-l" #'emacs-lisp-native-compile-and-load emacs-lisp-mode-map))
-  (bind-key "C-c C-j" #'eval-print-last-sexp lisp-interaction-mode-map))
+      (keymap-set emacs-lisp-mode-map "C-c C-l" #'emacs-lisp-native-compile-and-load))
+  (keymap-set lisp-interaction-mode-map "C-c C-j" #'eval-print-last-sexp))
 
 ;;;; pp
 
-(bind-key "M-:" #'pp-eval-expression)
+(keymap-global-set "M-:" #'pp-eval-expression)
 
 ;;;; pp-posframe
 
@@ -1085,26 +1099,25 @@ Otherwise use `consult-xref'."
 Display the result in a posframe." t)
 (autoload 'pp-posframe-macroexpand-last-sexp "pp-posframe.el"
   "Macroexpand the sexp before point; display the result in a posframe." t)
-(bind-key "C-x C-e" #'pp-posframe-eval-last-sexp)
+(keymap-global-set "C-x C-e" #'pp-posframe-eval-last-sexp)
 (with-eval-after-load 'elisp-mode
-  (bind-keys :map emacs-lisp-mode-map
-             ("C-M-x" . pp-posframe-compile-defun)
-             ("C-c M-e" . pp-posframe-macroexpand-last-sexp)))
+  (keymap-set emacs-lisp-mode-map "C-M-x" #'pp-posframe-compile-defun)
+  (keymap-set emacs-lisp-mode-map "C-c M-e" #'pp-posframe-macroexpand-last-sexp))
 
 ;;;; find-func
 
-(bind-keys ("C-x F" . find-function)
-           ("C-x V" . find-variable)
-           ("C-x K" . find-function-on-key)
-           ("C-x L" . find-library)
-           ("C-x 4 F" . find-function-other-window)
-           ("C-x 4 V" . find-variable-other-window)
-           ("C-x 4 K" . find-function-on-key-other-window)
-           ("C-x 4 L" . find-library-other-window)
-           ("C-x 5 F" . find-function-other-frame)
-           ("C-x 5 V" . find-variable-other-frame)
-           ("C-x 5 K" . find-function-on-key-other-frame)
-           ("C-x 5 L" . find-library-other-frame))
+(keymap-global-set "C-x F" #'find-function)
+(keymap-global-set "C-x V" #'find-variable)
+(keymap-global-set "C-x K" #'find-function-on-key)
+(keymap-global-set "C-x L" #'find-library)
+(keymap-global-set "C-x 4 F" #'find-function-other-window)
+(keymap-global-set "C-x 4 V" #'find-variable-other-window)
+(keymap-global-set "C-x 4 K" #'find-function-on-key-other-window)
+(keymap-global-set "C-x 4 L" #'find-library-other-window)
+(keymap-global-set "C-x 5 F" #'find-function-other-frame)
+(keymap-global-set "C-x 5 V" #'find-variable-other-frame)
+(keymap-global-set "C-x 5 K" #'find-function-on-key-other-frame)
+(keymap-global-set "C-x 5 L" #'find-library-other-frame)
 
 ;;;; eldoc
 
@@ -1139,7 +1152,7 @@ Display the result in a posframe." t)
 ;;;; project
 
 (fset 'project-prefix-map project-prefix-map)
-(bind-key "C-c p" #'project-prefix-map)
+(keymap-global-set "C-c p" #'project-prefix-map)
 (static-if (commandp 'project-prefix-or-any-command)
     (setq project-switch-commands 'project-prefix-or-any-command))
 
@@ -1181,7 +1194,7 @@ Display the result in a posframe." t)
 
 ;;;; vc
 
-(bind-key "C-c v" #'vc-prefix-map)
+(keymap-global-set "C-c v" #'vc-prefix-map)
 (with-eval-after-load 'vc
   (require 'diff-hl)
   (setq vc-follow-symlinks t)
@@ -1263,7 +1276,7 @@ Display the result in a posframe." t)
 (add-hook 'eshell-load-hook #'eat-eshell-mode)
 (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
 
-(bind-key "C-x p s" #'eat-project)
+(keymap-global-set "C-x p s" #'eat-project)
 (with-eval-after-load 'project
   (define-key project-other-window-map "s" #'eat-project-other-window)
   (when (consp project-switch-commands)
@@ -1285,7 +1298,7 @@ minibuffer."
         ((default-directory dir)
          (eat-buffer-name (concat "*" dir " : eat*")))
       (eat nil nil))))
-(bind-key "C-c t s" '+eat/here)
+(keymap-global-set "C-c t s" '+eat/here)
 
 (defvar eat-terminal)
 (defun eat-send-pass nil
@@ -1303,8 +1316,8 @@ minibuffer."
 
 ;;;; with-editor
 
-(bind-key "<remap> <async-shell-command>" #'with-editor-async-shell-command)
-(bind-key "<remap> <shell-command>" #'with-editor-shell-command)
+(keymap-global-set "<remap> <async-shell-command>" #'with-editor-async-shell-command)
+(keymap-global-set "<remap> <shell-command>" #'with-editor-shell-command)
 (add-hook 'eshell-mode-hook #'with-editor-export-editor)
 (add-hook 'shell-mode-hook #'with-editor-export-editor)
 (add-hook 'term-exec-hook #'with-editor-export-editor)
@@ -1527,7 +1540,7 @@ minibuffer."
 
 ;;;; deadgrep
 
-(bind-key "C-c s" #'deadgrep)
+(keymap-global-set "C-c s" #'deadgrep)
 
 ;;;; gptel
 
@@ -1606,7 +1619,7 @@ minibuffer."
     (apply args)))
 
 (autoload 'url-bookmark-add "bookmark-extras.el" "" t)
-(bind-key "C-x r u" #'url-bookmark-add)
+(keymap-global-set "C-x r u" #'url-bookmark-add)
 (with-eval-after-load 'bookmark
   (advice-add #'bookmark-write-file :around '+bookmark--pp-28)
 
@@ -1713,7 +1726,7 @@ minibuffer."
 
 ;;;; gnus
 
-(bind-key "C-c t G" #'gnus)
+(keymap-global-set "C-c t G" #'gnus)
 
 ;;;; discourse
 
@@ -1725,7 +1738,7 @@ minibuffer."
 ;; `discourse-command-map' to `doc-map' and bind discourse commands in
 ;; it.
 (setq discourse-command-map doc-map)
-(bind-key "C-c d l" #'discourse-login)
+(keymap-global-set "C-c d l" #'discourse-login)
 (defvar url-cache-expire-time)
 (with-eval-after-load 'discourse
   (setq discourse-debug nil)
@@ -1743,7 +1756,7 @@ minibuffer."
 
 ;;;; browser-hist
 
-(bind-key "M-s b" #'browser-hist-search)
+(keymap-global-set "M-s b" #'browser-hist-search)
 (with-eval-after-load 'browser-hist
   (alist-setq! browser-hist-db-paths
     zen (cond ((memq system-type '(cygwin windows-nt ms-dos))
@@ -1754,7 +1767,7 @@ minibuffer."
 
 ;;;; vundo
 
-(bind-key "C-c T u" #'vundo)
+(keymap-global-set "C-c T u" #'vundo)
 (with-eval-after-load 'vundo
   (setopt vundo-glyph-alist vundo-unicode-symbols))
 
@@ -1771,18 +1784,20 @@ minibuffer."
 (with-eval-after-load 'p-search
   (require 'psx-info))
 (autoload 'p-search "p-search" nil t)
-(bind-key "C-c t p" #'p-search)
+(keymap-global-set "C-c t p" #'p-search)
 
 ;;;; debug
 
-(bind-keys :prefix "C-c T d"
-           :prefix-map debug-prefix-map
-           ("e" . toggle-debug-on-error)
-           ("q" . toggle-debug-on-quit)
-           ("f" . debug-on-entry)
-           ("v" . debug-on-variable-change)
-           ("c f" . cancel-debug-on-entry)
-           ("c v" . cancel-debug-on-variable-change))
+(defvar-keymap debug-prefix-map
+  :prefix 'debug-prefix-map
+  "e" #'toggle-debug-on-error
+  "q" #'toggle-debug-on-quit
+  "f" #'debug-on-entry
+  "v" #'debug-on-variable-change
+  "c f" #'cancel-debug-on-entry
+  "c v" #'cancel-debug-on-variable-change)
+
+(keymap-set toggle-map "d" #'debug-prefix-map)
 
 ;;;; copyright
 
@@ -1821,13 +1836,13 @@ minibuffer."
           (t
            (modify-frame-parameters nil `((alpha-background . nil)))))))
 
-(bind-key "C-c f e" #'find-early-init-file)
-(bind-key "C-c f i" #'find-user-init-file)
+(keymap-global-set "C-c f e" #'find-early-init-file)
+(keymap-global-set "C-c f i" #'find-user-init-file)
 
-(bind-key "C-c f a" #'ffap)
-(bind-key "C-c f r" #'ff-find-related-file)
+(keymap-global-set "C-c f a" #'ffap)
+(keymap-global-set "C-c f r" #'ff-find-related-file)
 
-(bind-key "C-c T x" #'+toggle-transparent)
+(keymap-global-set "C-c T x" #'+toggle-transparent)
 
 
 ;;;; post-init
