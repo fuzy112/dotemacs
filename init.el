@@ -202,12 +202,17 @@
   (nerd-icons-set-font))
 
 ;;;; pixel-scroll
-(autoload 'pixel-scroll-up "pixel-scroll")
-(autoload 'pixel-scroll-down "pixel-scroll")
-(setq mwheel-scroll-up-function #'pixel-scroll-up)
-(setq mwheel-scroll-down-function #'pixel-scroll-down)
+
+(defun +pixel-scroll--autoload ()
+  (interactive)
+  (require 'pixel-scroll)
+  (let ((events (mapcar (lambda (ev) (cons t ev))
+                        (listify-key-sequence (this-command-keys)))))
+    (setq unread-command-events (append events unread-command-events))))
+(bind-key "<wheel-down>" #'+pixel-scroll--autoload)
 (with-eval-after-load 'pixel-scroll
-  (pixel-scroll-mode))
+  (unbind-key "<wheel-down>")
+  (pixel-scroll-precision-mode))
 
 ;;;; window
 (fset 'window-prefix-map window-prefix-map)
