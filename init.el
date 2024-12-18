@@ -40,6 +40,56 @@
 
 (setq straight-current-profile 'dotemacs)
 
+;;;; utils
+
+(eval-when-compile (require 'cl-lib))
+
+(defsubst alist-set! (alist key value &optional testfn)
+  "Associate KEY with VALUE in ALIST.
+Equality with KEY is tested by TESTFN, defaulting to `eq'."
+  (setf (alist-get key alist nil nil testfn) value))
+
+(defsubst alist-del! (alist key &optional testfn)
+  "Remove the first element of ALIST whose `car' equals KEY.
+Equality with KEY is tested by TESTFN, defaulting to `eq'."
+  (setf (alist-get key alist nil t testfn) t))
+
+(defmacro alist-setq! (alist &rest args)
+  "Associate each of KEY with VALUE in ALIST.
+If KEY is a symbol, equality is tested by `eq'.
+If KEY is an integer, equality is tested by `eql'.
+Otherwise, equality is tested by `equal'.
+
+\(fn [KEY VALUE]...)"
+  (declare (indent 1))
+  (cl-loop for (key value) on args by #'cddr
+           when (eq (car-safe key) 'quote)
+           do (byte-compile-warn-x key "The key should not be quoted")
+           collect `(alist-set! ,alist ,(macroexp-quote key) ,value
+                                ,(macroexp-quote
+                                  (cond ((symbolp key) #'eq)
+                                        ((integerp key) #'eql)
+                                        (t #'equal))))
+           into body
+           finally return (macroexp-progn body)))
+
+(defmacro alist-delq! (alist &rest keys)
+  "Remove elements of ALIST whose `car' equals to any of KEYS.
+If the key is a symbol, equality is tested by `eq'.
+If the key is an integer, equality is tested by `eql'.
+Otherwise, equality is tested by `equal'."
+  (declare (indent 1))
+  (macroexp-progn
+   (mapcar (lambda (key)
+             (when (eq (car-safe key) 'quote)
+               (byte-compile-warn-x key "The key should not be quoted"))
+             `(alist-del! ,alist ,(macroexp-quote key)
+                          ,(macroexp-quote
+                            (cond ((symbolp key) #'eq)
+                                  ((integerp key) #'eql)
+                                  (t #'equal)))))
+           keys)))
+
 
 ;;;; keymap
 
@@ -334,12 +384,10 @@
 (bind-key "M-A" #'marginalia-cycle minibuffer-local-map)
 
 (with-eval-after-load 'marginalia
-  (add-to-list 'marginalia-prompt-categories
-               '("\\<info manuals\\>" . info-manual))
-  (add-to-list 'marginalia-prompt-categories
-               '("\\<manual name\\>" . info-manual))
-  (add-to-list 'marginalia-prompt-categories
-               '("\\<Log rev,s\\>" . magit-rev))
+  (alist-setq! marginalia-prompt-categories
+    "\\<info manuals\\>" 'info-manual
+    "\\<manual name\\>" 'info-manual
+    "\\<Log rev,s\\>" 'magit-rev)
   (marginalia-mode))
 
 ;;;; crm
@@ -436,28 +484,21 @@ ARGS: see `completion-read-multiple'."
 (add-hook 'conf-mode-hook 'tempel-setup-capf)
 (add-hook 'prog-mode-hook 'tempel-setup-capf)
 (add-hook 'text-mode-hook 'tempel-setup-capf)
-(defvar tempel-path)
-(defvar tempel-user-elements)
+(defun tempel-include (elt)
+  (when (eq (car-safe elt) 'i)
+    (if-let* ((template (alist-get (cadr elt) (tempel--templates))))
+        (cons 'l template)
+      (message "Template %s not found" (cadr elt))
+      nil)))
 (with-eval-after-load 'tempel
   (setq tempel-path (concat user-emacs-directory "/templates/*.eld"))
-  (defun tempel-include (elt)
-    (when (eq (car-safe elt) 'i)
-      (if-let* ((template (alist-get (cadr elt) (tempel--templates))))
-          (cons 'l template)
-        (message "Template %s not found" (cadr elt))
-        nil)))
   (add-to-list 'tempel-user-elements #'tempel-include))
 
 ;;;; embark
 
 (bind-keys ("C-." . embark-act)
            ("C-c a" . embark-act))
-(setq embark-cycle-key ".")
 (setq prefix-help-command #'embark-prefix-help-command)
-
-(setq embark-indicators '(embark-minimal-indicator
-                          embark-highlight-indicator
-                          embark-isearch-highlight-indicator))
 
 (defun +embark/find-file-as-root (file)
   "Find FILE as root."
@@ -507,12 +548,11 @@ value for USE-OVERLAYS."
              #'ansi-color-apply-text-property-face)))
       (ansi-color-apply-on-region beg end))))
 
-(defvar embark-indicators)
-(defvar embark-file-map)
-(defvar embark-bookmark-map)
-(defvar embark-region-map)
-
 (with-eval-after-load 'embark
+  (setq embark-cycle-key ".")
+  (setq embark-indicators '(embark-minimal-indicator
+                            embark-highlight-indicator
+                            embark-isearch-highlight-indicator))
   (bind-key "#" '+embark/find-file-as-root embark-file-map)
   (bind-key "W" '+embark/eww-open-bookmark embark-bookmark-map)
   (bind-key "u" '+embark/browse-url-open-bookmark embark-bookmark-map)
@@ -620,9 +660,6 @@ value for USE-OVERLAYS."
 
 (setq read-buffer-function #'+consult--read-buffer-function)
 
-(setq consult-preview-key "M-.")
-(setq consult-narrow-key "<") ;; "C-+"
-
 (defvar orderless-match-faces)
 (defun +consult--orderless-regexp-compiler (input type &rest _config)
   (setq input (cdr (orderless-compile input)))
@@ -632,16 +669,18 @@ value for USE-OVERLAYS."
      (let ((orderless-match-faces orderless-match-faces))
        (setq orderless-match-faces (vconcat '(consult-highlight-match) orderless-match-faces))
        (orderless--highlight input t str)))))
-(setq-default consult--regexp-compiler #'+consult--orderless-regexp-compiler)
 
 (with-eval-after-load 'consult
+  (setq consult-preview-key "M-.")
+  (setq consult-narrow-key "<") ;; "C-+"
+  (setq-default consult--regexp-compiler #'+consult--orderless-regexp-compiler)
+
   ;; consult-customize is not autoloaded
   (eval '(consult-customize
           consult-xref consult-ripgrep consult-grep consult-git-grep
           consult-line consult-focus-lines consult-keep-lines
           consult-imenu
-          :preview-key '(:debounce 0.2 any))
-        lexical-binding)
+          :preview-key '(:debounce 0.2 any)))
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow))))
 
 
@@ -715,10 +754,10 @@ value for USE-OVERLAYS."
 (defun +popper--display (buffer alist)
   (funcall popper-display-function buffer alist))
 
-(add-to-list 'display-buffer-alist '(+popper--popup-p (+popper--display)))
+(alist-setq! display-buffer-alist +popper--popup-p '(+popper--display))
 
 (with-eval-after-load 'popper
-  (setq display-buffer-alist (assq-delete-all '+popper--popup-p display-buffer-alist))
+  (alist-delq! display-buffer-alist +popper--popup-p)
 
   ;; delay select-window to post-command-hook
   (defvar +popper--delayed-window nil)
@@ -764,8 +803,8 @@ value for USE-OVERLAYS."
 (autoload 'recentf-track-opened-file "recentf.el"
   "Insert the name of the file just opened or written into the recent list." )
 (add-hook 'find-file-hook #'recentf-track-opened-file)
-(setq recentf-max-saved-items 128)
 (with-eval-after-load 'recentf
+  (setq recentf-max-saved-items 128)
   (let ((inhibit-message t))
     (recentf-mode)))
 (with-eval-after-load 'consult
@@ -779,7 +818,7 @@ value for USE-OVERLAYS."
 (autoload 'save-place-find-file-hook "saveplace.el")
 (autoload 'save-place-dired-hook "saveplace.el"
   "Position point in a Dired buffer according to its saved place.
-This is run via ‘dired-initial-position-hook’, which see." )
+This is run via ‘dired-initial-position-hook’, which see.")
 (add-hook 'find-file-hook #'save-place-find-file-hook)
 (add-hook 'dired-initial-position-hook #'save-place-dired-hook)
 (with-eval-after-load 'saveplace
@@ -791,9 +830,8 @@ This is run via ‘dired-initial-position-hook’, which see." )
   "Consider tracking current buffer in a running Global Auto-Revert mode.")
 (add-hook 'find-file-hook #'auto-revert--global-adopt-current-buffer)
 
-(setq auto-revert-remote-files t
-      auto-revert-avoid-polling t)
 (with-eval-after-load 'autorevert
+  (setq auto-revert-avoid-polling t)
   (global-auto-revert-mode))
 
 ;;;; dired
@@ -826,7 +864,7 @@ This is run via ‘dired-initial-position-hook’, which see." )
 
 (defvar eshell-hist-mode-map)
 (with-eval-after-load 'eshell
-  (setopt eshell-scroll-to-bottom-on-input t
+  (setopt eshell-scroll-to-bottom-on-input 'this
           eshell-history-size 8192
           eshell-save-history-on-exit t)
   (setopt eshell-modules-list (seq-union '(eshell-tramp) (symbol-value 'eshell-modules-list)))
@@ -847,11 +885,10 @@ This is run via ‘dired-initial-position-hook’, which see." )
 
 ;;;; nxml-mode
 
-(with-eval-after-load 'nxml-mode
-  (defun +nxml-mode--flymake ()
-    (when (fboundp 'flymake-xmllint)
-      (add-hook 'flymake-diagnostics-functions nil #'flymake-xmllint)))
-  (add-hook 'nxml-mode-hook #'+nxml-mode--flymake))
+(defun +nxml-mode--flymake ()
+  (when (fboundp 'flymake-xmllint)
+    (add-hook 'flymake-diagnostics-functions nil #'flymake-xmllint)))
+(add-hook 'nxml-mode-hook #'+nxml-mode--flymake)
 
 ;;;; outline
 
@@ -935,12 +972,13 @@ Otherwise use `consult-xref'."
         (xref-show-definitions-buffer-at-bottom fetcher alist)
       (consult-xref fetcher alist))))
 
-(setq xref-search-program
-      (cond ((executable-find "rg") 'ripgrep)
-            ((executable-find "ugrep") 'ugrep)
-            (t 'grep))
-      xref-show-definitions-function #'+xref--show-definition
-      xref-auto-jump-to-first-definition t)
+(with-eval-after-load 'xref
+  (setq xref-search-program
+        (cond ((executable-find "rg") 'ripgrep)
+              ((executable-find "ugrep") 'ugrep)
+              (t 'grep))
+        xref-show-definitions-function #'+xref--show-definition
+        xref-auto-jump-to-first-definition t))
 
 ;;;; ctags
 
@@ -1138,21 +1176,20 @@ Display the result in a posframe." t)
   (clrhash buffer-env--cache))
 (defvar buffer-env-command-alist)
 (with-eval-after-load 'buffer-env
-  (setf (alist-get "/\\.nvmrc\\'" buffer-env-command-alist nil nil #'equal) "~/.nvm/nvm-exec env -0")
+  (alist-setq! buffer-env-command-alist "/\\.nvmrc\\'" "~/.nvm/nvm-exec env -0" #'equal)
   (setopt buffer-env-script-name '(".envrc" ".nvmrc" ".env")))
 
 ;;;; vc
 
-(setq vc-follow-symlinks t)
 (bind-key "C-c v" #'vc-prefix-map)
 (with-eval-after-load 'vc
-  (require 'diff-hl))
-
-(setq vc-svn-global-switches
-      '("--force-interactive"
-        "--config-option"
-        "config:auth:password-stores=gpg-agent")
-      vc-svn-diff-switches '("-x" "-u -p"))
+  (require 'diff-hl)
+  (setq vc-follow-symlinks t)
+  (setq vc-svn-global-switches
+        '("--force-interactive"
+          "--config-option"
+          "config:auth:password-stores=gpg-agent")
+        vc-svn-diff-switches '("-x" "-u -p")))
 
 ;;;; magit
 
@@ -1225,16 +1262,14 @@ Display the result in a posframe." t)
         [?\e ?o]))
 (add-hook 'eshell-load-hook #'eat-eshell-mode)
 (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
+
 (bind-key "C-x p s" #'eat-project)
 (with-eval-after-load 'project
-  (define-key project-other-window-map "s" #'eat-project-other-window))
-(with-eval-after-load 'project
+  (define-key project-other-window-map "s" #'eat-project-other-window)
   (when (consp project-switch-commands)
-    (setq project-switch-commands
-          (assq-delete-all 'project-shell
-                           project-switch-commands))
-    (add-to-list 'project-switch-commands
-                 '(eat-project "Eat") t)))
+    (alist-delq! project-switch-commands project-shell)
+    (add-to-list 'project-switch-commands '(eat-project "Eat") t)))
+
 (defvar eat-buffer-name)
 (defun +eat/here (&optional arg)
   "Run `eat' in the current directory.
@@ -1251,6 +1286,7 @@ minibuffer."
          (eat-buffer-name (concat "*" dir " : eat*")))
       (eat nil nil))))
 (bind-key "C-c t s" '+eat/here)
+
 (defvar eat-terminal)
 (defun eat-send-pass nil
   (interactive)
@@ -1262,6 +1298,7 @@ minibuffer."
                          (password-store--completing-read
                           t)))
   (eat-self-input 1 'return))
+
 (setq eat-kill-buffer-on-exit t)
 
 ;;;; with-editor
@@ -1310,8 +1347,7 @@ minibuffer."
 (add-hook 'pyim-deactivate-hook '+pyim--deactivate)
 
 (with-eval-after-load 'orderless
-  (add-to-list 'orderless-affix-dispatch-alist
-               '(96 . +orderless-pinyin)))
+  (alist-setq! orderless-affix-dispatch-alist 96 #'+orderless-pinyin))
 
 (with-eval-after-load 'pyim
   (pyim-basedict-enable))
@@ -1487,8 +1523,7 @@ minibuffer."
            ("C-c t d" . tui-locate))
 
 (with-eval-after-load 'tui
-  (setf (alist-get "^\\*tui-" display-buffer-alist nil nil #'equal)
-        '((display-buffer-same-window))))
+  (alist-setq! display-buffer-alist "^\\*tui-" '((display-buffer-same-window))))
 
 ;;;; deadgrep
 
@@ -1509,32 +1544,31 @@ minibuffer."
            ("<remap> <forward-page>" . logos-forward-page-dwim)
            ("<remap> <backward-page>" . logos-backward-page-dwim))
 
-(with-eval-after-load 'logos
-  (setopt logos-outline-regexp-alist
-          `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos-page-delimiter))
-            (org-mode . ,(format "\\(^\\*+ +\\|^-\\{5\\}$\\|%s\\)" logos-page-delimiter))))
-  (bind-keys :map logos-focus-mode-map
-             ("<left>" . logos-backward-page-dwim)
-             ("<right>" . logos-forward-page-dwim)))
-
 (defun logos-focus--narrow ()
   (when (symbol-value 'logos-focus-mode)
     (logos--narrow-to-page 0)
     (make-local-variable 'logos--restore)
     (push #'widen logos--restore)))
-(setopt logos-outlines-are-pages t)
-(setq-default logos-hide-cursor nil
-              logos-hide-mode-line t
-              logos-hide-header-line t
-              logos-hide-buffer-boundaries t
-              logos-hide-fringe t
-              logos-buffer-read-only nil
-              logos-scroll-lock nil
-              logos-olivetti t)
 
-(add-hook 'logos-focus-mode-hook #'logos-focus--narrow)
-
-(add-hook 'enable-theme-functions #'logos-update-fringe-in-buffers)
+(with-eval-after-load 'logos
+  (bind-keys :map logos-focus-mode-map
+             ("<left>" . logos-backward-page-dwim)
+             ("<right>" . logos-forward-page-dwim))
+  (setq logos-outline-regexp-alist
+        `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos-page-delimiter))
+          (org-mode . ,(format "\\(^\\*+ +\\|^-\\{5\\}$\\|%s\\)"
+                               logos-page-delimiter)))
+        logos-outlines-are-pages t)
+  (setq-default logos-hide-cursor nil
+                logos-hide-mode-line t
+                logos-hide-header-line t
+                logos-hide-buffer-boundaries t
+                logos-hide-fringe t
+                logos-buffer-read-only nil
+                logos-scroll-lock nil
+                logos-olivetti t)
+  (add-hook 'logos-focus-mode-hook #'logos-focus--narrow)
+  (add-hook 'enable-theme-functions #'logos-update-fringe-in-buffers))
 
 ;;;; eww
 
@@ -1571,15 +1605,15 @@ minibuffer."
   (let ((pp-default-function 'pp-28))
     (apply args)))
 
-(advice-add #'bookmark-write-file :around '+bookmark--pp-28)
-
-(setq bookmark-save-flag 1
-      bookmark-watch-bookmark-file 'silent
-      bookmark-version-control t)
-
 (autoload 'url-bookmark-add "bookmark-extras.el" "" t)
 (bind-key "C-x r u" #'url-bookmark-add)
 (with-eval-after-load 'bookmark
+  (advice-add #'bookmark-write-file :around '+bookmark--pp-28)
+
+  (setq bookmark-save-flag 1
+        bookmark-watch-bookmark-file 'silent
+        bookmark-version-control t)
+
   (require 'bookmark-extras))
 
 ;;;; org
@@ -1591,6 +1625,7 @@ minibuffer."
            ("C-c T m" . org-modern-mode))
 
 (add-hook 'org-mode-hook #'org-modern-mode)
+(add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
 
 (defun +org/toggle-emphasis-markers ()
   "Toggle the display of emphasis markers."
@@ -1599,16 +1634,13 @@ minibuffer."
   (font-lock-flush))
 
 (with-eval-after-load 'org
-  (setopt org-export-backends '(html latex texinfo)))
-
-(add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
-
-(setq org-agenda-hide-tags-regexp ".")
-(setq org-agenda-prefix-format
-      '((agenda . " %i %-12:c%?-12t% s")
-        (todo   . " ")
-        (tags   . " %i %-12:c")
-        (search . " %i %-12:c")))
+  (setopt org-export-backends '(html latex texinfo))
+  (setq org-agenda-hide-tags-regexp ".")
+  (setq org-agenda-prefix-format
+        '((agenda . " %i %-12:c%?-12t% s")
+          (todo   . " ")
+          (tags   . " %i %-12:c")
+          (search . " %i %-12:c"))))
 
 (with-eval-after-load 'org-capture
   (add-to-list 'org-capture-templates
@@ -1685,12 +1717,18 @@ minibuffer."
 
 ;;;; discourse
 
+;; Currently discourse-emacs doesn't have any autoload cookies, so I
+;; added them myself.
 (autoload 'discourse-login "discourse.el" nil t)
+;; Discourse tries to bind C-c d to `discourse-command-map' when loaded,
+;; which overrides my `doc-map'.  To prevent it, assign
+;; `discourse-command-map' to `doc-map' and bind discourse commands in
+;; it.
 (setq discourse-command-map doc-map)
 (bind-key "C-c d l" #'discourse-login)
+(defvar url-cache-expire-time)
 (with-eval-after-load 'discourse
   (setq discourse-debug nil)
-  (add-hook 'discourse-topic-mode-hook #'visual-line-mode)
   (define-key discourse-command-map "t" 'discourse-get-latest-topics)
   (define-key discourse-command-map "c" 'discourse-get-categories)
   (define-key discourse-command-map "l" 'discourse-login))
@@ -1698,6 +1736,7 @@ minibuffer."
 ;;;; copilot
 
 (with-eval-after-load 'copilot
+  ;; TODO choose better keybindings
   (bind-keys :map copilot-mode-map
              ("<tab>" . copilot-accept-completion)
              ("C-<tab>" . copilot-accept-completion-by-word)))
@@ -1706,11 +1745,11 @@ minibuffer."
 
 (bind-key "M-s b" #'browser-hist-search)
 (with-eval-after-load 'browser-hist
-  (setf (alist-get 'zen browser-hist-db-paths nil t)
-        (cond ((memq system-type '(cygwin windows-nt ms-dos))
+  (alist-setq! browser-hist-db-paths
+    zen (cond ((memq system-type '(cygwin windows-nt ms-dos))
                "$APPDATA/zen/Profiles/*/places.sqlite")))
-  (setf (alist-get 'zen browser-hist--db-fields)
-        '("title" "url" "moz_places" "ORDER BY last_visit_date desc"))
+  (alist-setq! browser-hist--db-fields
+    zen '("title" "url" "moz_places" "ORDER BY last_visit_date desc"))
   (setopt browser-hist-default-browser 'zen))
 
 ;;;; vundo
