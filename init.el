@@ -234,6 +234,11 @@
   (add-hook 'help-fns-describe-function-functions
             #'shortdoc-help-fns-examples-function 50))
 
+;;;; emacs-lock-mode
+
+(with-current-buffer "*scratch*"
+  (emacs-lock-mode 'kill))
+
 ;;;; backup
 
 (autoload 'list-backups "backup" nil t)
