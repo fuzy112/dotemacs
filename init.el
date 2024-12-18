@@ -681,7 +681,6 @@ value for USE-OVERLAYS."
 
 ;;;; popper
 
-(eval-when-compile (require 'popper))
 (autoload 'popper-toggle-type "popper.el" nil t)
 (bind-keys ("C-`" . popper-toggle)
            ("M-`" . popper-cycle)
@@ -756,14 +755,12 @@ value for USE-OVERLAYS."
 
 ;;;; whitespace
 
-(eval-when-compile (require 'whitespace))
 (dolist (hook '(prog-mode-hook conf-mode-hook yaml-mode-hook))
   (add-hook hook #'whitespace-mode))
 (setq whitespace-style '(face trailing empty indentation space-before-tab space-after-tab))
 
 ;;;; recentf
 
-(eval-when-compile (require 'recentf))
 (autoload 'recentf-track-opened-file "recentf.el"
   "Insert the name of the file just opened or written into the recent list." )
 (add-hook 'find-file-hook #'recentf-track-opened-file)
@@ -790,9 +787,8 @@ This is run via ‘dired-initial-position-hook’, which see." )
 
 ;;;; autorevert
 
-(eval-when-compile (require 'autorevert))
 (autoload 'auto-revert--global-adopt-current-buffer "autorevert.el"
-  "Consider tracking current buffer in a running Global Auto-Revert mode." )
+  "Consider tracking current buffer in a running Global Auto-Revert mode.")
 (add-hook 'find-file-hook #'auto-revert--global-adopt-current-buffer)
 
 (setq auto-revert-remote-files t
@@ -802,8 +798,6 @@ This is run via ‘dired-initial-position-hook’, which see." )
 
 ;;;; dired
 
-(eval-when-compile (require 'dired)
-                   (require 'dired-x))
 (add-hook 'dired-mode-hook #'dired-omit-mode)
 (setq dired-listing-switches "-lah"
       dired-hide-details-hide-absolute-location t
@@ -811,14 +805,12 @@ This is run via ‘dired-initial-position-hook’, which see." )
 
 ;;;; compile
 
-(eval-when-compile (require 'compile))
 (setq compilation-always-kill t
       compilation-ask-about-save t
       compilation-scroll-output 'first-error)
 
 ;;;; comint
 
-(eval-when-compile (require 'comint))
 (setq comint-prompt-read-only t
       comint-buffer-maximum-size 2048)
 
@@ -974,7 +966,7 @@ Otherwise use `consult-xref'."
 ;;;; gtags
 
 (autoload 'gtags-update "gtags.el" nil t)
-(autoload 'gtags-single-update "gtags.el" nil t)
+(autoload 'gtags-single-update "gtags.el" nil)
 (add-hook 'after-save-hook #'gtags-single-update)
 
 ;;;; devdocs
@@ -999,7 +991,6 @@ Otherwise use `consult-xref'."
   (setq-local comment-region-function #'js-jsx--comment-region))
 
 (define-advice js-jsx-enable (:after () sgml)
-  (eval-when-compile (require 'sgml-mode))
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map (current-local-map))
     (use-local-map map)
@@ -1138,8 +1129,8 @@ Display the result in a posframe." t)
 
 ;;;; buffer-env
 
-(dolist (hook '(hook-local-variables-hook comint-mode-hook))
-  (add-hook hook #'buffer-env-update))
+(add-hook 'hook-local-variables-hook #'buffer-env-update)
+(add-hook 'comint-mode-hook #'buffer-env-update)
 (defvar buffer-env--cache)
 (defun +buffer-env/clear-cache ()
   "Clear buffer-env cache."
@@ -1185,7 +1176,6 @@ Display the result in a posframe." t)
 
 ;;;; diff-hl
 
-(eval-when-compile (require 'diff-hl))
 (setq diff-hl-update-async t)
 (autoload 'diff-hl-magit-post-refresh "diff-hl.el")
 (add-hook 'tty-setup-hook #'diff-hl-margin-mode)
@@ -1502,12 +1492,10 @@ minibuffer."
 
 ;;;; deadgrep
 
-(eval-when-compile (require 'deadgrep))
 (bind-key "C-c s" #'deadgrep)
 
 ;;;; gptel
 
-(eval-when-compile (require 'gptel))
 (bind-keys ("C-c t A" . gptel)
            ("C-c t a" . gptel-send))
 
