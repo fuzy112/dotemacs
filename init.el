@@ -1685,8 +1685,15 @@ minibuffer."
 
 ;;;; discourse
 
-(add-hook 'discourse-topic-mode-hook #'visual-line-mode)
-(setq discourse-debug nil)
+(autoload 'discourse-login "discourse.el" nil t)
+(setq discourse-command-map doc-map)
+(bind-key "C-c d l" #'discourse-login)
+(with-eval-after-load 'discourse
+  (setq discourse-debug nil)
+  (add-hook 'discourse-topic-mode-hook #'visual-line-mode)
+  (define-key discourse-command-map "t" 'discourse-get-latest-topics)
+  (define-key discourse-command-map "c" 'discourse-get-categories)
+  (define-key discourse-command-map "l" 'discourse-login))
 
 ;;;; copilot
 
