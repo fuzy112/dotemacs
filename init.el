@@ -45,15 +45,15 @@
 
 (eval-when-compile (require 'cl-lib))
 
-(cl-defsubst alist-set! (alist key value &optional testfn)
+(defmacro alist-set! (alist key value &optional testfn)
   "Associate KEY with VALUE in ALIST.
 Equality with KEY is tested by TESTFN, defaulting to `eq'."
-  (setf (alist-get key alist nil nil testfn) value))
+  `(setf (alist-get ,key ,alist nil nil ,testfn) ,value))
 
-(cl-defsubst alist-del! (alist key &optional testfn)
+(defmacro alist-del! (alist key &optional testfn)
   "Remove the first element of ALIST whose `car' equals KEY.
 Equality with KEY is tested by TESTFN, defaulting to `eq'."
-  (setf (alist-get key alist nil t testfn) t))
+  `(setf (alist-get ,key ,alist nil t ,testfn) nil))
 
 (defmacro alist-setq! (alist &rest args)
   "Associate each of KEY with VALUE in ALIST.
@@ -1762,12 +1762,14 @@ minibuffer."
 
 (keymap-global-set "M-s b" #'browser-hist-search)
 (after-load! browser-hist
-  (alist-setq! browser-hist-db-paths
-    zen (cond ((memq system-type '(cygwin windows-nt ms-dos))
-               "$APPDATA/zen/Profiles/*/places.sqlite")))
+  (alist-setq! browser-hist-db-paths zen
+	      (cond
+	       ((memq system-type
+		      '(cygwin windows-nt ms-dos))
+	        "$APPDATA/zen/Profiles/*/places.sqlite")))
   (alist-setq! browser-hist--db-fields
     zen '("title" "url" "moz_places" "ORDER BY last_visit_date desc"))
-  (setopt browser-hist-default-browser 'zen))
+  (setq browser-hist-default-browser 'zen))
 
 ;;;; vundo
 
@@ -1889,6 +1891,7 @@ Otherwise disable it."
   "f" #'display-fill-column-indicator-mode
   "l" #'display-line-numbers-mode
   "o" #'outline-minor-mode
+  "x" #'+toggle-transparent
   "v" #'visual-line-mode)
 
 (defvar-keymap debug-map
