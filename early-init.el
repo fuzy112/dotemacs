@@ -144,7 +144,7 @@
                                     :background-color ,(face-background 'default nil '(shadow))))
     (custom-set-faces
      `(fill-column-indicator
-       ((((type tty))
+       ((((type tty w32))
          :height 1.0 :foreground "gray50" :background unspecified)))
      `(parenthesis
        ((t :inherit shadow)))
