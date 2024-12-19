@@ -40,6 +40,7 @@
 
 (setq package-enable-at-startup nil)
 (setq straight-use-version-specific-build-dir t)
+(setq straight-enable-use-package-integration t)
 (defvar straight-current-profile)
 (setq straight-current-profile nil)
 (setq straight-profiles '((nil . "default.el")
@@ -138,19 +139,29 @@
 
 (defun +custom-faces (&optional theme)
   (unless (eq theme 'user)
-    (setq pp-posframe-parameters `( :border-color ,(face-background 'border nil '(shadow))
+    (setq pp-posframe-parameters `( :border-color "gray"
+                                    :border-width 1
                                     :background-color ,(face-background 'default nil '(shadow))))
-    (let ((c '((class color) (min-colors 256)))
-          (bg-color (frame-parameter nil 'background-color))
-          (fg-color (frame-parameter nil 'foreground-color))
-          (shadow-color (face-foreground 'shadow)))
-      (custom-set-faces
-       `(fill-column-indicator ((,c :height 1.0 :foreground ,shadow-color :background unspecified)))
-       `(parenthesis ((,c :foreground ,shadow-color)))
-       `(mode-line-active ((,c :background ,bg-color :overline ,fg-color
-                               :box (:line-width 6 :color ,bg-color :style nil))))
-       `(mode-line-inactive ((,c :background ,bg-color :overline ,shadow-color
-                                 :box (:line-width 6 :color ,bg-color :style nil))))))))
+    (custom-set-faces
+     `(fill-column-indicator
+       ((((type tty))
+         :height 1.0 :foreground "gray50" :background unspecified)))
+     `(parenthesis
+       ((t :inherit shadow)))
+     `(mode-line-active
+       ((((class color grayscale) (background dark))
+         :background "black" :overline "white"
+         :box (:line-width 6 :color "black" :style nil))
+        (((class color grayscale) (background light))
+         :background "white" :overline "black"
+         :box (:line-width 6 :color "white" :style nil))))
+     `(mode-line-inactive
+       ((((class color grayscale) (background dark))
+         :background "black" :overline "gray70"
+         :box (:line-width 6 :color "black" :style nil))
+        (((class color grayscale) (background light))
+         :background "white" :overline "gray30"
+         :box (:line-width 6 :color "white" :style nil)))))))
 (add-hook 'enable-theme-functions #'+custom-faces t)
 (setq custom-file (locate-user-emacs-file "custom.el"))
 (when (file-exists-p custom-file)
@@ -175,8 +186,8 @@
 (provide 'early-init)
 
 ;; Local Variables:
-;; eval: (outline-minor-mode)
 ;; indent-tabs-mode: nil
+;; no-byte-compile: t
 ;; End:
 
 ;;; early-init.el ends here
