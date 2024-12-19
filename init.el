@@ -1914,7 +1914,7 @@ Otherwise disable it."
   "V" #'vundo
   "P" #'p-search
   "a" #'embark-act
-  "c" tool-map
+  "t" tool-map
   "d" doc-map
   "e" #'cape-prefix-map
   "f" file-map
