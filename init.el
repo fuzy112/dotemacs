@@ -1243,6 +1243,7 @@ Display the result in a posframe." t)
 (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
 (after-load! diff-hl
   (setopt diff-hl-update-async t)
+  (keymap-set diff-hl-mode-map "C-c v" diff-hl-command-map)
   (global-diff-hl-mode))
 
 ;;;; eldoc-diffstat
