@@ -81,7 +81,8 @@
   :keymap pp-posframe-map
   :global t
   (if pp-posframe-mode
-      (apply #'posframe-show pp-posframe-buffer-name pp-posframe-parameters)
+      (apply #'posframe-show pp-posframe-buffer-name
+	     :min-width 5 pp-posframe-parameters)
     (posframe-hide pp-posframe-buffer-name)))
 
 (defun pp-posframe-display-value (value lexical)
