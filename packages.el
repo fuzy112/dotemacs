@@ -7,6 +7,7 @@
 (straight-use-package '(cmake-mode :host github :repo "emacsmirror/cmake-mode" :files ("*.el")))
 (straight-use-package '(consult-everything :host github :repo "jthaman/consult-everything"))
 (straight-use-package '(discourse :host codeberg :repo "glenneth/discourse-emacs"))
+(straight-use-package '(eat :files ("*.el" "*.texi" "*.info" "integration" "term" "terminfo")))
 (straight-use-package '(eldoc-diffstat :host github :repo "kljohann/eldoc-diffstat"))
 (straight-use-package '(flymake-straight :host github :repo "KarimAziev/flymake-straight"))
 (straight-use-package '(gptel-quick :host github :repo "karthink/gptel-quick"))
@@ -91,4 +92,3 @@
 (straight-use-package 'ws-butler)
 (straight-use-package 'xterm-color)
 (straight-use-package 'yaml-mode)
-(straight-use-package `(eat :files ("*.el" "*.texi" "*.info" "integration" "term" "terminfo")))
