@@ -377,9 +377,6 @@ ARGS: see `completion-read-multiple'."
     "S-TAB" #'corfu-previous
     "<backtab>" #'corfu-previous))
 
-(after-load! savehist
-  (add-to-list 'savehist-additional-variables 'corfu-history))
-
 (unless (featurep 'tty-child-frames)
   (add-hook 'tty-setup-hook #'corfu-terminal-mode)
   (unless (display-graphic-p)
@@ -1400,7 +1397,9 @@ minibuffer."
 
 (autoload 'savehist-minibuffer-hook "savehist")
 (add-hook 'minibuffer-setup-hook #'savehist-minibuffer-hook)
-(after-load! savehist
+
+(after-load! (:or savehist compile corfu clipetty)
+  (setq savehist-additional-variables '(kill-ring compile-command corfu-history))
   (savehist-mode))
 
 ;;;; auth-sources
