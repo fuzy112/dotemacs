@@ -105,6 +105,10 @@
                             (height . 38)
                             (alpha-background . 80)))
 
+;;;; warnings
+
+(setopt warning-suppress-log-types '((bytecomp)))
+
 ;;;; files
 
 (setq confirm-kill-emacs 'y-or-n-p)

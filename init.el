@@ -1720,8 +1720,8 @@ minibuffer."
 
 ;;;; sftp
 (autoload 'sftp "sftp" nil t)
-
-;;;; other packages
+
+;;;; display buffer alist
 
 
 (defun find-early-init-file ()
