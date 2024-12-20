@@ -1446,6 +1446,14 @@ minibuffer."
 (add-hook 'next-error-hook '+lin-line--next-error-h)
 (add-hook 'gnus-visual-mark-article-hook #'hl-line-highlight)
 
+;;;; email and gnus
+
+(setq mm-discouraged-alternatives
+      (eval-when-compile
+        (require 'mm-decode)
+        (append '("text/html" "text/richtext")
+                (custom--standard-value 'mm-discouraged-alternatives))))
+
 ;;;; emacs-server
 
 ;; Workaround windows encoding issue
