@@ -93,6 +93,7 @@
       (delay-mode-hooks
 	(unless (derived-mode-p 'emacs-lisp-mode)
 	  (emacs-lisp-mode))
+	(defvar pp-default-function)
 	(let ((pp-default-function 'pp-fill))
 	  (pp value))
 	(setq lexical-binding lexical)
