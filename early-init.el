@@ -24,6 +24,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'dotemacs-core))
+
 ;;;; gc
 
 (setq gc-cons-threshold 25600000)
@@ -113,7 +115,7 @@
 
 ;;;; modus-theme
 
-(with-eval-after-load 'modus-themes
+(after-load! modus-themes
   (setq modus-themes-to-toggle '(modus-vivendi modus-operandi))
   (setq modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
   (setq modus-themes-mixed-fonts t
@@ -123,22 +125,22 @@
 
 ;;;; doom-modeline
 
+(require 'doom-modeline)
 (doom-modeline-mode)
 
 ;;;; libraries
-(with-eval-after-load 'dash
+(after-load! (:or dash elisp-mode)
   (global-dash-fontify-mode))
-(with-eval-after-load 'info-look
+(after-load! info-look
   (dash-register-info-lookup))
-(declare-function anaphora-install-font-lock-keywords "anaphora")
-(with-eval-after-load 'anaphora
-  (with-eval-after-load 'lisp-mode
-    (anaphora-install-font-lock-keywords)))
+(after-load! (:and anaphora elisp-mode)
+  (anaphora-install-font-lock-keywords))
 
 ;;;; custom
 
 (defun +custom-faces (&optional theme)
   (unless (eq theme 'user)
+    (defvar pp-posframe-parameters)
     (setq pp-posframe-parameters `( :border-color "gray"
                                     :border-width 1
                                     :background-color ,(face-background 'default nil '(shadow))))
@@ -167,10 +169,13 @@
 (when (file-exists-p custom-file)
   (let ((straight-current-profile 'custom))
     (load custom-file nil t)))
+(eval-after-load 'init #'+custom-faces)
+
+(declare-function modus-themes-load-theme "modus-themes.el" (arg1))
+(defvar modus-themes-to-toggle)
 (unless custom-enabled-themes
   (require 'modus-themes)
   (modus-themes-load-theme (car modus-themes-to-toggle)))
-(eval-after-load 'init #'+custom-faces)
 
 
 ;;;; post-early-init
@@ -187,7 +192,6 @@
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
-;; no-byte-compile: t
 ;; End:
 
 ;;; early-init.el ends here

@@ -27,7 +27,9 @@
 (require 'early-init early-init-file t)
 (when (featurep 'init)
   (load early-init-file nil t))
-(require 'compat)
+(eval-when-compile
+  (require 'dotemacs-core)
+  (require 'compat))
 
 ;;;; pre-init
 
@@ -40,88 +42,6 @@
     (load pre-init-file nil t)))
 
 (setq straight-current-profile 'dotemacs)
-
-;;;; utils
-
-(eval-when-compile (require 'cl-lib))
-
-(defmacro alist-set! (alist key value &optional testfn)
-  "Associate KEY with VALUE in ALIST.
-Equality with KEY is tested by TESTFN, defaulting to `eq'."
-  `(setf (alist-get ,key ,alist nil nil ,testfn) ,value))
-
-(defmacro alist-del! (alist key &optional testfn)
-  "Remove the first element of ALIST whose `car' equals KEY.
-Equality with KEY is tested by TESTFN, defaulting to `eq'."
-  `(setf (alist-get ,key ,alist nil t ,testfn) nil))
-
-(defmacro alist-setq! (alist &rest args)
-  "Associate each of KEY with VALUE in ALIST.
-If KEY is a symbol, equality is tested by `eq'.
-If KEY is an integer, equality is tested by `eql'.
-Otherwise, equality is tested by `equal'.
-
-\(fn ALIST &rest [KEY VALUE]...)"
-  (declare (indent 1))
-  (cl-loop for (key value) on args by #'cddr
-           when (eq (car-safe key) 'quote)
-           do (byte-compile-warn-x key "The key should not be quoted")
-           collect `(alist-set! ,alist ,(macroexp-quote key) ,value
-                                ,(macroexp-quote
-                                  (cond ((symbolp key) #'eq)
-                                        ((integerp key) #'eql)
-                                        (t #'equal))))
-           into body
-           finally return (macroexp-progn body)))
-
-(defmacro alist-delq! (alist &rest keys)
-  "Remove elements of ALIST whose `car' equals to any of KEYS.
-If the key is a symbol, equality is tested by `eq'.
-If the key is an integer, equality is tested by `eql'.
-Otherwise, equality is tested by `equal'."
-  (declare (indent 1))
-  (macroexp-progn
-   (mapcar (lambda (key)
-             (when (eq (car-safe key) 'quote)
-               (byte-compile-warn-x key "The key should not be quoted"))
-             `(alist-del! ,alist ,(macroexp-quote key)
-                          ,(macroexp-quote
-                            (cond ((symbolp key) #'eq)
-                                  ((integerp key) #'eql)
-                                  (t #'equal)))))
-           keys)))
-
-(defmacro after-load! (spec &rest body)
-  "Evaluate BODY after the specified features or files are loaded.
-SPEC could be
-- a symbol
-- a string
-- (SPECS...)
-- (:and SPECS...)
-- (:or SPEC...)."
-  (declare (indent 1))
-  (unless lexical-binding
-    (error "after-load! requires lexical-binding to be t"))
-  (pcase-exhaustive spec
-    (`(quote ,unquoted)
-     `(after-load! ,unquoted ,@body))
-    ((or (pred stringp) (pred symbolp))
-     `(with-eval-after-load ,(macroexp-quote spec)
-        (with-no-warnings ,@body)))
-    (`(:or . ,sub-specs)
-     (let ((lambda-var (gensym "body-")))
-       `(let ((,lambda-var (lambda () (with-no-warnings ,@body))))
-          ,(macroexp-progn
-            (mapcar (lambda (sub-spec)
-                      `(after-load! ,sub-spec
-                         (funcall (prog1
-                                      ,lambda-var
-                                    (setq ,lambda-var #'ignore)))))
-                    sub-specs)))))
-    ((or `(:and . ,sub-specs)
-         (and (pred listp) sub-specs))
-     `(after-load! ,(car sub-specs)
-        (after-load! ,(cdr sub-specs) ,@body)))))
 
 
 ;;;; meow-edit
@@ -1093,6 +1013,8 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
 (add-hook 'emacs-lisp-mode-hook #'flymake-straight-flymake-elisp-mode-init)
 (after-load! elisp-mode
+  (static-if (boundp 'trusted-content)
+    (add-to-list 'trusted-content (locate-user-emacs-file "site-lisp/")))
   (static-if (native-comp-available-p)
       (keymap-set emacs-lisp-mode-map "C-c C-l" #'emacs-lisp-native-compile-and-load))
   (keymap-set lisp-interaction-mode-map "C-c C-j" #'eval-print-last-sexp))
@@ -1883,6 +1805,7 @@ Otherwise disable it."
   "a" #'ffap
   "r" #'ff-find-related-file
   "R" #'recentf-open
+  "n" #'rename-visited-file
   "b" #'backup-list-backups)
 
 (defvar-keymap toggle-map
