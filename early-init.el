@@ -150,22 +150,31 @@
                                     :background-color ,(face-background 'default nil '(shadow))))
     (custom-set-faces
      `(fill-column-indicator
-       ((((type tty w32))
+       ((((supports :height 1))
+         :height 1)
+        (t
          :height 1.0 :foreground "gray50" :background unspecified)))
      `(parenthesis
        ((t :inherit shadow)))
+     `(header-line
+       ((((supports :underline t) (class color grayscale) (background dark))
+         :background "black" :underline (:color "white" :style line :position t)
+         :box (:line-width 6 :color "black" :style nil))
+        (((supports :underline t) (class color grayscale) (background light))
+         :background "white" :underline (:color "black" :style line :position t)
+         :box (:line-width 6 :color "white" :style nil))))
      `(mode-line-active
-       ((((class color grayscale) (background dark))
+       ((((supports :overline t) (class color grayscale) (background dark))
          :background "black" :overline "white"
          :box (:line-width 6 :color "black" :style nil))
-        (((class color grayscale) (background light))
+        (((supports :overline t) (class color grayscale) (background light))
          :background "white" :overline "black"
          :box (:line-width 6 :color "white" :style nil))))
      `(mode-line-inactive
-       ((((class color grayscale) (background dark))
+       ((((supports :overline t) (class color grayscale) (background dark))
          :background "black" :overline "gray70"
          :box (:line-width 6 :color "black" :style nil))
-        (((class color grayscale) (background light))
+        (((supports :overline t)(class color grayscale) (background light))
          :background "white" :overline "gray30"
          :box (:line-width 6 :color "white" :style nil)))))))
 (add-hook 'enable-theme-functions #'+custom-faces t)
