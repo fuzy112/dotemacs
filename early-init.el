@@ -24,8 +24,6 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'dotemacs-core))
-
 ;;;; gc
 
 (setq gc-cons-threshold 25600000)
@@ -78,6 +76,8 @@
 
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp/tui"))
+
+(eval-when-compile (require 'dotemacs-core))
 
 ;;;; emacs core
 
