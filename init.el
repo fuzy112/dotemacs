@@ -1439,6 +1439,8 @@ minibuffer."
 
 (after-load! lin
   (setopt lin-face 'lin-magenta)
+  (setopt lin-mode-hooks
+          (seq-union lin-mode-hooks (custom--standard-value 'lin-mode-hooks)))
   (lin-global-mode))
 
 (add-hook 'next-error-hook '+lin-line--next-error-h)
