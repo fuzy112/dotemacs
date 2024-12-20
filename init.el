@@ -628,12 +628,12 @@ value for USE-OVERLAYS."
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow))))
 
 
-(declare-function grep--heading-filter "grep.el")
 (defun +embark-consult-export-grep--headings (&rest _)
-  (save-excursion
-    (goto-char (point-max))
-    (let ((inhibit-read-only t))
-      (grep--heading-filter))))
+  (when (fboundp 'grep--heading-filter)
+    (save-excursion
+      (goto-char (point-max))
+      (let ((inhibit-read-only t))
+        (grep--heading-filter)))))
 
 (declare-function embark-consult-export-grep "embark-consult.el" (arg1))
 (after-load! embark-consult
@@ -810,6 +810,7 @@ This is run via ‘dired-initial-position-hook’, which see.")
   (interactive)
   (defvar eshell-buffer-name)
   (with-suppressed-warnings ((obsolete display-comint-buffer-action))
+    (defvar display-comint-buffer-action)
     (let ((eshell-buffer-name (format "*%s : eshell*" (abbreviate-file-name default-directory)))
           (display-comint-buffer-action '(() (inhibit-same-window . t))))
       (eshell))))
@@ -857,22 +858,21 @@ This is run via ‘dired-initial-position-hook’, which see.")
 
 ;;;; hl-todo
 
-(define-keymap :keymap global-map
-  "C-c T t" #'hl-todo-mode
-  "C-c t [" #'hl-todo-previous
-  "C-c t ]" #'hl-todo-next
-  "C-c t o" #'hl-todo-occur
-  "C-c t i" #'hl-todo-insert)
-
 (add-hook 'prog-mode-hook #'hl-todo-mode)
 (add-hook 'conf-mode-hook #'hl-todo-mode)
 
-(defvar-keymap +hl-todo-repeat-map
-  "[" #'hl-todo-previous
-  "]" #'hl-todo-next
-  "o" #'hl-todo-occur)
-(put #'hl-todo-previous 'repeat-map +hl-todo-repeat-map)
-(put #'hl-todo-previous 'repeat-map +hl-todo-repeat-map)
+(after-load! hl-todo
+  (define-keymap :keymap hl-todo-mode-map
+    "C-c t [" #'hl-todo-previous
+    "C-c t ]" #'hl-todo-next
+    "C-c t o" #'hl-todo-occur
+    "C-c t i" #'hl-todo-insert)
+  (defvar-keymap +hl-todo-repeat-map
+    "[" #'hl-todo-previous
+    "]" #'hl-todo-next
+    "o" #'hl-todo-occur)
+  (put #'hl-todo-previous 'repeat-map +hl-todo-repeat-map)
+  (put #'hl-todo-previous 'repeat-map +hl-todo-repeat-map))
 
 ;;;; display-line-numbers
 
@@ -1013,7 +1013,7 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
 (add-hook 'emacs-lisp-mode-hook #'flymake-straight-flymake-elisp-mode-init)
 (after-load! elisp-mode
-  (static-if (boundp 'trusted-content)
+  (when (boundp 'trusted-content)
     (add-to-list 'trusted-content (locate-user-emacs-file "site-lisp/")))
   (static-if (native-comp-available-p)
       (keymap-set emacs-lisp-mode-map "C-c C-l" #'emacs-lisp-native-compile-and-load))
