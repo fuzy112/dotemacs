@@ -8,8 +8,10 @@
   :group 'programming)
 
 (defface dynamic-highlight
-  '((((supports :box t) (class color) (min-colors 256))
-     :box (:line-width (-1 . -1) :color "#0066bb"))
+  '((((class color grayscale) (min-colors 256) (background light))
+     :weight bold :underline (:color "#333388" :position t))
+    (((class color grayscale) (min-colors 256) (background dark))
+     :weight bold :underline (:color "#9099d9" :position t))
     (t :inherit lazy-highlight))
   "Face used for highlight the symbol at point.")
 
@@ -27,7 +29,7 @@
 (defvar dynamic-highlight--regexp nil)
 (defvar dynamic-highlight--buffer nil)
 
-(defun dynamic-highlight--do ()
+(defun dynamic-highlight--update ()
   (and dynamic-highlight--regexp
        dynamic-highlight--buffer
     (with-current-buffer dynamic-highlight--buffer
@@ -49,7 +51,7 @@
   (when dynamic-highlight-mode
     (setq dynamic-highlight--timer
 	  (run-with-idle-timer
-	   dynamic-highlight-delay t #'dynamic-highlight--do))))
+	   dynamic-highlight-delay t #'dynamic-highlight--update))))
 
 (provide 'dynamic-highlight)
 ;;; dynamic-highlight.el ends here
