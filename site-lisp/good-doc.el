@@ -80,7 +80,7 @@
 
 (defun good-doc--parse (doc)
   "Parse the DOC index."
-  (let ((dom (with-work-buffer
+  (let ((dom (with-temp-buffer
                (insert-file-contents doc)
                (libxml-parse-xml-region nil nil doc)))
         (good-doc--doc doc)
@@ -166,7 +166,7 @@
          (file (format "%X" hashcode))
          (default-directory "~/good-doc/"))
     (if (file-exists-p file)
-        (with-work-buffer
+        (with-temp-buffer
           (insert-file-contents file)
           (read (current-buffer)))
       (let ((val (apply args)))
@@ -346,7 +346,7 @@ PROMPT is passed to `completing-read'."
 (defun good-doc--shr-tag-pre (dom)
   "Render code block in DOM."
   (insert
-   (with-work-buffer
+   (with-temp-buffer
      (shr-tag-pre dom)
      (goto-char (point-min))
      (ignore-errors
@@ -375,7 +375,7 @@ PROMPT is passed to `completing-read'."
       (unless (string-empty-p file)
         (erase-buffer)
         (shr-insert-document
-         (with-work-buffer
+         (with-temp-buffer
            (insert-file-contents file)
            (good-doc--filter-doc
             (libxml-parse-html-region))))))
