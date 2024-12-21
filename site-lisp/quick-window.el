@@ -33,15 +33,30 @@
 	     (< top-1 top-2)))))
 
 ;;;###autoload
-(defun quick-window-jump ()
-  "Quickly jump to a window by assigned character labels."
-  (interactive)
-  (let ((windows (window-list)))
+(defun quick-window-jump (&optional arg)
+  "Quickly jump to a window by assigned character labels.
+
+By default, considers only the windows in the current frames.
+Prefixed with one \\[universal-argument], considers all windows on all
+visible frames.
+Prefixed with two \\[universal-argument]'s, considers all windows on
+visible and iconified frames.
+Prefixed with three \\[universal-argument]'s, considers all windows on
+all existing frames."
+  (interactive "p")
+  (let*
+      ((all-frames (cond ((eq arg 4) 'visible)
+			 ((eq arg 16) 0)
+			 ((eq arg 64) t)
+			 (t nil)))
+       (windows (window-list-1 nil nil all-frames)))
     (if (length< windows 3)
 	(cl-loop for win in windows
 		 with current-win = (selected-window)
 		 when (not (eq win current-win))
-		 return (select-window win))
+		 return (progn
+			  (select-frame-set-input-focus (window-frame win))
+			  (select-window win)))
       (let (overlays)
 	(unwind-protect
 	    (let (window-map)
@@ -58,6 +73,7 @@
 		       do (overlay-put ov 'window win))
 	      (let ((key (read-key "Jump to window: ")))
 		(when-let ((win (plist-get window-map key #'eql)))
+		  (select-frame-set-input-focus (window-frame win))
 		  (select-window win))))
 	  (mapc #'delete-overlay overlays)))))
   (pulse-momentary-highlight-one-line))
