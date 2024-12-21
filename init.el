@@ -1684,17 +1684,7 @@ minibuffer."
   (keymap-set mode-specific-map "d" #'doc-map)
   (define-key doc-map "t" 'discourse-get-latest-topics)
   (define-key doc-map "c" 'discourse-get-categories)
-  (define-key doc-map "l" 'discourse-login)
-
-  (defvar discourse-forum-url-history nil)
-  (require 'savehist)
-  (add-to-list 'savehist-additional-variables 'discourse-forum-url-history)
-  (define-advice discourse-login (:before (url) history)
-    (interactive
-     (list (read-string (format-prompt "Discourse Forum URL"
-                                       (car-safe discourse-forum-url-history))
-                        nil 'discourse-forum-url-history
-                        (car-safe discourse-forum-url-history))))))
+  (define-key doc-map "l" 'discourse-login))
 
 ;;;; copilot
 
