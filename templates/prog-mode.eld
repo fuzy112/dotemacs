@@ -1,3 +1,4 @@
+;; -*- coding: utf-8-unix; -*-
 prog-mode
 
 (copyright (if (derived-mode-p 'lisp-data-mode)

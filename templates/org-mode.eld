@@ -1,6 +1,7 @@
+;; -*- coding: utf-8-unix; -*-
 org-mode
 
-(header "# -*- mode: org; coding: utf-8; -*-" n n
+(header "# -*- mode: org; coding: utf-8-unix; -*-" n n
 	"#+title: " (p "title") n
 	"#+author: " user-full-name "  <" user-mail-address ">" n
 	"#+date: " (current-time-string) n

@@ -1,4 +1,4 @@
-;; -*- mode: lisp-data; coding: utf-8; -*-
+;; -*- mode: lisp-data; coding: utf-8-unix; -*-
 
 emacs-lisp-mode
 
