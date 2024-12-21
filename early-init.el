@@ -149,26 +149,26 @@
                                     :border-width 1
                                     :background-color ,(face-background 'default nil '(shadow))))
     (custom-set-faces
-     `(fill-column-indicator
+     '(fill-column-indicator
        ((((type w32 tty))
          :height 1.0 :foreground "gray50" :background unspecified)))
-     `(parenthesis
+     '(parenthesis
        ((t :inherit shadow)))
-     `(header-line
+     '(header-line
        ((((supports :underline t) (class color grayscale) (background dark))
          :background "black" :underline (:color "white" :style line :position t)
          :box (:line-width 6 :color "black" :style nil))
         (((supports :underline t) (class color grayscale) (background light))
          :background "white" :underline (:color "black" :style line :position t)
          :box (:line-width 6 :color "white" :style nil))))
-     `(mode-line-active
+     '(mode-line-active
        ((((supports :overline t) (class color grayscale) (background dark))
          :background "black" :overline "white"
          :box (:line-width 6 :color "black" :style nil))
         (((supports :overline t) (class color grayscale) (background light))
          :background "white" :overline "black"
          :box (:line-width 6 :color "white" :style nil))))
-     `(mode-line-inactive
+     '(mode-line-inactive
        ((((supports :overline t) (class color grayscale) (background dark))
          :background "black" :overline "gray70"
          :box (:line-width 6 :color "black" :style nil))
