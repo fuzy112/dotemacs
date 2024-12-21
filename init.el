@@ -150,6 +150,10 @@
   "B" #'straight-rebuild-all
   "v" #'straight-freeze-versions
   "V" #'straight-thaw-versions
+  "n" #'straight-normalize-package
+  "N" #'straight-normalize-all
+  "m" #'straight-merge-package
+  "M" #'straight-merge-all
   "u" #'straight-use-package
   "d" #'straight-visit-package
   "w" #'straight-visit-package-website
