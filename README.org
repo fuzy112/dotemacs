@@ -154,6 +154,11 @@ This is my personal Emacs configuration.
 
   Run ~magit-dispatch~ in the package repository.
 
+** ~quick-window-jump~
+  findex: quick-window-jump
+
+  Quickly jump to a window, similar to ~ace-window~.
+
 * Custom Packages
 #+cindex: Custom Packages
 
