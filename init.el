@@ -1863,6 +1863,15 @@ Otherwise disable it."
   "v" #'vc-prefix-map
   "w" #'window-prefix-map)
 
+(define-keymap :keymap ctl-x-map
+  "C-c" #'restart-emacs
+  "k" #'kill-current-buffer)
+
+(define-keymap :keymap global-map
+  "M-c" #'capitalize-dwim
+  "M-l" #'downcase-dwim
+  "M-u" #'upcase-dwim)
+
 
 ;;;; post-init
 
