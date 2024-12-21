@@ -1832,7 +1832,9 @@ Otherwise disable it."
   "v" #'visual-line-mode)
 
 (defvar-keymap debug-map
+  :doc "Keymap for debugging commands."
   :prefix 'debug-map
+  :name "Debug map"
   "e" #'toggle-debug-on-error
   "q" #'toggle-debug-on-quit
   "f" #'debug-on-entry
