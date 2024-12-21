@@ -247,6 +247,7 @@
                                orderless-literal
                                orderless-regexp)))
 (setq completion-styles '(orderless basic))
+(setq completion-category-defaults nil)
 (setq completion-category-overrides
       '((file . ((styles . (basic partial-completion))))
         (symbol . ((styles . (orderless+flex))))
