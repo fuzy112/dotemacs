@@ -260,7 +260,7 @@
                             (find-function-noselect function))))
               (buffer (car position))
               (point (cdr position)))
-    (insert "\n  Source code:\n\n")
+    (insert "\nSource code:\n\n")
     (let ((text (with-current-buffer buffer
                   (save-excursion
                     (goto-char point)
@@ -269,6 +269,9 @@
                                       (point))))
                       (font-lock-ensure beg end)
                       (buffer-substring beg end))))))
+      (add-text-properties 0 (length text)
+                           '(line-prefix (space :align-to 2))
+                           text)
       (insert text)
       (insert "\n\n"))))
 
