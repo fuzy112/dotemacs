@@ -1791,15 +1791,14 @@ Otherwise disable it."
   (let ((current-alpha (frame-parameter nil 'alpha-background)))
     (when (and (numberp current-alpha) (< current-alpha 100))
       (setq +toggle-transparent-alpha current-alpha))
-    (cond ((= arg 1)
+    (cond ((eq arg 1)
            (if (and (numberp current-alpha) (< current-alpha 100))
                (modify-frame-parameters nil '((alpha-background . nil)))
              (modify-frame-parameters nil `((alpha-background . ,+toggle-transparent-alpha)))))
-          ((= arg 4)
+          ((eq arg 4)
            (modify-frame-parameters nil `((alpha-background . ,+toggle-transparent-alpha))))
           (t
            (modify-frame-parameters nil `((alpha-background . nil)))))))
-
 
 
 ;;;; keybindings
