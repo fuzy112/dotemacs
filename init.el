@@ -1205,10 +1205,6 @@ Display the result in a posframe." t)
 
 ;;;; magit
 
-(keymap-global-set "C-x g" #'magit-status)
-(keymap-global-set "C-x M-g" #'magit-dispatch)
-(keymap-global-set "C-c M-g" #'magit-file-dispatch)
-(keymap-global-set "C-x p m" #'magit-project-status)
 (after-load! project
   (when (consp project-switch-commands)
     (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)))
@@ -1833,6 +1829,9 @@ Otherwise disable it."
 (defalias 'window-prefix-map window-prefix-map)
 (defalias 'project-prefix-map project-prefix-map)
 
+(define-keymap :keymap project-prefix-map
+  "m" #'magit-project-status)
+
 (defvar-keymap tool-map
   :doc "Keymap for calling external tools."
   :prefix 'tool-map
@@ -1911,6 +1910,7 @@ Otherwise disable it."
   "e" #'cape-prefix-map
   "f" file-map
   "o" toggle-map
+  "m" #'magit-file-dispatch
   "p" #'project-prefix-map
   "s" #'deadgrep
   "v" #'vc-prefix-map
@@ -1918,7 +1918,9 @@ Otherwise disable it."
 
 (define-keymap :keymap ctl-x-map
   "C-c" #'restart-emacs
-  "k" #'kill-current-buffer)
+  "k" #'kill-current-buffer
+  "g" #'magit-status-quick
+  "M-g" #'magit-dispatch)
 
 (define-keymap :keymap global-map
   "M-c" #'capitalize-dwim
