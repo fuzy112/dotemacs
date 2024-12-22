@@ -65,9 +65,16 @@ all existing frames."
 		       for letter being the elements of quick-window-keys
 		       do (setq window-map (plist-put window-map letter win #'eql))
 		       for start = (window-start win)
-		       for ov = (make-overlay start start (window-buffer win))
+		       for end = (min (+ start 3) (window-end win))
+		       for width = (with-selected-window win
+				     (save-excursion (goto-char end) (current-column)))
+		       for ov = (make-overlay start end (window-buffer win))
 		       do (push ov overlays)
 		       do (overlay-put ov 'after-string
+				       (propertize " "
+						   'display
+						   `(space :align-to ,width)))
+		       do (overlay-put ov 'display
 				       (propertize (format "[%c]" letter)
 						   'face 'quick-window-label))
 		       do (overlay-put ov 'window win))
