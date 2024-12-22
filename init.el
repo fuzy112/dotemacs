@@ -253,27 +253,25 @@
 
 (defun help-fns-function-source-code (function)
   "Insert Emacs Lisp source code for FUNCTION into the current buffer."
-  (when-let* ((position (minibuffer-with-setup-hook
-                            (lambda ()
-                              (throw 'no-c-source nil))
-                          (catch 'no-c-source
-                            (find-function-noselect function))))
+  (when-let* ((inhibit-interaction t)
+              (position (catch 'inhibit-interaction
+                          (find-function-noselect function)))
               (buffer (car position))
-              (point (cdr position)))
+              (point (cdr position))
+              (text (with-current-buffer buffer
+	              (save-excursion
+	                (goto-char point)
+	                (let ((beg point)
+		              (end (progn (end-of-defun)
+			                  (point))))
+	                  (font-lock-ensure beg end)
+	                  (buffer-substring beg end))))))
+    (add-text-properties 0 (length text)
+                         '(line-prefix (space :align-to 2))
+                         text)
     (insert "\nSource code:\n\n")
-    (let ((text (with-current-buffer buffer
-                  (save-excursion
-                    (goto-char point)
-                    (let ((beg point)
-                          (end (progn (end-of-defun)
-                                      (point))))
-                      (font-lock-ensure beg end)
-                      (buffer-substring beg end))))))
-      (add-text-properties 0 (length text)
-                           '(line-prefix (space :align-to 2))
-                           text)
-      (insert text)
-      (insert "\n\n"))))
+    (insert text)
+    (insert "\n\n")))
 
 ;;;; emacs-lock-mode
 
