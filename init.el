@@ -1508,17 +1508,16 @@ minibuffer."
 
 ;;;; tui
 
-(unless (memq system-type '(windows-nt ms-dos))
-  (autoload 'tui-run "tui" nil t)
-  (autoload 'tui-rg "tui" nil t)
-  (autoload 'tui-ugrep "tui" nil t)
-  (autoload 'tui-yazi "tui" nil t)
-  (autoload 'tui-kill "tui" nil t)
-  (autoload 'tui-line "tui" nil t)
-  (autoload 'tui-find "tui" nil t)
-  (autoload 'tui-locate "tui" nil t)
-  (after-load! tui
-    (alist-setq! display-buffer-alist "^\\*tui-" '((display-buffer-same-window)))))
+(autoload 'tui-run "tui" nil t)
+(autoload 'tui-rg "tui" nil t)
+(autoload 'tui-ugrep "tui" nil t)
+(autoload 'tui-yazi "tui" nil t)
+(autoload 'tui-kill "tui" nil t)
+(autoload 'tui-line "tui" nil t)
+(autoload 'tui-find "tui" nil t)
+(autoload 'tui-locate "tui" nil t)
+(after-load! tui
+  (alist-setq! display-buffer-alist "^\\*tui-" '((display-buffer-same-window))))
 
 ;;;; gptel
 
