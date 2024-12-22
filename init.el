@@ -253,7 +253,11 @@
 
 (defun help-fns-function-source-code (function)
   "Insert Emacs Lisp source code for FUNCTION into the current buffer."
-  (when-let* ((position (find-function-noselect function))
+  (when-let* ((position (minibuffer-with-setup-hook
+                            (lambda ()
+                              (throw 'no-c-source nil))
+                          (catch 'no-c-source
+                            (find-function-noselect function))))
               (buffer (car position))
               (point (cdr position)))
     (insert "\n  Source code:\n\n")
