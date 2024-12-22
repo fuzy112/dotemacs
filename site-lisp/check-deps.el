@@ -61,7 +61,7 @@
             (minver (nth 3 req))
             exe ver)
         (if (setq exe (executable-find prog))
-            (with-work-buffer
+            (with-temp-buffer
               (if (not (zerop (apply #'call-process exe nil t nil args)))
                   (funcall insert-line prog ": error: "
                            (progn
