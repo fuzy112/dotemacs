@@ -49,6 +49,7 @@
 (require 'meow)
 
 (defun meow-setup ()
+  "Setup meow keybindings for Dvorak layout."
   (setq meow-keypad-leader-dispatch "C-c")
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
   (meow-leader-define-key
@@ -128,7 +129,8 @@
 ;;;; straight
 
 (defvar straight--recipe-cache)
-(defun +straight/visit-package-repository (pkg)
+(defun straight-magit-package-status (pkg)
+  "Run `magit-dispatch' in the repo of PKG."
   (interactive (list (straight--select-package "Visit: ")))
   (let ((repo (plist-get (gethash pkg straight--recipe-cache)
                          :local-repo)))
@@ -157,22 +159,51 @@
   "u" #'straight-use-package
   "d" #'straight-visit-package
   "w" #'straight-visit-package-website
-  "g" #'+straight/visit-package-repository
+  "g" #'straight-magit-package-status
   "x f" #'straight-x-fetch-all)
 
 
-;;;; faces
+;;;; fonts
+
+;; The following fonts need to be installed:n
+;;  - https://github.com/be5invis/Iosevka/releases/download/v31.8.0/SuperTTC-SGr-IosevkaSS04-31.8.0.zip
+;;  - https://github.com/be5invis/Sarasa-Gothic/releases/download/v1.0.26/Sarasa-SuperTTC-1.0.26.7z
+;;  - https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/NerdFontsSymbolsOnly.zip
+
 (unless (eq (framep-on-display) t)
-  (with-demoted-errors "Failed to setup fonts for Chinese characters: %S"
+  (with-demoted-errors "Failed to setup fonts: %S"
+
+    ;; chinese
     (set-fontset-font (frame-parameter nil 'font) 'han "Sarasa Gothic CL")
-    (set-fontset-font (frame-parameter nil 'font) 'cjk-misc "Sarasa Gothic CL")))
+    (set-fontset-font (frame-parameter nil 'font) 'cjk-misc "Sarasa Gothic CL")
+
+    ;; nerd-icons
+    (let ((charsets '((#xe5fa . #xe6b2)  ;; Seti-UI + Custom
+		      (#xe700 . #xe7c5)  ;; Devicons
+		      (#xf000 . #xf2e0)  ;; Font Awesome
+		      (#xe200 . #xe2a9)  ;; Font Awesome Extension
+		      (#xf500 . #xfd46) (#xf0001 . #xf1af0) ;; Material Design Icons
+		      (#xe300 . #xe3eb)  ;; Weather
+		      (#xf400 . #xf4a8) #x2665 #x26a1 #xf27c  ;; Octicons
+		      (#xe0a0 . #xe0a2) (#xe0b0 . #xe0b3)  ;; Powerline Symbols
+		      #xe0a3 (#xe0b4 . #xe0c8) (#xe0cc . #xe0d2) #xe0d4  ;; Powerline Extra Symbols
+		      (#x23fb . #x23fe) #x2b58  ;; IEC Power Symbols
+		      (#xf300 . #xf372)  ;; Font Logos
+		      (#xe000 . #xe00a)  ;; Pomicons
+		      (#xea60 . #xebeb))))  ;; Codicons
+      (cl-loop for charset in charsets do
+	       (set-fontset-font
+	        (frame-parameter nil 'font)
+	        charset
+                "Symbols Nerd Font"
+	        nil
+	        'prepend)))))
+
 (set-fontset-font t 'han "Sarasa Gothic CL")
+
 (set-face-attribute 'default nil :family "Iosevka SS04")
 (set-face-attribute 'fixed-pitch nil :family "Iosevka SS04")
 (set-face-attribute 'variable-pitch nil :family "Sarasa UI CL")
-(add-to-list 'face-font-family-alternatives '("Sarasa Gothic CL" "Iosevka SS04"))
-(add-to-list 'face-font-family-alternatives '("Sarasa UI CL" "Sarasa Gothic CL" "Iosevka SS04"))
-(setopt face-font-family-alternatives (append face-font-family-alternatives nil))
 
 ;;;; nerd-icons
 
@@ -183,9 +214,6 @@
 (add-hook 'archive-mode-hook #'nerd-icons-multimodal-mode)
 (add-hook 'tar-mode-hook #'nerd-icons-multimodal-mode)
 
-(ignore-errors
-  (nerd-icons-set-font))
-
 ;;;; pixel-scroll
 
 (defun +pixel-scroll--autoload ()
@@ -195,8 +223,11 @@
                         (listify-key-sequence (this-command-keys)))))
     (setq unread-command-events (append events unread-command-events))))
 (keymap-global-set "<wheel-down>" #'+pixel-scroll--autoload)
+(keymap-global-set "<wheel-up>" #'+pixel-scroll--autoload)
 (after-load! pixel-scroll
   (keymap-global-unset "<wheel-down>")
+  (keymap-global-unset "<wheel-up>")
+  (fmakunbound '+pixel-scroll--autoload)
   (pixel-scroll-precision-mode))
 
 ;;;; window
@@ -220,8 +251,9 @@
 
 ;;;; emacs-lock-mode
 
+;; prevent emacs from exiting if the *scratch* buffer is changed.
 (with-current-buffer "*scratch*"
-  (emacs-lock-mode 'kill))
+  (add-hook 'first-change-hook #'emacs-lock-mode nil t))
 
 ;;;; backup
 
@@ -230,16 +262,9 @@
 
 ;;;; breadcrumb
 
-(defun +breadcrumb--prog-mode ()
-  (setq-local header-line-format '((:eval (breadcrumb-project-crumbs))
-                                   ": "
-                                   (:eval (breadcrumb-imenu-crumbs)))))
-(defun +breadcrumb--text-mode ()
-  (setq-local header-line-format '((:eval (breadcrumb-imenu-crumbs)))))
-
-(add-hook 'text-mode-hook #'+breadcrumb--text-mode)
-(add-hook 'conf-mode-hook #'+breadcrumb--text-mode)
-(add-hook 'prog-mode-hook #'+breadcrumb--prog-mode)
+(add-hook 'text-mode-hook #'breadcrumb-local-mode)
+(add-hook 'conf-mode-hook #'breadcrumb-local-mode)
+(add-hook 'prog-mode-hook #'breadcrumb-local-mode)
 
 ;;;; orderless
 
@@ -262,6 +287,7 @@
         (eglot-capf . ((styles . (orderless))))
         (magit-rev . ((styles . (orderless+flex))))))
 
+;; copied from orderless wiki:
 (defun +orderless--consult-suffix ()
   "Regexp which matches the end of string with Consult tofu support."
   (if (and (boundp 'consult--tofu-char) (boundp 'consult--tofu-range))
@@ -568,17 +594,18 @@ value for USE-OVERLAYS."
     ;; Use consult--read-1 instead of consult--read to suppress consult customizations.
     ;; TODO figure out if this is the correct way
     ;; should I bind this-command temporarily?
-    (consult--read-1 #'read-file-name-internal
-                     :state (consult--file-preview)
-                     :prompt prompt
-                     :initial (if initial
-                                  (expand-file-name initial)
-                                default-directory)
-                     :require-match mustmatch
-                     :predicate pred
-                     :preview-key "M-."
-                     :sort t
-                     :lookup (lambda (selected &rest _) (substitute-in-file-name selected)))))
+    (consult--read-1
+     #'read-file-name-internal
+     :state (consult--file-preview)
+     :prompt prompt
+     :initial (if initial
+                  (expand-file-name initial)
+                default-directory)
+     :require-match mustmatch
+     :predicate pred
+     :preview-key "M-."
+     :sort t
+     :lookup (lambda (selected &rest _) (substitute-in-file-name selected)))))
 
 (setq read-file-name-function #'+consult--read-file-name-function)
 
@@ -590,15 +617,16 @@ value for USE-OVERLAYS."
   ;; Use consult--read-1 instead of consult--read to suppress consult customizations.
   ;; TODO figure out if this is the correct way
   ;; should I bind this-command temporarily?
-  (consult--read-1 #'internal-complete-buffer
-                   :state (consult--buffer-preview)
-                   :default def
-                   :prompt (format-prompt (replace-regexp-in-string ":[[:space:]]*\\'" "" prompt) def)
-                   :require-match mustmatch
-                   :predicate pred
-                   :preview-key consult-preview-key
-                   :sort t
-                   :lookup (lambda (selected &rest _) selected)))
+  (consult--read-1
+   #'internal-complete-buffer
+   :state (consult--buffer-preview)
+   :default def
+   :prompt (format-prompt (replace-regexp-in-string ":[[:space:]]*\\'" "" prompt) def)
+   :require-match mustmatch
+   :predicate pred
+   :preview-key consult-preview-key
+   :sort t
+   :lookup (lambda (selected &rest _) selected)))
 
 (setq read-buffer-function #'+consult--read-buffer-function)
 
@@ -621,16 +649,20 @@ value for USE-OVERLAYS."
   (setq consult-narrow-key "<") ;; "C-+"
   (setq-default consult--regexp-compiler #'+consult--orderless-regexp-compiler)
 
-  ;; consult-customize is not autoloaded
+  ;; consult-customize is a macro and is not autoloaded
   (eval '(consult-customize
           consult-xref consult-ripgrep consult-grep consult-git-grep
           consult-line consult-focus-lines consult-keep-lines
           consult-imenu
           :preview-key '(:debounce 0.2 any)))
+
+  ;; url-only bookmark type
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow))))
 
 
 (defun +embark-consult-export-grep--headings (&rest _)
+  "Group the results of `embark-consult-export-grep'."
+  ;; `grep--heading-filter' is a new function in Emacs 30.1.
   (when (fboundp 'grep--heading-filter)
     (save-excursion
       (goto-char (point-max))
@@ -649,21 +681,19 @@ value for USE-OVERLAYS."
   "C-x C-d" #'consult-dir
   "C-x C-j" #'consult-dir-jump-file)
 
+;;;; indent-aux
+
+;; New minor mode in Emacs 30.1: deindents code copied into kill-ring.
+(when (fboundp 'kill-ring-deindent-mode)
+  (kill-ring-deindent-mode))
+
 ;;;; windmove
 
-(defun +windmove--autoload ()
-  (interactive)
-  (require 'windmove)
-  (let ((events (mapcar (lambda (ev) (cons t ev))
-                        (listify-key-sequence (this-command-keys)))))
-    (setq unread-command-events (append events unread-command-events))))
 (define-keymap :keymap global-map
-  "S-<left>" #'+windmove--autoload
-  "S-<right>" #'+windmove--autoload
-  "S-<up>" #'+windmove--autoload
-  "S-<down>" #'+windmove--autoload)
-(after-load! windmove
-  (windmove-default-keybindings))
+  "S-<left>" #'windmove-left
+  "S-<right>" #'windmove-right
+  "S-<up>" #'windmove-up
+  "S-<down>" #'windmove-down)
 
 ;;;; popper
 
@@ -761,15 +791,14 @@ value for USE-OVERLAYS."
   (let ((inhibit-message t))
     (recentf-mode)))
 (after-load! consult
+  ;; enable recentf when accessing the recentf-file source from consult.
   (setf (plist-get consult--source-recent-file :enabled)
         (lambda () (require 'recentf) (symbol-value 'recentf-mode))))
 
 ;;;; saveplace
 
 (autoload 'save-place-find-file-hook "saveplace.el")
-(autoload 'save-place-dired-hook "saveplace.el"
-  "Position point in a Dired buffer according to its saved place.
-This is run via ‘dired-initial-position-hook’, which see.")
+(autoload 'save-place-dired-hook "saveplace.el")
 (add-hook 'find-file-hook #'save-place-find-file-hook)
 (add-hook 'dired-initial-position-hook #'save-place-dired-hook)
 (after-load! saveplace
@@ -777,8 +806,7 @@ This is run via ‘dired-initial-position-hook’, which see.")
 
 ;;;; autorevert
 
-(autoload 'auto-revert--global-adopt-current-buffer "autorevert.el"
-  "Consider tracking current buffer in a running Global Auto-Revert mode.")
+(autoload 'auto-revert--global-adopt-current-buffer "autorevert.el")
 (add-hook 'find-file-hook #'auto-revert--global-adopt-current-buffer)
 
 (after-load! autorevert
@@ -813,6 +841,7 @@ This is run via ‘dired-initial-position-hook’, which see.")
 ;;;; eshell
 
 (defun +eshell/here ()
+  "Open an EShell buffer in `default-directory'."
   (interactive)
   (defvar eshell-buffer-name)
   (with-suppressed-warnings ((obsolete display-comint-buffer-action))
@@ -838,6 +867,7 @@ This is run via ‘dired-initial-position-hook’, which see.")
 ;;;; text-mode
 
 (defun +text-mode--capf ()
+  "Addd `cape-dict' to the buffer local value of `completion-at-point-functions'."
   (when (fboundp 'cape-dict)
     (add-hook 'completion-at-point-functions #'cape-dict 90 t)))
 (add-hook 'text-mode-hook #'+text-mode--capf)
@@ -852,12 +882,16 @@ This is run via ‘dired-initial-position-hook’, which see.")
 ;;;; outline
 
 (defun +outline-minor-faces ()
+  "Enable `outline-minor-faces-mode' if not in a `help-mode' buffer."
+  ;; outline-minor-faces-mode conflicts with \\[describe-mode].
   (unless (derived-mode-p 'help-mode)
     (outline-minor-faces-mode)))
 (add-hook 'outline-minor-mode-hook '+outline-minor-faces)
 
 ;;;; adaptive-wrap or visual-wrap
 
+;; visual-wrap is a built-in replacement of adaptive-wrap since Emacs
+;; 30.1.
 (static-if (locate-library "visual-wrap")
     (add-hook 'visual-line-mode-hook #'visual-wrap-prefix-mode)
   (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode))
@@ -911,10 +945,12 @@ This is run via ‘dired-initial-position-hook’, which see.")
 
 ;;;; xref
 
+;; use Ctrl and mouse click to jump to definitions, and Ctrl+Alt+mouse
+;; click to jump to references.
 (keymap-global-unset "C-<down-mouse-1>")
 (keymap-global-unset "C-M-<down-mouse-1>")
 (keymap-global-set "C-<mouse-1>" #'xref-find-definitions-at-mouse)
-(keymap-global-set "C-<mouse-1>" #'xref-find-references-at-mouse)
+(keymap-global-set "C-M-<mouse-1>" #'xref-find-references-at-mouse)
 
 (defvar +xref--max-definitions-in-buffer 5)
 
@@ -962,11 +998,7 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 (autoload 'gtags-single-update "gtags.el" nil)
 (add-hook 'after-save-hook #'gtags-single-update)
 
-;;;; devdocs
-
-
-
-;;;; gtkdoc
+;;;; good-doc
 
 (autoload 'good-doc-lookup "good-doc" nil t)
 
@@ -979,9 +1011,11 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 (declare-function js-jsx--comment-region "js.el")
 
 (define-advice js-jsx-enable (:after () comments)
+  "Enable JSX comments."
   (setq-local comment-region-function #'js-jsx--comment-region))
 
 (define-advice js-jsx-enable (:after () sgml)
+  "Enable sgml commands in JSX buffers."
   (eval-and-compile (require 'sgml-mode))
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map (current-local-map))
@@ -992,10 +1026,6 @@ See `xref-show-xrefs' for FETCHER and ALIST."
     (define-key map (kbd "C-c C-f") #'sgml-skip-tag-forward)
     (define-key map (kbd "C-c C-o") #'sgml-tag)
     (define-key map (kbd "C-c C-t") #'sgml-tag)))
-
-;;;; sly
-
-;;;; geiser
 
 ;;;; paren-face
 
@@ -1019,10 +1049,12 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
 (add-hook 'emacs-lisp-mode-hook #'flymake-straight-flymake-elisp-mode-init)
 (after-load! elisp-mode
+  ;; Emacs 30.1
   (when (boundp 'trusted-content)
+    ;; trust contents in site-lisp
     (add-to-list 'trusted-content (locate-user-emacs-file "site-lisp/")))
-  (static-if (native-comp-available-p)
-      (keymap-set emacs-lisp-mode-map "C-c C-l" #'emacs-lisp-native-compile-and-load))
+  (when (native-comp-available-p)
+    (keymap-set emacs-lisp-mode-map "C-c C-l" #'emacs-lisp-native-compile-and-load))
   (keymap-set lisp-interaction-mode-map "C-c C-j" #'eval-print-last-sexp))
 
 ;;;; pp
@@ -1062,7 +1094,7 @@ Display the result in a posframe." t)
 ;;;; eldoc
 
 (after-load! eldoc
-  (eldoc-add-command
+  (eldoc-add-command                    ; for eldoc-diffstat
    'magit-next-line 'magit-previous-line
    'magit-section-forward 'magit-section-backward
    'magit-section-forward-sibling 'magit-section-backward-sibling
@@ -1094,9 +1126,6 @@ Display the result in a posframe." t)
 
 ;;;; project
 
-(static-if (commandp 'project-prefix-or-any-command)
-    (setopt project-switch-commands 'project-prefix-or-any-command))
-
 (declare-function project-root "project.el" (&rest rest))
 (defun +project--external-roots ()
   (and-let* ((project (project-current))
@@ -1110,6 +1139,9 @@ Display the result in a posframe." t)
                (string-lines (buffer-string) t nil))))))
 
 (after-load! project
+  (when (commandp 'project-prefix-or-any-command)
+    (setopt project-switch-commands 'project-prefix-or-any-command))
+
   (setq-default project-vc-external-roots-function #'+project--external-roots)
   (setq project-compilation-buffer-name-function #'project-prefixed-buffer-name)
 
@@ -1246,6 +1278,7 @@ minibuffer."
 (declare-function eat-self-input "eat.el" (n &optional e))
 (declare-function password-store--completing-read "password-store.el" (&optional require-match))
 (defun eat-send-pass nil
+  "Send a password from Password-Store to the terminal."
   (interactive)
   (if eat-terminal nil
     (user-error "Process not running"))
@@ -1305,7 +1338,8 @@ minibuffer."
 (add-hook 'pyim-deactivate-hook '+pyim--deactivate)
 
 (after-load! orderless
-  (alist-setq! orderless-affix-dispatch-alist 96 #'+orderless-pinyin))
+  ;; 通过拼音搜索中文
+  (alist-setq! orderless-affix-dispatch-alist ?` #'+orderless-pinyin))
 
 (after-load! pyim
   (pyim-basedict-enable))
@@ -1359,12 +1393,7 @@ minibuffer."
   (dolist (terminal (terminal-list))
     (when (eq (framep-on-display terminal) t)
       (with-selected-frame (car (frames-on-display-list terminal))
-        (term-keys/init))))
-
-  (after-load! eat
-    (unless (member [?\e ?\C-\]] eat-semi-char-non-bound-keys)
-      (setopt eat-semi-char-non-bound-keys
-              (cons [?\e ?\C-\]] eat-semi-char-non-bound-keys)))))
+        (term-keys/init)))))
 
 ;;;; xterm
 
@@ -1479,17 +1508,17 @@ minibuffer."
 
 ;;;; tui
 
-(autoload 'tui-run "tui" nil t)
-(autoload 'tui-rg "tui" nil t)
-(autoload 'tui-ugrep "tui" nil t)
-(autoload 'tui-yazi "tui" nil t)
-(autoload 'tui-kill "tui" nil t)
-(autoload 'tui-line "tui" nil t)
-(autoload 'tui-find "tui" nil t)
-(autoload 'tui-locate "tui" nil t)
-
-(after-load! tui
-  (alist-setq! display-buffer-alist "^\\*tui-" '((display-buffer-same-window))))
+(unless (memq system-type '(windows-nt ms-dos))
+  (autoload 'tui-run "tui" nil t)
+  (autoload 'tui-rg "tui" nil t)
+  (autoload 'tui-ugrep "tui" nil t)
+  (autoload 'tui-yazi "tui" nil t)
+  (autoload 'tui-kill "tui" nil t)
+  (autoload 'tui-line "tui" nil t)
+  (autoload 'tui-find "tui" nil t)
+  (autoload 'tui-locate "tui" nil t)
+  (after-load! tui
+    (alist-setq! display-buffer-alist "^\\*tui-" '((display-buffer-same-window)))))
 
 ;;;; gptel
 
@@ -1604,8 +1633,8 @@ minibuffer."
   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
 
   (define-keymap :keymap org-mode-map
-    "C-c T M" #'+org/toggle-emphasis-markers
-    "C-c T m" #'org-modern-mode)
+    "C-c o M" #'+org/toggle-emphasis-markers
+    "C-c o m" #'org-modern-mode)
   (setopt org-export-backends '(html latex texinfo))
   (setq org-agenda-hide-tags-regexp ".")
   (setq org-agenda-prefix-format
@@ -1696,7 +1725,7 @@ minibuffer."
 (after-load! copilot
   ;; TODO choose better keybindings
   (define-keymap :keymap copilot-mode-map
-    "<tab>" #'copilot-accept-completion
+ "<tab>" #'copilot-accept-completion
     "C-<tab>" #'copilot-accept-completion-by-word))
 
 ;;;; browser-hist
@@ -1778,12 +1807,6 @@ Otherwise disable it."
 
 (defalias 'window-prefix-map window-prefix-map)
 (defalias 'project-prefix-map project-prefix-map)
-
-(defalias 'search-map search-map)
-(keymap-global-set "M-s" #'search-map)
-
-(defalias 'goto-map goto-map)
-(keymap-global-set "M-g" #'goto-map)
 
 (defvar-keymap tool-map
   :doc "Keymap for calling external tools."
