@@ -1067,6 +1067,9 @@ See `xref-show-xrefs' for FETCHER and ALIST."
     "C-}" #'puni-barf-forward
     "C-{" #'puni-barf-backward))
 
+(after-load! elec-pair
+  (keymap-set electric-pair-mode-map "]" #'up-list))
+
 ;;;; elisp-mode
 
 (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
