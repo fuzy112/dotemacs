@@ -1554,9 +1554,9 @@ minibuffer."
 ;;;; logos
 
 (keymap-global-set "<f8>" #'logos-focus-mode)
-(keymap-set narrow-map "<remap> <narrow-to-region>" #'logos-narrow-dwim)
-(keymap-set narrow-map "<remap> <forward-page>" #'logos-forward-page-dwim)
-(keymap-set narrow-map "<remap> <backward-page>" #'logos-backward-page-dwim)
+(keymap-global-set "<remap> <narrow-to-region>" #'logos-narrow-dwim)
+(keymap-global-set "<remap> <forward-page>" #'logos-forward-page-dwim)
+(keymap-global-set "<remap> <backward-page>" #'logos-backward-page-dwim)
 
 (defun logos-focus--narrow ()
   (declare-function logos--narrow-to-page "logos.el")
