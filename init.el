@@ -247,7 +247,26 @@
         help-enable-completion-autoload nil)
   (when (fboundp 'shortdoc-help-fns-examples-function)
     (add-hook 'help-fns-describe-function-functions
-              #'shortdoc-help-fns-examples-function 50)))
+              #'shortdoc-help-fns-examples-function 50))
+
+  (add-hook 'help-fns-describe-function-functions #'help-fns-function-source-code 90))
+
+(defun help-fns-function-source-code (function)
+  "Insert Emacs Lisp source code for FUNCTION into the current buffer."
+  (when-let* ((position (find-function-noselect function))
+              (buffer (car position))
+              (point (cdr position)))
+    (insert "\n  Source code:\n\n")
+    (let ((text (with-current-buffer buffer
+                  (save-excursion
+                    (goto-char point)
+                    (let ((beg point)
+                          (end (progn (end-of-defun)
+                                      (point))))
+                      (font-lock-ensure beg end)
+                      (buffer-substring beg end))))))
+      (insert text)
+      (insert "\n\n"))))
 
 ;;;; emacs-lock-mode
 
