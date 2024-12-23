@@ -219,6 +219,11 @@
 (set-face-attribute 'fixed-pitch nil :family "Iosevka SS04")
 (set-face-attribute 'variable-pitch nil :family "Sarasa UI CL")
 
+(setopt face-font-family-alternatives
+        (seq-union '(("Sarasa Gothic CL" "Iosevka SS04")
+                     ("Sarasa UI CL" "Sarasa Gothic CL" "Iosevka SS04"))
+                   face-font-family-alternatives))
+
 ;;;; nerd-icons
 
 (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
