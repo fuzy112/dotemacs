@@ -1483,7 +1483,10 @@ minibuffer."
 (add-hook 'minibuffer-setup-hook #'savehist-minibuffer-hook)
 
 (after-load! (:or savehist compile corfu clipetty)
-  (setq savehist-additional-variables '(kill-ring compile-command corfu-history))
+  (setq savehist-additional-variables '(kill-ring
+                                        register-alist
+                                        compile-command
+                                        corfu-history))
   (savehist-mode))
 
 ;;;; auth-sources
