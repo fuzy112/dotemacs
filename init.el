@@ -1910,7 +1910,7 @@ Otherwise disable it."
   "e" #'cape-prefix-map
   "f" file-map
   "o" toggle-map
-  "m" #'magit-file-dispatch
+  "M-g" #'magit-file-dispatch
   "p" #'project-prefix-map
   "s" #'deadgrep
   "v" #'vc-prefix-map
