@@ -268,7 +268,7 @@
     (add-hook 'help-fns-describe-function-functions
               #'shortdoc-help-fns-examples-function 50))
 
-  (add-hook 'help-fns-describe-function-functions #'help-fns-function-source-code 90))
+  (add-to-list 'help-fns-describe-function-functions #'help-fns-function-source-code 'append))
 
 (defun help-fns-function-source-code (function)
   "Insert Emacs Lisp source code for FUNCTION into the current buffer."
@@ -280,15 +280,15 @@
               (text (with-current-buffer buffer
 	              (save-excursion
 	                (goto-char point)
-	                (let ((beg point)
-		              (end (progn (end-of-defun)
-			                  (point))))
-	                  (font-lock-ensure beg end)
-	                  (buffer-substring beg end))))))
+                        (end-of-defun)
+                        (let ((end (point)))
+                          (beginning-of-defun)
+                          (font-lock-ensure (point) end)
+                          (buffer-substring (point) end))))))
     (add-text-properties 0 (length text)
                          '(line-prefix (space :align-to 2))
                          text)
-    (insert "\nSource code:\n\n")
+    (insert "\n  Source code:\n\n")
     (insert text)
     (insert "\n\n")))
 
