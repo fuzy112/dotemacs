@@ -164,13 +164,13 @@
     (set-buffer buf)
     (let ((ftp-prompt-regexp sftp-prompt-regexp))
       (ftp-mode))
-    (setq-local coding-system-for-read 'utf-8-dos)
+    ;; (setq-local coding-system-for-read 'utf-8-dos)
     (setq-local comint-process-echoes t)
     (setq-local comint-password-prompt-regexp sftp-password-prompt-regexp)
     (setq-local comint-password-function #'sftp--password-function)
     (setq-local sftp--first-password-request t)
-    (add-hook 'comint-output-filter-functions #'sftp--watch-for-connected
-	      nil t)
+    (add-hook 'comint-output-filter-functions #'sftp--watch-for-connected nil t)
+    (add-hook 'comint-output-filter-functions #'comint-strip-ctrl-m nil t)
     (add-hook 'comint-dynamic-complete-functions #'sftp--capf nil t)
     (comint-exec buf (concat "sftp-" host) sftp-program nil
                  (append (list host) sftp-program-options))
