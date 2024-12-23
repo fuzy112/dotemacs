@@ -2,13 +2,14 @@
 ;; Copyright © 2024 Zhengyi Fu <i@fuzy.me>
 
 ;; Author:  Zhengyi Fu
-;; Package-Requires: ((emacs "29.4"))
-;; Version: 0.1.0
+;; Package-Requires: ((emacs "29.4") (popon "0.13"))
+;; Version: 0.2.0
 ;; Keywords: navigation
 
 ;;; Commentary:
 ;;; Code:
 
+(require 'popon)
 (eval-when-compile (require 'cl-lib))
 
 (defgroup quick-window nil
@@ -57,32 +58,23 @@ all existing frames."
 		 return (progn
 			  (select-frame-set-input-focus (window-frame win))
 			  (select-window win)))
-      (let (overlays)
+      (let (popons)
 	(unwind-protect
 	    (let (window-map)
 	      (cl-loop with sorted-windows = (sort windows #'quick-window--before-p)
 		       for win in sorted-windows
 		       for letter being the elements of quick-window-keys
 		       do (setq window-map (plist-put window-map letter win #'eql))
-		       for start = (window-start win)
-		       for end = (min (+ start 3) (window-end win))
-		       for width = (with-selected-window win
-				     (save-excursion (goto-char end) (current-column)))
-		       for ov = (make-overlay start end (window-buffer win))
-		       do (push ov overlays)
-		       do (overlay-put ov 'after-string
-				       (propertize " "
-						   'display
-						   `(space :align-to ,width)))
-		       do (overlay-put ov 'display
-				       (propertize (format "[%c]" letter)
-						   'face 'quick-window-label))
-		       do (overlay-put ov 'window win))
+		       for popon = (popon-create (propertize (format "[%c]" letter)
+							     'face 'quick-window-label)
+						 '(0 . 0)
+						 win)
+		       do (push popon popons))
 	      (let ((key (read-key "Jump to window: ")))
-		(when-let ((win (plist-get window-map key #'eql)))
+		(when-let* ((win (plist-get window-map key #'eql)))
 		  (select-frame-set-input-focus (window-frame win))
 		  (select-window win))))
-	  (mapc #'delete-overlay overlays)))))
+	  (mapc #'popon-kill popons)))))
   (pulse-momentary-highlight-one-line))
 
 (provide 'quick-window)
