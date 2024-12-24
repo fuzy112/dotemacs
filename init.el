@@ -365,7 +365,7 @@
   (setq vertico-quick1 "htnsd"
         vertico-quick2 "ueoai")
   (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
-  (add-hook 'rfn-eshadow-update-overlay #'vertico-directory-tidy)
+  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
   (vertico-mode)
   (keymap-global-set "M-R" #'vertico-repeat)
   (define-keymap :keymap vertico-map
