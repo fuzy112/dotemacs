@@ -1819,6 +1819,14 @@ minibuffer."
      (setq buffer-terminator-verbose nil)
      (buffer-terminator-mode))))
 
+;;;; uptime
+
+(defun uptime-notify ()
+  (message "Emacs has been running for %s" (emacs-uptime)))
+
+(defvar uptime-notification-timer
+  (run-with-timer 1800 1800 #'uptime-notify))
+
 
 ;;;; display buffer alist
 
