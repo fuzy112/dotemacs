@@ -22,6 +22,7 @@
 (straight-use-package 'breadcrumb)
 (straight-use-package 'browser-hist)
 (straight-use-package 'buffer-env)
+(straight-use-package 'buffer-terminator)
 (straight-use-package 'cape)
 (straight-use-package 'clipetty)
 (straight-use-package 'colorful-mode)

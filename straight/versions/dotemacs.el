@@ -5,6 +5,7 @@
  ("breadcrumb" . "6273c633c0ff6dba083278ddc5da6b0e7b25f7b1")
  ("browser-hist.el" . "0372c6d984ca194d9454b14eba6eadec480ec3ff")
  ("buffer-env" . "3814bdf3585ffffea3014b1d01549894ec1aa897")
+ ("buffer-terminator.el" . "9afade5c176e6fceee37fa034b550f5dc6cdb8cc")
  ("cape" . "bd40091f8ce1202632bf660bb8bfe78096ea4c0d")
  ("chez" . "605a81ff7b2d2b275a3ec68e3ce7e5b50f85014d")
  ("chicken" . "5f2c1bb446af6ae4aec9c8d74d4ecb34031706fd")

@@ -1809,6 +1809,16 @@ minibuffer."
 
 ;;;; sftp
 (autoload 'sftp "sftp" nil t)
+
+;;;; buffer terminator
+
+(unless (featurep 'buffer-terminator)
+  (run-with-idle-timer
+   600 nil
+   (lambda ()
+     (setq buffer-terminator-verbose nil)
+     (buffer-terminator-mode))))
+
 
 ;;;; display buffer alist
 
