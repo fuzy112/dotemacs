@@ -192,6 +192,10 @@
     (set-fontset-font (frame-parameter nil 'font) 'han "Sarasa Gothic CL")
     (set-fontset-font (frame-parameter nil 'font) 'cjk-misc "Sarasa Gothic CL")
 
+    ;; western
+    (set-fontset-font (frame-parameter nil 'font) 'latin "Iosevka SS04")
+    (set-fontset-font (frame-parameter nil 'font) 'greek "Iosevka SS04")
+
     ;; nerd-icons
     (let ((charsets '((#xe5fa . #xe6b2)  ;; Seti-UI + Custom
 		      (#xe700 . #xe7c5)  ;; Devicons
