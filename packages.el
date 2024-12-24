@@ -43,6 +43,7 @@
 (straight-use-package 'eldoc)
 (straight-use-package 'embark-consult)
 (straight-use-package 'erc)
+(straight-use-package 'explain-pause-mode)
 (straight-use-package 'f)
 (straight-use-package 'geiser)
 (straight-use-package 'geiser-chez)
