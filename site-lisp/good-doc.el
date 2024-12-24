@@ -78,6 +78,12 @@
 
 ;;;; Parsing functions
 
+(defun good-doc--set-untrusted-content ()
+  (set (make-local-variable 'untrusted-contents) t)
+  (with-suppressed-warnings ((obsolete untrusted-content))
+    (set (make-local-variable 'untrusted-content) t)))
+
+(put 'good-doc--parse 'good-doc-cache-function nil)
 (defun good-doc--parse (doc)
   "Parse the DOC index."
   (let ((dom (with-temp-buffer
@@ -164,7 +170,7 @@
 (defun good-doc--cache-file (&rest args)
   (let* ((hashcode (sxhash args))
          (file (format "%X" hashcode))
-         (default-directory "~/good-doc/"))
+         (default-directory (expand-file-name "good-doc/" user-emacs-directory)))
     (if (file-exists-p file)
         (with-temp-buffer
           (insert-file-contents file)
@@ -177,7 +183,7 @@
 (defun good-doc--memoize-function (symbol)
   (unless (function-get symbol 'good-doc-cache-function)
     (let ((original-function (symbol-function symbol)))
-      (fset symbol (apply-partially #'good-doc--cache-file original-function))
+      (fset symbol (apply-partially #'good-doc--cache original-function))
       (function-put symbol 'good-doc-cache-function original-function)
       nil)))
 
@@ -366,6 +372,7 @@ PROMPT is passed to `completing-read'."
 (defun good-doc--render (entry)
   "Render a Good-Doc ENTRY, returning a buffer."
   (with-current-buffer (get-buffer-create "*good-doc*")
+    (good-doc--set-untrusted-content)
     (unless (eq major-mode 'good-doc-mode)
       (good-doc-mode))
     (let ((inhibit-read-only t)
