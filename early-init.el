@@ -27,7 +27,6 @@
 ;;;; gc
 
 (setq gc-cons-threshold 25600000)
-(setq read-process-output-max (* 256 1024))
 
 ;;;; pre-early-init
 
