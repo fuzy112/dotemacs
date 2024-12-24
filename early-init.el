@@ -105,6 +105,8 @@
                             (height . 38)
                             (alpha-background . 80)))
 
+(setq auto-save-no-message t)
+
 ;;;; files
 
 (setq confirm-kill-emacs 'y-or-n-p)
