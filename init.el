@@ -1481,6 +1481,9 @@ minibuffer."
 (after-load! auth-source
   (auth-source-pass-enable))
 
+(after-load! password-store
+  (add-hook 'savehist-save-hook #'password-store-clear))
+
 ;;;; lin
 
 (defvar lin-mode-hooks)
