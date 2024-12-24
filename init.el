@@ -1313,18 +1313,18 @@ minibuffer."
 (defvar eat-terminal)
 (declare-function eat-term-send-string "eat.el" (terminal string))
 (declare-function eat-self-input "eat.el" (n &optional e))
-(declare-function password-store--completing-read "password-store.el" (&optional require-match))
 (defun eat-send-pass nil
   "Send a password from Password-Store to the terminal."
   (interactive)
   (if eat-terminal nil
     (user-error "Process not running"))
   (require 'password-store)
-  (eat-term-send-string eat-terminal
-                        (password-store-get
-                         (password-store--completing-read
-                          t)))
-  (eat-self-input 1 'return))
+  (password-store-get
+   (completing-read "Password-store entry: " nil 'require-match t)
+   (let ((my-term eat-terminal))
+     (lambda (password)
+       (eat-term-send-string my-term password)
+       (eat-self-input 1 'return)))))
 
 (setopt eat-kill-buffer-on-exit t)
 
