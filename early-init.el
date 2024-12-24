@@ -105,10 +105,6 @@
                             (height . 38)
                             (alpha-background . 80)))
 
-;;;; warnings
-
-(setopt warning-suppress-log-types '((bytecomp)))
-
 ;;;; files
 
 (setq confirm-kill-emacs 'y-or-n-p)
@@ -117,68 +113,9 @@
       kept-old-versions 9
       kept-new-versions 9)
 
-;;;; modus-theme
-
-(after-load! modus-themes
-  (setq modus-themes-to-toggle '(modus-vivendi modus-operandi))
-  (setq modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
-  (setq modus-themes-mixed-fonts t
-        modus-themes-bold-constructs t
-        modus-themes-slanted-constructs t
-        modus-themes-variable-pitch-ui t))
-
-;;;; doom-modeline
-
-(require 'doom-modeline)
-(doom-modeline-mode)
-
-;;;; libraries
-(after-load! (:or dash elisp-mode)
-  (global-dash-fontify-mode))
-(after-load! info-look
-  (dash-register-info-lookup))
-(after-load! (:and anaphora elisp-mode)
-  (anaphora-install-font-lock-keywords))
-
 ;;;; custom
 
-(defun +custom-faces (&optional theme)
-  (unless (eq theme 'user)
-    (defvar pp-posframe-parameters)
-    (setq pp-posframe-parameters `( :border-color "gray"
-                                    :border-width 1
-                                    :background-color ,(face-background 'default nil '(shadow))))
-    (custom-set-faces
-     '(fill-column-indicator
-       ((((type w32 tty))
-         :height 1.0 :foreground "gray50" :background unspecified)))
-     '(parenthesis
-       ((t :inherit shadow)))
-     `(header-line
-       ((((supports :underline t) (class color grayscale))
-         :background ,(face-background 'default) :underline (:color ,(face-foreground 'default) :style line :position t)
-         :box (:line-width 6 :color ,(face-background 'default) :style nil))))
-     `(mode-line-active
-       ((((supports :overline t) (class color grayscale))
-         :background ,(face-background 'default) :overline t
-         :box (:line-width 6 :color ,(face-background 'default) :style nil))))
-     `(mode-line-inactive
-       ((((supports :overline t) (class color grayscale))
-         :background ,(face-background 'default) :overline t
-         :box (:line-width 6 :color ,(face-background 'default) :style nil)))))))
-(add-hook 'enable-theme-functions #'+custom-faces t)
 (setq custom-file (locate-user-emacs-file "custom.el"))
-(when (file-exists-p custom-file)
-  (let ((straight-current-profile 'custom)
-        (inhibit-interaction t))
-    (load custom-file nil t)))
-(eval-after-load 'init #'+custom-faces)
-
-(declare-function modus-themes-load-theme "modus-themes.el" (arg1))
-(defvar modus-themes-to-toggle)
-(unless custom-enabled-themes
-  (require 'modus-themes)
-  (modus-themes-load-theme (car modus-themes-to-toggle)))
 
 
 ;;;; post-early-init

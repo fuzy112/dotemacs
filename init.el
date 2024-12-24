@@ -41,9 +41,10 @@
   (let ((straight-current-profile 'user))
     (load pre-init-file nil t)))
 
-(setq straight-current-profile 'dotemacs)
-
 
+(defvar custom-file)
+(when (file-exists-p custom-file)
+  (load custom-file))
 ;;;; meow-edit
 
 (require 'meow)
@@ -223,6 +224,68 @@
         (seq-union '(("Sarasa Gothic CL" "Iosevka SS04")
                      ("Sarasa UI CL" "Sarasa Gothic CL" "Iosevka SS04"))
                    face-font-family-alternatives))
+
+
+;;;; modus-theme
+
+(after-load! modus-themes
+  (setq modus-themes-to-toggle '(modus-vivendi modus-operandi))
+  (setq modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
+  (setq modus-themes-mixed-fonts t
+	modus-themes-bold-constructs t
+	modus-themes-slanted-constructs t
+	modus-themes-variable-pitch-ui t))
+
+(when (not custom-enabled-themes)
+  (load-theme 'modus-operandi :no-confirm))
+
+;;;; doom-modeline
+
+(require 'doom-modeline)
+(doom-modeline-mode)
+
+;;;; customized faces
+(defun +custom-faces (&optional theme)
+  (unless (eq theme 'user)
+    (defvar pp-posframe-parameters)
+    (setq pp-posframe-parameters `( :border-color "gray"
+				    :border-width 1
+				    :background-color ,(face-background 'default nil '(shadow))))
+    (custom-set-faces
+     `(fill-column-indicator
+       ((((type w32 tty))
+	 :height 1.0 :foreground "gray50" :background ,(face-background 'default))))
+     '(parenthesis
+       ((t :inherit shadow)))
+     `(header-line
+       ((((supports :underline t) (class color grayscale))
+	 :background ,(face-background 'default)
+         :underline (:color ,(face-foreground 'default) :style line :position t)
+	 :box (:line-width 6 :color ,(face-background 'default) :style nil))))
+     `(mode-line-active
+       ((((supports :overline t) (class color grayscale))
+	 :background ,(face-background 'default)
+         :foreground ,(face-foreground 'default)
+         :overline t
+	 :box (:line-width 6 :color ,(face-background 'default) :style nil))))
+     `(mode-line-inactive
+       ((((supports :overline t) (class color grayscale))
+	 :background ,(face-background 'default)
+         :foreground ,(face-foreground 'shadow)
+         :overline t
+	 :box (:line-width 6 :color ,(face-background 'default) :style nil)))))))
+
+(+custom-faces)
+(add-hook 'enable-theme-functions #'+custom-faces t)
+
+;;;; libraries
+(after-load! (:or dash elisp-mode)
+  (global-dash-fontify-mode))
+(after-load! info-look
+  (dash-register-info-lookup))
+(after-load! (:and anaphora elisp-mode)
+  (anaphora-install-font-lock-keywords))
+
 
 ;;;; nerd-icons
 
@@ -1812,12 +1875,12 @@ minibuffer."
 
 ;;;; buffer terminator
 
-(unless (featurep 'buffer-terminator)
-  (run-with-idle-timer
-   600 nil
-   (lambda ()
-     (setq buffer-terminator-verbose nil)
-     (buffer-terminator-mode))))
+(after-load! buffer-terminator
+  (setq buffer-terminator-verbose nil))
+
+(unless (bound-and-true-p buffer-terminator-mode)
+  (run-with-idle-timer 600 nil #'buffer-terminator-mode))
+
 
 ;;;; uptime
 
