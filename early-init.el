@@ -154,31 +154,23 @@
          :height 1.0 :foreground "gray50" :background unspecified)))
      '(parenthesis
        ((t :inherit shadow)))
-     '(header-line
-       ((((supports :underline t) (class color grayscale) (background dark))
-         :background "black" :underline (:color "white" :style line :position t)
-         :box (:line-width 6 :color "black" :style nil))
-        (((supports :underline t) (class color grayscale) (background light))
-         :background "white" :underline (:color "black" :style line :position t)
-         :box (:line-width 6 :color "white" :style nil))))
-     '(mode-line-active
-       ((((supports :overline t) (class color grayscale) (background dark))
-         :background "black" :overline "white"
-         :box (:line-width 6 :color "black" :style nil))
-        (((supports :overline t) (class color grayscale) (background light))
-         :background "white" :overline "black"
-         :box (:line-width 6 :color "white" :style nil))))
-     '(mode-line-inactive
-       ((((supports :overline t) (class color grayscale) (background dark))
-         :background "black" :overline "gray70"
-         :box (:line-width 6 :color "black" :style nil))
-        (((supports :overline t)(class color grayscale) (background light))
-         :background "white" :overline "gray30"
-         :box (:line-width 6 :color "white" :style nil)))))))
+     `(header-line
+       ((((supports :underline t) (class color grayscale))
+         :background ,(face-background 'default) :underline (:color ,(face-foreground 'default) :style line :position t)
+         :box (:line-width 6 :color ,(face-background 'default) :style nil))))
+     `(mode-line-active
+       ((((supports :overline t) (class color grayscale))
+         :background ,(face-background 'default) :overline t
+         :box (:line-width 6 :color ,(face-background 'default) :style nil))))
+     `(mode-line-inactive
+       ((((supports :overline t) (class color grayscale))
+         :background ,(face-background 'default) :overline t
+         :box (:line-width 6 :color ,(face-background 'default) :style nil)))))))
 (add-hook 'enable-theme-functions #'+custom-faces t)
 (setq custom-file (locate-user-emacs-file "custom.el"))
 (when (file-exists-p custom-file)
-  (let ((straight-current-profile 'custom))
+  (let ((straight-current-profile 'custom)
+        (inhibit-interaction t))
     (load custom-file nil t)))
 (eval-after-load 'init #'+custom-faces)
 
