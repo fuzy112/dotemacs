@@ -272,9 +272,9 @@
 
 (defun help-fns-function-source-code (function)
   "Insert Emacs Lisp source code for FUNCTION into the current buffer."
-  (when-let* ((inhibit-interaction t)
-              (position (catch 'inhibit-interaction
-                          (find-function-noselect function)))
+  (when-let* ((position (ignore-error inhibited-interaction
+                          (let ((inhibit-interaction t))
+                            (find-function-noselect function))))
               (buffer (car position))
               (point (cdr position))
               (text (with-current-buffer buffer
