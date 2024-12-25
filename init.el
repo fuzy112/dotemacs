@@ -951,6 +951,13 @@ value for USE-OVERLAYS."
           (display-comint-buffer-action '(() (inhibit-same-window . t))))
       (eshell))))
 
+(defun +eshell/other-window ()
+  "Open an EShell buffer in other window."
+  (interactive)
+  (with-suppressed-warnings ((obsolete display-comint-buffer-action))
+    (let ((display-comint-buffer-action '(() (inhibit-same-window . t))))
+      (eshell))))
+
 (defvar eshell-hist-mode-map)
 (after-load! eshell
   (setopt eshell-scroll-to-bottom-on-input 'this
@@ -1357,8 +1364,6 @@ Display the result in a posframe." t)
 (add-hook 'eshell-load-hook #'eat-eshell-mode)
 (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
 
-(keymap-global-set "C-x 4 s" #'eat-other-window)
-(keymap-global-set "C-x p s" #'eat-project)
 (after-load! project
   (define-key project-other-window-map "s" #'eat-project-other-window)
   (when (consp project-switch-commands)
@@ -1938,7 +1943,8 @@ Otherwise disable it."
 (defalias 'project-prefix-map project-prefix-map)
 
 (define-keymap :keymap project-prefix-map
-  "m" #'magit-project-status)
+  "m" #'magit-project-status
+  "s" #'eat-project)
 
 (defvar-keymap tool-map
   :doc "Keymap for calling external tools."
@@ -2023,6 +2029,10 @@ Otherwise disable it."
   "s" #'deadgrep
   "v" #'vc-prefix-map
   "w" #'window-prefix-map)
+
+(define-keymap :keymap ctl-x-4-map
+  "s" #'eat-other-window
+  "e" #'+eshell/other-window)
 
 (define-keymap :keymap ctl-x-map
   "C-c" #'restart-emacs
