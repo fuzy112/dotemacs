@@ -1881,9 +1881,8 @@ minibuffer."
 (after-load! buffer-terminator
   (setq buffer-terminator-verbose nil))
 
-(unless (bound-and-true-p buffer-terminator-mode)
+(defvar +buffer-terminator-load-timer
   (run-with-idle-timer 600 nil #'buffer-terminator-mode))
-
 
 ;;;; uptime
 
