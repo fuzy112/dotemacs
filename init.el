@@ -362,8 +362,11 @@
 ;;;; emacs-lock-mode
 
 ;; prevent emacs from exiting if the *scratch* buffer is changed.
-(with-current-buffer "*scratch*"
-  (add-hook 'first-change-hook #'emacs-lock-mode nil t))
+(define-advice get-scratch-buffer-create (:filter-return (buffer) lock)
+  (with-current-buffer buffer
+    (add-hook 'first-change-hook #'emacs-lock-mode nil t)))
+
+(get-scratch-buffer-create)
 
 ;;;; backup
 
