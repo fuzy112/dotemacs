@@ -82,7 +82,7 @@
  ("pdf-tools" . "30b50544e55b8dbf683c2d932d5c33ac73323a16")
  ("peg" . "c9155d5586909953861421ce05a341d59b53fa73")
  ("persist" . "a368929c78ddd2f98a4a4e62e80b0f19aa5946a7")
- ("popon" . "bf8174cb7e6e8fe0fe91afe6b01b6562c4dc39da")
+ ("popon" . "c9cdb495b539d3e791be0acaa2e919cb80fc160b")
  ("popper" . "faf155059e519fb036324af579c342365795dbbb")
  ("popup-el" . "c83d6e5f5fa693e08a542ea9ad7c06eced652de9")
  ("posframe" . "81651536827c96bf5af5265ee7918ab70e1dd5b1")

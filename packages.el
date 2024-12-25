@@ -14,6 +14,7 @@
 (straight-use-package '(nerd-icons-multimodal :host github :repo "abougouffa/nerd-icons-multimodal"))
 (straight-use-package '(p-search :host github :repo "zkry/p-search"))
 (straight-use-package '(term-keys :host github :repo "CyberShadow/term-keys"))
+(straight-use-package '(popon :fork (:host codeberg :repo "fuzy/emacs-popon")))
 (straight-use-package 'adaptive-wrap)
 (straight-use-package 'anaphora)
 (straight-use-package 'apheleia)
