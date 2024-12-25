@@ -826,7 +826,8 @@ value for USE-OVERLAYS."
                                    ;; "\\*Compile-Log\\*"
                                    "\\*vc-git : "
                                    ;;xref--xref-buffer-mode
-                                   help-mode compilation-mode
+                                   ;; help-mode
+                                   compilation-mode
                                    flymake-diagnostics-buffer-mode))
 
 (declare-function popper-display-control-p "popper.el" (buf &optional _act))
