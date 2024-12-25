@@ -1155,7 +1155,6 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 ;;;; elisp-mode
 
 (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
-(add-hook 'emacs-lisp-mode-hook #'flymake-straight-flymake-elisp-mode-init)
 (after-load! elisp-mode
   ;; Emacs 30.1
   (when (boundp 'trusted-content)

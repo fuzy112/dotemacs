@@ -9,7 +9,6 @@
 (straight-use-package '(discourse :host codeberg :repo "glenneth/discourse-emacs"))
 (straight-use-package '(eat :files ("*.el" "*.texi" "*.info" "integration" "term" "terminfo")))
 (straight-use-package '(eldoc-diffstat :host github :repo "kljohann/eldoc-diffstat"))
-(straight-use-package '(flymake-straight :host github :repo "KarimAziev/flymake-straight"))
 (straight-use-package '(gptel-quick :host github :repo "karthink/gptel-quick"))
 (straight-use-package '(image-slicing :host github :repo "ginqi7/image-slicing"))
 (straight-use-package '(nerd-icons-multimodal :host github :repo "abougouffa/nerd-icons-multimodal"))

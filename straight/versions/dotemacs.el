@@ -43,7 +43,6 @@
  ("external-completion" . "69f06e1eff72df60bb10153169edc859f27f58f2")
  ("f.el" . "931b6d0667fe03e7bf1c6c282d6d8d7006143c52")
  ("flymake" . "c4c8adc8df3ee0442b90c602613a74845bd1d8f7")
- ("flymake-straight" . "82306f7681fe5b36d7ae0c659dfbd285815de664")
  ("geiser" . "97ce88463f346ff0dab147334fa0ce7b81569d7c")
  ("goggles" . "142d788e16bf387608b51c8590c852940890f637")
  ("gptel" . "9b454b5ef3a74aa4f9fef7a7786af9926f16ea7c")
