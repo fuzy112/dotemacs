@@ -1357,6 +1357,7 @@ Display the result in a posframe." t)
 (add-hook 'eshell-load-hook #'eat-eshell-mode)
 (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
 
+(keymap-global-set "C-x 4 s" #'eat-other-window)
 (keymap-global-set "C-x p s" #'eat-project)
 (after-load! project
   (define-key project-other-window-map "s" #'eat-project-other-window)
