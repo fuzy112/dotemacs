@@ -185,63 +185,60 @@
 ;;  - https://github.com/be5invis/Sarasa-Gothic/releases/download/v1.0.26/Sarasa-SuperTTC-1.0.26.7z
 ;;  - https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/NerdFontsSymbolsOnly.zip
 
-(unless (eq (framep-on-display) t)
-  (with-demoted-errors "Failed to setup fonts: %S"
+(defun +custom-fontset ()
+  (unless (eq (framep-on-display) t)
+    (with-demoted-errors "Failed to setup fonts: %S"
 
-    ;; chinese
-    (set-fontset-font (frame-parameter nil 'font) 'han "Sarasa Gothic CL")
-    (set-fontset-font (frame-parameter nil 'font) 'cjk-misc "Sarasa Gothic CL")
+      ;; chinese
+      (set-fontset-font standard-fontset-spec 'han "Sarasa Gothic CL" nil 'prepend)
+      (set-fontset-font standard-fontset-spec 'cjk-misc "Sarasa Gothic CL" nil 'prepend)
 
-    ;; western
-    (set-fontset-font (frame-parameter nil 'font) 'latin "Iosevka SS04")
-    (set-fontset-font (frame-parameter nil 'font) 'greek "Iosevka SS04")
+      ;; western
+      (set-fontset-font standard-fontset-spec 'latin "Iosevka SS04" nil 'prepend)
+      (set-fontset-font standard-fontset-spec 'greek "Iosevka SS04" nil 'prepend)
 
-    ;; nerd-icons
-    (let ((charsets '((#xe5fa . #xe6b2)  ;; Seti-UI + Custom
-		      (#xe700 . #xe7c5)  ;; Devicons
-		      (#xf000 . #xf2e0)  ;; Font Awesome
-		      (#xe200 . #xe2a9)  ;; Font Awesome Extension
-		      (#xf500 . #xfd46) (#xf0001 . #xf1af0) ;; Material Design Icons
-		      (#xe300 . #xe3eb)  ;; Weather
-		      (#xf400 . #xf4a8) #x2665 #x26a1 #xf27c  ;; Octicons
-		      (#xe0a0 . #xe0a2) (#xe0b0 . #xe0b3)  ;; Powerline Symbols
-		      #xe0a3 (#xe0b4 . #xe0c8) (#xe0cc . #xe0d2) #xe0d4  ;; Powerline Extra Symbols
-		      (#x23fb . #x23fe) #x2b58  ;; IEC Power Symbols
-		      (#xf300 . #xf372)  ;; Font Logos
-		      (#xe000 . #xe00a)  ;; Pomicons
-		      (#xea60 . #xebeb))))  ;; Codicons
-      (cl-loop for charset in charsets do
-	       (set-fontset-font
-	        (frame-parameter nil 'font)
-	        charset
-                "Symbols Nerd Font"
-	        nil
-	        'prepend)))
+      ;; nerd-icons
+      (let ((charsets '((#xe5fa . #xe6b2)  ;; Seti-UI + Custom
+		        (#xe700 . #xe7c5)  ;; Devicons
+		        (#xf000 . #xf2e0)  ;; Font Awesome
+		        (#xe200 . #xe2a9)  ;; Font Awesome Extension
+		        (#xf500 . #xfd46) (#xf0001 . #xf1af0) ;; Material Design Icons
+		        (#xe300 . #xe3eb)  ;; Weather
+		        (#xf400 . #xf4a8) #x2665 #x26a1 #xf27c  ;; Octicons
+		        (#xe0a0 . #xe0a2) (#xe0b0 . #xe0b3)  ;; Powerline Symbols
+		        #xe0a3 (#xe0b4 . #xe0c8) (#xe0cc . #xe0d2) #xe0d4  ;; Powerline Extra Symbols
+		        (#x23fb . #x23fe) #x2b58  ;; IEC Power Symbols
+		        (#xf300 . #xf372)  ;; Font Logos
+		        (#xe000 . #xe00a)  ;; Pomicons
+		        (#xea60 . #xebeb))))  ;; Codicons
+        (cl-loop for charset in charsets do
+	         (set-fontset-font
+	          standard-fontset-spec
+	          charset
+                  "Symbols Nerd Font"
+	          nil
+	          'prepend))))))
 
-    (set-fontset-font t 'han "Sarasa Gothic CL")))
-
-(set-face-attribute 'default nil :family "Iosevka SS04")
-(set-face-attribute 'fixed-pitch nil :family "Iosevka SS04")
-(set-face-attribute 'variable-pitch nil :family "Sarasa UI CL")
+(+custom-fontset)
 
 (setopt face-font-family-alternatives
         (seq-union '(("Sarasa Gothic CL" "Iosevka SS04")
                      ("Sarasa UI CL" "Sarasa Gothic CL" "Iosevka SS04"))
                    face-font-family-alternatives))
 
-
 ;;;; modus-theme
 
 (after-load! modus-themes
   (setq modus-themes-to-toggle '(modus-vivendi modus-operandi))
-  (setq modus-themes-common-palette-overrides modus-themes-preset-overrides-intense)
-  (setq modus-themes-mixed-fonts t
-	modus-themes-bold-constructs t
-	modus-themes-slanted-constructs t
-	modus-themes-variable-pitch-ui t))
+  (setopt modus-themes-common-palette-overrides modus-themes-preset-overrides-intense
+          modus-themes-mixed-fonts t
+	  modus-themes-bold-constructs t
+	  modus-themes-slanted-constructs t
+	  modus-themes-variable-pitch-ui t))
 
 (when (not custom-enabled-themes)
-  (load-theme 'modus-operandi :no-confirm))
+  (require 'modus-themes)
+  (modus-themes-load-theme 'modus-operandi))
 
 ;;;; doom-modeline
 
@@ -256,6 +253,10 @@
 				    :border-width 1
 				    :background-color ,(face-background 'default nil '(shadow))))
     (custom-set-faces
+     `(fixed-pitch
+       ((t :family ,(face-attribute 'default :family))))
+     `(variable-pitch
+       ((t :family "Sarasa UI CL")))
      `(fill-column-indicator
        ((((type w32 tty))
 	 :height 1.0 :foreground "gray50" :background ,(face-background 'default))))
