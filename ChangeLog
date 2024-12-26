@@ -2,3 +2,4 @@
 
 	* init.el (+custom-fontset): move fontset configuration code to a function
 	(+custom-faces): customize `default', `variable-pitch' face
+	(+buffer-terminator-load-timer): better way of loading `buffer-terminator'
