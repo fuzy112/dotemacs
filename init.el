@@ -955,6 +955,7 @@ value for USE-OVERLAYS."
   "Open an EShell buffer in other window."
   (interactive)
   (with-suppressed-warnings ((obsolete display-comint-buffer-action))
+    (defvar display-comint-buffer-action)
     (let ((display-comint-buffer-action '(() (inhibit-same-window . t))))
       (eshell))))
 
