@@ -1892,10 +1892,14 @@ minibuffer."
 ;;;; buffer terminator
 
 (after-load! buffer-terminator
-  (setq buffer-terminator-verbose nil))
+  (setq buffer-terminator-verbose t)
+  (buffer-terminator-mode))
+
+(defun +buffer-terminator-load ()
+  (require 'buffer-terminator))
 
 (defvar +buffer-terminator-load-timer
-  (run-with-idle-timer 600 nil #'buffer-terminator-mode))
+  (run-with-idle-timer 600 nil #'+buffer-terminator-load))
 
 ;;;; uptime
 
