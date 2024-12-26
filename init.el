@@ -234,7 +234,7 @@
 
 (after-load! modus-themes
   (setq modus-themes-to-toggle '(modus-vivendi modus-operandi))
-  (setq modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
+  (setq modus-themes-common-palette-overrides modus-themes-preset-overrides-intense)
   (setq modus-themes-mixed-fonts t
 	modus-themes-bold-constructs t
 	modus-themes-slanted-constructs t
