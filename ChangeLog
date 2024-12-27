@@ -1,6 +1,8 @@
 2024-12-27  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: optimize loading of diff-hl
+	(+eshell/here): Fix for Emacs 31.1
+	(+eshell/other-window): Fix for Emacs 31.1
 
 	* straight/versions/dotemacs.el: Update magit
 
