@@ -1,5 +1,7 @@
 2024-12-27  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: fix the error occurred when configuring diff-hl
+
 	* ChangeLog.1: Imported from Git
 
 	* init.el: optimize loading of diff-hl
