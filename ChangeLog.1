@@ -1,0 +1,1031 @@
+2024-12-25  Zhengyi Fu  <i@fuzy.me>
+
+	Add new command `+eshell/other-window'
+
+	Bind C-x 4 s to `eat-other-window'
+
+	Fix "cannot create popon on empty buffer"
+
+	Do not treat help buffers as popup
+
+	Lock all scratch buffers
+
+	Avoid creating duplicate timers
+
+	Remove flymake-straight which doesn't work very stably
+
+2024-12-24  Zhengyi Fu  <i@fuzy.me>
+
+	Use Iosevka SS04 to display greek letters
+
+	Remove customization of read-process-output-max
+
+	Set auto-save-no-message to t
+
+	Move face customization to init.el
+
+	Notify uptime
+
+	Add package `buffer-terminator'
+
+	Add package explain-pause-mode
+
+	Clear passwords in kill-ring before saving history
+
+	Better implementation of +eat-send-pass
+
+	Fix hook name
+
+	Fix help-fns-function-source-code error on primitives
+
+	good-doc: mark good-doc buffer as untrusted-content
+
+	bootstrap.sh: add call to straight-pull-recipe-repositories
+
+	Better compatibility of custom faces
+
+	Remove hack on popper
+
+	help-fns-function-source-code: fix use of inhibit-interaction
+
+	packages.el: add pdf-tools
+
+2024-12-23  Zhengyi Fu  <i@fuzy.me>
+
+	sftp.el: use comint-strip-ctrl-m instead of forcing coding-system
+
+	Reorganize font configuration
+
+	Add error handling to quick-window
+
+	Use popons to show quick-window labels
+
+	Save registers across sessions
+
+	Improve help-fns-function-source-code implementation
+
+	Fallback to Iosevka SS04 if Sarasa fonts are installed
+
+	Fix line breaks
+
+	Enable dynamic-highlight for CC modes
+
+	Fix magit-file-dispatch keybinding
+
+	Refactor dynamic-highlight
+
+	Update package versions
+
+2024-12-22  Zhengyi Fu  <i@fuzy.me>
+
+	quick-window: Better display of window label
+
+	Update magit keybinding
+	- Use magit-status-quick instead of magit-status
+
+	Simplify help-fns-function-source-code
+
+	help-fns-function-source-code: improve output format
+
+	Fix keybinding for logos
+
+	Use ] to jump out of list
+
+	help-fns-function-source-code: Avoid asking for C source location
+
+	Show function source code in describe-function buffers
+
+	Use eq compare equality for prefix arguments
+
+	Autoload tui commands regardless of system-type
+
+	check-deps.el: Use with-temp-buffer instead of with-work-buffer
+
+	Remove outdated contents in Readme
+
+	Cleanup code
+
+2024-12-21  Zhengyi Fu  <i@fuzy.me>
+
+	Update readme
+
+	Add keybindings for more straight commands
+
+	quick-window: add support for multiple frames
+
+	Set correct coding-system for templates
+
+	Replace with-work-buffer by with-temp-buffer
+
+	Clear completion-category-defaults
+
+	Override some default keybindings
+
+	Use quote instead of backquote
+
+	; documentation
+
+	Revert "Allow discourse-login to use separate a history variable"
+	This reverts commit f519f819356eba058c0c90ce75ed5e472db74aad.
+
+	Allow discourse-login to use separate a history variable
+
+2024-12-20  Zhengyi Fu  <i@fuzy.me>
+
+	Define pp-default-function
+
+	Add kill-ring to savehist-additional-variables
+
+	Fix fill-column-indicator on windows
+
+	Update default style for dynamic-highlight
+
+	Update packages versions
+
+	Update customized faces
+	- add underline to headers
+
+	Add package: dynamic-highlight
+
+	Prefer plain text emails over html and rich text
+
+	Ensure default value of lin-mode-hooks are applied
+
+	Fix the minimum width of posframe
+
+	Use pipe in compilation-mode buffers
+
+	Hide *Compile-Log* buffer
+
+	Cleanup packages.el
+
+	Fix some errors
+
+	Fix require of dotemacs-core
+
+	Move utils to a separate library: dotemacs-core
+
+2024-12-19  Zhengyi Fu  <i@fuzy.me>
+
+	Bind C-c v to diff-hl-command-map in diff-hl-mode-map
+
+	Change tool-map from C-c c to C-c t
+
+	Fix alist-set! macro
+
+	Customize fill-column-indicator face for w32
+
+	Update
+
+2024-12-18  Zhengyi Fu  <i@fuzy.me>
+
+	Replace bind-key with keymap
+
+	Update
+
+	Update packages.el
+
+	Prevent discourse from override C-c d
+
+	Remove unnecesary require's
+
+	Simplify orderless configuration
+
+	Enable emacs-lock-mode on *scratch* buffer
+
+	Enable pixel-scroll-precision-mode
+
+2024-12-17  Zhengyi Fu  <i@fuzy.me>
+
+	Update
+
+	Fix keymap for straight commands
+
+	Update configuration
+
+2024-12-16  Zhengyi Fu  <i@fuzy.me>
+
+	Use eval-and-compile around straight-use-package
+
+	Adjust indentation
+
+	Update eat-semi-char-non-bound-keys to enable use of M-o in eat buffers
+
+	Remove delight
+	cleanup the code
+
+	Enable diff-hl-update-async
+
+	Remove setup.el
+
+2024-12-15  Zhengyi Fu  <i@fuzy.me>
+
+	Ignore mastodon.plstore
+
+	Fix compile issue
+
+	Popper: don't delay selection of the popup buffer if not executing a command
+
+	Fix error occurred during compilation
+
+	Remove Compile-Log from popper-reference-buffers
+
+	Delete gdb configuration which causes problems
+
+	Update custom faces
+
+	Fix bootstrap.sh for straight.el
+
+	Add eglot-tempel
+
+	Update packages
+
+	Add new command +eshell/here
+
+	Add quick-window
+
+2024-12-14  Zhengyi Fu  <i@fuzy.me>
+
+	Bind C-c t G to gnus
+
+	Update versions
+
+	Update configuration for custom faces
+
+	Readd eldoc-diffstat-setup to magit-blame-mode
+
+	Update theme customization
+
+2024-12-13  Zhengyi Fu  <i@fuzy.me>
+
+	Enable prettify-symbols-mode in emacs-lisp-mode
+
+	Rename the primary profile to dotemacs
+
+	Hook eldoc-diffstat-mode to magit-mode
+
+	Add command +toggle-transparent
+
+	Add deadgrep
+
+	Cleanups
+
+	Create README.org
+
+	Use font lock flush instead of font-lock-ensure
+
+2024-12-12  Zhengyi Fu  <i@fuzy.me>
+
+	Update packages
+
+	Update configuration of libraries
+
+	Replace nerd-icons-dired with nerd-icons-multimodal
+
+	Add package transducers
+
+	Move (require early-init) to toplevel
+
+2024-12-11  Zhengyi Fu  <i@fuzy.me>
+
+	Add eval-and-compile form around setup-define's
+
+	Add declarations of some special variables
+
+	Bind C-c f a to ffap
+
+	Set embark-cycle-key to .
+
+	Add eldoc-diffstat
+
+2024-12-10  Zhengyi Fu  <i@fuzy.me>
+
+	Add keybind for gnus
+
+	Theme customization
+
+	Update packages
+
+	Workaround an issue of outline-minor-faces
+
+	Update versions
+
+	More keybindings
+
+	workaround WSL wayland clipboard issue
+
+	Update pp-posframe.el and fix some display problem
+
+	Add package pass
+
+	Fix heading and line breaks
+
+	Adjust configuration for pyim
+
+	Add package inf-ruby
+
+	Update straight-default-files-directive to include docs/
+
+2024-12-09  Zhengyi Fu  <i@fuzy.me>
+
+	Update versions
+
+	Fix loading of pp-posframe
+
+2024-12-08  Zhengyi Fu  <i@fuzy.me>
+
+	Update versions
+
+	Update keybindings for debug
+
+	Bind gptel commands in under C-c t
+
+	Fix some face customization issues with multiple frame
+
+	Remove unused `:init' keyword
+
+	Add package p-search
+
+	Add configuration for display-fill-column-indicator-mode
+
+2024-12-07  Zhengyi Fu  <i@fuzy.me>
+
+	Bind more commands under C-c T
+
+	Stick to use :require
+
+	Add setup directive :straight
+
+	Fix +straight/visit-package-repository
+
+2024-12-06  Zhengyi Fu  <i@fuzy.me>
+
+	Ignore TAGS
+
+	Update versions
+
+	Update straight keybindings
+	* New command: +straight/visit-package-repository
+
+	Set project-switch-commands to project-prefix-or-any-command if available
+
+	Add keybinding for straight-x-fetch-all
+
+	Allow project-switch-commands to be a symbol
+
+	Enable lin-mode on telega-root-mode
+
+2024-12-05  Zhengyi Fu  <i@fuzy.me>
+
+	Update versions
+
+	Add meow-tree-sitter
+
+	Update keybindings for better integration with meow keypad
+
+	Ignore only custom.el in the toplevel directory
+
+	Update meow
+
+2024-12-04  Zhengyi Fu  <i@fuzy.me>
+
+	Change meow-keypad-leader-dispatch back to C-c
+	Add some convenient keybindings under C-c
+
+	change some keybindings
+	cape-prefix-map: from C-c TAB to C-c p
+	but project-prefix-map remains <leader> p
+
+	Update versions
+
+2024-12-03  Zhengyi Fu  <i@fuzy.me>
+
+	fuzzy-finder: display a warning if none of skim or fzf can be found
+
+	Fix autoload of pp-posframe
+
+	Do not enable gpg-agent.el by default
+
+	Do not override value of elisp-flymake-byte-compile-load-path by defvaralias
+
+	Add geiser-chez and geiser-guile
+
+	Add more templates for cc mode
+
+	Disable auto newline and hungry delete for CC mode
+
+	Add geiser, geiser-chicken
+
+	Add package olivetti
+	- Freeze versions
+
+	Add package show-font
+
+	New command: +org/toggle-emphasis-markers
+
+	install erc using straight
+	The version of erc shipped with Emacs 29.4 doesn't include all the
+	modules needed.
+
+	Remove (alpha . 80) from default-frame-alist
+
+	Set meow-keypad-leader-dispatch to "C-c"
+
+	Font configuration
+	- Use with-demoted-errors instead of ignore-errors
+	- Specify fonts for cjk-misc charset
+
+	Autoload popper-toggle-type
+
+	Update backup.el
+
+	Bind C-c p to project-prefix-map
+
+	Add meow normal mode keybindings for sexp operations
+
+	Change the keybinding of cape-prefx-map to C-c TAB
+
+	Bind some commands in puni-mode-map
+
+	Add keybinding for switching between markdown-mode and markdown-view-mode
+
+	pp-posframe: add a temporary minor mode pp-posframe-mode
+	Update pp-posframe-map keybindings
+
+	Add erc configuration
+
+	Add keybinding for straight-visit-package
+
+	Meow!  Enable modal editing
+
+	Configure backup.el
+
+	Add user straight profiles
+
+2024-11-26  Zhengyi Fu  <i@fuzy.me>
+
+	Add sly
+
+	Fix keybinding of avy-isearch
+
+	Do not enable puni globally
+
+	Add configuration for whitespace
+
+	Replace paredit with puni
+
+	Configure rcirc
+
+	Update diff xfuncname for elisp
+
+2024-11-25  Zhengyi Fu  <i@fuzy.me>
+
+	Change the name of +eat/here buffers
+
+	early-init.el: load custom-file only when it exists
+
+	tui.el: autoload tui-terminal-function values
+
+2024-11-22  Zhengyi Fu  <i@fuzy.me>
+
+	Remove site-lisp.el
+
+	Remove .dir-locales.el from project-vc-extra-root-markers
+
+2024-11-21  Zhengyi Fu  <i@fuzy.me>
+
+	Freese packages
+
+	Add colorful-mode
+
+	Use rime as the default input method
+
+2024-11-20  Zhengyi Fu  <i@fuzy.me>
+
+	- Add cmake-mode
+	- Fix nerd-icons configuration
+	- fix diff-hl configuration
+
+	Add systemd-mode
+
+	Fix typo in saveplace configuration
+
+	Fix vertico configuration
+
+2024-11-19  Zhengyi Fu  <i@fuzy.me>
+
+	Simplify configuration of recentf for consult
+
+	Use embark-minimal-indicator
+
+	Add mwim
+
+	Fix use of :with-function
+
+	Use setup instead of use-package
+
+2024-11-16  Zhengyi Fu  <i@fuzy.me>
+
+	cj5-hans.el: fix punctation
+
+2024-11-15  Zhengyi Fu  <i@fuzy.me>
+
+	Update use-package
+
+	Merge branch 'straight'
+
+	Merge branch 'straight' of https://github.com/fuzy112/dotemacs into straight
+
+	Add two cangjie input methods
+
+	Revert "Pyim: use cangjie5 as the default input schema"
+	This reverts commit ca79dee55657492c1ea3380b36a6a61957767c7b.
+
+	Pyim: use cangjie5 as the default input schema
+
+	Update packages
+
+2024-11-14  Zhengyi Fu  <i@fuzy.me>
+
+	Rime: use minibuffer to show candidates
+
+	Update apheleia
+
+2024-11-08  Zhengyi Fu  <i@fuzy.me>
+
+	Use version-specific build directory
+
+	Freeze versions
+
+	Add dependency: pcre2el
+
+	rime: use horizontal candidates
+
+2024-11-06  Zhengyi Fu  <i@fuzy.me>
+
+	Merge branch 'straight' of https://github.com/fuzy112/dotemacs into straight
+
+	Use hl-line to highlight selected entries in gnus summary buffer
+
+	Update version lock
+
+2024-11-05  Zhengyi Fu  <i@fuzy.me>
+
+	Update version lock
+
+	Fix installation of eat
+
+	init.el Fix indentation
+
+2024-11-04  Zhengyi Fu  <i@fuzy.me>
+
+	rime: use posframe in terminal
+
+	Add rime
+
+	Turn vc-follow-symlinks
+
+	Do not use pyim as default input method for chinese
+
+	pp-posframe: remove border, update color when modus theme changes
+
+	Delay the initialization of site lisp to the end of the initialization
+
+	Add markdown-mode
+
+	Add straight-use-package form for transient
+
+	Fix ibuffer configuration
+
+	Merge remote-tracking branch 'dotemacs/main' into straight
+
+	Add packages
+
+	pp-posframe: fix hard-coded buffer name
+
+	init.el: replace static-if with if
+
+2024-11-03  Zhengyi Fu  <i@fuzy.me>
+
+	init.el: Add yaml-mode and toml-mode
+
+	init.el: replace static-if with if
+
+2024-11-03  Zhengyi Fu  <tsingyat@outlook.com>
+
+	Fix grep heading of embark-export buffer of consult-grep
+
+2024-11-01  Zhengyi Fu  <tsingyat@outlook.com>
+
+	Fix grep heading of embark-export buffer of consult-grep
+
+	Use straight.el for package management
+
+2024-10-31  Zhengyi Fu  <i@fuzy.me>
+
+	init: consult: add consult-highlight-match to orderless-match-faces
+
+	init.el: grep--heading-filter is not available before emacs 30
+
+	init.el: lin: select the window when updating highlight
+
+	Fix usage of if-let
+
+	init.el: popper: set popper-gorup-by-project after project.el is loaded
+
+	init.el: hl-line: highlight the currently visited errors
+
+	embark-consult: add heading to consult-grep buffers
+
+	ctags-menu: ctags-menu--read-files remove the predicate passed to crm
+
+	ctags-core.el: add FIXME
+
+	ctags-menu.el: add completion for -o option
+
+	ctags-menu.el: fix input files option
+
+	init.el: require eat in +eat/here
+
+	init.el: eat: New command `+eat/here'
+	* avoid using when-let
+
+	init: paren-face: use more faint colors
+
+	Add paren-face
+
+2024-10-30  Zhengyi Fu  <i@fuzy.me>
+
+	Use if-let* and when-let*
+
+2024-10-28  Zhengyi Fu  <i@fuzy.me>
+
+	init.el: use xref-show-definitions-buffer-at-bottom instead of managing all xref buffers with popper
+
+	Upgrade org and modus-themes
+
+2024-10-25  Zhengyi Fu  <i@fuzy.me>
+
+	Add customizable parameters for posframe display in `pp-posframe.el`.
+	* Improved border width and colors with theme integration in `init.el`.
+
+	Improve ctags-xref functionality and add debugging messages
+	- Enhance score calculation logic in ctags-xref-c--filter to handle macros
+	- Add messages to provide better insight into the scoring process
+	- Remove unused variables and functions related to filtering
+	- Update ctags-xref-debug to be enabled by default for ease of debugging
+	- Modify ctags-xref--message convenience function to insert messages
+	  to the *ctags-xref-debug* buffer
+
+	Update elpa pub key
+
+2024-10-24  Zhengyi Fu  <i@fuzy.me>
+
+	init.el: Enhance popper window management with delayed selection
+
+	Rename pre-init--file to pre-init-file
+	* bootstrap.sh: load early-init.el instead of init.el
+
+	init.el: fix autoload issue of term-keys configuration
+
+	Introduce bootstrap.sh to automate Emacs setup and initialization
+	This commit introduces a `bootstrap.sh` script that serves as a convenient way to set up and initialize Emacs configuration. The script performs the following actions:
+	- Deletes all existing compiled Emacs Lisp files.
+	- Removes 'package-quickstart.el' and 'site-lisp-quickstart.el' files.
+	- Recompiles all packages using 'package-recompile-all'.
+	- Byte-compiles all site-lisp packages.
+
+	Merge user-specific early-init configuration into main init.el and update bootstrap script
+	1. Modified init.el to load user's early-init.el file if it exists.
+
+	diff: Remove which-key configuration from init.el
+	Removed the disabled which-key package configuration from the init.el file.
+
+	init.el: Correct ibuffer hook for nerd-icons mode
+
+	ctags-xref-c.el: Enhance function name extraction
+	- Remove spaces in function names
+
+	init.el: fix typo in popper configuration
+
+	init.el: set popper-group-function
+	* Set popper-group-function to group buffers by project in Popper
+	  config
+	* remove *Warnings* from popper-reference-buffers
+
+	Correct corfu-previous keybinding typo
+	* core/init: Update corfu-previous keybinding to use "<backtab>" instead of "<backtab"
+
+	Add pp-posframe enhancements for eval and compile features in Emacs Lisp
+	* Bind new key C-M-x for pp-posframe-compile-defun in emacs-lisp-mode-map
+	* Add pp-posframe-compile-defun function for compiling and evaluating the current top-level form using a posframe
+	* Bind M-: to pp-eval-expression in the global keymap for convenience
+
+	Update pp-posframe package to support macro expansion visualization
+	- Modified key-binding configuration in user init.el to include new macroexpansion command.
+	- Expanded pp-posframe.el with pp-posframe-macroexpand-last-sexp function to handle macro visualization.
+	- Added autoload directive for the new function.
+
+	Refactor eval print to pp-posframe, new behavior for displaying evaluation results
+	- Modified init.el to replace pp with pp-posframe package, and updated the keybinding
+	- Created a new file pp-posframe.el with implementation for pp-posframe package
+	  - Defines pp-posframe-buffer-name custom variable
+	  - Provides commands to handle posframe display for pp results
+	  - Adds keymap for interaction with posframe display output
+
+2024-10-23  Zhengyi Fu  <i@fuzy.me>
+
+	init.el: rust--compile uses project-prefix-buffer-name
+
+	init.el: corfu tab-and-go completion
+
+	site-lisp.el: enable lexical binding for site-lisp-quickstart file
+
+	site-lisp.el: allow customize ignored files
+	* New command: site-lisp-initialize
+
+	init.el: Uses xref buffer to show definitions if the candidates are few
+
+	posframe.el: detect tty child frame support
+
+	init.el:corfu-terminal: disable if tty-child-frames is available
+
+	corfu: detect tty-child-frames support
+
+	Replace medit with iedit
+
+	hide-pass.el: mark hide-pass-regexps as safe file local variables
+
+2024-10-22  Zhengyi Fu  <i@fuzy.me>
+
+	gpg-agent.el: fix duplicate password prompt
+
+	ctags-xref-c.el: fix last change
+
+	init.el: setq dired-hide-details-hide-absolute-location
+
+	init.el: add eglot configuration
+	* Enable auto shutdown
+	* Extend to xref
+
+	init.el: delight nerd-icons modes
+
+2024-10-21  Zhengyi Fu  <i@fuzy.me>
+
+	init.el: setq magit-wip-mode-lighter to ""
+
+	site-lisp/ctags-xref-c.el: use cl-sort instead of sort
+
+	Set quit-restore-window-no-switch and kill-buffer-quit-windows to `t'
+	These change only takes effect on Emacs 30.1.
+
+	Add delight
+
+	Set fallback fonts to use when Sarasa Gothic is not found
+
+	init.el: add configuration for vertico-repeat
+
+	Update org to v9.7.13
+
+	Update gptel to v0.9.6
+
+2024-10-21  Zhengyi Fu  <i@fuzy.me>
+
+	ctags-xref.el, ctags-xref-c.el: Simplify the code
+	* Remove the score member in ctags-xref-tag, use hash table to store
+	  the scores
+	* Remove the ctags-xref-c--sort function and now the scoring is done
+	  in ctags-xref-c--filter
+	* Simplify the code, rather than using a single pcase form, use
+	  multiple pcase forms and when forms
+	* Add a variable ctags-xref-c-annotate-score, which controls whether
+	  scores are appended to the summary
+	* Add xref-backend-definition :around method for c++-mode and
+	  c-ts-base-mode
+
+	init.el: Add *xref* to popper-reference-buffers,
+	Use default value for xref-backend-definition.
+
+2024-10-20  Zhengyi Fu  <i@fuzy.me>
+
+	ctags-xref: extend using cl-defmethod instead of hooks
+
+	init.el: elisp-mode: set elisp-flymake-byte-compile-load-path
+
+	Do not use consult-xref as xref-show-xrefs-function
+
+2024-10-19  Zhengyi Fu  <i@fuzy.me>
+
+	init.el: remove nano-modeline configuration
+
+	Reorganize font setting
+	* Set initial font in default-frame-alist
+	* After the frame is created, a fontset is created (fontset-startup)
+	  and used as the font parameter of the frame, that frame is used to
+	  configure Chinese fonts.
+	* Fix nerd-icons font setting
+
+	init.el: consult: preview consult-imenu
+
+	init.el: pp: (+pp--show-buffer) reuse the temp-buffer
+
+2024-10-18  Zhengyi Fu  <i@fuzy.me>
+
+	ctags-menu.el: fix ctags-menu--args
+
+	ctags-menu.el: fix typo
+
+	init.el: term-keys: add support for eat
+
+	init.el: dired: add "-h" to dired-listing-switches
+
+	site-lisp.el: ignore directories that usually don't contain lisp files
+
+	medit.el: fix bugs and simplify the code
+
+	init.el: medit: fix use of wrong command name
+
+	ws-butler.el: fix ws-butler-before-save
+	* this bug is caused by me when porting to newer emacs versions
+
+	init.el: repeat: Use new functino +repeat--post-command to load the package
+
+	init.el: configure ws-butler
+	* Add package ws-butler
+
+2024-10-17  Zhengyi Fu  <i@fuzy.me>
+
+	init.el: tui: display all tui buffers in the same window
+
+	tui.el: change the preview tui-find to the above
+	* init.el: tui: change display-buffer-alist to display tui-find buffer
+	  in the same window.
+
+	init.el: recentf: inhibit-message when enabling the mode
+	* use (bound-and-true-p recentf-mode) to make sure error not occur
+	  if recentf has been unloaded.
+
+	init.el: require early-init when run too
+
+	early-init.el: package: add package-quickstart-refresh to kill-emacs-hook
+
+	Add upgraded version of built-in packages (xref, project)
+	* early-init.el: set package-install-upgrade-built-in to t
+
+	gpg-agent.el: restart the process if it is already running
+
+	init.el: hl-todo: fix repeat-map support
+
+2024-10-16  Zhengyi Fu  <i@fuzy.me>
+
+	init.el: bookmark-extras: fix incorrect configuration
+
+	Add previously ignored files
+
+	init.el: eat: add eat-project to project-switch-commands
+
+	init.el: eat: kill buffer on exit
+
+	init.el: with-editor: add support for eat
+
+	init.el: term-keys: remove the term-keys/prefix binding after the package is loaded
+
+	init.el: fix typo
+
+	init.el: activities: use :bind instead of :bind*
+
+	init.el: marginalia: use use-package/:bind instead of bind-key
+
+	init.el: term-keys: fix initialization in daemon mode
+	input-decode-map is a terminal local map.
+
+2024-10-16  Zhengyi Fu  <i@fuzy.me>
+
+	consult-xref-apropos.el: rename consult-xref-history to consult--xref--history
+	* consult-xref--history: is defined in consult-xref.el, so
+	  consult-xref-apropos shares history with consult-xref now
+
+	* remove: configuration for save-hist, which should be done by the
+	  user, rather than in this package
+
+2024-10-16  Zhengyi Fu  <i@fuzy.me>
+
+	Add previously ignored files
+	* update .gitignore: remove .*
+
+	init.el: epa: use minibuffer to select keys
+
+	init.el: shortdoc: add missing :defer keyword
+
+	init.el: shortdoc: show function examples in *Help* buffers when supported
+
+	early-init.el: use face-font-family-alternatives to configure fonts
+
+	early-init.el: font configuration
+	* change Chinese font to CL variant
+	* set fonts for variable-pitch, fixed-pitch, fixed-pitch-serif
+
+	init.el: configure help
+	* enable variable editing
+	* disable completing autoload
+
+2024-10-15  Zhengyi Fu  <i@fuzy.me>
+
+	early-init.el: reorder modus-themes and custom configuration
+	Put (use-package modus-themes) before (use-package custom) to make sure when
+	modus-themes are loaded it already has been configured.
+
+	init.el: ace-window: change ace-window keybinding to M-o
+
+	init.el: popper: defer loading
+
+	ace-window: fix usage of quotes
+
+	init.el: project: add project-compile to project-switch-commands
+
+	init.el: magit: project.el integration to :init section
+
+	site-lisp.el: allows the user to skip checking site lisp files on startup
+
+	early-init.el: Enable imenu support for use-package
+
+	early-init.el: don't print messages for loading custom.el
+
+	Update .gitignore
+
+	init.el: reorganize org configurations
+
+	init.el: bookmark: always enable bookmark version control
+
+	early-init.el, init.el: load pre-early-init.el, post-early-init.el, pre-init.el, post-init.el
+
+	setup.sh: add executable permission
+
+2024-10-14  Zhengyi Fu  <i@fuzy.me>
+
+	bookmarklet.el: fix the requirements
+
+	init.el: fix some incorrect usage of use-package/:hook
+
+	init.el: consult: enable auto-preview for more commands
+
+	init.el: don't throw errors when requiring 'early-init
+
+	init.el: cc-mode: enable hungry delete and auto newline by default
+
+	early-init.el: package: use package-activate-all
+
+	site-lisp.el: simplify code
+
+	init.el: eshell: given cape-history lower priority
+
+	init.el: cleanup whitespaces
+
+	init.el: consult: enable auto preview for consult-xref
+
+	init.el: auth-sources: add :defer t
+
+	init.el: lin: add :defer t
+
+	init.el: Fix clipetty configuration
+	clipetty-mode is local minor mode.  Use global-clipetty-mode instead.
+
+	Delay loading of term-keys until term-keys/prefix is pressed
+
+	Do not call nerd-icons-set-font on tty
+
+	Allow the user to add a `post-init-file' when private configurations can be placed
+
+2024-10-14  Zhengyi Fu  <i@fuzy.me>
+
+	init.el: autorevert: delay loading
+	* When global-auto-revert-non-file-buffers is nil, only the
+	  find-file-hook is touched when turning on the
+	  `global-auto-revert-mode', so the package can be lazy-loaded by adding
+	  `auto-revert--global-adopt-current-buffer' to `find-file-hook'.
+
+	* Set auto-revert-remote-files to t.
+
+	* Avoid polling when notification is available.
+
+2024-10-14  Zhengyi Fu  <i@fuzy.me>
+
+	Add url-bookmark-jump to consult-bookmark-narrow
+
+	init.el: consult: turn off automatic preview
+
+	Do not wrap isearch configurations in with-eval-after-load forms
+	Because isearch is preloaded in loadup.el.
+
+	init.el: pp: new command (+pp--show-buffer)
+	Show the popon contents in a temp buffer.
+
+	flymake-define: put docstrings of the defined functions to the right place
+
+	medit: do not set any keybindings
+	- medit: remove isearch and embark keybindings
+	- init.el: medit: add keybindings in isearch-mode-map and embark-identifier-map
+
+	init.el: browser-hist: add configuration for zen
+
+	Initial commit

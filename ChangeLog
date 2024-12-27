@@ -1,5 +1,7 @@
 2024-12-27  Zhengyi Fu  <i@fuzy.me>
 
+	* ChangeLog.1: Imported from Git
+
 	* init.el: optimize loading of diff-hl
 	(+eshell/here): Fix for Emacs 31.1
 	(+eshell/other-window): Fix for Emacs 31.1
