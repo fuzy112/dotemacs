@@ -948,8 +948,9 @@ value for USE-OVERLAYS."
   (defvar eshell-buffer-name)
   (with-suppressed-warnings ((obsolete display-comint-buffer-action))
     (defvar display-comint-buffer-action)
-    (let ((eshell-buffer-name (format "*%s : eshell*" (abbreviate-file-name default-directory)))
-          (display-comint-buffer-action '(() (inhibit-same-window . t))))
+    (cl-letf ((eshell-buffer-name (format "*%s : eshell*" (abbreviate-file-name default-directory)))
+              (display-comint-buffer-action '(() (inhibit-same-window . t)))
+              ((alist-get '(category . comint) display-buffer-alist nil t #'equal) '(() (inhibit-same-window . t))))
       (eshell))))
 
 (defun +eshell/other-window ()
@@ -957,7 +958,8 @@ value for USE-OVERLAYS."
   (interactive)
   (with-suppressed-warnings ((obsolete display-comint-buffer-action))
     (defvar display-comint-buffer-action)
-    (let ((display-comint-buffer-action '(() (inhibit-same-window . t))))
+    (cl-letf ((display-comint-buffer-action '(() (inhibit-same-window . t)))
+              ((alist-get '(category . comint) display-buffer-alist nil t #'equal) '(() (inhibit-same-window . t))))
       (eshell))))
 
 (defvar eshell-hist-mode-map)
