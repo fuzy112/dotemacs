@@ -56,7 +56,7 @@
  ("let-alist" . "8141e7c941105c92e89bba44e73aae6cdd962b49")
  ("lin" . "0607a6a618a8bb791cecf47e754f81e28dcb5c92")
  ("logos" . "706f2751b6bd9bb5cf773e2afa11aadf4b48ee61")
- ("magit" . "6f07b17393a70b77aa393ddac40b3bcf256a339c")
+ ("magit" . "692cc5e7696f9de6fce4a2e076eb51507809aaf3")
  ("marginalia" . "006a7cd0a14dd651dcff65ed96c0d52d2067b8c1")
  ("markdown-mode" . "8692afc12e13431efb0c302baee1de5bbf4a41e4")
  ("mathjax" . "84e5fd902d83c11460e008de8ed0aef74cb9a62a")
