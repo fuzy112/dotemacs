@@ -1289,7 +1289,6 @@ Display the result in a posframe." t)
 ;;;; vc
 
 (after-load! vc
-  (require 'diff-hl)
   (setq vc-follow-symlinks t)
   (setq vc-svn-global-switches
         '("--force-interactive"
@@ -1318,7 +1317,7 @@ Display the result in a posframe." t)
 (autoload 'diff-hl-magit-post-refresh "diff-hl.el")
 (add-hook 'tty-setup-hook #'diff-hl-margin-mode)
 (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
-(after-load! diff-hl
+(after-load! (:or diff-hl vc magit)
   (setopt diff-hl-update-async t)
   (keymap-set diff-hl-mode-map "C-c v" diff-hl-command-map)
   (global-diff-hl-mode))

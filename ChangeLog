@@ -1,5 +1,7 @@
 2024-12-27  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: optimize loading of diff-hl
+
 	* straight/versions/dotemacs.el: Update magit
 
 2024-12-26  Zhengyi Fu  <zhengyi@vbox>
