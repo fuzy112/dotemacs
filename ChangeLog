@@ -1,3 +1,7 @@
+2024-12-27  Zhengyi Fu  <i@fuzy.me>
+
+	* straight/versions/dotemacs.el: Update magit
+
 2024-12-26  Zhengyi Fu  <zhengyi@vbox>
 
 	* site-lisp/quick-init.el: Add a simple init file for use with emacs -Q
