@@ -1,3 +1,7 @@
+2024-12-28  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (hl-todo): Change the prefix M-g C-t.
+
 2024-12-27  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: fix the error occurred when configuring diff-hl

@@ -1021,10 +1021,10 @@ value for USE-OVERLAYS."
 
 (after-load! hl-todo
   (define-keymap :keymap hl-todo-mode-map
-    "C-c t [" #'hl-todo-previous
-    "C-c t ]" #'hl-todo-next
-    "C-c t o" #'hl-todo-occur
-    "C-c t i" #'hl-todo-insert)
+    "M-g C-t [" #'hl-todo-previous
+    "M-g C-t ]" #'hl-todo-next
+    "M-g C-t o" #'hl-todo-occur
+    "M-g C-t i" #'hl-todo-insert)
   (defvar-keymap +hl-todo-repeat-map
     "[" #'hl-todo-previous
     "]" #'hl-todo-next
