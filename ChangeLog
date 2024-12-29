@@ -1,3 +1,7 @@
+2024-12-29  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: save-file-hook doesn't exist, use after-save-hook instead
+
 2024-12-28  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (hl-todo): Change the prefix M-g C-t.

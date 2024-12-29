@@ -1251,7 +1251,7 @@ Display the result in a posframe." t)
 
 (after-load! sh-script
   (add-hook 'sh-mode-hook #'sh-electric-here-document-mode))
-(add-hook 'save-file-hook #'executable-make-buffer-file-executable-if-script-p)
+(add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
 
 ;;;; project
 
