@@ -1,5 +1,7 @@
 2024-12-29  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/dotemacs-core.el (after-load!): Fix handling of empty list
+
 	* init.el: save-file-hook doesn't exist, use after-save-hook instead
 
 2024-12-28  Zhengyi Fu  <i@fuzy.me>

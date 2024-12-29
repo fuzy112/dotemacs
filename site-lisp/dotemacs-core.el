@@ -69,6 +69,8 @@ SPEC could be
   (unless lexical-binding
     (error "after-load! requires lexical-binding to be t"))
   (pcase-exhaustive spec
+    ('nil
+     (macroexp-progn body))
     (`(quote ,unquoted)
      `(after-load! ,unquoted ,@body))
     ((or (pred stringp) (pred symbolp))
