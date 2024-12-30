@@ -274,7 +274,7 @@
        ((((supports :overline t) (class color grayscale))
          :background ,(face-background 'default)
          :foreground ,(face-foreground 'default)
-         :overline t
+         :overline ,(face-foreground 'default)
          :box (:line-width 6 :color ,(face-background 'default) :style nil))))
      `(mode-line-inactive
        ((((supports :overline t) (class color grayscale))
