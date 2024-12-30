@@ -1,3 +1,7 @@
+2024-12-30  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Fix configuration of buffer-env
+
 2024-12-29  Zhengyi Fu  <i@fuzy.me>
 
 	* Fork rime and fix defcustom types
