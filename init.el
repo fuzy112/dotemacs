@@ -1291,7 +1291,7 @@ Display the result in a posframe." t)
   (clrhash buffer-env--cache))
 (defvar buffer-env-command-alist)
 (after-load! buffer-env
-  (alist-setq! buffer-env-command-alist "/\\.nvmrc\\'" "~/.nvm/nvm-exec env -0" #'equal)
+  (alist-setq! buffer-env-command-alist "/\\.nvmrc\\'" "~/.nvm/nvm-exec env -0")
   (setopt buffer-env-script-name '(".envrc" ".nvmrc" ".env")))
 
 ;;;; vc
