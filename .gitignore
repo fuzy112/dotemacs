@@ -49,3 +49,6 @@ elpa/archives
 /tutorial/
 /TAGS
 /mastodon.plstore
+/.dir-locals.el
+/good-doc
+/request
