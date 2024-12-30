@@ -3,6 +3,8 @@
 	* init.el: Fix configuration of buffer-env,
 	Fix identation,
 	(+custom-faces): Highlight incorrect indentation
+	Turn off ws-butler-keep-whitespace-before-point
+	Turn on ws-butler-convert-leading-tabs-or-spaces
 
 2024-12-29  Zhengyi Fu  <i@fuzy.me>
 
