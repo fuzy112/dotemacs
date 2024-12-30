@@ -1,6 +1,7 @@
 2024-12-30  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (+custom-faces): Fix overline color of mode-line-active
+	(+dynamic-highlight--predicate): New function
 
 	* site-lisp/vi-modeline.el: Use hack-local-variables-hook instead
 	of before-hack-local-variables-hook

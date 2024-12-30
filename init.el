@@ -1073,10 +1073,12 @@ value for USE-OVERLAYS."
 
 (autoload 'dynamic-highlight-mode "dynamic-highlight.el" nil t)
 (add-hook 'c-mode-common-hook #'dynamic-highlight-mode)
+(defun +dynamic-highlight--predicate (&optional _symbol)
+  (and (not (and (fboundp 'eglot-managed-p)
+                 (eglot-managed-p)))
+       (not (eq (get-text-property (point) 'face) 'font-lock-comment-face))))
 (after-load! dynamic-highlight
-  (setq dynamic-highlight-predicate (lambda (_) (and (not (and (fboundp 'eglot-managed-p)
-                                                          (eglot-managed-p)))
-                                                (not (puni--in-comment-p))))))
+  (setq dynamic-highlight-predicate #'+dynamic-highlight--predicate))
 
 ;;;; xref
 
