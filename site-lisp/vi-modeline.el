@@ -1,4 +1,4 @@
-;;; vi-modeline.el --- Vi-compatible modeline -*- lexical-binding: t -*-
+;;; vi-modeline.el --- Vi-compatible modeline -*- lexical-binding: t; -*-
 ;; Copyright © 2024  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
@@ -47,8 +47,8 @@
                 (shiftwidth . c-file-offset))))
   "Known vi variables."
   :type '(alist :key-type symbol
-		:value-type (alist :key-type symbol
-				   :value-type symbol)))
+                :value-type (alist :key-type symbol
+                                   :value-type symbol)))
 
 
 (defvar-local vi-modeline-var-count 0)
@@ -60,8 +60,8 @@
   "A global minor mode that supports Vi-style modeline magic."
   :global t
   (if vi-modeline-mode
-      (add-hook 'before-hack-local-variables-hook #'vi-modeline-apply)
-    (remove-hook 'before-hack-local-variables-hook #'vi-modeline-apply)))
+      (add-hook 'hack-local-variables-hook #'vi-modeline-apply)
+    (remove-hook 'hack-local-variables-hook #'vi-modeline-apply)))
 
 (setf (alist-get 'vi-modeline-mode minor-mode-alist)
       '(vi-modeline-format))
@@ -69,31 +69,37 @@
 (defun vi-modeline-update ()
   "Update modeline for the current buffer."
   (setq vi-modeline-format
-	(if (> vi-modeline-var-count 0)
-	    (format " VI[%i]" vi-modeline-var-count)
-	  "")))
+        (if (> vi-modeline-var-count 0)
+            (format " VI[%i]" vi-modeline-var-count)
+          "")))
 
 (defun vi-modeline-apply ()
   "Find and apply vi modelines in the current buffer."
+  (message "vi-modeline-appy")
   (when vi-modeline-mode
     (save-excursion
       (goto-char (point-min))
       (setq vi-modeline-var-count 0)
       (when (re-search-forward "\\(#\\|//\\|/\\*\\|;;\\).* vim?:" nil t)
-	(save-restriction
+        (save-restriction
           (narrow-to-region (point) (line-end-position))
           (while (re-search-forward "\\_<\\([[:alpha:]]+\\)=\\([[:digit:]]+\\|\"[^\"]*\"\\)\\_>" nil t)
-            ;;(message "%s=%s" (match-string 1) (match-string 2))
+            (message "%s=%s" (match-string 1) (match-string 2))
             (let ((key (read (match-string 1)))
                   (value (read (match-string 2))))
-              ;; (message "%S" (cons key value))
+              (message "%S" (cons key value))
               (pcase-dolist (`(,mode . ,vars) vi-modeline-known-vars-alist)
-		(when (or (null mode) (derived-mode-p mode))
+                (when (or (null mode) (derived-mode-p mode))
                   (when-let* ((el-var (alist-get key vars)))
-                    ;; (message "mode: %S key: %S el-var: %S value: %S" mode key el-var value)
+                    (message "mode: %S key: %S el-var: %S value: %S" mode key el-var value)
                     (setf (alist-get el-var file-local-variables-alist) value)
-		    (cl-incf vi-modeline-var-count)))))))))
+                    (cl-incf vi-modeline-var-count)))))))))
     (vi-modeline-update)))
 
 (provide 'vi-modeline)
+
+;; Local Variables:
+;; indent-tabs-mode: nil
+;; End:
+
 ;;; vi-modeline.el ends here
