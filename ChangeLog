@@ -1,5 +1,8 @@
 2024-12-30  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/vi-modeline.el: Use hack-local-variables-hook instead
+	of before-hack-local-variables-hook
+
 	* init.el: Fix configuration of buffer-env,
 	Fix identation,
 	(+custom-faces): Highlight incorrect indentation
