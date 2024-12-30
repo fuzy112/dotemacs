@@ -199,25 +199,25 @@
 
       ;; nerd-icons
       (let ((charsets '((#xe5fa . #xe6b2)  ;; Seti-UI + Custom
-		        (#xe700 . #xe7c5)  ;; Devicons
-		        (#xf000 . #xf2e0)  ;; Font Awesome
-		        (#xe200 . #xe2a9)  ;; Font Awesome Extension
-		        (#xf500 . #xfd46) (#xf0001 . #xf1af0) ;; Material Design Icons
-		        (#xe300 . #xe3eb)  ;; Weather
-		        (#xf400 . #xf4a8) #x2665 #x26a1 #xf27c  ;; Octicons
-		        (#xe0a0 . #xe0a2) (#xe0b0 . #xe0b3)  ;; Powerline Symbols
-		        #xe0a3 (#xe0b4 . #xe0c8) (#xe0cc . #xe0d2) #xe0d4  ;; Powerline Extra Symbols
-		        (#x23fb . #x23fe) #x2b58  ;; IEC Power Symbols
-		        (#xf300 . #xf372)  ;; Font Logos
-		        (#xe000 . #xe00a)  ;; Pomicons
-		        (#xea60 . #xebeb))))  ;; Codicons
+                        (#xe700 . #xe7c5)  ;; Devicons
+                        (#xf000 . #xf2e0)  ;; Font Awesome
+                        (#xe200 . #xe2a9)  ;; Font Awesome Extension
+                        (#xf500 . #xfd46) (#xf0001 . #xf1af0) ;; Material Design Icons
+                        (#xe300 . #xe3eb)  ;; Weather
+                        (#xf400 . #xf4a8) #x2665 #x26a1 #xf27c  ;; Octicons
+                        (#xe0a0 . #xe0a2) (#xe0b0 . #xe0b3)  ;; Powerline Symbols
+                        #xe0a3 (#xe0b4 . #xe0c8) (#xe0cc . #xe0d2) #xe0d4  ;; Powerline Extra Symbols
+                        (#x23fb . #x23fe) #x2b58  ;; IEC Power Symbols
+                        (#xf300 . #xf372)  ;; Font Logos
+                        (#xe000 . #xe00a)  ;; Pomicons
+                        (#xea60 . #xebeb))))  ;; Codicons
         (cl-loop for charset in charsets do
-	         (set-fontset-font
-	          standard-fontset-spec
-	          charset
+                 (set-fontset-font
+                  standard-fontset-spec
+                  charset
                   "Symbols Nerd Font"
-	          nil
-	          'prepend))))))
+                  nil
+                  'prepend))))))
 
 (+custom-fontset)
 
@@ -232,9 +232,9 @@
   (setq modus-themes-to-toggle '(modus-vivendi modus-operandi))
   (setopt modus-themes-common-palette-overrides modus-themes-preset-overrides-intense
           modus-themes-mixed-fonts t
-	  modus-themes-bold-constructs t
-	  modus-themes-slanted-constructs t
-	  modus-themes-variable-pitch-ui t))
+          modus-themes-bold-constructs t
+          modus-themes-slanted-constructs t
+          modus-themes-variable-pitch-ui t))
 
 (when (not custom-enabled-themes)
   (require 'modus-themes)
@@ -250,8 +250,8 @@
   (unless (eq theme 'user)
     (defvar pp-posframe-parameters)
     (setq pp-posframe-parameters `( :border-color "gray"
-				    :border-width 1
-				    :background-color ,(face-background 'default nil '(shadow))))
+                                    :border-width 1
+                                    :background-color ,(face-background 'default nil '(shadow))))
     (custom-set-faces
      `(fixed-pitch
        ((t :family ,(face-attribute 'default :family))))
@@ -259,26 +259,29 @@
        ((t :family "Sarasa UI CL")))
      `(fill-column-indicator
        ((((type w32 tty))
-	 :height 1.0 :foreground "gray50" :background ,(face-background 'default))))
+         :height 1.0 :foreground "gray50" :background ,(face-background 'default))))
+     '(whitespace-indentation ((t :background "yellow")))
+     '(whitespace-space-before-tab ((t :background "DarkOrange")))
+     '(whitespace-space-after-tab ((t :background "yellow")))
      '(parenthesis
        ((t :inherit shadow)))
      `(header-line
        ((((supports :underline t) (class color grayscale))
-	 :background ,(face-background 'default)
+         :background ,(face-background 'default)
          :underline (:color ,(face-foreground 'default) :style line :position t)
-	 :box (:line-width 6 :color ,(face-background 'default) :style nil))))
+         :box (:line-width 6 :color ,(face-background 'default) :style nil))))
      `(mode-line-active
        ((((supports :overline t) (class color grayscale))
-	 :background ,(face-background 'default)
+         :background ,(face-background 'default)
          :foreground ,(face-foreground 'default)
          :overline t
-	 :box (:line-width 6 :color ,(face-background 'default) :style nil))))
+         :box (:line-width 6 :color ,(face-background 'default) :style nil))))
      `(mode-line-inactive
        ((((supports :overline t) (class color grayscale))
-	 :background ,(face-background 'default)
+         :background ,(face-background 'default)
          :foreground ,(face-foreground 'shadow)
          :overline t
-	 :box (:line-width 6 :color ,(face-background 'default) :style nil)))))))
+         :box (:line-width 6 :color ,(face-background 'default) :style nil)))))))
 
 (+custom-faces)
 (add-hook 'enable-theme-functions #'+custom-faces t)
@@ -346,8 +349,8 @@
               (buffer (car position))
               (point (cdr position))
               (text (with-current-buffer buffer
-	              (save-excursion
-	                (goto-char point)
+                      (save-excursion
+                        (goto-char point)
                         (end-of-defun)
                         (let ((end (point)))
                           (beginning-of-defun)
@@ -881,7 +884,10 @@ value for USE-OVERLAYS."
 
 (dolist (hook '(prog-mode-hook conf-mode-hook yaml-mode-hook))
   (add-hook hook #'whitespace-mode))
-(setopt whitespace-style '(face trailing empty indentation space-before-tab space-after-tab))
+(setopt whitespace-style '(face
+                           trailing empty indentation
+                           space-before-tab space-after-tab
+                           missing-newline-at-eof))
 
 ;;;; recentf
 
@@ -963,9 +969,9 @@ value for USE-OVERLAYS."
     (defvar display-comint-buffer-action)
     (let ((display-comint-buffer-action '(() (inhibit-same-window . t)))
           (display-buffer-alist (cons '((category . comint)
-			                nil
-			                (inhibit-same-window . t))
-			              display-buffer-alist)))
+                                        nil
+                                        (inhibit-same-window . t))
+                                      display-buffer-alist)))
       (eshell))))
 
 (defvar eshell-hist-mode-map)
@@ -1179,9 +1185,9 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
 (after-load! elisp-mode
   ;; Emacs 30.1
-  (when (boundp 'trusted-content)
+  (when (boundp 'trusted-contents)
     ;; trust contents in site-lisp
-    (add-to-list 'trusted-content (locate-user-emacs-file "site-lisp/")))
+    (add-to-list 'trusted-contents (locate-user-emacs-file "site-lisp/")))
   (when (native-comp-available-p)
     (keymap-set emacs-lisp-mode-map "C-c C-l" #'emacs-lisp-native-compile-and-load))
   (keymap-set lisp-interaction-mode-map "C-c C-j" #'eval-print-last-sexp))
@@ -1800,8 +1806,8 @@ minibuffer."
   ;; This enables displaying servers and channels in side windows,
   ;; which can be toggled by C-x w s.
   (setopt erc-modules
-	  (seq-union '(sasl nicks scrolltobottom track)
-		     erc-modules))
+          (seq-union '(sasl nicks scrolltobottom track)
+                     erc-modules))
 
   ;; insert a newline when I hit <RET> at the prompt, and prefer
   ;; something more deliberate for actually send messages.
@@ -1833,7 +1839,7 @@ minibuffer."
   ;; prevent JOINs and PARTs from lighting up the mode-line.
   (after-load! erc-track
     (setopt erc-track-faces-priority-list (remq 'erc-notice-face
-					        erc-track-faces-priority-list)))
+                                                erc-track-faces-priority-list)))
   (setq erc-track-priority-faces-only 'all))
 
 ;;;; discourse
@@ -1861,10 +1867,10 @@ minibuffer."
 (keymap-global-set "M-s b" #'browser-hist-search)
 (after-load! browser-hist
   (alist-setq! browser-hist-db-paths zen
-	      (cond
-	       ((memq system-type
-		      '(cygwin windows-nt ms-dos))
-	        "$APPDATA/zen/Profiles/*/places.sqlite")))
+              (cond
+               ((memq system-type
+                      '(cygwin windows-nt ms-dos))
+                "$APPDATA/zen/Profiles/*/places.sqlite")))
   (alist-setq! browser-hist--db-fields
     zen '("title" "url" "moz_places" "ORDER BY last_visit_date desc"))
   (setq browser-hist-default-browser 'zen))
