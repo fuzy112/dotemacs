@@ -1,5 +1,7 @@
 2024-12-31  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Disable doom-modeline-mode for igc branch
+
 	* straight/versions/dotemacs.el: Fix bug#75199 by updating corfu
 
 	* site-lisp/vi-modeline.el (vi-modeline-apply): Disable messages

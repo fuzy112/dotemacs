@@ -242,8 +242,10 @@
 
 ;;;; doom-modeline
 
-(require 'doom-modeline)
-(doom-modeline-mode)
+;; NOTE: currently when using the igc branch + doom-modeline-mode + meow
+;; the \\[mark-whole-buffer] command doesn't work
+(unless (featurep 'mps)
+  (doom-modeline-mode))
 
 ;;;; customized faces
 (defun +custom-faces (&optional theme)
