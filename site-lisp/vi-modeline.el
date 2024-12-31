@@ -75,7 +75,7 @@
 
 (defun vi-modeline-apply ()
   "Find and apply vi modelines in the current buffer."
-  (message "vi-modeline-appy")
+  ;; (message "vi-modeline-appy")
   (when vi-modeline-mode
     (save-excursion
       (goto-char (point-min))
@@ -84,14 +84,14 @@
         (save-restriction
           (narrow-to-region (point) (line-end-position))
           (while (re-search-forward "\\_<\\([[:alpha:]]+\\)=\\([[:digit:]]+\\|\"[^\"]*\"\\)\\_>" nil t)
-            (message "%s=%s" (match-string 1) (match-string 2))
+            ;; (message "%s=%s" (match-string 1) (match-string 2))
             (let ((key (read (match-string 1)))
                   (value (read (match-string 2))))
               (message "%S" (cons key value))
               (pcase-dolist (`(,mode . ,vars) vi-modeline-known-vars-alist)
                 (when (or (null mode) (derived-mode-p mode))
                   (when-let* ((el-var (alist-get key vars)))
-                    (message "mode: %S key: %S el-var: %S value: %S" mode key el-var value)
+                    ;; (message "mode: %S key: %S el-var: %S value: %S" mode key el-var value)
                     (setf (alist-get el-var file-local-variables-alist) value)
                     (cl-incf vi-modeline-var-count)))))))))
     (vi-modeline-update)))

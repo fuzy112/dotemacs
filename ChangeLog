@@ -1,3 +1,7 @@
+2024-12-31  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/vi-modeline.el (vi-modeline-apply): Disable messages
+
 2024-12-30  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (+custom-faces): Fix overline color of mode-line-active
