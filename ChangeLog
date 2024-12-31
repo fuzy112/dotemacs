@@ -3,6 +3,7 @@
 	* init.el: Disable doom-modeline-mode for igc branch
 	(+indent-tabs-mode--find-file-h): Detect whether indent-tabs-mode
 	should be enabled
+	(tool-map): Bind C-t a to gptel-menu instead of gptel-send
 
 	* straight/versions/dotemacs.el: Fix bug#75199 by updating corfu
 
