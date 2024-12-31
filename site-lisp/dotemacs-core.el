@@ -57,7 +57,7 @@ Otherwise, equality is tested by `equal'."
                                   (t #'equal)))))
            keys)))
 
-(defmacro after-load! (spec &rest body)
+(defmacro after-load-1! (spec &rest body)
   "Evaluate BODY after the specified features or files are loaded.
 SPEC could be
 - a symbol
@@ -72,24 +72,30 @@ SPEC could be
     ('nil
      (macroexp-progn body))
     (`(quote ,unquoted)
-     `(after-load! ,unquoted ,@body))
+     `(after-load-1! ,unquoted ,@body))
     ((or (pred stringp) (pred symbolp))
      `(with-eval-after-load ,(macroexp-quote spec)
-        (with-no-warnings ,@body)))
+        ,@body))
     (`(:or . ,sub-specs)
      (let ((lambda-var (gensym "body-")))
-       `(let ((,lambda-var (lambda () (with-no-warnings ,@body))))
+       `(let ((,lambda-var (lambda () ,@body)))
           ,(macroexp-progn
             (mapcar (lambda (sub-spec)
-                      `(after-load! ,sub-spec
+                      `(after-load-1! ,sub-spec
                          (funcall (prog1
                                       ,lambda-var
                                     (setq ,lambda-var #'ignore)))))
                     sub-specs)))))
     ((or `(:and . ,sub-specs)
          (and (pred listp) sub-specs))
-     `(after-load! ,(car sub-specs)
-        (after-load! ,(cdr sub-specs) ,@body)))))
+     `(after-load-1! ,(car sub-specs)
+        (after-load-1! ,(cdr sub-specs) ,@body)))))
+
+(defmacro after-load! (spec &rest body)
+  "Similar to `after-load-1!', but suppress warnings in BODY.
+See `after-load-1!' for SPEC."
+  (declare (indent 1))
+  `(after-load-1! ,spec (with-no-warnings ,@body)))
 
 (provide 'dotemacs-core)
 ;;; dotemacs-core.el ends here
