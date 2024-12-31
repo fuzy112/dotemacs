@@ -1,6 +1,8 @@
 2024-12-31  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Disable doom-modeline-mode for igc branch
+	(+indent-tabs-mode--find-file-h): Detect whether indent-tabs-mode
+	should be enabled
 
 	* straight/versions/dotemacs.el: Fix bug#75199 by updating corfu
 

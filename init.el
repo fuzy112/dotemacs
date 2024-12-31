@@ -893,6 +893,21 @@ value for USE-OVERLAYS."
                            space-before-tab space-after-tab
                            missing-newline-at-eof))
 
+;;;; indent-tabs-mode
+(defun +indent-tabs-mode--find-file-h ()
+  (unless (derived-mode-p 'special-mode
+                          'markdown-mode 'markdown-ts-mode 'org-mode
+                          'makefile-mode
+                          'diff-mode
+                          'term-mode 'eshell-mode 'eat-mode 'comint-mode
+                          'minibuffer-mode)
+    (save-excursion
+      (goto-char (point-min))
+      (when (re-search-forward (format "^\\(\t\\| \\{%d\\}\\)" tab-width) 10000 t)
+        (setq-local indent-tabs-mode (equal (match-string 1) "\t"))
+        (message "%s `indent-tabs-mode'" (if indent-tabs-mode "Enabled" "Disabled"))))))
+(add-hook 'find-file-hook #'+indent-tabs-mode--find-file-h)
+
 ;;;; recentf
 
 (autoload 'recentf-track-opened-file "recentf.el"
