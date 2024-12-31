@@ -1992,7 +1992,7 @@ Otherwise disable it."
   :prefix 'tool-map
   :name "Tool map"
   "A" #'gptel
-  "a" #'gptel-send
+  "a" #'gptel-menu
   "t" #'tui-run
   "r" #'tui-rg
   "g" #'tui-ugrep
