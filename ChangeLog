@@ -1,5 +1,8 @@
 2024-12-31  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/dotemacs-core.el (after-load-1!, after-load!):
+	Optimize the expanded code
+
 	* init.el: Disable doom-modeline-mode for igc branch
 	(+indent-tabs-mode--find-file-h): Detect whether indent-tabs-mode
 	should be enabled
