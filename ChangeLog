@@ -1,5 +1,7 @@
 2024-12-31  Zhengyi Fu  <i@fuzy.me>
 
+	* straight/versions/dotemacs.el: Fix bug#75199 by updating corfu
+
 	* site-lisp/vi-modeline.el (vi-modeline-apply): Disable messages
 
 2024-12-30  Zhengyi Fu  <i@fuzy.me>
