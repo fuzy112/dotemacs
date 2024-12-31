@@ -18,7 +18,7 @@
  ("consult-eglot" . "c5f87d92448cd9c22a33ebd1feb54ca2fb89afa8")
  ("consult-everything" . "ac574a63b3e869787bbe6354b57a7a8021647ee3")
  ("copilot.el" . "c5dfa99f05878db5e6a6a378dc7ed09f11e803d4")
- ("corfu" . "9f0903387f0c9019dab8b91cf39b8c6ba2de9430")
+ ("corfu" . "7f0b32a32da3e3060cd7b7cc9d64034b12958f21")
  ("corfu-terminal" . "501548c3d51f926c687e8cd838c5865ec45d03cc")
  ("dash.el" . "1de9dcb83eacfb162b6d9a118a4770b1281bcd84")
  ("deadgrep" . "bb555790c6f404572d537e1e4adec8b4ff0515f5")
