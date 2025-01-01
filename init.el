@@ -1193,7 +1193,7 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 (add-hook 'conf-mode-hook #'puni-mode)
 (add-hook 'puni-mode-hook #'electric-pair-local-mode)
 (after-load! elisp-mode
-  (define-keymap :keymap emacs-lisp-mode-map
+  (define-keymap :keymap lisp-data-mode-map
     "C-)" #'puni-slurp-forward
     "C-(" #'puni-slurp-backward
     "C-}" #'puni-barf-forward
@@ -1201,6 +1201,11 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 
 (after-load! elec-pair
   (keymap-set electric-pair-mode-map "]" #'up-list))
+
+;;;; lisp
+
+(after-load! sly
+  (keymap-set sly-prefix-map "M-h" #'sly-documentation-lookup))
 
 ;;;; elisp-mode
 

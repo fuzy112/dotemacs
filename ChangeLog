@@ -1,3 +1,7 @@
+2025-01-01  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Configuration for Common Lisp
+
 2024-12-31  Zhengyi Fu  <i@fuzy.me>
 
 	* site-lisp/dotemacs-core.el (after-load-1!, after-load!):
