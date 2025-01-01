@@ -1,5 +1,7 @@
 2025-01-01  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/exwm-settings.el: Add configuration for EXWM
+
 	* init.el: Configuration for Common Lisp
 
 2024-12-31  Zhengyi Fu  <i@fuzy.me>
