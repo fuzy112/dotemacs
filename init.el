@@ -272,7 +272,7 @@
        ((((supports :underline t) (class color grayscale))
          :background ,(face-background 'default)
          :underline (:color ,(face-foreground 'default) :style line :position t)
-         :box (:line-width 6 :color ,(face-background 'default) :style nil))))
+         :box (:line-width 6 :style flat-button))))
      `(mode-line-active
        ((((supports :overline t) (class color grayscale))
          :background ,(face-background 'default)
