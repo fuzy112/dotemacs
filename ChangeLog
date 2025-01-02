@@ -1,5 +1,7 @@
 2025-01-02  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (rime-input-method@exwm-xim): workaround for EXWM-XIM
+
 	* site-lisp/ctags-menu.el
 	(ctags-menu--languages): Signal an error when the ctags program
 	is not universal ctags
