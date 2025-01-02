@@ -1,6 +1,6 @@
 ;;; ctags-core.el --- ctags support         -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Copyright (C) 2023, 2024  Zhengyi Fu
+;; Copyright (C) 2023, 2024, 2025  Zhengyi Fu
 
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Keywords: tools, programming
@@ -60,14 +60,18 @@
   :type 'string)
 
 (defcustom ctags-create-tags-default-args
-  "ctags -o %TAGSFILE% --languages=all --kinds-all=* --fields=* \
+  " -o %TAGSFILE% --languages=all --kinds-all=* --fields=* \
 --extras=* --exclude=moc_*.cpp  -R ."
   "Default arguments used to create tags file."
   :type 'string)
 
+(defcustom ctags-universal-ctags-program "ctags-universal"
+  "Path to Universal-Ctags program."
+  :type 'file)
+
 (defcustom ctags-readtags-program "readtags"
   "Path to `readtags (1)' program."
-  :type 'string)
+  :type 'file)
 
 (defcustom ctags-readtags-always-local 'auto
   "When set to t, always copy remote tags file to the local machine.
@@ -337,7 +341,7 @@ The values are paths to the local cache files.")
       (propertize (match-string 1 dir) 'help-echo (abbreviate-file-name dir))
     dir))
 
-(defun ctags--create-tags-default-args ()
+(defun ctags--create-tags-default-command ()
   "Return the default command used to create the tags table."
   (let* ((dir (ctags--project-root (ctags-tags-file-path)))
          (file-name
@@ -346,9 +350,11 @@ The values are paths to the local cache files.")
                (file-local-name (ctags-tags-file-path))
                dir)
             ctags-default-tags-file-name)))
-    (string-replace "%TAGSFILE%"
-                    file-name
-                    ctags-create-tags-default-args)))
+    (concat ctags-universal-ctags-program
+            " "
+            (string-replace "%TAGSFILE%"
+                            file-name
+                            ctags-create-tags-default-args))))
 
 ;;;; Commands
 
@@ -374,7 +380,7 @@ See also man page `ctags(1)'."
                 "Run ctags in this directory: "
                 dir)
              dir))
-          (default (ctags--create-tags-default-args)))
+          (default (ctags--create-tags-default-command)))
      (list dir2
            (read-shell-command
             (format "Run ctags (in %s): " (ctags--project-name dir2))
