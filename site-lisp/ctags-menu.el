@@ -1,5 +1,5 @@
 ;;; ctags-menu.el --- Transient menu for Ctags -*- lexical-binding: t -*-
-;; Copyright © 2024  Zhengyi Fu <i@fuzy.me>
+;; Copyright © 2024, 2025  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
 ;; Version: 0.1.5
@@ -112,7 +112,13 @@
                 (list ".")))))
 
 (defun ctags-menu--languages ()
-  (process-lines "ctags" "--list-languages"))
+  (process-lines-handling-status
+   ctags-universal-ctags-program
+   (lambda (exit-status)
+     (unless (zerop exit-status)
+       (error "`%s --list-languages' failed, please ensure you are using universal-ctags"
+              ctags-universal-ctags-program)))
+   "--list-languages"))
 
 (defun ctags-menu--format-prompt-for-language (prompt language)
   (replace-regexp-in-string
@@ -227,15 +233,19 @@
   :key "RET"
   (interactive (list (ctags-menu--args)))
   (let ((default-directory ctags-menu--directory))
-    (compilation-start (concat "ctags " (combine-and-quote-strings args " "))
-                       nil #'ctags-menu--buffer-native)))
+    (compilation-start
+     (concat ctags-universal-ctags-program " "
+             (combine-and-quote-strings args " "))
+     nil #'ctags-menu--buffer-native)))
 
 (transient-define-suffix ctags-menu:edit-and-run (args)
   :description "Edit and run the command"
   :key "!"
   (interactive (list (ctags-menu--args)))
   (let* ((default-directory ctags-menu--directory)
-         (default-command (concat "ctags " (combine-and-quote-strings args " ")))
+         (default-command (concat ctags-universal-ctags-program
+                                  " "
+                                  (combine-and-quote-strings args " ")))
          (command (read-shell-command "Run ctags: " default-command)))
     (compilation-start command nil #'ctags-menu--buffer-native)))
 

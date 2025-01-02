@@ -1,5 +1,15 @@
 2025-01-02  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/ctags-menu.el
+	(ctags-menu--languages): Signal an error when the ctags program
+	is not universal ctags
+	(ctags-menu:RET): Use ctags-universal-ctags-program
+
+	* site-lisp/ctags-core.el
+	(ctags-create-tags-default-args): Remove the program name
+	(ctags--create-tags-default-command): Use ctags-universal-ctags-program
+	(ctags-create-tags): Use ctags-universal-ctags-program
+
 	* init.el (get-scratch-buffer-create@lock): Explicitly call
 	`(emacs-lock-mode 'all)'.
 
