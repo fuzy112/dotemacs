@@ -1,6 +1,8 @@
 2025-01-02  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (rime-input-method@exwm-xim): workaround for EXWM-XIM
+	(+custom-faces): Enlarge the height of tab-bar by adding a
+	flat-button box
 
 	* site-lisp/ctags-menu.el
 	(ctags-menu--languages): Signal an error when the ctags program
