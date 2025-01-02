@@ -1513,6 +1513,10 @@ minibuffer."
 (define-advice toggle-input-method (:before (&rest _) rime)
   (setq default-input-method "rime"))
 
+(define-advice rime-input-method (:before (&rest _) exwm-xim)
+  (when (bound-and-true-p exwm-xim-buffer-p)
+    (rime-active-mode)))
+
 ;;;; kinsoku
 
 (setq word-wrap-by-category t)
