@@ -1,6 +1,6 @@
 ;;; early-init.el --- Early init file                -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024  Zhengyi Fu
+;; Copyright (C) 2024, 2025  Zhengyi Fu
 
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Keywords: local
@@ -90,6 +90,8 @@
 
 ;; workaround WSL wayland clipboard issue
 (setq select-active-regions nil)
+
+(setq save-interprogram-paste-before-kill t)
 
 (setq menu-bar-mode nil)
 (setq tool-bar-mode nil)

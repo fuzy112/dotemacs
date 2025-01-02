@@ -1,5 +1,7 @@
 2025-01-02  Zhengyi Fu  <i@fuzy.me>
 
+	* early-init.el (save-interprogram-paste-before-kill): Set to t.
+
 	* init.el (rime-input-method@exwm-xim): workaround for EXWM-XIM
 	Set rime--temporarily-ignore-predicates to t to force enable rime
 	even if meow is enabled
