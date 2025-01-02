@@ -284,7 +284,10 @@
          :background ,(face-background 'default)
          :foreground ,(face-foreground 'shadow)
          :overline t
-         :box (:line-width 6 :color ,(face-background 'default) :style nil)))))))
+         :box (:line-width 6 :color ,(face-background 'default) :style nil))))
+     `(tab-bar
+       ((((supports :box t))
+         :box (:line-width (-2 . 6) :style flat-button)))))))
 
 (+custom-faces)
 (add-hook 'enable-theme-functions #'+custom-faces t)
