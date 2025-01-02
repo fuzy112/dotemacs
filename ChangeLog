@@ -1,3 +1,8 @@
+2025-01-02  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (get-scratch-buffer-create@lock): Explicitly call
+	`(emacs-lock-mode 'all)'.
+
 2025-01-01  Zhengyi Fu  <i@fuzy.me>
 
 	* site-lisp/exwm-settings.el: Add configuration for EXWM

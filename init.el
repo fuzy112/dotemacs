@@ -1,6 +1,6 @@
 ;;; init.el --- Emacs configuration file           -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024  Zhengyi Fu
+;; Copyright (C) 2024, 2025  Zhengyi Fu
 
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Keywords: local
@@ -371,7 +371,10 @@
 ;; prevent emacs from exiting if the *scratch* buffer is changed.
 (define-advice get-scratch-buffer-create (:filter-return (buffer) lock)
   (with-current-buffer buffer
-    (add-hook 'first-change-hook #'emacs-lock-mode nil t)))
+    (add-hook 'first-change-hook
+              (lambda ()
+                (emacs-lock-mode 'all))
+              nil t)))
 
 (get-scratch-buffer-create)
 
