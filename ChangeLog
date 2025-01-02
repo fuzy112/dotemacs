@@ -1,6 +1,8 @@
 2025-01-02  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (rime-input-method@exwm-xim): workaround for EXWM-XIM
+	Set rime--temporarily-ignore-predicates to t to force enable rime
+	even if meow is enabled
 	(+custom-faces): Enlarge the height of tab-bar by adding a
 	flat-button box
 	(+custom-faces): Simplify header face
