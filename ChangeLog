@@ -88,3 +88,12 @@
 	* init.el (+custom-fontset): move fontset configuration code to a function
 	(+custom-faces): customize `default', `variable-pitch' face
 	(+buffer-terminator-load-timer): better way of loading `buffer-terminator'
+
+;; Local Variables:
+;; coding: utf-8
+;; End:
+
+ Copyright (C) 2024, 2025 Zhengyi Fu
+
+ Copying and distribution of this file, with or without modification, are
+ permitted provided the copyright notice and this notice are preserved.
