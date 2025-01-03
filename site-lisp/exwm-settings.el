@@ -45,7 +45,24 @@
         ([?\s-6] . +exwm-workspace-switch-create/dwim)
         ([?\s-7] . +exwm-workspace-switch-create/dwim)
         ([?\s-8] . +exwm-workspace-switch-create/dwim)
-        ([?\s-9] . +exwm-workspace-switch-create/dwim)))
+        ([?\s-9] . +exwm-workspace-switch-create/dwim)
+
+        ;;; for MS-windows where s- cannot be used
+        ([?\M-g ?w ?r] . exwm-reset)
+        ([?\M-g ?w ?w] . exwm-workspace-switch)
+        ([?\M-g ?w ?&] . (lambda (cmd)
+                           (interactive (list (read-shell-command "$ ")))
+                           (start-process-shell-command cmd nil cmd)))
+        ([?\M-g ?w ?0] . +exwm-workspace-switch-create/dwim)
+        ([?\M-g ?w ?1] . +exwm-workspace-switch-create/dwim)
+        ([?\M-g ?w ?2] . +exwm-workspace-switch-create/dwim)
+        ([?\M-g ?w ?3] . +exwm-workspace-switch-create/dwim)
+        ([?\M-g ?w ?4] . +exwm-workspace-switch-create/dwim)
+        ([?\M-g ?w ?5] . +exwm-workspace-switch-create/dwim)
+        ([?\M-g ?w ?6] . +exwm-workspace-switch-create/dwim)
+        ([?\M-g ?w ?7] . +exwm-workspace-switch-create/dwim)
+        ([?\M-g ?w ?8] . +exwm-workspace-switch-create/dwim)
+        ([?\M-g ?w ?9] . +exwm-workspace-switch-create/dwim)))
 
 (defun +exwm-workspace-switch-create/dwim ()
   (interactive)
@@ -75,7 +92,10 @@
 (exwm-systemtray-mode)
 (exwm-enable)
 (exwm-xim-mode)
-(push ?\C-\\ exwm-input-prefix-keys)
+(cl-pushnew ?\C-\\ exwm-input-prefix-keys)
+
+
+(cl-pushnew ?\M-o exwm-input-prefix-keys)
 
 ;;;; GPG pinentry
 
@@ -98,6 +118,11 @@
 (require 'exwm-firefox)
 (exwm-firefox-mode)
 
+
+(provide 'exwm-settings)
+
 ;; Local Variables:
 ;; indent-tabs-mode: nil
 ;; End:
+
+;;; exwm-settings.el ends here

@@ -2115,6 +2115,19 @@ Otherwise disable it."
   "M-u" #'upcase-dwim)
 
 
+
+;;;; EXWM
+
+(defun +exwm--command-line-handler ()
+  (and (string= argi "--exwm")
+       (require 'exwm-settings)
+       (add-hook 'after-init-hook #'exwm-init)
+       t))
+
+(defvar command-line-functions)
+(push '+exwm--command-line-handler command-line-functions)
+
+
 ;;;; post-init
 
 (defvar post-init-file (locate-user-emacs-file "post-init.el"))

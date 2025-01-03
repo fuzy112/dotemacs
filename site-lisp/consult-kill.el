@@ -1,5 +1,5 @@
 ;;; consult-kill.el --- Interactively kill a process -*- lexical-binding: t -*-
-;; Copyright © 2024  Zhengyi Fu <i@fuzy.me>
+;; Copyright © 2024, 2025  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
 ;; Version: 0.1.0
@@ -23,12 +23,7 @@
   (interactive)
   (let ((pid
 	 (consult--read
-	  (thread-first
-	    (consult--async-sink)
-	    (consult--dynamic-compute
-	     (lambda (&optional _arg)
-	       (cdr (process-lines "ps" "-ef"))))
-	    (consult--async-throttle))
+	  (cdr (process-lines "ps" "-ef"))
 	  :prompt "Kill process: "
 	  :initial initial
 	  :require-match t
