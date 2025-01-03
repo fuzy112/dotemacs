@@ -1,7 +1,5 @@
 2025-01-03  Zhengyi Fu  <i@fuzy.me>
 
-	* site-lisp/exwm-settings.el (exwm-input-prefix-key): Add ?\s and ?q.
-
 	* site-lisp/consult-kill.el (consult-kill): Simplify code.
 
 	* init.el (+exwm--command-line-handler): Handle --exwm command
