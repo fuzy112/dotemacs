@@ -96,6 +96,8 @@
 
 
 (cl-pushnew ?\M-o exwm-input-prefix-keys)
+(cl-pushnew ?\s exwm-input-prefix-keys)
+(cl-pushnew ?q exwm-input-prefix-keys)
 
 ;;;; GPG pinentry
 
