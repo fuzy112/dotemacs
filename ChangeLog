@@ -1,3 +1,7 @@
+2025-01-03  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Add GitHub and CodeBerg to webjump-sites.
+
 2025-01-02  Zhengyi Fu  <i@fuzy.me>
 
 	* early-init.el (save-interprogram-paste-before-kill): Set to t.
