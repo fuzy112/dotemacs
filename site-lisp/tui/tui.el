@@ -1,5 +1,5 @@
 ;;; tui.el --- Run TUI tools in terminal -*- lexical-binding: t -*-
-;; Copyright © 2024  Zhengyi Fu <i@fuzy.me>
+;; Copyright © 2024, 2025  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu
 ;; Version:  0.1.1
@@ -79,7 +79,7 @@ single argument, the process."
 
 (defun tui--project-root (&optional may-prompt)
   (and-let* ((root (and (functionp tui-project-function)
-                        (funcall tui-project-function may-prompt))))
+			(funcall tui-project-function may-prompt))))
     (expand-file-name root)))
 
 (defconst tui--grep-regexp "^\\([^:]+\\):\\([[:digit:]]+\\):\\([[:digit:]]+\\):[[:space:]]*\\(.*\\)$")
@@ -237,10 +237,22 @@ When called interactively, the symbol at point is used as the initial query."
   (interactive)
   (tui-run "tui-mc" "mc"))
 
+(defun tui--kill-callback (proc)
+  (with-current-buffer (process-buffer proc)
+    (goto-char (point-min))
+    (while (re-search-forward "^[^[:space:]]+\s+\\([[:digit:]]+\\)" nil t)
+      (shell-command (format "kill -TERM %s" (match-string 1))))))
+
 ;;;###autoload
 (defun tui-kill ()
   (interactive)
-  (tui-run "tui-kill" "pik"))
+  (tui-run
+   "tui-kill"
+   (fuzzy-finder-command
+    :ansi t
+    :bind '("ctrl-k:kill-line")
+    :cmd "ps -ax")
+   #'tui--kill-callback))
 
 ;;;###autoload
 (defun tui-lnav (file)

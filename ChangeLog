@@ -1,5 +1,8 @@
 2025-01-03  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/tui/tui.el: tui-kill drops dependency on tik.
+	(tui--kill-callback): New function.
+
 	* init.el (+indent-tabs-mode--hack-local-variables-h): Renamed
 	from `+indent-tabs-mode--find-file-h'.  It should be added to
 	hack-local-variables-hook now.
