@@ -74,7 +74,7 @@
 
 (exwm-systemtray-mode)
 (exwm-enable)
-;(exwm-xim-mode)
+(exwm-xim-mode)
 (push ?\C-\\ exwm-input-prefix-keys)
 
 ;;;; GPG pinentry
@@ -90,6 +90,13 @@
 
 (require 'org-crypt)
 (org-crypt-use-before-save-magic)
+
+;;;; firefox
+
+(straight-use-package
+ '(exwm-firefox :host codeberg :repo "emacs-weirdware/exwm-firefox"))
+(require 'exwm-firefox)
+(exwm-firefox-mode)
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
