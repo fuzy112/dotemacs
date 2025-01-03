@@ -1,5 +1,8 @@
 2025-01-04  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: bind puni commands in lisp-mode-shared-map instead of
+	lisp-data-mode-map.
+
 	* site-lisp/consult-omni-kagi.el: New file.
 
 	* site-lisp/exwm-settings.el (exwm-input-prefix-keys): Add ?\M-s.
