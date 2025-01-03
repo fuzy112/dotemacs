@@ -1,5 +1,8 @@
 2025-01-03  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/exwm-settings.el: Enable exwm-xim-mode by default.
+	Add package exwm-firefox.
+
 	* init.el: Add GitHub and CodeBerg to webjump-sites.
 
 2025-01-02  Zhengyi Fu  <i@fuzy.me>
