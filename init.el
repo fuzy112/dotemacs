@@ -1810,7 +1810,8 @@ minibuffer."
 
   (define-keymap :keymap org-mode-map
     "C-c o M" #'+org/toggle-emphasis-markers
-    "C-c o m" #'org-modern-mode)
+    "C-c o m" #'org-modern-mode
+    "M-g o" #'consult-org-heading)
   (setopt org-export-backends '(html latex texinfo))
   (setq org-agenda-hide-tags-regexp ".")
   (setq org-agenda-prefix-format
