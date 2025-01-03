@@ -901,7 +901,7 @@ value for USE-OVERLAYS."
                            missing-newline-at-eof))
 
 ;;;; indent-tabs-mode
-(defun +indent-tabs-mode--find-file-h ()
+(defun +indent-tabs-mode--hack-local-variables-h ()
   (unless (derived-mode-p 'special-mode
                           'markdown-mode 'markdown-ts-mode 'org-mode
                           'makefile-mode
@@ -910,10 +910,14 @@ value for USE-OVERLAYS."
                           'minibuffer-mode)
     (save-excursion
       (goto-char (point-min))
-      (when (re-search-forward (format "^\\(\t\\| \\{%d\\}\\)" tab-width) 10000 t)
-        (setq-local indent-tabs-mode (equal (match-string 1) "\t"))
-        (message "%s `indent-tabs-mode'" (if indent-tabs-mode "Enabled" "Disabled"))))))
-(add-hook 'find-file-hook #'+indent-tabs-mode--find-file-h)
+      (let ((score 0))
+        (while (re-search-forward (format "^\\(\t\\| \\{%d\\}\\)" tab-width) 10000 t)
+          (if (equal (match-string 1) "\t")
+              (cl-incf score)
+            (cl-decf score)))
+        (unless (zerop score)
+          (indent-tabs-mode score))))))
+(add-hook 'hack-local-variables-hook #'+indent-tabs-mode--hack-local-variables-h)
 
 ;;;; recentf
 
