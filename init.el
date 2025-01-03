@@ -1913,6 +1913,13 @@ minibuffer."
     zen '("title" "url" "moz_places" "ORDER BY last_visit_date desc"))
   (setq browser-hist-default-browser 'zen))
 
+;;;; webjump
+
+(after-load! webjump
+  (alist-setq! webjump-sites
+    "GitHub" "https://github.com"
+    "CodeBerg" "https://codeberg.org"))
+
 ;;;; vundo
 
 (after-load! vundo
