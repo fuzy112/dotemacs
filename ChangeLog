@@ -1,5 +1,15 @@
 2025-01-03  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/consult-kill.el (consult-kill): Simplify code.
+
+	* init.el (+exwm--command-line-handler): Handle --exwm command
+	line argument.
+	(command-line-functions): Add +exwm--command-line-handler.
+
+	* site-lisp/exwm-settings.el (exwm-input-global-keys): Add
+	alternative keybindings for ms-windows.
+	(exwm-input-prefix-key): Add ?\M-o
+
 	* site-lisp/tui/tui.el: tui-kill drops dependency on tik.
 	(tui--kill-callback): New function.
 
