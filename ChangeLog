@@ -1,5 +1,7 @@
 2025-01-03  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Bind "M-g o" to consult-org-heading in org-mode-map.
+
 	* site-lisp/consult-kill.el (consult-kill): Simplify code.
 
 	* init.el (+exwm--command-line-handler): Handle --exwm command
