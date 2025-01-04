@@ -2117,8 +2117,9 @@ Otherwise disable it."
 ;;;; EXWM
 
 (defun +exwm--command-line-handler ()
-  (and (string= argi "--exwm")
-       (require 'exwm-settings)
+  (and (or (equal argi "--exwm")
+           (equal argi "--exde"))
+       (require 'exde)
        (add-hook 'after-init-hook #'exwm-init)
        t))
 

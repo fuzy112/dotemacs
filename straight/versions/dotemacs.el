@@ -41,6 +41,7 @@
  ("erc" . "d8f8e99b7b6e026af9dffa97af5ae7653c7d1f1c")
  ("explain-pause-mode" . "2356c8c3639cbeeb9751744dbe737267849b4b51")
  ("external-completion" . "5a5dcff61f04553ce5093052d445e01782a67a26")
+ ("exwm" . "26d24e534a227d3d4de199f8ae3d098ef647f71d")
  ("f.el" . "931b6d0667fe03e7bf1c6c282d6d8d7006143c52")
  ("flymake" . "fe291b5b57393c71b9c6522d0425e86e9f9798cc")
  ("geiser" . "97ce88463f346ff0dab147334fa0ce7b81569d7c")
