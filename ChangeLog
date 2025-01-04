@@ -1,5 +1,10 @@
 2025-01-04  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+exwm--command-line-handler): Handle --exde as well as
+	--exwm.
+	* site-lisp/exde.el: Rename from exwm-settings.
+	* packages.el: Add exwm, xelb, exwm-firefox.
+
 	* init.el: Add kagi.com to webjump-sites.
 
 	* exwm-settings.el: Move rime workaround for EXWM to exwm-settings.el.

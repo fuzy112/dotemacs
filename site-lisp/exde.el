@@ -1,4 +1,4 @@
-;;; exwm-settings.el --- EXWM settings -*- lexical-binding: t -*-
+;;; exde.el --- Emacs X Desktop Environment -*- lexical-binding: t -*-
 ;; Copyright © 2025  Zhengyi Fu <i@fuzy.me>
 
 ;; This program is free software: you can redistribute it and/or modify
@@ -17,10 +17,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-use-package
- '(xelb :host github :repo "emacs-exwm/xelb"))
-(straight-use-package
- '(exwm :host github :repo "emacs-exwm/exwm"))
 (require 'exwm)
 
 ;; set the initial workspace number
@@ -104,9 +100,7 @@
 (setq auth-source-debug t)
 
 (straight-use-package 'pinentry)
-(require 'epa-file)
-(setq epa-pinentry-mode 'loopback
-      epg-pinentry-mode 'loopback)
+(setq epg-pinentry-mode 'loopback)
 (pinentry-start)
 
 (require 'org-crypt)
@@ -114,6 +108,7 @@
 
 ;;;; rime
 
+(declare-function rime-active-mode "rime.el" (&optional arg1))
 (define-advice rime-input-method (:before (&rest _) exwm-xim)
   (when (bound-and-true-p exwm-xim-buffer-p)
     (setq-local rime--temporarily-ignore-predicates t)
@@ -121,16 +116,14 @@
 
 ;;;; firefox
 
-(straight-use-package
- '(exwm-firefox :host codeberg :repo "emacs-weirdware/exwm-firefox"))
 (require 'exwm-firefox)
 (exwm-firefox-mode)
 
 
-(provide 'exwm-settings)
+(provide 'exde)
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
 ;; End:
 
-;;; exwm-settings.el ends here
+;;; exde.el ends here
