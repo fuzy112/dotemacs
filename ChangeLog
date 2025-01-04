@@ -1,6 +1,7 @@
 2025-01-04  Zhengyi Fu  <i@fuzy.me>
 
-	* init.el:
+	* init.el: Add kagi.com to webjump-sites.
+
 	* exwm-settings.el: Move rime workaround for EXWM to exwm-settings.el.
 
 	* init.el: bind puni commands in lisp-mode-shared-map instead of
