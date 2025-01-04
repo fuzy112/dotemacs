@@ -1,6 +1,6 @@
 ;;; flymake-systemd.el --- Flymake diagnostic function for systemd unit files  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024  Zhengyi Fu
+;; Copyright (C) 2024, 2025  Zhengyi Fu
 
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Keywords: tools

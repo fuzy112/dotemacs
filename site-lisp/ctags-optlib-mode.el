@@ -1,7 +1,7 @@
 ;;; ctags-optlib-mode.el --- major mode for editing ctags optlib files  -*- lexical-binding: t; -*-
 ;;  Copyright (c) 2019, Red Hat, Inc.
 ;;  Copyright (c) 2019, Masatake YAMATO
-;;  Copyright (c) 2024, Zhengyi FU <i@fuzy.me>
+;;  Copyright (c) 2024, 2025, Zhengyi FU <i@fuzy.me>
 ;;
 ;;  Author: Masatake YAMATO <yamato@redhat.com>
 ;;

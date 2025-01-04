@@ -1,6 +1,6 @@
 ;;; hide-pass.el --- Hide passwords in buffer        -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2023, 2024  Zhengyi Fu <i@fuzy.me>
+;; Copyright (C) 2023, 2024, 2025  Zhengyi Fu <i@fuzy.me>
 
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Keywords: convenience

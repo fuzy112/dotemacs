@@ -1,5 +1,5 @@
 ;;; flymake-define.el --- Define flymake diagnostic functions. -*- lexical-binding: t -*-
-;; Copyright © 2024  Zhengyi Fu
+;; Copyright © 2024, 2025  Zhengyi Fu
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
 ;; Version: 0.8.5

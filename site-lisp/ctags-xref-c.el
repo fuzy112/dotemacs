@@ -1,6 +1,6 @@
 ;;; ctags-xref-c.el --- C language support for ctags-xref  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024  Zhengyi Fu
+;; Copyright (C) 2024, 2025  Zhengyi Fu
 
 ;; Author: Zhengyi Fu  <i@fuzy.me>
 ;; Keywords: c, tools

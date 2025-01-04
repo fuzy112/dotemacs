@@ -1,6 +1,6 @@
 ;;; cmake-capf.el --- Completion-at-point function for CMake  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2023, 2024  Zhengyi Fu <i@fuzy.me>
+;; Copyright (C) 2023, 2024, 2025  Zhengyi Fu <i@fuzy.me>
 
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Keywords: convenience
