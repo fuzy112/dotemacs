@@ -1918,7 +1918,9 @@ minibuffer."
 (after-load! webjump
   (alist-setq! webjump-sites
     "GitHub" "https://github.com"
-    "CodeBerg" "https://codeberg.org"))
+    "CodeBerg" "https://codeberg.org"
+    "Kagi Search" [simple-query "www.kagi.com"
+                                "www.kagi.com/search?q=" ""]))
 
 ;;;; vundo
 
