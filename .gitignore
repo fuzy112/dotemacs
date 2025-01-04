@@ -52,3 +52,4 @@ elpa/archives
 /.dir-locals.el
 /good-doc
 /request
+/forge-database.sqlite
