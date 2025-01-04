@@ -1,6 +1,6 @@
 ;;; ctags-xref.el --- XREF backend for Universal-Ctags  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2023, 2024  Zhengyi Fu
+;; Copyright (C) 2023, 2024, 2025  Zhengyi Fu
 
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Keywords: c, tools

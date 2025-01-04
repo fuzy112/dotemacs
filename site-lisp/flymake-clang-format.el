@@ -1,6 +1,6 @@
 ;;; flymake-clang-format.el --- Clang-format diagnostic function  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024  Zhengyi Fu
+;; Copyright (C) 2024, 2025  Zhengyi Fu
 
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Version: 0.1.0

@@ -1,5 +1,5 @@
 ;;; flymake-xmllint.el --- xmllint diagnostic function -*- lexical-binding: t -*-
-;; Copyright © 2024  Zhengyi Fu <i@fuzy.me>
+;; Copyright © 2024, 2025  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
 ;; Version: 0.3.0

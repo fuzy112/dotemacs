@@ -1,6 +1,6 @@
 ;;; backup.el --- Backup management                  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024  Zhengyi Fu
+;; Copyright (C) 2024, 2025  Zhengyi Fu
 
 ;; Package-Version: 0.7.3
 ;; Author: Zhengyi Fu <i@fuzy.me>
