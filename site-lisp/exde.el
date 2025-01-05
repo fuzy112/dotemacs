@@ -188,6 +188,22 @@ Wait DELAY secondcs before taking the shot."
    (frame-parameter nil 'window-id)
    delay))
 
+(defun exde-capture-rectangle (x y w h &optional delay)
+  (exde-capture-and-display
+   (list "scrot"
+         "-a" (format "%d,%d,%d,%d" x y w h)
+         "-d" (number-to-string (or delay 0))
+         "-")))
+
+(defun exde-capture-window (&optional win delay)
+  (interactive "ip")
+  (exde-capture-rectangle
+   (window-pixel-left win)
+   (window-pixel-top win)
+   (window-pixel-width win)
+   (window-pixel-height win)
+   delay))
+
 
 (provide 'exde)
 
