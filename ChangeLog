@@ -1,6 +1,11 @@
 2025-01-05  Zhengyi Fu  <i@fuzy.me>
 
 	* site-lisp/exde.el: Enable display time mode.
+	Add commands for capturing screens.
+	(exde-capture-xwindow, exde-capture-interactive)
+	(exde-capture-fullscreen): New commands.
+	(exde-capture-and-display): New function.
+	(+exwm--read-window-id): New function.
 
 2025-01-04  Zhengyi Fu  <i@fuzy.me>
 
