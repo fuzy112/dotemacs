@@ -123,6 +123,54 @@
 
 (display-time-mode)
 
+;;;; screen capture
+
+(defun exde-capture-and-display (command)
+  (let* ((buf (generate-new-buffer "*screen-capture*"))
+         (process
+          (make-process :name "scrot"
+                        :buffer buf
+                        :stderr (get-buffer-create " *scrot-stderr*")
+                        :connection-type 'pipe
+                        :command command
+                        :sentinel (lambda (p _e)
+                                    (unless (process-live-p p)
+                                      (pop-to-buffer buf)
+                                      (image-mode))))))))
+
+(defun exde-capture-interactive (&optional delay)
+  (interactive "p")
+  (exde-capture-and-display
+   (list "scrot" "-s" "-f" "-d" (number-to-string (or delay 0)) "-")))
+
+(defun exde-capture-fullscreen (&optional delay)
+  (interactive "p")
+  (exde-capture-and-display
+   (list "scrot" "-d" (number-to-string (or delay 0)) "-")))
+
+
+(defun +exwm--read-window-id (prompt)
+  (let* ((collection (mapcar (lambda (pair)
+                               (cons (buffer-name (cdr pair))
+                                     (car pair)))
+                             exwm--id-buffer-alist))
+         (selected (completing-read prompt collection nil
+                                    'require-match nil nil exwm--id))
+         (id (alist-get selected collection nil nil #'equal)))
+    (unless id (user-error "No window selected"))
+    id))
+
+(defun exde-capture-xwindow (win &optional delay)
+  (interactive
+   (list
+    (+exwm--read-window-id "Capture window: ")
+    (prefix-numeric-value current-prefix-arg)))
+  (exde-capture-and-display
+   (list "scrot"
+         "-d" (number-to-string (or delay 0))
+         "-w" (number-to-string win)
+         "-")))
+
 
 (provide 'exde)
 
