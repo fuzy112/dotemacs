@@ -7,6 +7,8 @@
 	(exde-capture-and-display): New function.
 	(+exwm--read-window-id): New function.
 	(exde-capture-frame): New command.
+	(exde-capture-rectangle): New function.
+	(exde-capture-window): New command.
 
 2025-01-04  Zhengyi Fu  <i@fuzy.me>
 
