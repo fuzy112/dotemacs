@@ -1,3 +1,7 @@
+2025-01-05  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/exde.el: Enable display time mode.
+
 2025-01-04  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (+exwm--command-line-handler): Handle --exde as well as

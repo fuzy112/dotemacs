@@ -119,6 +119,10 @@
 (require 'exwm-firefox)
 (exwm-firefox-mode)
 
+;;;; display time
+
+(display-time-mode)
+
 
 (provide 'exde)
 
