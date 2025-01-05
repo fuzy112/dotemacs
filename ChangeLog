@@ -6,6 +6,7 @@
 	(exde-capture-fullscreen): New commands.
 	(exde-capture-and-display): New function.
 	(+exwm--read-window-id): New function.
+	(exde-capture-frame): New command.
 
 2025-01-04  Zhengyi Fu  <i@fuzy.me>
 

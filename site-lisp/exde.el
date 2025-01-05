@@ -156,7 +156,6 @@ Wait DELAY seconds before taking the shot."
   (exde-capture-and-display
    (list "scrot" "-d" (number-to-string (or delay 0)) "-")))
 
-
 (defun +exwm--read-window-id (prompt)
   (let* ((collection (mapcar (lambda (pair)
                                (cons (buffer-name (cdr pair))
@@ -166,10 +165,11 @@ Wait DELAY seconds before taking the shot."
                                     'require-match nil nil exwm--id))
          (id (alist-get selected collection nil nil #'equal)))
     (unless id (user-error "No window selected"))
-    id))
+    (number-to-string id)))
 
 (defun exde-capture-xwindow (win &optional delay)
   "Capture an image from WIN.
+WIN is a string representing an X11 window id.
 Interactively, read a window id from the minibuffer.
 Wait DELAY secondcs before taking the shot."
   (interactive
@@ -179,8 +179,14 @@ Wait DELAY secondcs before taking the shot."
   (exde-capture-and-display
    (list "scrot"
          "-d" (number-to-string (or delay 0))
-         "-w" (number-to-string win)
+         "-w" win
          "-")))
+
+(defun exde-capture-frame (&optional frame delay)
+  (interactive "ip")
+  (exde-capture-xwindow
+   (frame-parameter nil 'window-id)
+   delay))
 
 
 (provide 'exde)
