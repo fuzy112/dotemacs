@@ -126,6 +126,10 @@
 ;;;; screen capture
 
 (defun exde-capture-and-display (command)
+  "Run COMMAND to capture an image and display it in a buffer.
+COMMAND is a list of strings specifying an executable and its
+arguments.  The command should write the raw image to the standard
+output."
   (let* ((buf (generate-new-buffer "*screen-capture*"))
          (process
           (make-process :name "scrot"
@@ -139,11 +143,15 @@
                                       (image-mode))))))))
 
 (defun exde-capture-interactive (&optional delay)
+  "Capture an image from an interactively selected window or rectangle.
+Wait DELAY seconds before taking the shot."
   (interactive "p")
   (exde-capture-and-display
    (list "scrot" "-s" "-f" "-d" (number-to-string (or delay 0)) "-")))
 
 (defun exde-capture-fullscreen (&optional delay)
+  "Capture an image of the entire screen.
+Wait DELAY seconds before taking the shot."
   (interactive "p")
   (exde-capture-and-display
    (list "scrot" "-d" (number-to-string (or delay 0)) "-")))
@@ -161,6 +169,9 @@
     id))
 
 (defun exde-capture-xwindow (win &optional delay)
+  "Capture an image from WIN.
+Interactively, read a window id from the minibuffer.
+Wait DELAY secondcs before taking the shot."
   (interactive
    (list
     (+exwm--read-window-id "Capture window: ")
