@@ -1,6 +1,7 @@
 2025-01-07  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Add a consult-buffer-source for FireFox.
+	Add autoload cookie for `browser-hist--send-query'.
 
 	* site-lisp/exde.el: Enable exwm-ns.
 	* packages.el: Add package exwm-ns.
