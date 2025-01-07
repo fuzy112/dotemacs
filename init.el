@@ -1936,7 +1936,7 @@ minibuffer."
     zen '("title" "url" "moz_places" "ORDER BY last_visit_date desc"))
   (setq browser-hist-default-browser 'zen))
 
-(autoload 'consult-browser-hist "init.el" nil t)
+(autoload 'consult-browser-hist "consult-browser-hist" nil t)
 (keymap-global-set "M-s b" #'consult-browser-hist)
 
 ;;;; webjump

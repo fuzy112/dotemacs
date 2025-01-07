@@ -1,5 +1,7 @@
 2025-01-07  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (consult-browser-hist): Fix autoload.
+
 	* site-lisp/consult-browser-hist.el: Adapt to new consult api.
 
 	Move consult interface for browser-hist to a separate file.
