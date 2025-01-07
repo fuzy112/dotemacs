@@ -61,53 +61,58 @@
      (concat (propertize type 'face 'consult-browser-hist-type) "   "
              (propertize url 'face 'consult-browser-hist-url)))))
 
-(defun consult-browser-hist--highlight (async)
-  (consult--async-highlight
-   async
-   (lambda (input)
-     (apply-partially #'consult--highlight-regexps
-                      (mapcar #'regexp-quote (split-string input))
-                      t))))
+(defun consult-browser-hist--highlight (input)
+  (lambda (str)
+    (consult--highlight-regexps
+     (mapcar #'regexp-quote (split-string input))
+     t str)))
 
-(defun consult-browser-hist--async (async browser)
-  (let (connection)
-    (lambda (action)
-      (pcase action
-        ('setup
-         (browser-hist--make-db-copy browser))
-        ('destroy
-         (when connection
-           (sqlite-close connection))))
-      (let ((browser-hist-default-browser browser)
-            (browser-hist--db-connection connection))
-        (unwind-protect
-            (funcall async action)
-          (setq connection browser-hist--db-connection))))))
+(defun consult-browser-hist--async (browser)
+  (lambda (async)
+    (let (connection)
+      (lambda (action)
+        (pcase action
+          ('setup
+           (browser-hist--make-db-copy browser))
+          ('destroy
+           (when connection
+             (sqlite-close connection)
+             (setq connection nil))))
+        (let ((browser-hist-default-browser browser)
+              (browser-hist--db-connection connection))
+          (unwind-protect
+              (funcall async action)
+            (setq connection browser-hist--db-connection)))))))
 
-(defun consult-browser-hist--collection (async browser)
-  (thread-first
-    (consult-browser-hist--highlight async)
-    (consult-browser-hist--async browser)
-    (consult--async-map #'consult-browser-hist--transform)
-    (consult--dynamic-compute #'browser-hist--send-query)
-    (consult--async-throttle)))
+(defun consult-browser-hist--send-query (input &optional callback)
+  (let ((items (browser-hist--send-query input)))
+    (when callback
+      (funcall callback items)
+      items)))
+
+(defun consult-browser-hist--collection (browser)
+  (consult--async-pipeline
+   (consult--async-throttle)
+   (consult-browser-hist--async browser)
+   (consult--async-dynamic #'consult-browser-hist--send-query)
+   (consult--async-map #'consult-browser-hist--transform)
+   (consult--async-highlight #'consult-browser-hist--highlight)))
 
 (defun consult-browser-hist-source-make (name browser &optional db-path db-fields)
   (when db-path
     (setf (alist-get browser browser-hist-db-paths) db-path))
   (when db-fields
     (setf (alist-get browser browser-hist--db-fields) db-fields))
-  `( :name ,name
-     :narrow ?f
-     :category consult-browser-hist
-     :action ,(lambda (selected)
-                (browse-url (get-text-property 0 'consult-browser-hist-url selected)))
-     :enabled ,(lambda ()
-                 (and-let* ((path (alist-get browser browser-hist-db-paths)))
-                   (file-expand-wildcards (substitute-in-file-name path))))
-     :annotate ,(apply-partially #'consult-browser-hist--annotate name)
-     :async ,(lambda (async)
-               (consult-browser-hist--collection async browser))))
+  (list :name name
+        :narrow ?f
+        :category 'consult-browser-hist
+        :action (lambda (selected)
+                  (browse-url (get-text-property 0 'consult-browser-hist-url selected)))
+        :enabled (lambda ()
+                   (and-let* ((path (alist-get browser browser-hist-db-paths)))
+                     (file-expand-wildcards (substitute-in-file-name path))))
+        :annotate (apply-partially #'consult-browser-hist--annotate name)
+        :async (consult-browser-hist--collection browser)))
 
 (defvar consult-firefox-hist-source
   (consult-browser-hist-source-make "FireFox" 'firefox))
