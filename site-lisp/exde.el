@@ -15,6 +15,9 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
+
+;; TODO: Refactor this file into a minor mode.
+
 ;;; Code:
 
 (require 'exwm)
