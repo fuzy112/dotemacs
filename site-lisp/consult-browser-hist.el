@@ -98,13 +98,13 @@
    (consult--async-map #'consult-browser-hist--transform)
    (consult--async-highlight #'consult-browser-hist--highlight)))
 
-(defun consult-browser-hist-source-make (name browser &optional db-path db-fields)
+(defun consult-browser-hist-source-make (name browser narrow-key &optional db-path db-fields)
   (when db-path
     (setf (alist-get browser browser-hist-db-paths) db-path))
   (when db-fields
     (setf (alist-get browser browser-hist--db-fields) db-fields))
   (list :name name
-        :narrow ?f
+        :narrow narrow-key
         :category 'consult-browser-hist
         :action (lambda (selected)
                   (browse-url (get-text-property 0 'consult-browser-hist-url selected)))
@@ -115,22 +115,22 @@
         :async (consult-browser-hist--collection browser)))
 
 (defvar consult-firefox-hist-source
-  (consult-browser-hist-source-make "FireFox" 'firefox))
+  (consult-browser-hist-source-make "FireFox" 'firefox ?f))
 
 (defvar consult-chromium-hist-source
-  (consult-browser-hist-source-make "Chromium" 'chromium))
+  (consult-browser-hist-source-make "Chromium" 'chromium ?c))
 
 (defvar consult-chrome-hist-source
-  (consult-browser-hist-source-make "Chrome" 'chrome))
+  (consult-browser-hist-source-make "Chrome" 'chrome ?C))
 
 (defvar consult-brave-hist-source
-  (consult-browser-hist-source-make "Brave" 'brave))
+  (consult-browser-hist-source-make "Brave" 'brave ?b))
 
 (defvar consult-qutebrowser-hist-source
-  (consult-browser-hist-source-make "QuteBrowser" 'qutebrowser))
+  (consult-browser-hist-source-make "QuteBrowser" 'qutebrowser ?q))
 
 (defvar consult-safari-hist-source
-  (consult-browser-hist-source-make "Safari" 'safari))
+  (consult-browser-hist-source-make "Safari" 'safari ?s))
 
 (defcustom consult-browser-hist-sources
   '(consult-firefox-hist-source

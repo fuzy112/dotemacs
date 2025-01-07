@@ -1,5 +1,7 @@
 2025-01-07  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/consult-browser-hist.el: Properly specify narrow keys.
+
 	* init.el (consult-browser-hist): Fix autoload.
 
 	* site-lisp/consult-browser-hist.el: Adapt to new consult api.
