@@ -119,6 +119,11 @@
 (require 'exwm-firefox)
 (exwm-firefox-mode)
 
+;;;; notification service
+
+(require 'exwm-ns)
+(exwm-ns-init)
+
 ;;;; display time
 
 (display-time-mode)
