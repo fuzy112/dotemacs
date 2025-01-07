@@ -1,5 +1,7 @@
 2025-01-07  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/consult-browser-hist.el: Adapt to new consult api.
+
 	Move consult interface for browser-hist to a separate file.
 	* consult-browser-hist.el: New file.
 	* init.el: Remove consult-browser-hist implemenation.
