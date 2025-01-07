@@ -13,7 +13,7 @@
  ("cmake-mode" . "b08b5d9045308362a623a4f576896d55ffecfd52")
  ("colorful-mode" . "5c7831073f687738a8ffae2b78f9bea48c8a140b")
  ("compat" . "70e5ff2963b0e3aa6f29c08733a17cd1fdb8824a")
- ("consult" . "c824677a40dde91121923462e3017fe21759de93")
+ ("consult" . "f66f3b2de5a51f04236d9c0c08381b373d4d7ee8")
  ("consult-dir" . "26fd5516511747ecefe98ef8e4592e330d99e6ae")
  ("consult-eglot" . "3ef13f931c6c6b3b2d086ff4c387ab7a05378370")
  ("consult-everything" . "ac574a63b3e869787bbe6354b57a7a8021647ee3")
