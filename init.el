@@ -1936,6 +1936,8 @@ minibuffer."
     zen '("title" "url" "moz_places" "ORDER BY last_visit_date desc"))
   (setq browser-hist-default-browser 'zen))
 
+(autoload 'browser-hist--send-query "browser-hist.el")
+
 (defun consult-browser-hist--transform (item)
   (let ((cand (concat (cdr item)
                       (propertize (concat "\t" (car item)) 'invisible t))))
