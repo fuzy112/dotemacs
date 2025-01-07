@@ -1,3 +1,8 @@
+2025-01-07  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/exde.el: Enable exwm-ns.
+	* packages.el: Add package exwm-ns.
+
 2025-01-06  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (consult-browser-hist): Enhance browser-hist with consult.

@@ -12,6 +12,7 @@
 (straight-use-package '(xelb :host github :repo "emacs-exwm/xelb"))
 (straight-use-package '(exwm :host github :repo "emacs-exwm/exwm"))
 (straight-use-package '(exwm-firefox :host codeberg :repo "emacs-weirdware/exwm-firefox"))
+(straight-use-package '(exwm-ns :host github :repo "timor/exwm-ns"))
 (straight-use-package '(gptel-quick :host github :repo "karthink/gptel-quick"))
 (straight-use-package '(image-slicing :host github :repo "ginqi7/image-slicing"))
 (straight-use-package '(nerd-icons-multimodal :host github :repo "abougouffa/nerd-icons-multimodal"))
