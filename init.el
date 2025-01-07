@@ -1936,39 +1936,7 @@ minibuffer."
     zen '("title" "url" "moz_places" "ORDER BY last_visit_date desc"))
   (setq browser-hist-default-browser 'zen))
 
-(autoload 'browser-hist--send-query "browser-hist.el")
-
-(defun consult-browser-hist--transform (item)
-  (let ((cand (concat (cdr item)
-                      (propertize (concat "\t" (car item)) 'invisible t))))
-    (add-text-properties 0 1 `( consult-browser-hist-url ,(car item)
-                                consult-browser-hist-title ,(cdr item))
-                         cand)
-    cand))
-
-(defun consult-browser-hist--annotate (cand)
-  (let* ((url (get-text-property 0 'consult-browser-hist-url cand)))
-    (consult--annotate-align cand url)))
-
-(defun consult-browser-hist (initial)
-  (interactive "P")
-  (browse-url
-   (consult--read
-    (thread-first
-      (consult--async-sink)
-      (consult--async-indicator)
-      (consult--async-map #'consult-browser-hist--transform)
-      (consult--dynamic-compute #'browser-hist--send-query)
-      (consult--async-throttle)
-      (consult--async-split))
-    :prompt "Browser history: "
-    :sort nil
-    :require-match t
-    :category 'consult-browser-hist
-    :initial initial
-    :annotate #'consult-browser-hist--annotate
-    :lookup (apply-partially #'consult--lookup-prop 'consult-browser-hist-url))))
-
+(autoload 'consult-browser-hist "init.el" nil t)
 (keymap-global-set "M-s b" #'consult-browser-hist)
 
 ;;;; webjump
