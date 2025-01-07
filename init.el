@@ -785,6 +785,30 @@ value for USE-OVERLAYS."
   ;; url-only bookmark type
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow))))
 
+;; firefox
+
+(defvar +consult-firefox-filter "\\`\\*firefox")
+(defvar +consult-source-firefox
+  `(:name      "FireFox"
+    :narrow    ?w
+    ;; :hidden t
+    :category  buffer
+    :face      consult-buffer
+    :history   buffer-name-history
+    ;; Specify either :action or :state
+    :action    ,#'consult--buffer-action ;; No preview
+    ;; :state  ,#'consult--buffer-state  ;; Preview
+    :items
+    ,(lambda () (consult--buffer-query
+                 :sort 'visibility
+                 :as #'buffer-name
+                 :exclude (remq +consult-firefox-filter consult-buffer-filter)
+                 :mode 'exwm-mode)))
+  "FireFox buffer source.")
+(after-load! consult
+  (add-to-list 'consult-buffer-filter +consult-firefox-filter)
+  (add-to-list 'consult-buffer-sources '+consult-source-firefox))
+
 
 (defun +embark-consult-export-grep--headings (&rest _)
   "Group the results of `embark-consult-export-grep'."
