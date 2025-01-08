@@ -721,9 +721,6 @@ value for USE-OVERLAYS."
          (minibuffer-completing-file-name t)
          (pred (or pred 'file-exists-p)))
     (require 'consult)
-    ;; Use consult--read-1 instead of consult--read to suppress consult customizations.
-    ;; TODO figure out if this is the correct way
-    ;; should I bind this-command temporarily?
     (consult--read-1
      #'read-file-name-internal
      :state (consult--file-preview)
@@ -744,9 +741,6 @@ value for USE-OVERLAYS."
 
 (defun +consult--read-buffer-function (prompt &optional def mustmatch pred)
   (require 'consult)
-  ;; Use consult--read-1 instead of consult--read to suppress consult customizations.
-  ;; TODO figure out if this is the correct way
-  ;; should I bind this-command temporarily?
   (consult--read-1
    #'internal-complete-buffer
    :state (consult--buffer-preview)
