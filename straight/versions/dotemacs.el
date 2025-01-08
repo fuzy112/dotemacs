@@ -15,7 +15,7 @@
  ("compat" . "70e5ff2963b0e3aa6f29c08733a17cd1fdb8824a")
  ("consult" . "f66f3b2de5a51f04236d9c0c08381b373d4d7ee8")
  ("consult-dir" . "26fd5516511747ecefe98ef8e4592e330d99e6ae")
- ("consult-eglot" . "3ef13f931c6c6b3b2d086ff4c387ab7a05378370")
+ ("consult-eglot" . "4ebb7f442e855487981f59e49fbf720f6b9a0f0e")
  ("consult-everything" . "ac574a63b3e869787bbe6354b57a7a8021647ee3")
  ("copilot.el" . "c5dfa99f05878db5e6a6a378dc7ed09f11e803d4")
  ("corfu" . "ec846c6aa373931508cc078b49a3a8ba8265c453")
