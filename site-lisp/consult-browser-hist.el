@@ -56,7 +56,7 @@
                        (if (floatp consult-browser-hist-title-max-width)
                            (floor (* .4 (window-width (minibuffer-window))))
                          consult-browser-hist-title-max-width)
-                       nil nil "…" :ellipsis-text-property)
+                       nil nil :truncate :ellipsis-text-property)
                       (propertize (concat "\t" (car item)) 'invisible t))))
     (add-text-properties 0 (length cand)
                          `( consult-browser-hist-url ,(car item)
