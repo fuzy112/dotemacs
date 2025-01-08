@@ -21,6 +21,14 @@
 ;;; Code:
 
 (require 'exwm)
+(require 'exwm-systemtray)
+(require 'exwm-ns)
+(require 'exwm-firefox)
+
+(add-hook 'exwm-init-hook #'exwm-firefox-mode)
+(add-hook 'exwm-init-hook #'exwm-xim-mode)
+(add-hook 'exwm-init-hook #'exwm-systemtray-mode)
+(add-hook 'exwm-init-hook #'exwm-ns-init)
 
 ;; set the initial workspace number
 (setq exwm-workspace-number 4)
@@ -88,13 +96,13 @@
         ([?\C-y] . [?\C-v])
         ([?\C-w] . [?\C-x])))
 
-(exwm-systemtray-mode)
-(exwm-enable)
-(exwm-xim-mode)
-(cl-pushnew ?\C-\\ exwm-input-prefix-keys)
 
-
+
+;; toggle-input-method
+(cl-pushnew ?\C-\\ exwm-input-prefix-keys)
+;; quick-window-jump
 (cl-pushnew ?\M-o exwm-input-prefix-keys)
+;; search-map
 (cl-pushnew ?\M-s exwm-input-prefix-keys)
 
 ;;;; GPG pinentry
@@ -117,16 +125,6 @@
     (setq-local rime--temporarily-ignore-predicates t)
     (rime-active-mode)))
 
-;;;; firefox
-
-(require 'exwm-firefox)
-(exwm-firefox-mode)
-
-;;;; notification service
-
-(require 'exwm-ns)
-(exwm-ns-init)
-
 ;;;; display time
 
 (display-time-mode)
@@ -138,17 +136,16 @@
 COMMAND is a list of strings specifying an executable and its
 arguments.  The command should write the raw image to the standard
 output."
-  (let* ((buf (generate-new-buffer "*screen-capture*"))
-         (process
-          (make-process :name "scrot"
-                        :buffer buf
-                        :stderr (get-buffer-create " *scrot-stderr*")
-                        :connection-type 'pipe
-                        :command command
-                        :sentinel (lambda (p _e)
-                                    (unless (process-live-p p)
-                                      (pop-to-buffer buf)
-                                      (image-mode))))))))
+  (let* ((buf (generate-new-buffer "*screen-capture*")))
+    (make-process :name "scrot"
+              :buffer buf
+              :stderr (get-buffer-create " *scrot-stderr*")
+              :connection-type 'pipe
+              :command command
+              :sentinel (lambda (p _e)
+                          (unless (process-live-p p)
+                            (pop-to-buffer buf)
+                            (image-mode))))))
 
 (defun exde-capture-interactive (&optional delay)
   "Capture an image from an interactively selected window or rectangle.
@@ -193,7 +190,7 @@ Wait DELAY secondcs before taking the shot."
 (defun exde-capture-frame (&optional frame delay)
   (interactive "ip")
   (exde-capture-xwindow
-   (frame-parameter nil 'window-id)
+   (frame-parameter frame 'window-id)
    delay))
 
 (defun exde-capture-rectangle (x y w h &optional delay)
@@ -211,6 +208,8 @@ Wait DELAY secondcs before taking the shot."
    (window-pixel-width win)
    (window-pixel-height win)
    delay))
+
+(exwm-enable)
 
 
 (provide 'exde)

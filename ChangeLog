@@ -1,3 +1,8 @@
+2025-01-08  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/exde.el: Put exwm-firefox-mode, exwm-xim-mode,
+	exmw-systemtray mode and exiwm-ns-init into exwm-init-hook.
+
 2025-01-07  Zhengyi Fu  <i@fuzy.me>
 
 	* site-lisp/consult-browser-hist.el: Properly specify narrow keys.
