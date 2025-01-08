@@ -1,5 +1,8 @@
 2025-01-08  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/consult-browser-hist.el (consult-browser-hist--format):
+	Use `truncate-string-ellipsis' to truncate the title.
+
 	* site-lisp/quick-window.el: Replace popon with posframe
 	because of popon's bugs.
 
