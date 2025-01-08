@@ -63,10 +63,7 @@ INITIAL is the initial input."
    (consult--read
     (consult--dynamic-collection
         (apply-partially #'consult-xref-apropos--compute (current-buffer))
-      :highlight (lambda (input)
-                   (apply-partially
-                    #'consult--highlight-regexps
-                    (mapcar #'regexp-quote (split-string input)) t))
+      :highlight t
       :min-input 3
       :debounce .5
       :throttle .5)
