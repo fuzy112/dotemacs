@@ -4,7 +4,7 @@
 
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Keywords: convenience, tools
-;; Package-Requires: ((emacs "29.1") (browser-hist "0.0.1"))
+;; Package-Requires: ((emacs "29.1") (browser-hist "0.0.1") (consult "1.10"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'browser-hist)
+(require 'consult)
 
 (defgroup consult-browser-hist ()
   "Consult searching browser historyy"
