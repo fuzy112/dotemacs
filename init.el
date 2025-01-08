@@ -249,48 +249,49 @@
   (doom-modeline-mode))
 
 ;;;; customized faces
-(defun +custom-faces (&optional theme)
-  (unless (eq theme 'user)
-    (defvar pp-posframe-parameters)
-    (setq pp-posframe-parameters `( :border-color "gray"
-                                    :border-width 1
-                                    :background-color ,(face-background 'default nil '(shadow))))
-    (custom-set-faces
-     `(fixed-pitch
-       ((t :family ,(face-attribute 'default :family))))
-     `(variable-pitch
-       ((t :family "Sarasa UI CL")))
-     `(fill-column-indicator
-       ((((type w32 tty))
-         :height 1.0 :foreground "gray50" :background ,(face-background 'default))))
-     '(whitespace-indentation ((t :background "yellow")))
-     '(whitespace-space-before-tab ((t :background "DarkOrange")))
-     '(whitespace-space-after-tab ((t :background "yellow")))
-     '(parenthesis
-       ((t :inherit shadow)))
-     `(header-line
-       ((((supports :underline t) (class color grayscale))
-         :background ,(face-background 'default)
-         :underline (:color ,(face-foreground 'default) :style line :position t)
-         :box (:line-width 6 :style flat-button))))
-     `(mode-line-active
-       ((((supports :overline t) (class color grayscale))
-         :background ,(face-background 'default)
-         :foreground ,(face-foreground 'default)
-         :overline ,(face-foreground 'default)
-         :box (:line-width 6 :color ,(face-background 'default) :style nil))))
-     `(mode-line-inactive
-       ((((supports :overline t) (class color grayscale))
-         :background ,(face-background 'default)
-         :foreground ,(face-foreground 'shadow)
-         :overline t
-         :box (:line-width 6 :color ,(face-background 'default) :style nil))))
-     `(tab-bar
-       ((((supports :box t))
-         :box (:line-width (-2 . 6) :style flat-button)))))))
+(defun +custom-faces (&optional _theme)
+  (defvar pp-posframe-parameters)
+  (setq pp-posframe-parameters `( :border-color "gray"
+                                  :border-width 1
+                                  :background-color ,(face-background 'default nil '(shadow))))
+  (custom-set-faces
+   `(fixed-pitch
+     ((t :family ,(face-attribute 'default :family))))
+   `(variable-pitch
+     ((t :family "Sarasa UI CL")))
+   `(fill-column-indicator
+     ((((type w32 tty))
+       :height 1.0 :foreground "gray50" :background ,(face-background 'default))))
+   '(whitespace-indentation ((t :background "yellow")))
+   '(whitespace-space-before-tab ((t :background "DarkOrange")))
+   '(whitespace-space-after-tab ((t :background "yellow")))
+   '(parenthesis
+     ((t :inherit shadow)))
+   `(header-line
+     ((((supports :underline t) (class color grayscale))
+       :background ,(face-background 'default)
+       :underline (:color ,(face-foreground 'default) :style line :position t)
+       :box (:line-width 6 :style flat-button))))
+   `(mode-line-active
+     ((((supports :overline t) (class color grayscale))
+       :background ,(face-background 'default)
+       :foreground ,(face-foreground 'default)
+       :overline ,(face-foreground 'default)
+       :box (:line-width 6 :color ,(face-background 'default) :style nil))))
+   `(mode-line-inactive
+     ((((supports :overline t) (class color grayscale))
+       :background ,(face-background 'default)
+       :foreground ,(face-foreground 'shadow)
+       :overline t
+       :box (:line-width 6 :color ,(face-background 'default) :style nil))))
+   `(tab-bar
+     ((((supports :box t))
+       :box (:line-width (-2 . 6) :style flat-button))))))
 
 (+custom-faces)
 (add-hook 'enable-theme-functions #'+custom-faces t)
+(add-hook 'after-make-frame-functions #'+custom-faces t)
+(add-hook 'server-after-make-frame-hook #'+custom-faces t)
 
 ;;;; libraries
 (after-load! (:or dash elisp-mode)
@@ -373,11 +374,13 @@
 
 ;; prevent emacs from exiting if the *scratch* buffer is changed.
 (define-advice get-scratch-buffer-create (:filter-return (buffer) lock)
-  (with-current-buffer buffer
-    (add-hook 'first-change-hook
-              (lambda ()
-                (emacs-lock-mode 'all))
-              nil t)))
+  (when buffer
+    (with-current-buffer buffer
+      (add-hook 'first-change-hook
+                (lambda ()
+                  (emacs-lock-mode 'all))
+                nil t)))
+  buffer)
 
 (get-scratch-buffer-create)
 

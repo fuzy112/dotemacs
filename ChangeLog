@@ -1,5 +1,7 @@
 2025-01-08  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Set customized faces for emacs server.
+
 	* site-lisp/consult-xref-apropos.el: Adapt to consult 1.10.
 
 	* site-lisp/consult-browser-hist.el: Requires consult 1.10.
