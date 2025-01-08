@@ -45,8 +45,18 @@
   '((t :inherit font-lock-type-face))
   "Face used to highlight browser types.")
 
-(defun consult-browser-hist--transform (item)
-  (let ((cand (concat (cdr item)
+(defcustom consult-browser-hist-title-max-width .4
+  "Maximum width of the entry titles displayed."
+  :type '(choice (natnum :tag "Number of columns")
+                 (float :tag "Ratio in the window")))
+
+(defun consult-browser-hist--format (item)
+  (let ((cand (concat (truncate-string-to-width
+                       (cdr item)
+                       (if (floatp consult-browser-hist-title-max-width)
+                           (floor (* .4 (window-width (minibuffer-window))))
+                         consult-browser-hist-title-max-width)
+                       nil nil "…" :ellipsis-text-property)
                       (propertize (concat "\t" (car item)) 'invisible t))))
     (add-text-properties 0 (length cand)
                          `( consult-browser-hist-url ,(car item)
@@ -96,7 +106,7 @@
    (consult--async-throttle)
    (consult-browser-hist--async browser)
    (consult--async-dynamic #'consult-browser-hist--send-query)
-   (consult--async-map #'consult-browser-hist--transform)
+   (consult--async-map #'consult-browser-hist--format)
    (consult--async-highlight #'consult-browser-hist--highlight)))
 
 (defun consult-browser-hist-source-make (name browser narrow-key &optional db-path db-fields)

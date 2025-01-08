@@ -1,6 +1,8 @@
 2025-01-08  Zhengyi Fu  <i@fuzy.me>
 
 	* site-lisp/consult-browser-hist.el: Requires consult 1.10.
+	Truncate the titles if too long.
+	(consult-browser-hist-title-max-width): New user option.
 
 	* site-lisp/exde.el: Put exwm-firefox-mode, exwm-xim-mode,
 	exmw-systemtray mode and exiwm-ns-init into exwm-init-hook.
