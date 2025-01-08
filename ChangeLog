@@ -1,5 +1,7 @@
 2025-01-08  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Autoload `consult-kill'.
+
 	* site-lisp/consult-browser-hist.el (consult-browser-hist--format):
 	Use `truncate-string-ellipsis' to truncate the title.
 

@@ -828,6 +828,8 @@ value for USE-OVERLAYS."
 (define-keymap :keymap minibuffer-local-map
   "C-x C-d" #'consult-dir
   "C-x C-j" #'consult-dir-jump-file)
+
+(autoload 'consult-kill "consult-kill.el" nil t)
 
 ;;;; indent-aux
 
