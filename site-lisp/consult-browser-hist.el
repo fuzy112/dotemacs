@@ -72,12 +72,6 @@
      (concat (propertize type 'face 'consult-browser-hist-type) "   "
              (propertize url 'face 'consult-browser-hist-url)))))
 
-(defun consult-browser-hist--highlight (input)
-  (lambda (str)
-    (consult--highlight-regexps
-     (mapcar #'regexp-quote (split-string input))
-     t str)))
-
 (defun consult-browser-hist--async (browser)
   (lambda (async)
     (let (connection)
@@ -103,11 +97,12 @@
 
 (defun consult-browser-hist--collection (browser)
   (consult--async-pipeline
+   (consult--async-min-input)
    (consult--async-throttle)
    (consult-browser-hist--async browser)
    (consult--async-dynamic #'consult-browser-hist--send-query)
    (consult--async-map #'consult-browser-hist--format)
-   (consult--async-highlight #'consult-browser-hist--highlight)))
+   (consult--async-highlight)))
 
 (defun consult-browser-hist-source-make (name browser narrow-key &optional db-path db-fields)
   (when db-path
