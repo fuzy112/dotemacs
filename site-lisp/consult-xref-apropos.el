@@ -4,6 +4,7 @@
 ;; Author:  Zhengyi Fu <i@fuzy.me>
 ;; Version: 0.2.2
 ;; Keywords: programming
+;; Package-Requires: ((consult "1.10"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -40,21 +41,7 @@
 (require 'xref)
 (require 'consult-xref)
 
-(defun consult-xref-apropos--highlight-candidate (input)
-  "Highlight the candidates for the parts that matches INPUT."
-  (let ((words (string-split input "[ \t]")))
-    (lambda (cand)
-      (let* ((prefix (get-text-property 0 'consult--prefix-group cand))
-             (prefix-length (length prefix)))
-        (dolist (word words)
-          (when (string-match (regexp-quote word) cand prefix-length)
-            (add-text-properties (match-beginning 0)
-                                 (match-end 0)
-                                 '(face consult-highlight-match)
-                                 cand))))
-      cand)))
-
-(defun consult-xref-apropos--compute (buffer input)
+(defun consult-xref-apropos--compute (buffer input &optional callback)
   "Dynamically compute candidates for INPUT in BUFFER."
   (with-current-buffer buffer
     (ignore-errors
@@ -63,12 +50,9 @@
              (candidates (consult-xref--candidates)))
         (mapc (consult-xref-apropos--highlight-candidate input)
               candidates)
+        (when callback
+          (funcall callback candidates))
         candidates))))
-
-(defun consult-xref-apropos--collection (buffer)
-  "Return a completion table for BUFFER."
-  (consult--dynamic-collection
-   (apply-partially #'consult-xref-apropos--compute buffer)))
 
 ;;;###autoload
 (defun consult-xref-apropos (initial)
@@ -76,18 +60,25 @@
 INITIAL is the initial input."
   (interactive "P")
   (xref-pop-to-location
-   (let ((consult-async-input-debounce .6))
-     (consult--read
-      (consult-xref-apropos--collection (current-buffer))
-      :prompt "Search for pattern: "
-      :history 'consult-xref--history
-      :require-match t
-      :sort nil
-      :category 'consult-xref
-      :initial (consult--async-split-initial initial)
-      :group #'consult--prefix-group
-      :state (consult-xref--preview #'switch-to-buffer)
-      :lookup (apply-partially #'consult--lookup-prop 'consult-xref)))))
+   (consult--read
+    (consult--dynamic-collection
+        (apply-partially #'consult-xref-apropos--compute (current-buffer))
+      :highlight (lambda (input)
+                   (apply-partially
+                    #'consult--highlight-regexps
+                    (mapcar #'regexp-quote (split-string input)) t))
+      :min-input 3
+      :debounce .5
+      :throttle .5)
+    :prompt "Search for pattern: "
+    :history 'consult-xref--history
+    :require-match t
+    :sort nil
+    :category 'consult-xref
+    :initial initial
+    :group #'consult--prefix-group
+    :state (consult-xref--preview #'switch-to-buffer)
+    :lookup (apply-partially #'consult--lookup-prop 'consult-xref))))
 
 (provide 'consult-xref-apropos)
 ;;; consult-xref-apropos.el ends here
