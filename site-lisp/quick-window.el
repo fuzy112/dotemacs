@@ -2,8 +2,8 @@
 ;; Copyright © 2024, 2025 Zhengyi Fu <i@fuzy.me>
 
 ;; Author:  Zhengyi Fu
-;; Package-Requires: ((emacs "29.4") (popon "0.13"))
-;; Version: 0.2.0
+;; Package-Requires: ((emacs "29.4") (posframe "1.4.4"))
+;; Version: 0.3.0
 ;; Keywords: navigation
 
 ;; This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(require 'popon)
+(require 'posframe)
 (eval-when-compile (require 'cl-lib))
 
 (defgroup quick-window nil
@@ -45,6 +45,14 @@
     (or (< left-1 left-2)
 	(and (= left-1 left-2)
 	     (< top-1 top-2)))))
+
+(defun quick-window--get-posframe-buffer (char)
+  (let ((buf-name (format " *quick-window : %c*" char)))
+    (or (get-buffer buf-name)
+	(with-current-buffer (get-buffer-create buf-name)
+	  (insert (propertize (format "[%c]" char)
+			      'face 'quick-window-label))
+	  (current-buffer)))))
 
 ;;;###autoload
 (defun quick-window-jump (&optional arg)
@@ -71,18 +79,18 @@ all existing frames."
 		 return (progn
 			  (select-frame-set-input-focus (window-frame win))
 			  (select-window win)))
-      (let (popons)
+      (let (posframes)
 	(unwind-protect
 	    (let (window-map)
 	      (cl-loop with sorted-windows = (sort windows #'quick-window--before-p)
 		       for win in sorted-windows
 		       for letter being the elements of quick-window-keys
 		       do (setq window-map (plist-put window-map letter win #'eql))
-		       for popon = (popon-create (propertize (format "[%c]" letter)
-							     'face 'quick-window-label)
-						 '(0 . 0)
-						 win)
-		       do (push popon popons))
+		       do (with-selected-window win
+			    (posframe-show (quick-window--get-posframe-buffer letter)
+					   :poshandler #'posframe-poshandler-window-top-left-corner))
+		       do (push (quick-window--get-posframe-buffer letter) posframes))
+	      (redisplay)
 	      (let* ((key (read-key "Jump to window: "))
 		     (win (plist-get window-map key #'eql)))
 		(when (eql key ?\C-g)
@@ -92,7 +100,7 @@ all existing frames."
 		(unless (eq (window-frame win) (selected-frame))
 		  (select-frame-set-input-focus (window-frame win)))
 		(select-window win)))
-	  (mapc #'popon-kill popons)))))
+	  (mapc #'posframe-hide posframes)))))
   (pulse-momentary-highlight-one-line))
 
 (provide 'quick-window)

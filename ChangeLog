@@ -1,5 +1,8 @@
 2025-01-08  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/quick-window.el: Replace popon with posframe
+	because of popon's bugs.
+
 	* site-lisp/consult-xref-apropos.el:
 	* site-lisp/consult-browser-hist.el: Use the default consult
 	highlight function.
