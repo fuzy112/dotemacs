@@ -705,6 +705,7 @@ value for USE-OVERLAYS."
   "M-r" #'consult-history)
 
 (after-load! consult
+  (add-to-list 'consult-buffer-filter "\\`\\*EGLOT")
   (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode))
 
 (setq register-preview-delay 0.5
