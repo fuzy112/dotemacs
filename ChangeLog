@@ -2,6 +2,7 @@
 
 	* init.el: Remove hack for autoloading pixel-scroll.
 	Set `scroll-conservatively' to 101.
+	Do not disable poll for autorevert anymore.
 
 2025-01-08  Zhengyi Fu  <i@fuzy.me>
 
