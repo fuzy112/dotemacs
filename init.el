@@ -313,19 +313,8 @@
 
 ;;;; pixel-scroll
 
-(defun +pixel-scroll--autoload ()
-  (interactive)
-  (require 'pixel-scroll)
-  (let ((events (mapcar (lambda (ev) (cons t ev))
-                        (listify-key-sequence (this-command-keys)))))
-    (setq unread-command-events (append events unread-command-events))))
-(keymap-global-set "<wheel-down>" #'+pixel-scroll--autoload)
-(keymap-global-set "<wheel-up>" #'+pixel-scroll--autoload)
-(after-load! pixel-scroll
-  (keymap-global-unset "<wheel-down>")
-  (keymap-global-unset "<wheel-up>")
-  (fmakunbound '+pixel-scroll--autoload)
-  (pixel-scroll-precision-mode))
+(setq scroll-conservatively 101)
+(pixel-scroll-precision-mode)
 
 ;;;; window
 
