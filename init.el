@@ -31,7 +31,7 @@
   (require 'dotemacs-core)
   (require 'compat))
 
-;;;; pre-init
+;;;; pre-init.el
 
 (defvar pre-init-file (locate-user-emacs-file "pre-init.el")
   "The file to load before the init file.")
@@ -41,7 +41,8 @@
   (let ((straight-current-profile 'user))
     (load pre-init-file nil t)))
 
-
+;;;; custom
+
 (defvar custom-file)
 (when (file-exists-p custom-file)
   (load custom-file))
@@ -142,7 +143,9 @@
   (meow-tree-sitter-register-defaults))
 
 
-;;;; straight
+;;;; straight commands
+
+;; Define a command to run `magit' in package repos.
 
 (defvar straight--recipe-cache)
 (defun straight-magit-package-status (pkg)
@@ -152,8 +155,10 @@
                          :local-repo)))
     (magit-status-setup-buffer (straight--repos-dir repo))))
 
+;; Command for fetching all repos asynchronously.
 (autoload 'straight-x-fetch-all "straight-x" nil t)
 
+;; Define a prefix keymap for `straight' commands.
 (defvar-keymap straight-prefix-map
   :doc "Prefix map for straight.el commands."
   :prefix 'straight-prefix-map
@@ -186,7 +191,7 @@
 ;;  - https://github.com/be5invis/Sarasa-Gothic/releases/download/v1.0.26/Sarasa-SuperTTC-1.0.26.7z
 ;;  - https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/NerdFontsSymbolsOnly.zip
 
-
+;; Fonts for each script.
 (defvar +custom-fonts-alist
   '((han      "Sarasa Gothic CL")
     (cjk-misc "Sarasa Gothic CL")
@@ -206,6 +211,7 @@
 
 (+custom-fontset)
 
+;; Fallback to Iosevka SS04 if Sarasa fonts are not available.
 (setopt face-font-family-alternatives
         (seq-union '(("Sarasa Gothic CL" "Iosevka SS04")
                      ("Sarasa UI CL" "Sarasa Gothic CL" "Iosevka SS04"))
@@ -228,9 +234,9 @@
 ;;;; doom-modeline
 
 ;; NOTE: currently when using the igc branch + doom-modeline-mode + meow
-;; the \\[mark-whole-buffer] command doesn't work
-(unless (featurep 'mps)
-  (doom-modeline-mode))
+;; the \\[mark-whole-buffer] command doesn't work.
+
+(doom-modeline-mode)
 
 ;;;; customized faces
 (defun +custom-faces (&optional _theme)
@@ -292,7 +298,6 @@
 (after-load! (:and anaphora elisp-mode)
   (anaphora-install-font-lock-keywords))
 
-
 ;;;; nerd-icons
 
 (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
@@ -302,8 +307,15 @@
 (add-hook 'archive-mode-hook #'nerd-icons-multimodal-mode)
 (add-hook 'tar-mode-hook #'nerd-icons-multimodal-mode)
 
-(autoload 'nerd-icons-set-font "nerd-icons.el")
-(add-hook 'after-make-frame-functions (apply-partially #'nerd-icons-set-font nil))
+;; Fonts for nerd-icons need to be configured in graphical frames.
+(defun +nerd-icons--after-make-frame-h (&optional frame)
+  (with-selected-frame (or frame (selected-frame))
+    ;;  `framep' returns t
+    (unless (memq (framep (selected-frame)) '(t))
+      (require 'nerd-icons)
+      (nerd-icons-set-font))))
+(add-hook 'after-make-frame-functions '+nerd-icons--after-make-frame-h)
+(add-hook 'server-after-make-frame-hook '+nerd-icons--after-make-frame-h)
 
 ;;;; pixel-scroll
 
@@ -331,6 +343,7 @@
 
   (add-to-list 'help-fns-describe-function-functions #'help-fns-function-source-code 'append))
 
+;; Insert the source code of the function in `describe-function' buffers.
 (defun help-fns-function-source-code (function)
   "Insert Emacs Lisp source code for FUNCTION into the current buffer."
   (when-let* ((position (ignore-errors
@@ -355,7 +368,7 @@
 
 ;;;; emacs-lock-mode
 
-;; prevent emacs from exiting if the *scratch* buffer is changed.
+;; Prevent emacs from exiting if the *scratch* buffer is changed.
 (define-advice get-scratch-buffer-create (:filter-return (buffer) lock)
   (when buffer
     (with-current-buffer buffer
@@ -365,6 +378,7 @@
                 nil t)))
   buffer)
 
+;; Ensure the initial *scratch* buffer is locked.
 (get-scratch-buffer-create)
 
 ;;;; backup
@@ -696,9 +710,13 @@ value for USE-OVERLAYS."
 
 (advice-add #'register-preview :override #'consult-register-window)
 
+
+;; Declare internal functions of consult to avoid bytecomp warnings.
 (declare-function consult--read-1 "consult.el" (arg1 &rest rest))
 (declare-function consult--file-preview "consult.el")
+(declare-function consult--buffer-preview "consult.el")
 
+;; Add preview for `read-file-name'.
 (defun +consult--read-file-name-function (prompt &optional dir _default mustmatch initial pred)
   (let* ((default-directory (abbreviate-file-name (or dir default-directory)))
          (minibuffer-completing-file-name t)
@@ -719,9 +737,9 @@ value for USE-OVERLAYS."
 
 (setq read-file-name-function #'+consult--read-file-name-function)
 
-(declare-function consult--buffer-preview "consult.el")
-(defvar consult-preview-key)
+;; Add preview for `read-buffer'.
 
+(defvar consult-preview-key)
 (defun +consult--read-buffer-function (prompt &optional def mustmatch pred)
   (require 'consult)
   (consult--read-1
@@ -736,6 +754,9 @@ value for USE-OVERLAYS."
    :lookup (lambda (selected &rest _) selected)))
 
 (setq read-buffer-function #'+consult--read-buffer-function)
+
+
+;; Use `orderless-compile' as the `consult''s default regexp compiler.
 
 (declare-function orderless-compile "orderless.el" (arg1 &optional arg2 arg3))
 (declare-function orderless--highlight "orderless.el" (arg1 arg2 arg3))
@@ -766,7 +787,9 @@ value for USE-OVERLAYS."
   ;; url-only bookmark type
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow))))
 
-;; firefox
+
+;; Put EXWM buffers for FireFox windows to a separate buffer source that
+;; can be narrowed indepedently.
 
 (defvar +consult-firefox-filter "\\`\\*firefox")
 (defvar +consult-source-firefox
@@ -791,6 +814,8 @@ value for USE-OVERLAYS."
   (add-to-list 'consult-buffer-sources '+consult-source-firefox))
 
 
+;; Integrate heading support of `grep-mode'.
+
 (defun +embark-consult-export-grep--headings (&rest _)
   "Group the results of `embark-consult-export-grep'."
   ;; `grep--heading-filter' is a new function in Emacs 30.1.
@@ -804,14 +829,19 @@ value for USE-OVERLAYS."
 (after-load! embark-consult
   (require 'grep)
   (when (fboundp 'grep--heading-filter)
-    (advice-add #'embark-consult-export-grep :after #'+embark-consult-export-grep--headings)))
+    (advice-add #'embark-consult-export-grep
+                :after #'+embark-consult-export-grep--headings)))
 
 
+;; Keybindings for `consult-dir' commands.
+
 (keymap-global-set "C-x C-d" #'consult-dir)
 (define-keymap :keymap minibuffer-local-map
   "C-x C-d" #'consult-dir
   "C-x C-j" #'consult-dir-jump-file)
+
 
+;; Custom consult commands.
 (autoload 'consult-kill "consult-kill.el" nil t)
 
 ;;;; indent-aux
@@ -882,6 +912,7 @@ value for USE-OVERLAYS."
 
 ;;;; ibuffer
 
+;; Replace `list-buffers' with `ibuffer-jump'.
 (keymap-global-set "<remap> <list-buffers>" #'ibuffer-jump)
 
 ;;;; apheleia
@@ -908,6 +939,9 @@ value for USE-OVERLAYS."
                            missing-newline-at-eof))
 
 ;;;; indent-tabs-mode
+
+;; Guess whether `indent-tabs-mode' should be enabled by looking at
+;; the first 10000 lines.
 (defun +indent-tabs-mode--hack-local-variables-h ()
   (unless (derived-mode-p 'special-mode
                           'markdown-mode 'markdown-ts-mode 'org-mode
@@ -1051,7 +1085,8 @@ value for USE-OVERLAYS."
 ;;;; adaptive-wrap or visual-wrap
 
 ;; visual-wrap is a built-in replacement of adaptive-wrap since Emacs
-;; 30.1.
+;; 30.1.  However, there seems to be a bug in `visual-wrap' but I
+;; don't remember what it is.
 (static-if (locate-library "visual-wrap")
     (add-hook 'visual-line-mode-hook #'visual-wrap-prefix-mode)
   (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode))
@@ -1116,7 +1151,7 @@ value for USE-OVERLAYS."
 
 ;;;; xref
 
-;; use Ctrl and mouse click to jump to definitions, and Ctrl+Alt+mouse
+;; Use Ctrl and mouse click to jump to definitions, and Ctrl+Alt+mouse
 ;; click to jump to references.
 (keymap-global-unset "C-<down-mouse-1>")
 (keymap-global-unset "C-M-<down-mouse-1>")
@@ -1240,6 +1275,8 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 (keymap-global-set "M-:" #'pp-eval-expression)
 
 ;;;; pp-posframe
+
+;; Show results of `eval-last-sexp' in posframes.
 
 (autoload 'pp-posframe-eval-last-sexp "pp-posframe.el"
   "Evaluate sexp before point; display the value in a posframe." t)
@@ -1472,26 +1509,9 @@ minibuffer."
 (add-hook 'term-exec-hook #'with-editor-export-editor)
 (add-hook 'vterm-mode-hook #'with-editor-export-editor)
 
-(defun +with-editor--export-editor-to-eat (proc)
-  (eval-and-compile (require 'with-editor))
-  (if with-editor-emacsclient-executable
-      (with-editor
-        (with-editor--setup)
-        (while (accept-process-output proc 1 nil t))
-        (when-let* ((v (getenv "EDITOR")))
-          (eat-term-send-string eat-terminal (format " export EDITOR=%S" v))
-          (eat-self-input 1 'return))
-        (when-let* ((v (getenv "EMACS_SERVER_FILE")))
-          (eat-term-send-string eat-terminal (format " export EMACS_SERVER_FILE=%S" v))
-          (eat-self-input 1 'return))
-        (eat-term-send-string eat-terminal " clear")
-        (eat-self-input 1 'return))
-    (error "Cannot use sleeping editor in this buffer")))
-(add-hook 'eat-exec-hook '+with-editor--export-editor-to-eat)
-
 ;;;; pyim
 
-(declare-function pyim-cregexp-build "pyim-cregexp.el" (string &optional char-level-num chinese-only))
+(declare-function pyim-cregexp-build "pyim-cregexp.el")
 (defun +orderless-pinyin (component)
   (require 'pyim)
   (pyim-cregexp-build component 3 t))
@@ -1981,6 +2001,7 @@ minibuffer."
 ;;;; display buffer alist
 
 
+;;;; Custom commands
 (defun find-early-init-file ()
   "Find `early-init-file'."
   (interactive)
@@ -2123,6 +2144,8 @@ Otherwise disable it."
 
 
 ;;;; EXWM
+
+;; If emacs is started with `--exwm' or `--exde', enable EXWM.
 
 (defun +exwm--command-line-handler ()
   (and (or (equal argi "--exwm")

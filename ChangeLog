@@ -1,5 +1,8 @@
 2025-01-09  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Update comments.
+	Remove `with-editor' integration for `eat'.
+
 	* packages.el: Add package el2org.
 
 	* site-lisp/pp-posframe.el: Change default binding for
