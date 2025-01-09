@@ -22,13 +22,13 @@
 
 (require 'exwm)
 (require 'exwm-systemtray)
-(require 'exwm-ns)
 (require 'exwm-firefox)
+(require 'ednc)
 
 (add-hook 'exwm-init-hook #'exwm-firefox-mode)
 (add-hook 'exwm-init-hook #'exwm-xim-mode)
 (add-hook 'exwm-init-hook #'exwm-systemtray-mode)
-(add-hook 'exwm-init-hook #'exwm-ns-init)
+(add-hook 'exwm-init-hook #'ednc-mode)
 
 ;; set the initial workspace number
 (setq exwm-workspace-number 4)
@@ -208,6 +208,7 @@ Wait DELAY secondcs before taking the shot."
    (window-pixel-width win)
    (window-pixel-height win)
    delay))
+
 
 (exwm-enable)
 

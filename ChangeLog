@@ -1,5 +1,8 @@
 2025-01-09  Zhengyi Fu  <i@fuzy.me>
 
+	* packages.el:
+	* exde: Replace exwm-ns by ednc.
+
 	* init.el: Update comments.
 	Remove `with-editor' integration for `eat'.
 
