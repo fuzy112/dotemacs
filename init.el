@@ -181,44 +181,28 @@
 
 ;;;; fonts
 
-;; The following fonts need to be installed:n
+;; The following fonts need to be installed:
 ;;  - https://github.com/be5invis/Iosevka/releases/download/v31.8.0/SuperTTC-SGr-IosevkaSS04-31.8.0.zip
 ;;  - https://github.com/be5invis/Sarasa-Gothic/releases/download/v1.0.26/Sarasa-SuperTTC-1.0.26.7z
 ;;  - https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/NerdFontsSymbolsOnly.zip
 
+
+(defvar +custom-fonts-alist
+  '((han      "Sarasa Gothic CL")
+    (cjk-misc "Sarasa Gothic CL")
+    (latin    "Iosevka SS04"      prepend)
+    (greek    "Iosevka SS04"      prepend)
+    (emoji    "Noto Color Emoji"  prepend)))
+
+(defun +apply-font-setting (charset family &optional add)
+  (set-fontset-font t charset family nil add))
+
+(defun +apply-custom-fonts (alist)
+  (dolist (item alist)
+    (apply #'+apply-font-setting item)))
+
 (defun +custom-fontset ()
-  (unless (eq (framep-on-display) t)
-    (with-demoted-errors "Failed to setup fonts: %S"
-
-      ;; chinese
-      (set-fontset-font standard-fontset-spec 'han "Sarasa Gothic CL" nil 'prepend)
-      (set-fontset-font standard-fontset-spec 'cjk-misc "Sarasa Gothic CL" nil 'prepend)
-
-      ;; western
-      (set-fontset-font standard-fontset-spec 'latin "Iosevka SS04" nil 'prepend)
-      (set-fontset-font standard-fontset-spec 'greek "Iosevka SS04" nil 'prepend)
-
-      ;; nerd-icons
-      (let ((charsets '((#xe5fa . #xe6b2)  ;; Seti-UI + Custom
-                        (#xe700 . #xe7c5)  ;; Devicons
-                        (#xf000 . #xf2e0)  ;; Font Awesome
-                        (#xe200 . #xe2a9)  ;; Font Awesome Extension
-                        (#xf500 . #xfd46) (#xf0001 . #xf1af0) ;; Material Design Icons
-                        (#xe300 . #xe3eb)  ;; Weather
-                        (#xf400 . #xf4a8) #x2665 #x26a1 #xf27c  ;; Octicons
-                        (#xe0a0 . #xe0a2) (#xe0b0 . #xe0b3)  ;; Powerline Symbols
-                        #xe0a3 (#xe0b4 . #xe0c8) (#xe0cc . #xe0d2) #xe0d4  ;; Powerline Extra Symbols
-                        (#x23fb . #x23fe) #x2b58  ;; IEC Power Symbols
-                        (#xf300 . #xf372)  ;; Font Logos
-                        (#xe000 . #xe00a)  ;; Pomicons
-                        (#xea60 . #xebeb))))  ;; Codicons
-        (cl-loop for charset in charsets do
-                 (set-fontset-font
-                  standard-fontset-spec
-                  charset
-                  "Symbols Nerd Font"
-                  nil
-                  'prepend))))))
+  (+apply-custom-fonts +custom-fonts-alist))
 
 (+custom-fontset)
 
@@ -231,7 +215,7 @@
 
 (after-load! modus-themes
   (setq modus-themes-to-toggle '(modus-vivendi modus-operandi))
-  (setopt modus-themes-common-palette-overrides modus-themes-preset-overrides-intense
+  (setopt modus-themes-common-palette-overrides modus-themes-preset-overrides-faint
           modus-themes-mixed-fonts t
           modus-themes-bold-constructs t
           modus-themes-slanted-constructs t
@@ -317,6 +301,9 @@
 (add-hook 'dired-mode-hook #'nerd-icons-multimodal-mode)
 (add-hook 'archive-mode-hook #'nerd-icons-multimodal-mode)
 (add-hook 'tar-mode-hook #'nerd-icons-multimodal-mode)
+
+(autoload 'nerd-icons-set-font "nerd-icons.el")
+(add-hook 'after-make-frame-functions (apply-partially #'nerd-icons-set-font nil))
 
 ;;;; pixel-scroll
 
@@ -785,7 +772,7 @@ value for USE-OVERLAYS."
 (defvar +consult-source-firefox
   `(:name      "FireFox"
     :narrow    ?w
-    ;; :hidden t
+    :hidden    t
     :category  buffer
     :face      consult-buffer
     :history   buffer-name-history
