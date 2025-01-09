@@ -1,5 +1,10 @@
 2025-01-09  Zhengyi Fu  <i@fuzy.me>
 
+	* packages.el: Add package el2org.
+
+	* site-lisp/pp-posframe.el: Change default binding for
+	`pp-posframe-buffer' to `M-.'.
+
 	* init.el: Remove hack for autoloading pixel-scroll.
 	Set `scroll-conservatively' to 101.
 	Do not disable poll for autorevert anymore.

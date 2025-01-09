@@ -73,7 +73,7 @@
   :doc "The transient keymap to use when displaying the posframe."
   "M-w" #'pp-posframe-save
   "C-y" #'pp-posframe-yank
-  "M-o" #'pp-posframe-buffer
+  "M-." #'pp-posframe-buffer
   "q" #'ignore)
 
 (define-minor-mode pp-posframe-mode
