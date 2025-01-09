@@ -270,23 +270,30 @@
    `(header-line
      ((((supports :underline t) (class color grayscale))
        :background ,(face-background 'default)
-       :underline (:color ,(face-foreground 'default) :style line :position t)
+       :underline ( :color ,(face-foreground 'default)
+                    :style line
+                    :position t)
        :box (:line-width 6 :style flat-button))))
    `(mode-line-active
      ((((supports :overline t) (class color grayscale))
        :background ,(face-background 'default)
        :foreground ,(face-foreground 'default)
        :overline ,(face-foreground 'default)
-       :box (:line-width 6 :color ,(face-background 'default) :style nil))))
+       :box ( :line-width 6
+              :color ,(face-background 'default)
+              :style nil))))
    `(mode-line-inactive
      ((((supports :overline t) (class color grayscale))
        :background ,(face-background 'default)
        :foreground ,(face-foreground 'shadow)
        :overline t
-       :box (:line-width 6 :color ,(face-background 'default) :style nil))))
+       :box ( :line-width 6
+              :color ,(face-background 'default)
+              :style nil))))
    `(tab-bar
      ((((supports :box t))
-       :box (:line-width (-2 . 6) :style flat-button))))))
+       :box ( :line-width (-2 . 6)
+              :style flat-button))))))
 
 (+custom-faces)
 (add-hook 'enable-theme-functions #'+custom-faces t)
@@ -961,7 +968,6 @@ value for USE-OVERLAYS."
 (add-hook 'find-file-hook #'auto-revert--global-adopt-current-buffer)
 
 (after-load! autorevert
-  (setq auto-revert-avoid-polling t)
   (global-auto-revert-mode))
 
 ;;;; dired
