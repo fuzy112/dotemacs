@@ -46,7 +46,6 @@
 (straight-use-package 'dpkg-dev-el)
 (straight-use-package 'eglot)
 (straight-use-package 'eglot-tempel)
-(straight-use-package 'el2org)
 (straight-use-package 'eldoc)
 (straight-use-package 'embark-consult)
 (straight-use-package 'erc)
