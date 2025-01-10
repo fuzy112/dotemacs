@@ -1923,7 +1923,7 @@ minibuffer."
 (after-load! copilot
   ;; TODO choose better keybindings
   (define-keymap :keymap copilot-mode-map
- "<tab>" #'copilot-accept-completion
+    "<tab>" #'copilot-accept-completion
     "C-<tab>" #'copilot-accept-completion-by-word))
 
 ;;;; browser-hist
@@ -1990,6 +1990,8 @@ minibuffer."
   (run-with-idle-timer 600 nil #'+buffer-terminator-load))
 
 ;;;; uptime
+
+;; Set up a timer to display emacs uptime every 30 min.
 
 (defun uptime-notify ()
   (message "Emacs has been running for %s" (emacs-uptime)))
