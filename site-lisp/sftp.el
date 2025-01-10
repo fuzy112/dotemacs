@@ -2,7 +2,7 @@
 ;; Copyright © 2024, 2025  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
-;; Version:  0.1.8
+;; Version:  0.2.0
 ;; Keywords: network comm
 
 ;; This file is not part of GNU Emacs.
@@ -27,13 +27,9 @@
 
 ;;; Code:
 
-;;;; Requirements
-
 (require 'net-utils)
 (require 'comint)
 (require 'auth-source)
-
-;;;; Customization options
 
 (defgroup sftp nil
   "SFTP."
@@ -68,8 +64,6 @@
 
 (defvar auth-source-creation-prompts)
 
-;;;; Internal functions
-
 (defun sftp--password-function (prompt)
   (or
    (and (string-match sftp-password-prompt-regexp prompt)
@@ -102,7 +96,7 @@
 	prompt-begin kept completions new-input)
     (unwind-protect
 	(progn
-          (setq kept "")
+	  (setq kept "")
 	  (set-process-filter proc (lambda (_p s) (setq kept (concat kept s))))
 	  (process-send-string proc (concat input "\t"))
 	  ;; Wait for the prompt to appear
@@ -111,7 +105,7 @@
 	  (if (not prompt-begin)
 	      ;; no completions
 	      nil
-            (setq new-input (substring kept (1+ (match-end 0))))
+	    (setq new-input (substring kept (1+ (match-end 0))))
 	    (if (not (string= input new-input))
 		;; sole completion
 		(list new-input)
@@ -120,7 +114,7 @@
 	      ;; split the completions
 	      (setq completions (split-string kept))
 	      ;; (message "completions: %S" completions)
-              (string-match "\\(.*?\\)[^/ ]*$" input) ;TODO handle escaped characters
+	      (string-match "\\(.*?\\)[^/ ]*$" input) ;TODO handle escaped characters
 	      (let ((prefix (match-string 1 input)))
 		(setq completions (mapcar (lambda (c) (concat prefix c)) completions)))
 	      completions)))
@@ -151,29 +145,30 @@
     (list beg end (sftp--completion-table beg end)
 	  :exclusive 'no :company-docsig #'ignore)))
 
-;;;; Commands
+(define-derived-mode sftp-mode ftp-mode "SFTP"
+  "Major mode for interacting with the sftp program."
+  :interactive nil
+  (setq-local comint-prompt-regexp sftp-prompt-regexp
+	      comint-process-echoes t
+	      comint-password-prompt-regexp sftp-password-prompt-regexp
+	      comint-password-function #'sftp--password-function
+	      sftp--first-password-request t)
+  (add-hook 'comint-output-filter-functions #'sftp--watch-for-connected nil t)
+  (add-hook 'comint-output-filter-functions #'comint-strip-ctrl-m nil t)
+  (add-hook 'comint-dynamic-complete-functions #'sftp--capf nil t))
 
 ;;;###autoload
 (defun sftp (host)
   "Run `sftp-program' to connect to HOST."
   (interactive
    (list (let ((default (ffap-machine-at-point)))
-           (read-string (format-prompt "Sftp to Host" default)
-                        nil 'sftp-history default))))
+	   (read-string (format-prompt "Sftp to Host" default)
+			nil 'sftp-history default))))
   (let ((buf (get-buffer-create (concat "*sftp [" host "]*"))))
     (set-buffer buf)
-    (let ((ftp-prompt-regexp sftp-prompt-regexp))
-      (ftp-mode))
-    ;; (setq-local coding-system-for-read 'utf-8-dos)
-    (setq-local comint-process-echoes t)
-    (setq-local comint-password-prompt-regexp sftp-password-prompt-regexp)
-    (setq-local comint-password-function #'sftp--password-function)
-    (setq-local sftp--first-password-request t)
-    (add-hook 'comint-output-filter-functions #'sftp--watch-for-connected nil t)
-    (add-hook 'comint-output-filter-functions #'comint-strip-ctrl-m nil t)
-    (add-hook 'comint-dynamic-complete-functions #'sftp--capf nil t)
+    (sftp-mode)
     (comint-exec buf (concat "sftp-" host) sftp-program nil
-                 (append (list host) sftp-program-options))
+		 (append (list host) sftp-program-options))
     (pop-to-buffer buf)))
 
 (provide 'sftp)

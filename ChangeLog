@@ -1,5 +1,8 @@
 2025-01-10  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/sftp.el: Refactor.
+	(sftp-mode): New major mode.
+
 	* early-init.el: Disable byte-compile of this file.
 	Skip loading of site-start.el.
 	Set `load-prefer-newer' to t.
