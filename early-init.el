@@ -27,6 +27,7 @@
 ;;;; gc
 
 (setq gc-cons-threshold 25600000)
+(setq load-prefer-newer t)
 
 ;;;; pre-early-init
 
@@ -116,6 +117,11 @@
       kept-old-versions 9
       kept-new-versions 9)
 
+;;;; startup
+
+;; Disable loading of the `site-start' file.
+(setq site-run-file nil)
+
 ;;;; custom
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
@@ -135,6 +141,7 @@
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
+;; no-byte-compile: t
 ;; End:
 
 ;;; early-init.el ends here

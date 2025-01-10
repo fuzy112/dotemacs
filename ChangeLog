@@ -1,5 +1,9 @@
 2025-01-10  Zhengyi Fu  <i@fuzy.me>
 
+	* early-init.el: Disable byte-compile of this file.
+	Skip loading of site-start.el.
+	Set `load-prefer-newer' to t.
+
 	* site-lisp/consult-xref-apropos.el: Remove this rarely used
 	package.
 
