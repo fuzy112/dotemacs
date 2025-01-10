@@ -1,3 +1,8 @@
+2025-01-10  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/consult-xref-apropos.el: Remove this rarely used
+	package.
+
 2025-01-09  Zhengyi Fu  <i@fuzy.me>
 
 	* packages.el:
