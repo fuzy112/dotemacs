@@ -1,5 +1,9 @@
 2025-01-10  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (quilt-new-patch, quilt-add-visited-file)
+	(quilt-refresh, quilt-pop, quilt-push): New commands.
+	(quilt-prefix-map): Prefix map for quilt commands.
+
 	* site-lisp/sftp.el: Refactor.
 	(sftp-mode): New major mode.
 

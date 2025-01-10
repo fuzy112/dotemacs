@@ -1999,6 +1999,45 @@ minibuffer."
 (defvar uptime-notification-timer
   (run-with-timer 1800 1800 #'uptime-notify))
 
+;;;; quilt
+
+(defun quilt-new-patch (patch-name)
+  (interactive "sNew patch name:")
+  (unless (string-suffix-p "patch" patch-name)
+    (setq patch-name (concat patch-name ".patch")))
+  (shell-command (concat "quilt new " (shell-quote-argument patch-name))))
+
+(defun quilt-add-visited-file ()
+  (interactive)
+  (if-let* ((file (buffer-file-name)))
+      (let ((basename (file-name-nondirectory file)))
+        (shell-command (concat "quilt add " (shell-quote-argument basename))))
+    (user-error "Buffer not visiting a file")))
+
+(defun quilt-refresh ()
+  (interactive)
+  (shell-command "quilt refresh"))
+
+(defun quilt-pop (arg)
+  (interactive "p")
+  (while (> arg 0)
+    (shell-command "quilt pop")
+    (cl-decf arg)))
+
+(defun quilt-push (arg)
+  (interactive "p")
+  (while (> arg 0)
+    (shell-command "quilt push")
+    (cl-decf arg)))
+
+(defvar-keymap quilt-prefix-map
+  :prefix 'quilt-prefix-map
+  "n" #'quilt-new-patch
+  "a" #'quilt-add-visited-file
+  "-" #'quilt-pop
+  "+" #'quilt-push
+  "r" #'quilt-refresh)
+
 
 ;;;; display buffer alist
 
@@ -2124,6 +2163,7 @@ Otherwise disable it."
   "o" toggle-map
   "M-g" #'magit-file-dispatch
   "p" #'project-prefix-map
+  "q" quilt-prefix-map
   "s" #'deadgrep
   "v" #'vc-prefix-map
   "w" #'window-prefix-map)
