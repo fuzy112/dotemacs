@@ -1,3 +1,7 @@
+2025-01-11  Zhengyi Fu  <zhengyi@fedora>
+
+	* packages.el: Fix recipe of systemd-mode.
+
 2025-01-10  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (quilt-new-patch, quilt-add-visited-file)
