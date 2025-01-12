@@ -155,36 +155,36 @@ process terminates.  Otherwise, the buffer is killed silently."
     (byte-compile
      (cl-function
       (lambda (&key report-fn source file cleanup)
-	(lambda (p _ev)
-	  (when (memq (process-status p) '(exit signal))
-	    (unwind-protect
-		(if (eq p (buffer-local-value proc-var source))
-		    (with-current-buffer (process-buffer p)
-		      (when filter-color
-			(ansi-color-filter-region (point-min) (point-max)))
-		      (goto-char (point-min))
-		      (let ((diags
-			     (cl-loop
-			      for (regexp . action) in compiled-patterns
-			      do (goto-char (point-min))
-			      nconc
-			      (cl-loop
-			       while (re-search-forward regexp nil t)
-			       for diag = (funcall action source file)
-			       collect diag))))
-			(if (or diags (zerop (process-exit-status p)))
-			    (funcall report-fn diags)
-			  (funcall report-fn
-				   :panic :explanation
-				   (buffer-substring
-				    (point-min)
-				    (progn (goto-char (point-min))
-					   (line-end-position)))))))
-		  (flymake-log :warning "Cancelling obsolete check %s" p))
-	      (unless (process-live-p p)
-		(when debug (display-buffer (process-buffer p)))
-		(unless debug (kill-buffer (process-buffer p)))
-		(funcall cleanup))))))))))
+        (lambda (p _ev)
+          (when (memq (process-status p) '(exit signal))
+            (unwind-protect
+                (if (eq p (buffer-local-value proc-var source))
+                    (with-current-buffer (process-buffer p)
+                      (when filter-color
+                        (ansi-color-filter-region (point-min) (point-max)))
+                      (goto-char (point-min))
+                      (let ((diags
+                             (cl-loop
+                              for (regexp . action) in compiled-patterns
+                              do (goto-char (point-min))
+                              nconc
+                              (cl-loop
+                               while (re-search-forward regexp nil t)
+                               for diag = (funcall action source file)
+                               collect diag))))
+                        (if (or diags (zerop (process-exit-status p)))
+                            (funcall report-fn diags)
+                          (funcall report-fn
+                                   :panic :explanation
+                                   (buffer-substring
+                                    (point-min)
+                                    (progn (goto-char (point-min))
+                                           (line-end-position)))))))
+                  (flymake-log :warning "Cancelling obsolete check %s" p))
+              (unless (process-live-p p)
+                (when debug (display-buffer (process-buffer p)))
+                (unless debug (kill-buffer (process-buffer p)))
+                (funcall cleanup))))))))))
 
 ;;;; Public macros
 
@@ -238,7 +238,7 @@ function or a form."
     `(progn
        (defvar-local ,proc-var nil)
        (defun ,name (report-fn &rest _args)
-	 ,documentation
+         ,documentation
          (when (process-live-p ,proc-var)
            (kill-process ,proc-var))
          (if (not ,(cond ((null condition)
