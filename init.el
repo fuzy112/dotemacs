@@ -1022,6 +1022,7 @@ value for USE-OVERLAYS."
 (after-load! dired
   (setq dired-listing-switches "-lah"
         dired-hide-details-hide-absolute-location t
+        dired-do-revert-buffer t
         dired-x-hands-off-my-keys nil))
 
 ;;;; compile

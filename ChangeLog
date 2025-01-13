@@ -11,6 +11,8 @@
 2025-01-13  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Enable `ultra-scroll-mode' if xinput2 is available.
+	Set dired-do-revert-buffer to t.
+
 	* packages.el: Add package `ultra-scroll'.
 
 	* init.el: Set font of default face.
