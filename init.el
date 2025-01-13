@@ -211,6 +211,7 @@
 
 (set-face-attribute 'default nil :family "Iosevka SS04" :height 140)
 (+custom-fontset)
+(add-hook 'server-after-make-frame-hook #'+custom-fontset)
 
 ;; Fallback to Iosevka SS04 if Sarasa fonts are not available.
 (setopt face-font-family-alternatives
@@ -2133,7 +2134,8 @@ Otherwise disable it."
   "l" #'display-line-numbers-mode
   "o" #'outline-minor-mode
   "x" #'+toggle-transparent
-  "v" #'visual-line-mode)
+  "v" #'visual-line-mode
+  "w" #'whitespace-mode)
 
 (defvar-keymap debug-map
   :doc "Keymap for debugging commands."
