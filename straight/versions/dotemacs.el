@@ -109,6 +109,7 @@
  ("track-changes" . "fc64bead78b510877be462d802a6216c6d70f00a")
  ("transducers.el" . "f8f46db6ddba6641669160fffb3f98213ab5b213")
  ("transient" . "69202c123205f396fefd35acdbc66fe8d0dfad12")
+ ("ultra-scroll" . "9f62273531ad2f9837ad6da28fccbe2ec4c7938c")
  ("vala-mode" . "d696a8177e94c81ea557ad364a3b3dcc3abbc50f")
  ("vertico" . "c033c7149de510b4da9c473b31a6d73619868ce0")
  ("vundo" . "d5869788a06f08d652d4786574ab546b71d57964")

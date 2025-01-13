@@ -319,10 +319,12 @@
 (add-hook 'after-make-frame-functions '+nerd-icons--after-make-frame-h)
 (add-hook 'server-after-make-frame-hook '+nerd-icons--after-make-frame-h)
 
-;;;; pixel-scroll
+;;;; ultra-scroll
 
 (setq scroll-conservatively 101)
-(pixel-scroll-precision-mode)
+(if (and (featurep 'x) (not (featurep 'xinput2)))
+    (pixel-scroll-precision-mode)
+  (ultra-scroll-mode))
 
 ;;;; window
 
@@ -511,6 +513,11 @@ ARGS: see `completion-read-multiple'."
 
 ;;;; corfu
 
+(setopt completion-cycle-threshold 0
+        tab-always-indent 'complete
+        text-mode-ispell-word-completion nil
+        read-extended-command-predicate #'command-completion-default-include-p)
+
 (define-advice completion-in-region (:before (&rest _) corfu)
   (require 'corfu))
 
@@ -518,10 +525,6 @@ ARGS: see `completion-read-multiple'."
 (after-load! corfu
   (advice-remove 'completion-in-region #'completion-in-region@corfu)
   (require 'orderless)
-  (setopt completion-cycle-threshold 0
-          tab-always-indent 'complete
-          text-mode-ispell-word-completion nil
-          read-extended-command-predicate #'command-completion-default-include-p)
   (setopt corfu-cycle t
           corfu-preselect 'prompt)
   (setopt corfu-quick1 "htnsd"
