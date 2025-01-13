@@ -1,6 +1,9 @@
 2025-01-13  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Set font of default face.
+	(toggle-map): Bind `w' to `whitespace-mode'.
+	(server-after-make-frame-hook): Add `+custom-fontset'.
+
 	* early-init.el (default-frame-alist): Remove `font', `width' and
 	`height'.
 
