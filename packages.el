@@ -20,6 +20,7 @@
 (straight-use-package '(rime :fork (:host github :repo "fuzy112/emacs-rime")))
 (straight-use-package '(term-keys :host github :repo "CyberShadow/term-keys"))
 (straight-use-package '(consult-eglot :fork (:host github :repo "fuzy112/consult-eglot")))
+(straight-use-package '(ultra-scroll :host github :repo "jdtsmith/ultra-scroll"))
 (straight-use-package 'adaptive-wrap)
 (straight-use-package 'anaphora)
 (straight-use-package 'apheleia)
