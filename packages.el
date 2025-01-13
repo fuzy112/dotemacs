@@ -15,7 +15,7 @@
 (straight-use-package '(gptel-quick :host github :repo "karthink/gptel-quick"))
 (straight-use-package '(image-slicing :host github :repo "ginqi7/image-slicing"))
 (straight-use-package '(nerd-icons-multimodal :host github :repo "abougouffa/nerd-icons-multimodal"))
-(straight-use-package '(p-search :host github :repo "zkry/p-search"))
+(straight-use-package '(p-search :host github :repo "zkry/p-search" :files (:defaults "extensions")))
 (straight-use-package '(popon :fork (:host codeberg :repo "fuzy/emacs-popon")))
 (straight-use-package '(rime :fork (:host github :repo "fuzy112/emacs-rime")))
 (straight-use-package '(term-keys :host github :repo "CyberShadow/term-keys"))
