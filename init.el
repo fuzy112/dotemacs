@@ -209,6 +209,7 @@
 (defun +custom-fontset ()
   (+apply-custom-fonts +custom-fonts-alist))
 
+(set-face-attribute 'default nil :family "Iosevka SS04" :height 140)
 (+custom-fontset)
 
 ;; Fallback to Iosevka SS04 if Sarasa fonts are not available.

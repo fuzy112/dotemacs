@@ -1,3 +1,9 @@
+2025-01-13  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Set font of default face.
+	* early-init.el (default-frame-alist): Remove `font', `width' and
+	`height'.
+
 2025-01-12  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Increase `recentf-max-saved-items' to 8192.

@@ -102,9 +102,6 @@
 
 (setq default-frame-alist `((vertical-scroll-bars . nil)
                             (horizontal-scroll-bars . nil)
-                            (font . "Iosevka SS04-14")
-                            (width . 157)
-                            (height . 38)
                             (alpha-background . 80)))
 
 (setq auto-save-no-message t)
