@@ -1,5 +1,8 @@
 2025-01-14  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (mm-discouraged-alternatives): Set value of
+	`mm-discouraged-alternatives' directly.
+
 	* site-lisp/outline2org.el: New file.
 
 2025-01-13  Zhengyi Fu  <i@fuzy.me>

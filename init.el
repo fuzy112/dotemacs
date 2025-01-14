@@ -1684,11 +1684,7 @@ minibuffer."
 
 ;;;; email and gnus
 
-(setq mm-discouraged-alternatives
-      (eval-when-compile
-        (require 'mm-decode)
-        (append '("text/html" "text/richtext")
-                (custom--standard-value 'mm-discouraged-alternatives))))
+(setq mm-discouraged-alternatives '("text/html" "text/richtext"))
 
 ;;;; emacs-server
 
