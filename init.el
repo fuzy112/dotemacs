@@ -55,6 +55,14 @@
   "Setup meow keybindings for Dvorak layout."
   (setq meow-keypad-leader-dispatch "C-c")
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
+  (setq meow-use-clipboard t)
+  (alist-setq! meow-mode-state-list
+    eat-mode 'insert
+    term-mode 'insert
+    shell-mode 'insert
+    eshell-mode 'insert
+    vterm-mode 'insert
+    telega-chat-mode 'normal)
   (meow-leader-define-key
    '("1" . meow-digit-argument)
    '("2" . meow-digit-argument)
@@ -330,6 +338,18 @@
 
 (setopt kill-buffer-quit-windows t
         quit-restore-window-no-switch t)
+
+;;;; tab-bar
+
+(setq tab-bar-tab-name-format-function
+      (lambda (tab i)
+        (tab-bar-tab-name-format-face
+         (concat " "
+                 (propertize (number-to-string i) 'face '(:weight ultra-bold :underline t))
+                 " "
+                 (alist-get 'name tab)
+                 " ")
+         tab i)))
 
 ;;;; quick-window
 
