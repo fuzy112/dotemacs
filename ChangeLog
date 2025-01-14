@@ -1,3 +1,7 @@
+2025-01-14  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/outline2org.el: New file.
+
 2025-01-13  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Enable `ultra-scroll-mode' if xinput2 is available.
