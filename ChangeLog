@@ -2,6 +2,9 @@
 
 	* init.el (mm-discouraged-alternatives): Set value of
 	`mm-discouraged-alternatives' directly.
+	(meow-setup): Set `meow-use-clipboard' to t.  Customize
+	`meow-mode-state-list'.
+	(tab-bar-tab-name-format-function): Better format for tab names.
 
 	* site-lisp/outline2org.el: New file.
 
