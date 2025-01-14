@@ -33,7 +33,7 @@
   (interactive)
   (let ((buf (current-buffer)))
     (pop-to-buffer (generate-new-buffer "*org*"))
-    (insert-buffer buf)
+    (insert-buffer-substring-no-properties buf)
     (goto-char (point-min))
     (while (re-search-forward outline2org-code-block-regexp nil t)
       (let ((code-block (string-trim-right (match-string 0))))
