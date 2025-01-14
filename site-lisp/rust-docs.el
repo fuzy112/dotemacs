@@ -1887,7 +1887,7 @@
     "std::usize::MIN")
   "std::A list of available topics in rust-docs.
 
-Extracted by using 
+Extracted by using
    Array.from(document.querySelectorAll(
      '#main-content .all-items li')).map(li => li.innerText)")
 
@@ -1916,16 +1916,16 @@ Extracted by using
 (defun rust-docs--base-path ()
   (or rust-docs--base-path
       (let ((index-file
-	     (with-work-buffer
-	       (call-process "rustup" nil t nil "doc" "--std" "--path")
-	       (string-trim-right (buffer-substring-no-properties (point-min) (point-max))))))
-	(setq rust-docs--base-path
-	      (file-name-parent-directory
-	       (file-name-parent-directory index-file))))))
+             (with-work-buffer
+               (call-process "rustup" nil t nil "doc" "--std" "--path")
+               (string-trim-right (buffer-substring-no-properties (point-min) (point-max))))))
+        (setq rust-docs--base-path
+              (file-name-parent-directory
+               (file-name-parent-directory index-file))))))
 
 (cl-defmethod rust-docs--url-p (url)
   (setq url (url-expand-file-name url))
-  (or 
+  (or
    (string-prefix-p (rust-docs--base-path) url)
    (string-prefix-p (concat "file://" (rust-docs--base-path)) url)))
 
@@ -1933,9 +1933,9 @@ Extracted by using
   "Mode for displaying rust-docs."
   ;; New in Emacs 28.1
   (setq-local browse-url-handlers `((rust-docs--url-p . rust-docs--url-handler)
-				    ,@browse-url-handlers))
+                                    ,@browse-url-handlers))
   (setq-local buffer-undo-list nil
-	      truncate-lines t))
+              truncate-lines t))
 
 (defcustom rust-docs-fontify-code-blocks t
   "If non-nil, fontify code blocks in the documentation."
@@ -1945,16 +1945,16 @@ Extracted by using
   "Fontify DOM as rust code block."
   (let ((start (point)))
     (if-let* ((mode (and rust-docs-fontify-code-blocks
-			(or (and (fboundp 'rust-mode) 'rust-mode)
-			    (and (fboundp 'rust-ts-mode) 'rust-ts-mode)))))
-	(insert
-	 (with-work-buffer
-	   (shr-tag-pre dom)
-	   (let ((inhibit-message t)
-		 (message-log-max nil))
-	     (ignore-errors (delay-mode-hooks (funcall mode)))
-	     (font-lock-ensure))
-	   (buffer-string)))
+                        (or (and (fboundp 'rust-mode) 'rust-mode)
+                            (and (fboundp 'rust-ts-mode) 'rust-ts-mode)))))
+        (insert
+         (with-work-buffer
+           (shr-tag-pre dom)
+           (let ((inhibit-message t)
+                 (message-log-max nil))
+             (ignore-errors (delay-mode-hooks (funcall mode)))
+             (font-lock-ensure))
+           (buffer-string)))
       (shr-tag-pre dom))
     (add-face-text-property start (point) 'rust-docs-code-block t)))
 
@@ -1963,14 +1963,14 @@ Extracted by using
     (unless (derived-mode-p 'rust-docs-mode)
       (rust-docs-mode))
     (let ((inhibit-read-only t)
-	  (shr-external-rendering-functions `((pre . rust-docs--shr-tag-pre)
-					      ,@shr-external-rendering-functions))
-	  (urlobj (url-generic-parse-url url)))
+          (shr-external-rendering-functions `((pre . rust-docs--shr-tag-pre)
+                                              ,@shr-external-rendering-functions))
+          (urlobj (url-generic-parse-url url)))
       (erase-buffer)
       (shr-insert-document
        (with-work-buffer
-	 (url-insert-file-contents url)
-	 (libxml-parse-html-region nil nil)))
+         (url-insert-file-contents url)
+         (libxml-parse-html-region nil nil)))
       (set-buffer-modified-p nil)
       (setq url-current-object urlobj))
     (goto-char (point-min))
@@ -1987,7 +1987,7 @@ Extracted by using
 INITIAL is the initial input of the minibuffer."
   (interactive "P")
   (let* ((topic (rust-docs--read-topic "Look up rust-docs: " initial))
-	 (url (rust-docs--get-url topic)))
+         (url (rust-docs--get-url topic)))
     (pop-to-buffer (rust-docs--render url))))
 
 ;;;###autoload
