@@ -25,7 +25,7 @@
 
 ;;; Code:
 
-(defconst outline2org-code-block-regexp "\\(?:^[^;\n].*$\\)\\(?:\\(?:^[^;\n].*$\\)\\|\n\\)+")
+(defconst outline2org-code-block-regexp "\\(?:^[^;\n].*$\\|^;;;###.*$\\)\\(?:\\(?:^[^;\n].*$\\)\\|\n\\)+")
 
 ;;;###autoload
 (defun outline-to-org ()
@@ -45,10 +45,10 @@
     (when (looking-at "^;;+[[:space:]]+[^[:space:]]+[[:space:]]+---[[:space:]]+\\(.*\\)[[:space:]]+\\(?:-\\*-.*-\\*-$\\)")
       (replace-match "* \\1"))
     (goto-char (point-min))
-    (while (re-search-forward "^;;\\(;+\\)" nil t)
-      (replace-match (concat ";" (make-string (length (match-string 1)) ?*))))
+    (while (re-search-forward "^;;\\(;+\\)[[:space:]]+" nil t)
+      (replace-match (concat ";" (make-string (length (match-string 1)) ?*) " ")))
     (goto-char (point-min))
-    (while (re-search-forward "^;+[[:space:]]*\\(.*\\)$" nil t)
+    (while (re-search-forward "^;+[[:space:]]*\\([^;#].*\\)$" nil t)
       (let ((text (match-string-no-properties 1)))
         (save-match-data
           (setq text (replace-regexp-in-string "`\\([^']+\\)'" "~\\1~" text)))
