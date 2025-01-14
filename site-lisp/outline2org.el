@@ -46,10 +46,13 @@
       (replace-match "* \\1"))
     (goto-char (point-min))
     (while (re-search-forward "^;;\\(;+\\)" nil t)
-      (replace-match (make-string (length (match-string 1)) ?*)))
+      (replace-match (concat ";" (make-string (length (match-string 1)) ?*))))
     (goto-char (point-min))
-    (while (re-search-forward "^;+[[:space:]]*" nil t)
-      (replace-match ""))
+    (while (re-search-forward "^;+[[:space:]]*\\(.*\\)$" nil t)
+      (let ((text (match-string-no-properties 1)))
+        (save-match-data
+          (setq text (replace-regexp-in-string "`\\([^']+\\)'" "~\\1~" text)))
+        (replace-match text)))
     (org-mode)))
 
 (provide 'outline2org)
