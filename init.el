@@ -642,7 +642,7 @@ ARGS: see `completion-read-multiple'."
                   (user-error "Bookmark `%s' doesn't have a location" bookmark))))
 
 (defun +embark/apply-ansi-color (beg end &optional use-overlays)
-  "Apply ansi color sequence on region [BEG END).
+  "Apply ansi color sequence on the text from BEG to END.
 
 When interactive, prefix-argument means to use overlays instead of text
 properties, if supported.  Elisp code can achieve this with non-nil
