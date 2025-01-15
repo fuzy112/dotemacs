@@ -1683,23 +1683,25 @@ minibuffer."
 (dolist (hook lin-mode-hooks)
   (add-hook hook #'lin-mode))
 
-(declare-function hl-line-highlight "hl-line.el")
-(defun +lin-line--next-error-h ()
-  (with-current-buffer next-error-buffer
-    (save-selected-window
-      (when-let* ((win (get-buffer-window (current-buffer))))
-        (select-window win)
-        (recenter))
-      (when (bound-and-true-p lin-mode)
-        (hl-line-highlight)))))
-
 (after-load! lin
   (setopt lin-face 'lin-magenta)
   (setopt lin-mode-hooks
           (seq-union lin-mode-hooks (custom--standard-value 'lin-mode-hooks)))
   (lin-global-mode))
 
+;; Highlight current line in the error buffer after running `next-error'.
+(declare-function hl-line-highlight "hl-line.el")
+(defun +lin-line--next-error-h ()
+  "Highlight the current line in the error buffer."
+  (save-selected-window
+    (when-let* ((win (get-buffer-window next-error-buffer)))
+      (select-window win)
+      (recenter))
+    (when (bound-and-true-p lin-mode)
+      (hl-line-highlight))))
 (add-hook 'next-error-hook '+lin-line--next-error-h)
+
+;; Highlight the current gnus header buffer item.
 (add-hook 'gnus-visual-mark-article-hook #'hl-line-highlight)
 
 ;;;; email and gnus
