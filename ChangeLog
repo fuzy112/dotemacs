@@ -1,3 +1,7 @@
+2025-01-16  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Remove custom keybinding for C-x C-c.
+
 2025-01-14  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (mm-discouraged-alternatives): Set value of
