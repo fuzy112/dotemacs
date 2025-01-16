@@ -2198,7 +2198,6 @@ Otherwise disable it."
   "e" #'+eshell/other-window)
 
 (define-keymap :keymap ctl-x-map
-  "C-c" #'restart-emacs
   "k" #'kill-current-buffer
   "g" #'magit-status-quick
   "M-g" #'magit-dispatch)
