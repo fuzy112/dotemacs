@@ -1990,7 +1990,7 @@ minibuffer."
 ;;;; p-search
 
 (after-load! p-search
-  (require 'psx-info))
+  (require 'extensions/psx-info))
 (autoload 'p-search "p-search" nil t)
 
 ;;;; copyright
