@@ -2205,7 +2205,8 @@ Otherwise disable it."
 (define-keymap :keymap global-map
   "M-c" #'capitalize-dwim
   "M-l" #'downcase-dwim
-  "M-u" #'upcase-dwim)
+  "M-u" #'upcase-dwim
+  "<f5>" #'recompile)
 
 
 
