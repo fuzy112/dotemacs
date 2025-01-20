@@ -1,5 +1,19 @@
 2025-01-20  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/rust-docs.el (rust-docs--get-file):
+	(rust-docs--base-path):
+	(rust-docs--shr-tag-pre):
+	(rust-docs--render):
+	* site-lisp/gtkdoc.el (gtkdoc--parse-xml):
+	(gtkdoc--extract-symbols):
+	(gtkdoc--shr-tag-pre):
+	(gtkdoc--render):
+	* site-lisp/backup.el (backup-list-default-format-entry-function):
+	Use `with-temp-buffer' instead of `with-work-buffer'.
+
+	* site-lisp/compat+.el:
+	* site-lisp/keymap+.el: Removed.
+
 	* init.el: Bind <f5> to `project-recompile'.
 	Enable color emoji when using Xft.
 

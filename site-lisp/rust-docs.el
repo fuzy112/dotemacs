@@ -1892,7 +1892,7 @@ Extracted by using
      '#main-content .all-items li')).map(li => li.innerText)")
 
 (cl-defmethod rust-docs--get-file (topic)
-  (with-work-buffer
+  (with-temp-buffer
     (unless (zerop (call-process "rustup" nil t nil "doc" "--path" topic))
       (error "rustup: %s" (buffer-string)))
     (expand-file-name
@@ -1916,7 +1916,7 @@ Extracted by using
 (defun rust-docs--base-path ()
   (or rust-docs--base-path
       (let ((index-file
-             (with-work-buffer
+             (with-temp-buffer
                (call-process "rustup" nil t nil "doc" "--std" "--path")
                (string-trim-right (buffer-substring-no-properties (point-min) (point-max))))))
         (setq rust-docs--base-path
@@ -1948,7 +1948,7 @@ Extracted by using
                         (or (and (fboundp 'rust-mode) 'rust-mode)
                             (and (fboundp 'rust-ts-mode) 'rust-ts-mode)))))
         (insert
-         (with-work-buffer
+         (with-temp-buffer
            (shr-tag-pre dom)
            (let ((inhibit-message t)
                  (message-log-max nil))
@@ -1968,7 +1968,7 @@ Extracted by using
           (urlobj (url-generic-parse-url url)))
       (erase-buffer)
       (shr-insert-document
-       (with-work-buffer
+       (with-temp-buffer
          (url-insert-file-contents url)
          (libxml-parse-html-region nil nil)))
       (set-buffer-modified-p nil)

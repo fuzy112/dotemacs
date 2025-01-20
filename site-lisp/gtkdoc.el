@@ -101,7 +101,7 @@
 
 (cl-defmethod gtkdoc--parse-xml (url)
   (gtkdoc--with-url-file-handler
-   (with-work-buffer
+   (with-temp-buffer
      (insert-file-contents url)
      (libxml-parse-xml-region  nil nil url))))
 
@@ -111,7 +111,7 @@
     (mkdir gtkdoc-cache-directory))
   (let ((cache-file-name (gtkdoc--cache-file-name url)))
     (if (file-exists-p cache-file-name)
-        (with-work-buffer
+        (with-temp-buffer
           (insert-file-contents cache-file-name)
           (goto-char (point-min))
           (read (current-buffer)))
@@ -209,7 +209,7 @@
 			 (if (fboundp 'c-ts-mode) 'c-ts-mode
                            'c-mode))))
 	(insert
-	 (with-work-buffer
+	 (with-temp-buffer
 	   (shr-tag-pre dom)
 	   (let ((inhibit-message t)
 		 (message-log-max nil))
@@ -228,7 +228,7 @@
 					      ,@shr-external-rendering-functions)))
       (erase-buffer)
       (shr-insert-document
-       (with-work-buffer
+       (with-temp-buffer
 	 (url-insert-file-contents url)
 	 (libxml-parse-html-region nil nil)))
       (set-buffer-modified-p nil))
