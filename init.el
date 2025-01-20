@@ -1988,7 +1988,8 @@ minibuffer."
   (keymap-set markdown-mode-map "C-x C-q" #'markdown-view-mode)
   (keymap-set markdown-view-mode-map "C-x C-q" #'markdown-mode)
   (keymap-set gfm-mode-map "C-x C-q" #'gfm-view-mode)
-  (keymap-set gfm-view-mode-map "C-x C-q" #'gfm-mode))
+  (keymap-set gfm-view-mode-map "C-x C-q" #'gfm-mode)
+  (add-hook 'markdown-mode-hook #'visual-line-mode))
 
 ;;;; p-search
 
