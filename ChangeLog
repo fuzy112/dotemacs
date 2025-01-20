@@ -1,5 +1,8 @@
 2025-01-20  Zhengyi Fu  <i@fuzy.me>
 
+	* early-init.el (default-frame-alist): Do not set
+	`alpha-background' any more.
+
 	* site-lisp/rust-docs.el (rust-docs--get-file):
 	(rust-docs--base-path):
 	(rust-docs--shr-tag-pre):

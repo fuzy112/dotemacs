@@ -101,8 +101,7 @@
       inhibit-splash-screen t)
 
 (setq default-frame-alist `((vertical-scroll-bars . nil)
-                            (horizontal-scroll-bars . nil)
-                            (alpha-background . 80)))
+                            (horizontal-scroll-bars . nil)))
 
 (setq auto-save-no-message t)
 
