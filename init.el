@@ -2209,7 +2209,7 @@ Otherwise disable it."
   "M-c" #'capitalize-dwim
   "M-l" #'downcase-dwim
   "M-u" #'upcase-dwim
-  "<f5>" #'recompile)
+  "<f5>" #'project-recompile)
 
 
 
