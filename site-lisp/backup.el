@@ -137,7 +137,7 @@ If NOCONFIRM is non-nil, do not ask for confirmation."
 	 (uid (file-attribute-user-id attrs))
 	 (gid (file-attribute-group-id attrs))
 	 (size (file-attribute-size attrs)))
-    (with-work-buffer
+    (with-temp-buffer
       (indent-to 2)
       (insert name)
       (indent-to 40)
