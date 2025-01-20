@@ -227,6 +227,9 @@
                      ("Sarasa UI CL" "Sarasa Gothic CL" "Iosevka SS04"))
                    face-font-family-alternatives))
 
+(setq xft-ignore-color-fonts nil
+      face-ignored-fonts nil)
+
 ;;;; modus-theme
 
 (after-load! modus-themes
