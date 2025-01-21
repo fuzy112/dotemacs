@@ -258,6 +258,9 @@
                                   :border-width 1
                                   :background-color ,(face-background 'default nil '(shadow))))
   (custom-set-faces
+   `(cursor
+     ((((background light)) :background "DarkCyan")
+      (((background dark)) :background "cyan")))
    `(fixed-pitch
      ((t :family ,(face-attribute 'default :family))))
    `(variable-pitch
