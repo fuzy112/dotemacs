@@ -1088,7 +1088,8 @@ value for USE-OVERLAYS."
   (add-hook 'eshell-mode-hook '+eshell--capf)
   (after-load! esh-hist
     (when (fboundp 'consult-history)
-      (keymap-set eshell-hist-mode-map "M-r" #'consult-history))))
+      (keymap-set eshell-hist-mode-map "M-r" #'consult-history)))
+  (require 'eshell-extras))
 
 ;;;; text-mode
 

@@ -1,5 +1,7 @@
 2025-01-21  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/eshell-extras.el (eshell/rg): New eshell command.
+
 	* init.el (+vc/dir-here): New command.  Bound to `C-c v .'.
 	(+custom-faces): Use underline to highlight incorrect whitespaces.
 	Change cursor color to cyan.
