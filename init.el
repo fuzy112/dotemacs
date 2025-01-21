@@ -1417,7 +1417,20 @@ Display the result in a posframe." t)
         '("--force-interactive"
           "--config-option"
           "config:auth:password-stores=gpg-agent")
-        vc-svn-diff-switches '("-x" "-u -p")))
+        vc-svn-diff-switches '("-x" "-u -p"))
+  (keymap-set vc-prefix-map "." '+vc/dir-here))
+
+(defun +vc/dir-here (&optional backend)
+  (interactive
+   (list
+    (if current-prefix-arg
+        (intern
+         (completing-read
+          "Use VC backend: "
+          (mapcar (lambda (b) (list (symbol-name b)))
+                  vc-handled-backends)
+          nil t nil nil)))))
+  (vc-dir default-directory backend))
 
 ;;;; magit
 
