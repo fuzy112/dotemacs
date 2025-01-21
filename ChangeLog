@@ -2,6 +2,7 @@
 
 	* init.el (+vc/dir-here): New command.  Bound to `C-c v .'.
 	(+custom-faces): Use underline to highlight incorrect whitespaces.
+	Change cursor color to cyan.
 
 2025-01-20  Zhengyi Fu  <i@fuzy.me>
 
