@@ -1,3 +1,7 @@
+2025-01-21  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (+vc/dir-here): New command.  Bound to `C-c v .'.
+
 2025-01-20  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (markdown-mode): Enable visual-line-mode.
