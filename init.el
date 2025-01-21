@@ -2222,7 +2222,7 @@ Otherwise disable it."
   (and (or (equal argi "--exwm")
            (equal argi "--exde"))
        (require 'exde)
-       (add-hook 'after-init-hook #'exwm-init)
+       (add-hook 'after-init-hook 'exwm-init)
        t))
 
 (defvar command-line-functions)
