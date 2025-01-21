@@ -265,9 +265,9 @@
    `(fill-column-indicator
      ((((type w32 tty))
        :height 1.0 :foreground "gray50" :background ,(face-background 'default))))
-   '(whitespace-indentation ((t :background "yellow")))
-   '(whitespace-space-before-tab ((t :background "DarkOrange")))
-   '(whitespace-space-after-tab ((t :background "yellow")))
+   '(whitespace-indentation ((t :underline "yellow")))
+   '(whitespace-space-before-tab ((t :underline "DarkOrange")))
+   '(whitespace-space-after-tab ((t :underline "yellow")))
    '(parenthesis
      ((t :inherit shadow)))
    `(header-line
