@@ -98,6 +98,8 @@
 (straight-use-package 'vala-mode)
 (straight-use-package 'vertico)
 (straight-use-package 'vundo)
+(straight-use-package 'valign)
+(straight-use-package 'ftable)
 (straight-use-package 'ws-butler)
 (straight-use-package 'xterm-color)
 (straight-use-package 'yaml-mode)

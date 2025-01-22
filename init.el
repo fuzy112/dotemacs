@@ -1870,7 +1870,10 @@ minibuffer."
   (font-lock-flush))
 
 (after-load! org
+  (setq org-modern-table nil)
   (add-hook 'org-mode-hook #'org-modern-mode)
+  (setq valign-fancy-bar t)
+  (add-hook 'org-mode-hook #'valign-mode)
   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
 
   (define-keymap :keymap org-mode-map
