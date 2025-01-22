@@ -259,8 +259,8 @@
                                   :background-color ,(face-background 'default nil '(shadow))))
   (custom-set-faces
    `(cursor
-     ((((background light)) :background "DarkCyan")
-      (((background dark)) :background "cyan")))
+     ((((class color) (min-colors 256) (background light)) :background "#005077")
+      (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
    `(fixed-pitch
      ((t :family ,(face-attribute 'default :family))))
    `(variable-pitch
