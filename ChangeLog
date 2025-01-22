@@ -1,5 +1,8 @@
 2025-01-22  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/pp-posframe.el (pp-posframe-yank): Remove text
+	properties from inserting into buffers.
+
 	* init.el (+custom-faces): Change cursor colors.
 
 2025-01-21  Zhengyi Fu  <i@fuzy.me>
