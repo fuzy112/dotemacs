@@ -1,5 +1,9 @@
 2025-01-22  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (org): Use valign and ftable to align tables in
+	org-mode.
+	* package.el: Add package valign and ftable.
+
 	* site-lisp/pp-posframe.el (pp-posframe-yank): Remove text
 	properties from inserting into buffers.
 
