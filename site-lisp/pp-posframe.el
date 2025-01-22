@@ -62,6 +62,7 @@
 (defun pp-posframe-yank ()
   "Yank the evaluation result into the current buffer."
   (interactive)
+  (set-text-properties (point-min) (point-max) nil (get-buffer pp-posframe-buffer-name))
   (insert-buffer-substring pp-posframe-buffer-name))
 
 (defun pp-posframe-buffer ()
