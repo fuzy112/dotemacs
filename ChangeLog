@@ -1,3 +1,7 @@
+2025-01-22  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (+custom-faces): Change cursor colors.
+
 2025-01-21  Zhengyi Fu  <i@fuzy.me>
 
 	* site-lisp/eshell-extras.el (eshell/rg): New eshell command.
