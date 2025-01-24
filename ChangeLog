@@ -2,6 +2,7 @@
 
 	* packages.el (visual-fill-column): Add new package.
 	* init.el (gptel-default-mode): Set to `org-mode'.
+	(+gptel-mode-h): New function.
 
 	* init.el (toggle-map): Bind "c" to `olivetti-mode'.
 
