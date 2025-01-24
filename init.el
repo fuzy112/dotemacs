@@ -2179,6 +2179,7 @@ Otherwise disable it."
   "f" #'display-fill-column-indicator-mode
   "l" #'display-line-numbers-mode
   "o" #'outline-minor-mode
+  "c" #'olivetti-mode
   "x" #'+toggle-transparent
   "v" #'visual-line-mode
   "w" #'whitespace-mode)
