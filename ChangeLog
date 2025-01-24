@@ -1,5 +1,7 @@
 2025-01-24  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (toggle-map): Bind "c" to `olivetti-mode'.
+
 	* packages.el: Reorganize package.el.
 
 2025-01-22  Zhengyi Fu  <i@fuzy.me>
