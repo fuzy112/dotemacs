@@ -1,5 +1,8 @@
 2025-01-24  Zhengyi Fu  <i@fuzy.me>
 
+	* packages.el (visual-fill-column): Add new package.
+	* init.el (gptel-default-mode): Set to `org-mode'.
+
 	* init.el (toggle-map): Bind "c" to `olivetti-mode'.
 
 	* packages.el: Reorganize package.el.
