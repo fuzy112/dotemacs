@@ -1769,6 +1769,11 @@ minibuffer."
 
 (setq gptel-default-mode #'org-mode)
 (add-hook 'gptel-mode-hook #'visual-line-fill-column-mode)
+(defun +gptel-mode-h ()
+  (when (derived-mode-p 'org-mode)
+    (setq-local org-hide-emphasis-markers t))
+  (setq-local visual-fill-column-center-text t))
+(add-hook 'gptel-mode-hook #'+gptel-mode-h)
 
 ;;;; logos
 
