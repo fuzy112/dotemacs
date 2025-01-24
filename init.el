@@ -1767,6 +1767,9 @@ minibuffer."
 (after-load! embark
   (keymap-set embark-general-map "?" #'gptel-quick))
 
+(setq gptel-default-mode #'org-mode)
+(add-hook 'gptel-mode-hook #'visual-line-fill-column-mode)
+
 ;;;; logos
 
 (keymap-global-set "<f8>" #'logos-focus-mode)
@@ -1874,6 +1877,7 @@ minibuffer."
   (add-hook 'org-mode-hook #'org-modern-mode)
   (setq valign-fancy-bar t)
   (add-hook 'org-mode-hook #'valign-mode)
+  (add-hook 'org-mode-hook #'visual-line-mode)
   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
 
   (define-keymap :keymap org-mode-map

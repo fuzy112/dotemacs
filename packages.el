@@ -158,6 +158,7 @@
 (straight-use-package 'ftable)
 (straight-use-package 'olivetti)
 (straight-use-package 'adaptive-wrap)
+(straight-use-package 'visual-fill-column)
 (straight-use-package 'logos)
 (straight-use-package 'puni)
 
