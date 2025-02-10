@@ -246,9 +246,6 @@
 
 ;;;; doom-modeline
 
-;; NOTE: currently when using the igc branch + doom-modeline-mode + meow
-;; the \\[mark-whole-buffer] command doesn't work.
-
 (doom-modeline-mode)
 
 ;;;; customized faces
