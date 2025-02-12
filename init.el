@@ -1445,6 +1445,7 @@ Display the result in a posframe." t)
     (set-process-query-on-exit-flag
      magit-credential-cache-daemon-process nil)))
 (after-load! magit
+  (setopt magit-format-file-function #'magit-format-file-nerd-icons)
   (advice-add #'magit-maybe-start-credential-cache-daemon :after '+magit--ccdp-no-query)
   (setopt magit-wip-mode-lighter "")
   (magit-wip-mode))
