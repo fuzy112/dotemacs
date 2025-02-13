@@ -3,6 +3,8 @@
 	* init.el (toggle-map): Bind c to
 	+visual-fill-column/toggle-visual-fill-and-center.
 	(+visual-fill-column/toggle-visual-fill-and-center): New command.
+	(meow-setup): Use `meow-motion-define-key' instead of
+	`meow-motion-overwrite-define-key'.
 
 2025-02-12  Zhengyi Fu  <i@fuzy.me>
 
