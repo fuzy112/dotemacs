@@ -1420,14 +1420,13 @@ Display the result in a posframe." t)
 
 ;;;; vc
 
-(after-load! vc
-  (setq vc-follow-symlinks t)
-  (setq vc-svn-global-switches
-        '("--force-interactive"
-          "--config-option"
-          "config:auth:password-stores=gpg-agent")
-        vc-svn-diff-switches '("-x" "-u -p"))
-  (keymap-set vc-prefix-map "." '+vc/dir-here))
+(setq vc-follow-symlinks t)
+(setq vc-svn-global-switches
+      '("--force-interactive"
+        "--config-option"
+        "config:auth:password-stores=gpg-agent")
+      vc-svn-diff-switches '("-x" "-u -p"))
+(keymap-set vc-prefix-map "." '+vc/dir-here)
 
 (defun +vc/dir-here (&optional backend)
   (interactive
