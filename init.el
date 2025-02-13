@@ -1121,6 +1121,14 @@ value for USE-OVERLAYS."
     (add-hook 'visual-line-mode-hook #'visual-wrap-prefix-mode)
   (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode))
 
+
+;;;; visual-fill-column
+
+(defun +visual-fill-column/toggle-visual-fill-and-center ()
+  (interactive)
+  (visual-line-fill-column-mode 'toggle)
+  (setq-local visual-fill-column-center-text (symbol-value 'visual-line-fill-column-mode)))
+
 ;;;; hl-todo
 
 (add-hook 'prog-mode-hook #'hl-todo-mode)
@@ -2186,7 +2194,7 @@ Otherwise disable it."
   "f" #'display-fill-column-indicator-mode
   "l" #'display-line-numbers-mode
   "o" #'outline-minor-mode
-  "c" #'olivetti-mode
+  "c" #'+visual-fill-column/toggle-visual-fill-and-center
   "x" #'+toggle-transparent
   "v" #'visual-line-mode
   "w" #'whitespace-mode)
