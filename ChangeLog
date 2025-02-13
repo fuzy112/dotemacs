@@ -1,3 +1,9 @@
+2025-02-13  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (toggle-map): Bind c to
+	+visual-fill-column/toggle-visual-fill-and-center.
+	(+visual-fill-column/toggle-visual-fill-and-center): New command.
+
 2025-02-12  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (magit): Enable icons in status buffer.
