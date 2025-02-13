@@ -76,7 +76,7 @@
    '("0" . meow-digit-argument)
    '("/" . meow-keypad-describe-key)
    '("?" . meow-cheatsheet))
-  (meow-motion-overwrite-define-key '("<escape>" . ignore))
+  (meow-motion-define-key '("<escape>" . ignore))
   (meow-normal-define-key
    '("0" . meow-expand-0)
    '("9" . meow-expand-9)
