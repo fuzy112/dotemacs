@@ -1,5 +1,7 @@
 2025-02-13  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Move vc configuration to toplevel.
+
 	* init.el (toggle-map): Bind c to
 	+visual-fill-column/toggle-visual-fill-and-center.
 	(+visual-fill-column/toggle-visual-fill-and-center): New command.
