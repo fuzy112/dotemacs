@@ -1,3 +1,7 @@
+2025-02-14  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Do not enable `dynamic-highlight'.
+
 2025-02-13  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Move vc configuration to toplevel.

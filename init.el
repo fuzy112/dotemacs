@@ -1176,17 +1176,6 @@ value for USE-OVERLAYS."
 (after-load! eglot
   (eglot-tempel-mode))
 
-;;;; dynamic-highlight
-
-(autoload 'dynamic-highlight-mode "dynamic-highlight.el" nil t)
-(add-hook 'c-mode-common-hook #'dynamic-highlight-mode)
-(defun +dynamic-highlight--predicate (&optional _symbol)
-  (and (not (and (fboundp 'eglot-managed-p)
-                 (eglot-managed-p)))
-       (not (eq (get-text-property (point) 'face) 'font-lock-comment-face))))
-(after-load! dynamic-highlight
-  (setq dynamic-highlight-predicate #'+dynamic-highlight--predicate))
-
 ;;;; xref
 
 ;; Use Ctrl and mouse click to jump to definitions, and Ctrl+Alt+mouse
