@@ -1,5 +1,8 @@
 2025-02-18  Zhengyi Fu  <i@fuzy.me>
 
+	* transient/values.el: New file.  Default values for `ctags-menu'
+	and `gptel-menu'.
+
 	* site-lisp/ctags-menu.el (ctags-menu--read-existing-file): New function.
 	(ctags-menu--read-file): Allow reading non-existing file names.
 
