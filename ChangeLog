@@ -1,3 +1,8 @@
+2025-02-18  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/ctags-menu.el (ctags-menu--read-existing-file): New function.
+	(ctags-menu--read-file): Allow reading non-existing file names.
+
 2025-02-14  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Do not enable `dynamic-highlight'.
