@@ -69,6 +69,8 @@
       (seq-union straight-default-files-directive
                  '("docs/dir" "docs/*.info" "docs/*.texi" "docs/*.texinfo")))
 
+(straight-use-package 'straight)
+
 (let ((straight-current-profile 'dotemacs))
   (load (locate-user-emacs-file "packages.el") nil t))
 
