@@ -1176,6 +1176,22 @@ value for USE-OVERLAYS."
 (after-load! eglot
   (eglot-tempel-mode))
 
+;;;;; consult-eglot
+
+(after-load! consult
+  (add-to-list 'consult-async-split-styles-alist `(space :separator ?\s :function ,#'consult--split-separator)))
+
+(defun consult-eglot--async-wrap (async)
+  (consult--async-pipeline
+   (consult--async-split 'space)
+   async
+   (consult--async-indicator)
+   (consult--async-refresh)))
+
+(after-load! (:and consult-eglot consult)
+  (eval `(consult-customize consult-eglot-symbols
+                            :async-wrap #'consult-eglot--async-wrap)))
+
 ;;;; xref
 
 ;; Use Ctrl and mouse click to jump to definitions, and Ctrl+Alt+mouse
