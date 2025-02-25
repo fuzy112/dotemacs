@@ -1535,7 +1535,9 @@ minibuffer."
            default-directory)))
     (let
         ((default-directory dir)
-         (eat-buffer-name (concat "*" dir " : eat*")))
+         (eat-buffer-name (concat "*"
+                                  (abbreviate-file-name dir)
+                                  " : eat*")))
       (eat nil nil))))
 
 (defvar eat-terminal)
