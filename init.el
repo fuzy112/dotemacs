@@ -1305,10 +1305,8 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 
 (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
 (after-load! elisp-mode
-  ;; Emacs 30.1
-  (when (boundp 'trusted-contents)
-    ;; trust contents in site-lisp
-    (add-to-list 'trusted-contents (locate-user-emacs-file "site-lisp/")))
+  (when (boundp 'trusted-content)
+    (add-to-list 'trusted-content (locate-user-emacs-file "site-lisp/")))
   (when (native-comp-available-p)
     (keymap-set emacs-lisp-mode-map "C-c C-l" #'emacs-lisp-native-compile-and-load))
   (keymap-set lisp-interaction-mode-map "C-c C-j" #'eval-print-last-sexp))
