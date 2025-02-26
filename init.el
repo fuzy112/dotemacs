@@ -1688,9 +1688,9 @@ minibuffer."
   (savehist-mode))
 
 ;;;; auth-sources
-(setopt auth-sources '("~/.authinfo.gpg" password-store))
-(after-load! auth-source
-  (auth-source-pass-enable))
+(setopt auth-sources '("~/.authinfo.gpg"))
+(after-load! auth-sources
+  (auth-source-forget-all-cached))
 
 (after-load! password-store
   (add-hook 'savehist-save-hook #'password-store-clear))
