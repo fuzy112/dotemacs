@@ -65,6 +65,7 @@
 (defvar auth-source-creation-prompts)
 
 (defun sftp--password-function (prompt)
+  (setq prompt (replace-regexp-in-string "" "" prompt t t))
   (or
    (and (string-match sftp-password-prompt-regexp prompt)
 	sftp--first-password-request
