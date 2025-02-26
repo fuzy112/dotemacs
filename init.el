@@ -1690,6 +1690,8 @@ minibuffer."
 ;;;; auth-sources
 (setopt auth-sources '("~/.authinfo.gpg"))
 (after-load! auth-sources
+  (setopt auth-source-save-behavior t
+          auth-source-gpg-encrypt-to "0xBBE2757FC7BFC23B")
   (auth-source-forget-all-cached))
 
 (after-load! password-store
@@ -1755,7 +1757,7 @@ minibuffer."
 
 ;;;; epg
 
-(setopt epg-pinentry-mode 'loopback)
+;; (setopt epg-pinentry-mode 'loopback)
 (setopt epa-keys-select-method 'minibuffer)
 
 ;;;; tui
