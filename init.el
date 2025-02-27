@@ -1402,8 +1402,10 @@ Display the result in a posframe." t)
   (setq-default project-vc-external-roots-function #'+project--external-roots)
   (setq project-compilation-buffer-name-function #'project-prefixed-buffer-name)
 
-  (dolist (file '(".project-root" "configure.ac" "Cargo.toml" "package.json"))
-    (add-to-list 'project-vc-extra-root-markers file))
+  (setopt project-vc-ignores (seq-union project-vc-ignores '(".pc")))
+  (setopt project-vc-extra-root-markers
+          (seq-union project-vc-extra-root-markers
+                     '(".project-root" "configure.ac" "Cargo.toml" "package.json")))
   (when (and (not (functionp project-switch-commands))
              (consp project-switch-commands))
     (add-to-list 'project-switch-commands '(project-compile "Compile") t)))
