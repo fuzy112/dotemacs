@@ -2064,6 +2064,8 @@ minibuffer."
 ;; Set up a timer to display emacs uptime every 30 min.
 
 (defun uptime-notify ()
+  (call-process "notify-send" nil nil nil
+                (format "Emacs has been running for %s" (emacs-uptime)))
   (message "Emacs has been running for %s" (emacs-uptime)))
 
 (defvar uptime-notification-timer
