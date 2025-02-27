@@ -34,7 +34,7 @@
  ("ednc" . "1da992886e533c4e6e76cc27b2806511e37070d8")
  ("eglot" . "46b4caa7abc86fb01a82b4abb14983672e6daa26")
  ("eglot-tempel" . "c6c9a18eba61f6bae7167fa62bab9b637592d20d")
- ("eldoc" . "d2786a66b2752d1fa79b3391fe5a58560b74b786")
+ ("eldoc" . "a233b42b0e32154d2fe00d25a8b89329e81450f2")
  ("eldoc-box" . "ebc0e2c13791f5a22cf81be050b32f0ebf726855")
  ("eldoc-diffstat" . "33aa6d7ee5d0e712b112c74ec6e076463b540e9e")
  ("emacs-async" . "b99658e831bc7e7d20ed4bb0a85bdb5c7dd74142")
