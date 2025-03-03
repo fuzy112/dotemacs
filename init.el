@@ -1413,6 +1413,58 @@ Display the result in a posframe." t)
              (consp project-switch-commands))
     (add-to-list 'project-switch-commands '(project-compile "Compile") t)))
 
+;;;; perspective
+
+(setq wg-morph-on nil)      ; switch off animation from workgrousp.el
+(setq persp-autokill-buffer-on-remove 'kill-weak)
+(add-hook 'window-setup-hook #'persp-mode)
+(setopt persp-keymap-prefix (kbd "C-c M-p"))
+
+;; special buffer support
+(after-load! persp-mode
+
+  ;; eshell
+  (persp-def-buffer-save/load
+   :mode 'eshell-mode :tag-symbol 'def-eshell-buffer
+   :save-vars '(major-mode default-directory))
+
+  ;; compilation
+  (persp-def-buffer-save/load
+   :mode 'compilation-mode :tag-symbol 'def-compilation-buffer
+   :save-vars '( major-mode default-directory compilation-directory
+                 compilation-environment compilation-arg))
+
+  ;; magit
+  (autoload 'magit-refresh "magit-mode.el" nil t)
+  (autoload 'magit-status-mode "magit")
+  (persp-def-buffer-save/load
+   :mode 'magit-status-mode :tag-symbol 'def-magit-status-buffer
+   :save-vars '( major-mode default-directory)
+   :after-load-function #'(lambda (b &rest _)
+                            (with-current-buffer b
+                              (magit-refresh)))))
+
+;; ibuffer
+(keymap-global-set "C-x C-b" (lambda (arg)
+                               (interactive "P")
+                               (with-persp-buffer-list () (ibuffer-jump arg))))
+
+;; consult
+(after-load! consult
+  (defvar persp-mode-consult-source
+    (list :name "Persp"
+          :narrow ?s
+          :category 'buffer
+          :state #'consult--buffer-state
+          :history 'buffer-name-history
+          :default t
+          :items
+          (lambda () (consult--buffer-query :sort 'visibility
+                                       :predicate (lambda (buf) (persp-contain-buffer-p buf))
+                                       :as #'buffer-name))))
+  (eval '(consult-customize consult--source-buffer :hidden t :default nil))
+  (add-to-list 'consult-buffer-sources 'persp-mode-consult-source))
+
 ;;;; buffer-env
 
 (add-hook 'hook-local-variables-hook #'buffer-env-update)
