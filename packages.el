@@ -2,8 +2,6 @@
 
 (declare-function straight-use-package "straight.el")
 
-(add-to-list 'straight-built-in-pseudo-packages 'image)
-
 ;;; Utility libraries
 (straight-use-package 'dash)
 (straight-use-package 'f)
@@ -180,7 +178,6 @@
 (straight-use-package 'pass)
 (straight-use-package 'erc)
 (straight-use-package 'show-font)
-(straight-use-package '(discourse :host codeberg :repo "glenneth/discourse-emacs"))
 
 (straight-use-package '(eat :files (:defaults "integration" "term" "terminfo")))
 
