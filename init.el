@@ -215,11 +215,12 @@
     (apply #'+apply-font-setting item)))
 
 (defun +custom-fontset ()
+  (set-face-attribute 'default nil :family "Inconsolata" :height 140)
+  (set-face-attribute 'italic nil :family "Iosevka SS04")
+
   (+apply-custom-fonts +custom-fonts-alist))
 
-(set-face-attribute 'default nil :family "Inconsolata" :height 140)
-(set-face-attribute 'italic nil :family "Iosevka SS04")
-(+custom-fontset)
+;; (+custom-fontset)
 (add-hook 'server-after-make-frame-hook #'+custom-fontset)
 
 ;; Fallback to Iosevka SS04 if Sarasa fonts are not available.
@@ -251,6 +252,8 @@
 
 ;;;; customized faces
 (defun +custom-faces (&optional _theme)
+  (+custom-fontset)
+
   (defvar pp-posframe-parameters)
   (setq pp-posframe-parameters `( :border-color "gray"
                                   :border-width 1
