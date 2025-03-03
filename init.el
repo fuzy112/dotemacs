@@ -1892,7 +1892,6 @@ minibuffer."
 
 (autoload 'image-slicing-mode "image-slicing.el" nil t)
 (add-hook 'eww-mode-hook #'image-slicing-mode)
-(add-hook 'discourse-topic-mode-hook #'image-slicing-mode)
 
 ;;;; eww
 
@@ -2040,18 +2039,6 @@ minibuffer."
     (setopt erc-track-faces-priority-list (remq 'erc-notice-face
                                                 erc-track-faces-priority-list)))
   (setq erc-track-priority-faces-only 'all))
-
-;;;; discourse
-
-;; Currently discourse-emacs doesn't have any autoload cookies, so I
-;; added them myself.
-(autoload 'discourse-login "discourse.el" nil t)
-(after-load! discourse
-  (setq discourse-debug nil)
-  (keymap-set mode-specific-map "d" #'doc-map)
-  (define-key doc-map "t" 'discourse-get-latest-topics)
-  (define-key doc-map "c" 'discourse-get-categories)
-  (define-key doc-map "l" 'discourse-login))
 
 ;;;; copilot
 
@@ -2245,8 +2232,7 @@ Otherwise disable it."
   "i" #'devdocs-install
   "p" #'devdocs-peruse
   "r" #'rust-docs-lookup
-  "g" #'good-doc-lookup
-  "l" #'discourse-login)
+  "g" #'good-doc-lookup)
 
 (defvar-keymap file-map
   :doc "Open file commands."
