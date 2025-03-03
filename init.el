@@ -1445,9 +1445,18 @@ Display the result in a posframe." t)
                               (magit-refresh)))))
 
 ;; ibuffer
-(keymap-global-set "C-x C-b" (lambda (arg)
-                               (interactive "P")
-                               (with-persp-buffer-list () (ibuffer-jump arg))))
+
+(defun +persp-mode--setup-ibuffer-filter-groups (&rest _)
+  (interactive)
+  (setq ibuffer-filter-groups
+        (seq-map (lambda (persp)
+                   `(,(persp-name persp)
+                     (predicate . (persp-contain-buffer-p (current-buffer) ,persp))))
+                 (seq-filter #'identity (persp-persps))))
+  (ibuffer-update nil t))
+
+(advice-add #'ibuffer :after #'+persp-mode--setup-ibuffer-filter-groups)
+
 
 ;; consult
 (after-load! consult
