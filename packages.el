@@ -115,7 +115,7 @@
 (straight-use-package 'buffer-terminator)
 (straight-use-package 'ws-butler)
 (straight-use-package 'popper)
-
+(straight-use-package 'persp-mode)
 
 ;;; Version control
 (straight-use-package 'magit)
