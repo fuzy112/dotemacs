@@ -26,7 +26,7 @@
 ;;;; Consult
 (straight-use-package 'consult)
 (straight-use-package 'consult-dir)
-(straight-use-package '(consult-eglot :fork (:host github :repo "fuzy112/consult-eglot")))
+(straight-use-package 'consult-eglot)
 (straight-use-package '(consult-everything :host github :repo "jthaman/consult-everything"))
 (straight-use-package 'browser-hist)
 
