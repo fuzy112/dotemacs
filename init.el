@@ -1938,7 +1938,7 @@ minibuffer."
   (when (derived-mode-p 'org-mode)
     (setq-local org-hide-emphasis-markers t)))
 (add-hook 'gptel-mode-hook #'+gptel-mode-h)
-(add-hook 'gptel-hook-hook #'olivetti-mode)
+(add-hook 'gptel-mode-hook #'olivetti-mode)
 
 ;;;; logos
 
