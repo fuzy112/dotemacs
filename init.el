@@ -1417,11 +1417,17 @@ Display the result in a posframe." t)
 
 (setq wg-morph-on nil)      ; switch off animation from workgrousp.el
 (setq persp-autokill-buffer-on-remove 'kill-weak)
+(setopt persp-add-buffer-on-after-change-major-mode t)
+
 (add-hook 'window-setup-hook #'persp-mode)
 (setopt persp-keymap-prefix (kbd "C-c M-p"))
 
 ;; special buffer support
 (after-load! persp-mode
+
+  (add-hook 'persp-common-buffer-filter-functions
+            (lambda (buf)
+              (derived-mode-p '(magit-process-mode))))
 
   ;; eshell
   (persp-def-buffer-save/load
@@ -1439,7 +1445,8 @@ Display the result in a posframe." t)
   (autoload 'magit-status-mode "magit")
   (persp-def-buffer-save/load
    :mode 'magit-status-mode :tag-symbol 'def-magit-status-buffer
-   :save-vars '( major-mode default-directory)
+   :save-vars '( major-mode default-directory
+                 magit-buffer-margin)
    :after-load-function #'(lambda (b &rest _)
                             (with-current-buffer b
                               (magit-refresh)))))
@@ -1480,11 +1487,15 @@ Display the result in a posframe." t)
   "Create a perspective from the current project.
 Buffers in the project are added to the perspective."
   (interactive)
-  (let* ((project (project-current t)))
-    (unless (persp-with-name-exists-p (project-name project))
+  (let* ((project (project-current t))
+         (name (project-name project)))
+    (unless (persp-with-name-exists-p name)
+      (persp-switch name)
       (project-dired))
-    (persp-switch (project-name project))
-    (persp-add-buffer (project-buffers project))))
+    (persp-switch name)
+    (dolist (buf (project-buffers project))
+      (with-current-buffer buf
+        (persp-after-change-major-mode-h)))))
 
 (defun +persp/switch-project-and-persp ()
   (interactive)
@@ -1495,7 +1506,9 @@ Buffers in the project are added to the perspective."
   "Add buffers in the current project to the current perspective."
   (interactive)
   (let* ((project (project-current t)))
-    (persp-add-buffer (project-buffers project))))
+    (dolist (buf (project-buffers project))
+      (with-current-buffer buf
+        (persp-after-change-major-mode-h)))))
 
 (defun +persp/remove-project ()
   "Remove buffers in the current project from the current perspective."
