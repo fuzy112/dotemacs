@@ -1481,8 +1481,15 @@ Display the result in a posframe." t)
 Buffers in the project are added to the perspective."
   (interactive)
   (let* ((project (project-current t)))
+    (unless (persp-with-name-exists-p (project-name project))
+      (project-dired))
     (persp-switch (project-name project))
     (persp-add-buffer (project-buffers project))))
+
+(defun +persp/switch-project-and-persp ()
+  (interactive)
+  (let ((project-switch-commands '+persp/project-to-persp))
+    (call-interactively 'project-switch-project)))
 
 (defun +persp/add-project ()
   "Add buffers in the current project to the current perspective."
@@ -1506,6 +1513,14 @@ Buffers in the project are added to the perspective."
     (persp-remove-buffer
      (seq-difference (persp-buffers persp)
                      (project-buffers project)))))
+
+(after-load! persp-mode
+  (define-keymap :keymap persp-key-map
+    "P" #'+persp/switch-project-and-persp
+    "I" #'+persp/project-to-persp
+    "A" #'+persp/add-project
+    "R" #'+persp/remove-project
+    "X" #'+persp/shrink-to-project))
 
 ;;;; buffer-env
 
