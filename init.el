@@ -1427,7 +1427,11 @@ Display the result in a posframe." t)
 
   (add-hook 'persp-common-buffer-filter-functions
             (lambda (buf)
-              (derived-mode-p '(magit-process-mode))))
+              (buffer-match-p '(or (derived-mode . magit-process-mode)
+                                   "\\*Compile-Log\\*"
+                                   "\\*log-edit-files\\*"
+                                   "\\*vc-change-log\\*")
+                              buf)))
 
   ;; eshell
   (persp-def-buffer-save/load
