@@ -1560,7 +1560,7 @@ Buffers in the project are added to the perspective."
 (after-load! persp-mode
   (define-keymap :keymap persp-key-map
     "P" #'+persp/switch-project-and-persp
-    "I" #'+persp/project-to-persp
+    "O" #'+persp/project-to-persp
     "A" #'+persp/add-project
     "R" #'+persp/remove-project
     "X" #'+persp/shrink-to-project))
