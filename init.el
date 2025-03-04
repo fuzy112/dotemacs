@@ -2100,18 +2100,6 @@ minibuffer."
 ;;;; sftp
 (autoload 'sftp "sftp" nil t)
 
-;;;; buffer terminator
-
-(after-load! buffer-terminator
-  (setq buffer-terminator-verbose t)
-  (buffer-terminator-mode))
-
-(defun +buffer-terminator-load ()
-  (require 'buffer-terminator))
-
-(defvar +buffer-terminator-load-timer
-  (run-with-idle-timer 600 nil #'+buffer-terminator-load))
-
 ;;;; uptime
 
 ;; Set up a timer to display emacs uptime every 30 min.
