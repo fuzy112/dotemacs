@@ -88,6 +88,8 @@
                   (cl-incf score 2))
                 (when tag-type
                   (cl-incf score 2)))
+               ("typedef"
+                (cl-incf score 2))
                ((or "m" "member")
                 (if is-member
                     (cl-incf score 1)
