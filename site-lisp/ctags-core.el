@@ -65,7 +65,9 @@
   "Default arguments used to create tags file."
   :type 'string)
 
-(defcustom ctags-universal-ctags-program "ctags-universal"
+(defcustom ctags-universal-ctags-program
+  (or (executable-find "ctags-universal")
+      (executable-find "ctags"))
   "Path to Universal-Ctags program."
   :type 'file)
 
