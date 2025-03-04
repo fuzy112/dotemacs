@@ -1444,12 +1444,38 @@ Display the result in a posframe." t)
   (autoload 'magit-refresh "magit-mode.el" nil t)
   (autoload 'magit-status-mode "magit")
   (persp-def-buffer-save/load
-   :mode 'magit-status-mode :tag-symbol 'def-magit-status-buffer
+   :predicate (lambda (buf) (buffer-match-p '(derived-mode . magit-mode) buf))
+   :tag-symbol 'def-magit-buffer
    :save-vars '( major-mode default-directory
-                 magit-buffer-margin)
-   :after-load-function #'(lambda (b &rest _)
-                            (with-current-buffer b
-                              (magit-refresh)))))
+                 magit-buffer-margin
+                 magit-buffer-arguments
+                 magit-buffer-diff-type
+                 magit-buffer-diff-args
+                 magit-buffer-diff-files
+                 magit-buffer-diff-files-suspended
+                 magit-buffer-file-name
+                 magit-buffer-files
+                 magit-buffer-log-args
+                 magit-buffer-log-files
+                 magit-buffer-range
+                 magit-buffer-range-hashed
+                 magit-buffer-refname
+                 magit-buffer-revision
+                 magit-buffer-revision-hash
+                 magit-buffer-revisions
+                 magit-buffer-typearg
+                 magit-buffer-upstream)
+   :mode-restore-function
+   (lambda (mode)
+     (require 'magit)
+     (funcall mode))
+   :after-load-function
+   (lambda (buf &rest _)
+     (with-current-buffer buf
+       (run-hooks 'magit-create-buffer-hook)
+       (run-hooks 'magit-setup-buffer-hook)
+       (magit-refresh-buffer)
+       (run-hooks 'magit-post-create-buffer-hook)))))
 
 ;; ibuffer
 
