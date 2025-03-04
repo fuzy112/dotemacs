@@ -1474,6 +1474,39 @@ Display the result in a posframe." t)
   (eval '(consult-customize consult--source-buffer :hidden t :default nil))
   (add-to-list 'consult-buffer-sources 'persp-mode-consult-source))
 
+;; project
+
+(defun +persp/project-to-persp ()
+  "Create a perspective from the current project.
+Buffers in the project are added to the perspective."
+  (interactive)
+  (let* ((project (project-current t)))
+    (persp-switch (project-name project))
+    (persp-add-buffer (project-buffers project))))
+
+(defun +persp/add-project ()
+  "Add buffers in the current project to the current perspective."
+  (interactive)
+  (let* ((project (project-current t)))
+    (persp-add-buffer (project-buffers project))))
+
+(defun +persp/remove-project ()
+  "Remove buffers in the current project from the current perspective."
+  (interactive)
+  (let* ((project (project-current t)))
+    (persp-remove-buffer (project-buffers project))))
+
+(defun +persp/shrink-to-project ()
+  "Remove buffers not in the current project from the current perspective."
+  (interactive)
+  (let* ((project (project-current t))
+         (persp (get-current-persp)))
+    (cl-assert (seq-every-p #'bufferp (persp-buffers persp)))
+    (cl-assert (seq-every-p #'bufferp (project-buffers project)))
+    (persp-remove-buffer
+     (seq-difference (persp-buffers persp)
+                     (project-buffers project)))))
+
 ;;;; buffer-env
 
 (add-hook 'hook-local-variables-hook #'buffer-env-update)
