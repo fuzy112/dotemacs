@@ -113,14 +113,16 @@
                 (if (string-prefix-p "class:" scope)
                     (if is-member
                         (cl-incf score 1)
-                      (when (equal scope class-scope)
+                      (when (or (equal scope class-scope)
+                                (equal scope (concat "class:" identifier)))
                         (cl-incf score 2)))
                   (cl-incf score 2)))
                ((or "f" "function" "m" "macro")
                 (if (string-prefix-p "class:" scope)
                     (if is-member
                         (cl-incf score 2)
-                      (when (equal scope class-scope)
+                      (when (or (equal scope class-scope)
+                                (equal scope (concat "class:" identifier)))
                         (cl-incf score 3)))
                   (cl-incf score 3)))
                ((or "x" "externvar")
