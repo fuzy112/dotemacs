@@ -1847,12 +1847,11 @@ minibuffer."
   (keymap-set embark-general-map "?" #'gptel-quick))
 
 (setq gptel-default-mode #'org-mode)
-(add-hook 'gptel-mode-hook #'visual-line-fill-column-mode)
 (defun +gptel-mode-h ()
   (when (derived-mode-p 'org-mode)
-    (setq-local org-hide-emphasis-markers t))
-  (setq-local visual-fill-column-center-text t))
+    (setq-local org-hide-emphasis-markers t)))
 (add-hook 'gptel-mode-hook #'+gptel-mode-h)
+(add-hook 'gptel-hook-hook #'olivetti-mode)
 
 ;;;; logos
 
@@ -1966,6 +1965,7 @@ minibuffer."
   (define-keymap :keymap org-mode-map
     "C-c o M" #'+org/toggle-emphasis-markers
     "C-c o m" #'org-modern-mode
+    "C-c o c" #'olivetti-mode
     "M-g o" #'consult-org-heading)
   (setopt org-export-backends '(html latex texinfo))
   (setq org-agenda-hide-tags-regexp ".")
