@@ -1419,7 +1419,7 @@ Display the result in a posframe." t)
 (setq persp-autokill-buffer-on-remove 'kill-weak)
 (setopt persp-add-buffer-on-after-change-major-mode t)
 
-(add-hook 'window-setup-hook #'persp-mode)
+;; (add-hook 'window-setup-hook #'persp-mode)
 (setopt persp-keymap-prefix (kbd "C-c M-p"))
 
 ;; special buffer support
@@ -1492,11 +1492,11 @@ Display the result in a posframe." t)
                  (seq-filter #'identity (persp-persps))))
   (ibuffer-update nil t))
 
-(advice-add #'ibuffer :after #'+persp-mode--setup-ibuffer-filter-groups)
-
+(after-load! (:and persp-mode ibuffer)
+  (advice-add #'ibuffer :after #'+persp-mode--setup-ibuffer-filter-groups))
 
 ;; consult
-(after-load! consult
+(after-load! (:and persp-mode consult)
   (defvar persp-mode-consult-source
     (list :name "Persp"
           :narrow ?s
