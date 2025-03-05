@@ -1565,6 +1565,28 @@ Buffers in the project are added to the perspective."
     "R" #'+persp/remove-project
     "X" #'+persp/shrink-to-project))
 
+;;;; activities
+
+(after-load! activities
+  (activities-mode)
+  (activities-tabs-mode)
+  (setopt edebug-inhibit-emacs-lisp-mode-bindings t))
+
+(defvar-keymap activities-prefix-map
+  :prefix 'activities-prefix-map
+  "C-n" #'activities-new
+  "C-d" #'activities-define
+  "C-a" #'activities-resume
+  "C-s" #'activities-suspend
+  "C-k" #'activities-kill
+  "C-r" #'activities-rename
+  "RET" #'activities-switch
+  "b" #'activities-switch-buffer
+  "g" #'activities-revert
+  "l" #'activities-list)
+
+(keymap-global-set "C-x C-a" #'activities-prefix-map)
+
 ;;;; buffer-env
 
 (add-hook 'hook-local-variables-hook #'buffer-env-update)

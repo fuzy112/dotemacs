@@ -113,6 +113,7 @@
 (straight-use-package 'ws-butler)
 (straight-use-package 'popper)
 (straight-use-package 'persp-mode)
+(straight-use-package 'activities)
 
 ;;; Version control
 (straight-use-package 'magit)
