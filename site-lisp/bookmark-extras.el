@@ -126,7 +126,7 @@
               #'devdocs-bookmark-make-record))
 
 ;;;###autoload(add-hook 'devdocs-mode-hook #'devdocs-bookmark-enable)
- 
+
 ;;;; Mu4e
 (declare-function mu4e "ext:mu4e")
 
