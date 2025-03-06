@@ -1570,6 +1570,8 @@ Buffers in the project are added to the perspective."
 (after-load! activities
   (activities-mode)
   (activities-tabs-mode)
+  (require 'activities-persist-buffers)
+  (activities-persist-buffers-mode)
   (setopt edebug-inhibit-emacs-lisp-mode-bindings t))
 
 (defvar +activities-tab-buffer-source
