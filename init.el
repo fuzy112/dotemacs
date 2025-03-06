@@ -1592,19 +1592,23 @@ Buffers in the project are added to the perspective."
                                     (tab (activities-tabs--tab activity))
                                     (buffer-list (activities-tabs--tab-parameter
                                                   'activities-buffer-list tab)))
-                          (seq-filter #'buffer-live-p buffer-list))
-                                 :as #'buffer-name))))
+                          (setq buffer-list (seq-filter #'buffer-live-p buffer-list))
+                          (setq buffer-list (delq (current-buffer) buffer-list))
+                          buffer-list)
+           :as #'consult--buffer-pair))))
 
-(defun +activities-tabs-mode-h (&rest _)
+(defun +activities--fix-consult--source-buffer (&rest _)
   (when (boundp 'consult--source-buffer)
     (let ((hide-buffer-source (and (default-value 'activities-tabs-mode) (activities-current) t)))
       (eval `(consult-customize consult--source-buffer :hidden ,hide-buffer-source) t))))
 
-(add-hook 'activities-tabs-mode-hook #'+activities-tabs-mode-h)
+(add-hook 'activities-tabs-mode-hook #'+activities--fix-consult--source-buffer)
 
 (after-load! (:and activities consult)
-  (+activities-tabs-mode-h)
-  (add-to-list 'tab-bar-tab-post-select-functions #'+activities-tabs-mode-h)
+  (+activities--fix-consult--source-buffer)
+  (add-to-list 'activities-after-switch-functions #'+activities--fix-consult--source-buffer)
+  (add-to-list 'activities-after-resume-functions #'+activities--fix-consult--source-buffer)
+  (add-to-list 'tab-bar-tab-post-select-functions #'+activities--fix-consult--source-buffer)
   (add-to-list 'consult-buffer-sources '+activities-tab-buffer-source))
 
 (defvar-keymap activities-prefix-map
