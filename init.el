@@ -1568,6 +1568,8 @@ Buffers in the project are added to the perspective."
 ;;;; activities
 
 (after-load! activities
+  (require 'bookmark-extras)
+  (bookmark-extras-install)
   (activities-mode)
   (activities-tabs-mode)
   (require 'activities-persist-buffers)
