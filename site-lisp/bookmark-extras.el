@@ -308,6 +308,49 @@
 
 ;;;###autoload(add-hook 'deadgrep-mode-hook #'deadgrep-bookmark-enable)
 
+;;;; Telega
+
+(defvar telega-root-buffer-name)
+
+(defun telega-root-bookmark-make-record ()
+  `(,@(bookmark-make-record-default 'no-file 'no-context)
+    (buffer-name . ,(buffer-name))
+    (handler . telega-root-bookmark-handler)))
+
+;;;###autoload
+(defun telega-root-bookmark-handler (bookmark)
+  (let ((telega-root-buffer-name (bookmark-prop-get bookmark 'buffer-name)))
+    (telega)))
+
+;;;###autoload
+(defun telega-root-bookmark-enable ()
+  (setq-local bookmark-make-record-function #'telega-root-bookmark-make-record))
+
+;;;###autoload(add-hook 'telega-root-mode-hook #'telega-root-bookmark-enable)
+
+(defun telega-chat-bookmark-make-record ()
+  `(,@(bookmark-make-record-default 'no-file)
+    (buffer-name . ,(buffer-name))
+    (telega-chat . ,telega-chatbuf--chat)
+    (handler . telega-chat-bookmark-handler)))
+
+;;;###autoload
+(defun telega-chat-bookmark-handler (bookmark)
+  (require 'telega)
+  (telega)
+  (telega-chat--pop-to-buffer (bookmark-prop-get bookmark 'telega-chat)))
+
+;;;###autoload
+(defun telega-chat-bookmark-enable ()
+  (setq-local bookmark-make-record-function #'telega-chat-bookmark-make-record))
+
+;;;###autoload(add-hook 'telega-chat-mode-hook #'telaga-chat-bookmark-enable)
+
+;;;###autoload
+(defun telega-bookmark-install ()
+  (add-hook 'telega-root-mode-hook #'telega-root-bookmark-enable)
+  (add-hook 'telega-chat-mode-hook #'telega-chat-bookmark-enable))
+
 ;;;; Browser independent URL bookmark
 
 ;;;###autoload
@@ -340,7 +383,8 @@
   (add-hook 'compilation-shell-minor-mode-hook #'compilation-bookmark-enable)
   (add-hook 'shell-mode-hook #'shell-bookmark-enable)
   (add-hook 'eat-mode-hook #'eat-bookmark-enable)
-  (add-hook 'deadgrep-mode-hook #'deadgrep-bookmark-enable))
+  (add-hook 'deadgrep-mode-hook #'deadgrep-bookmark-enable)
+  (telega-bookmark-install))
 
 
 (provide 'bookmark-extras)
