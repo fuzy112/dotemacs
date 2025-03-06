@@ -330,6 +330,17 @@
     (let ((bookmark `((location . ,url)
                       (handler . ,#'url-bookmark-jump))))
       (bookmark-store name bookmark t))))
+
+;;;###autoload
+(defun bookmark-extras-install ()
+  (interactive)
+  (add-hook 'devdocs-mode-hook #'devdocs-bookmark-enable)
+  (add-hook 'compilation-mode-hook #'compilation-bookmark-enable)
+  (add-hook 'compilation-minor-mode-hook #'compilation-bookmark-enable)
+  (add-hook 'compilation-shell-minor-mode-hook #'compilation-bookmark-enable)
+  (add-hook 'shell-mode-hook #'shell-bookmark-enable)
+  (add-hook 'eat-mode-hook #'eat-bookmark-enable)
+  (add-hook 'deadgrep-mode-hook #'deadgrep-bookmark-enable))
 
 
 (provide 'bookmark-extras)
