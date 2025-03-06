@@ -1572,6 +1572,38 @@ Buffers in the project are added to the perspective."
   (activities-tabs-mode)
   (setopt edebug-inhibit-emacs-lisp-mode-bindings t))
 
+(defvar +activities-tab-buffer-source
+  (list :name "Activity"
+        :narrow ?a
+        :category 'buffer
+        :state #'consult--buffer-state
+        :history 'buffer-name-history
+        :enabled (lambda ()
+                   (bound-and-true-p activities-tabs-mode))
+        :default t
+        :items
+        (lambda ()
+          (consult--buffer-query :sort 'visibility
+                                 :buffer-list (when-let* ((activity (activities-current))
+                                                          (tab (activities-tabs--tab activity))
+                                                          (buffer-list (activities-tabs--tab-parameter 'activities-buffer-list tab)))
+                                                (seq-filter #'buffer-live-p buffer-list))
+                                 :as #'buffer-name))))
+
+(after-load! consult
+  (add-to-list 'consult-buffer-sources '+activities-tab-buffer-source))
+
+(defun +activities-tabs-mode-h ()
+  (cond
+   ((default-value 'activities-tabs-mode)
+    (when (boundp 'consult--source-buffer)
+      (eval '(consult-customize consult--source-buffer :hidden t :default nil))))
+   (t
+    (when (boundp 'consult--source-buffer)
+      (eval '(consult-customize consult--source-buffer :hidden nil :default t))))))
+
+(add-hook 'activities-tabs-mode-hook #'+activities-tabs-mode-h)
+
 (defvar-keymap activities-prefix-map
   :doc "Prefix map for `activities' commands."
   :prefix 'activities-prefix-map
