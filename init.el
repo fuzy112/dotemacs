@@ -1580,31 +1580,29 @@ Buffers in the project are added to the perspective."
         :category 'buffer
         :state #'consult--buffer-state
         :history 'buffer-name-history
-        :enabled (lambda ()
-                   (bound-and-true-p activities-tabs-mode))
+        :enabled (lambda () (bound-and-true-p activities-tabs-mode))
         :default t
         :items
         (lambda ()
-          (consult--buffer-query :sort 'visibility
-                                 :buffer-list (when-let* ((activity (activities-current))
-                                                          (tab (activities-tabs--tab activity))
-                                                          (buffer-list (activities-tabs--tab-parameter 'activities-buffer-list tab)))
-                                                (seq-filter #'buffer-live-p buffer-list))
+          (consult--buffer-query
+           :sort 'visibility
+           :buffer-list (when-let* ((activity (activities-current))
+                                    (tab (activities-tabs--tab activity))
+                                    (buffer-list (activities-tabs--tab-parameter
+                                                  'activities-buffer-list tab)))
+                          (seq-filter #'buffer-live-p buffer-list))
                                  :as #'buffer-name))))
 
-(defun +activities-tabs-mode-h ()
-  (cond
-   ((default-value 'activities-tabs-mode)
-    (when (boundp 'consult--source-buffer)
-      (eval '(consult-customize consult--source-buffer :hidden t :default nil))))
-   (t
-    (when (boundp 'consult--source-buffer)
-      (eval '(consult-customize consult--source-buffer :hidden nil :default t))))))
+(defun +activities-tabs-mode-h (&rest _)
+  (when (boundp 'consult--source-buffer)
+    (let ((hide-buffer-source (and (default-value 'activities-tabs-mode) (activities-current) t)))
+      (eval `(consult-customize consult--source-buffer :hidden ,hide-buffer-source) t))))
 
 (add-hook 'activities-tabs-mode-hook #'+activities-tabs-mode-h)
 
 (after-load! (:and activities consult)
   (+activities-tabs-mode-h)
+  (add-to-list 'tab-bar-tab-post-select-functions #'+activities-tabs-mode-h)
   (add-to-list 'consult-buffer-sources '+activities-tab-buffer-source))
 
 (defvar-keymap activities-prefix-map
