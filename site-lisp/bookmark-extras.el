@@ -33,6 +33,7 @@
 ;;  - mu4e-main-mode
 ;;  - compilation-mode
 ;;  - shell-mode
+;;  - eat-mode
 ;;  - deadgrep-mode
 ;;
 ;; An browser independent URL bookmark type is also supported.
@@ -220,6 +221,33 @@
               #'shell-bookmark-make-record))
 
 ;;;###autoload(add-hook 'shell-mode-hook #'shell-bookmark-enable)
+
+;;;; Eat-mode
+
+(defvar eat-buffer-name)
+
+(defun eat-bookmark-make-record ()
+  "Create a bookmark record for `eat-mode'."
+  `(,@(bookmark-make-record-default 'no-file 'no-context)
+    (default-directory . ,default-directory)
+    (buffer-name . ,(buffer-name))
+    (handler . ,#'eat-bookmark-handler)))
+
+;;;###autoload
+(defun eat-bookmark-handler (bookmark)
+  "Jump to a BOOKMARK entry of an Eat buffer."
+  (require 'eat)
+  (let-alist bookmark
+    (let ((default-directory .default-directory)
+          (eat-buffer-name .buffer-name))
+      (set-buffer (eat)))))
+
+;;;###autoload
+(defun eat-bookmark-enable ()
+  "Enable bookmark support for Eat."
+  (setq-local bookmark-make-record-function #'eat-bookmark-make-record))
+
+;;;###autoload(add-hook 'eat-mode-hook #'eat-bookmark-enable)
 
 ;;;; Deadgrep
 
