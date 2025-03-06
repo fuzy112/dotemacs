@@ -1592,9 +1592,6 @@ Buffers in the project are added to the perspective."
                                                 (seq-filter #'buffer-live-p buffer-list))
                                  :as #'buffer-name))))
 
-(after-load! consult
-  (add-to-list 'consult-buffer-sources '+activities-tab-buffer-source))
-
 (defun +activities-tabs-mode-h ()
   (cond
    ((default-value 'activities-tabs-mode)
@@ -1605,6 +1602,10 @@ Buffers in the project are added to the perspective."
       (eval '(consult-customize consult--source-buffer :hidden nil :default t))))))
 
 (add-hook 'activities-tabs-mode-hook #'+activities-tabs-mode-h)
+
+(after-load! (:and activities consult)
+  (+activities-tabs-mode-h)
+  (add-to-list 'consult-buffer-sources '+activities-tab-buffer-source))
 
 (defvar-keymap activities-prefix-map
   :doc "Prefix map for `activities' commands."
