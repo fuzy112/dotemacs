@@ -1573,6 +1573,7 @@ Buffers in the project are added to the perspective."
   (setopt edebug-inhibit-emacs-lisp-mode-bindings t))
 
 (defvar-keymap activities-prefix-map
+  :doc "Prefix map for `activities' commands."
   :prefix 'activities-prefix-map
   "C-n" #'activities-new
   "C-d" #'activities-define
@@ -1636,6 +1637,7 @@ Buffers in the project are added to the perspective."
      magit-credential-cache-daemon-process nil)))
 (after-load! magit
   (transient-set-default-level 'magit:--gpg-sign 1)
+  (transient-set-default-level 'magit:--signoff 1)
   (setopt magit-openpgp-default-signing-key "ABE50B31E2F0C94AC4585BC78D97BF3F6BFA0BDA")
   (setopt magit-format-file-function #'magit-format-file-nerd-icons)
   (advice-add #'magit-maybe-start-credential-cache-daemon :after '+magit--ccdp-no-query)
