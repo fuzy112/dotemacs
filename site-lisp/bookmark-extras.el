@@ -320,7 +320,7 @@
 ;;;###autoload
 (defun telega-root-bookmark-handler (bookmark)
   (let ((telega-root-buffer-name (bookmark-prop-get bookmark 'buffer-name)))
-    (telega)))
+    (set-buffer (telega))))
 
 ;;;###autoload
 (defun telega-root-bookmark-enable ()
@@ -331,14 +331,17 @@
 (defun telega-chat-bookmark-make-record ()
   `(,@(bookmark-make-record-default 'no-file)
     (buffer-name . ,(buffer-name))
-    (telega-chat . ,telega-chatbuf--chat)
+    (telega-chat-id . ,(plist-get telega-chatbuf--chat :id))
     (handler . telega-chat-bookmark-handler)))
 
 ;;;###autoload
 (defun telega-chat-bookmark-handler (bookmark)
   (require 'telega)
-  (telega)
-  (telega-chat--pop-to-buffer (bookmark-prop-get bookmark 'telega-chat)))
+  (telega t)
+  (let* ((id (bookmark-prop-get bookmark 'telega-chat-id))
+         (chat (telega-chat-get id)))
+    (set-buffer
+     (telega-chatbuf--get-create chat))))
 
 ;;;###autoload
 (defun telega-chat-bookmark-enable ()
