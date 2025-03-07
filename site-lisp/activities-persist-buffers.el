@@ -40,7 +40,7 @@
 (defun activities-persist-buffers--backtrace-p (buf)
   (buffer-match-p '(derived-mode . backtrace-mode) buf))
 
-(defvar activities-persist-buffers-ant-save-predicates
+(defvar activities-persist-buffers-anti-save-predicates
   '(activities-buffer-special-p
     activities-buffer-hidden-p
     activities-persist-buffers--error-buffer-p
@@ -60,7 +60,7 @@
            (seq-filter
             (lambda (buf)
               (not (run-hook-with-args-until-success
-                    'activities-persist-buffers-ant-save-predicates buf)))
+                    'activities-persist-buffers-anti-save-predicates buf)))
             buffer-list))
      (mapcar #'activity--serialize buffer-list))))
 
