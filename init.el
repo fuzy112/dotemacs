@@ -2002,7 +2002,7 @@ minibuffer."
 (after-load! embark
   (keymap-set embark-general-map "?" #'gptel-quick))
 
-(setq gptel-default-mode #'org-mode)
+(setq gptel-default-mode #'markdown-mode)
 (defun +gptel-mode-h ()
   (when (derived-mode-p 'org-mode)
     (setq-local org-hide-emphasis-markers t)))
