@@ -90,6 +90,8 @@
                   (cl-incf score 2)))
                ("typedef"
                 (cl-incf score 2))
+               ("enumerator"
+                (cl-incf score 2))
                ((or "m" "member")
                 (if is-member
                     (cl-incf score 1)
@@ -97,7 +99,7 @@
                     (cl-incf score 2))))
                ((or "l" "local" "z" "parameter" "L" "label")
                 (when (equal scope function-scope)
-                  (cl-incf score 2))
+                  (cl-incf score 5))
                 (when is-member
                   (cl-decf score 2))
                 (when tag-type
