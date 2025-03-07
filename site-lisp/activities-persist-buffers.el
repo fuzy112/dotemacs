@@ -29,6 +29,11 @@
 (require 'activities)
 (require 'activities-tabs)
 
+(defgroup activities-persist-buffers ()
+  "Persist activity buffers."
+  :group 'activities
+  :prefix "activities-persist-buffers-")
+
 (cl-defstruct (activities-persist-buffers-activity-state
                (:include activities-activity-state))
   "activities-activity-state with buffers."
