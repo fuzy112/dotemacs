@@ -1207,6 +1207,10 @@ value for USE-OVERLAYS."
 
 (defvar +xref--max-definitions-in-buffer 5)
 
+(defun +xref-window-quit ()
+  (when-let* ((xref-win (get-buffer-window xref-buffer-name (selected-frame))))
+    (quit-window nil xref-win)))
+
 (declare-function xref-show-definitions-buffer-at-bottom "xref.el")
 (defun +xref--show-definition (fetcher alist)
   "Use `xref-show-definitions-buffer' if the candidates are few.
@@ -1214,9 +1218,14 @@ Otherwise use `consult-xref'.
 
 See `xref-show-xrefs' for FETCHER and ALIST."
   (let ((xrefs (funcall fetcher)))
-    (if (length< xrefs +xref--max-definitions-in-buffer)
-        (xref-show-definitions-buffer-at-bottom fetcher alist)
-      (consult-xref fetcher alist))))
+    (cond ((length= xrefs 1)
+           (+xref-window-quit)
+           (xref-show-definitions-buffer-at-bottom fetcher alist))
+          ((length< xrefs +xref--max-definitions-in-buffer)
+           (xref-show-definitions-buffer-at-bottom fetcher alist))
+          (t
+           (+xref-window-quit)
+           (consult-xref fetcher alist)))))
 
 (after-load! xref
   (setq xref-search-program
