@@ -130,7 +130,7 @@
 (straight-use-package '(rime :fork (:host github :repo "fuzy112/emacs-rime")))
 
 ;;; LLM
-(straight-use-package 'gptel)
+(straight-use-package '(gptel :build (:not compile)))
 (straight-use-package '(gptel-quick :host github :repo "karthink/gptel-quick"))
 
 
