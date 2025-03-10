@@ -1235,30 +1235,15 @@ See `xref-show-xrefs' for FETCHER and ALIST."
         xref-show-definitions-function #'+xref--show-definition
         xref-auto-jump-to-first-definition t))
 
-;;;; ctags
+;;;; citre
 
-(autoload 'ctags-menu "ctags-menu" nil t)
-(autoload 'ctags-xref-backend "ctags-xref")
-(add-hook 'xref-backend-functions #'ctags-xref-backend)
-
-;; Override `xref-backend-references' for ctags: if GRTAGS exists,
-;; find reference using `gtags' backend.
-(cl-defmethod xref-backend-references :around ((_backend (eql 'ctags)) identifier)
-  (require 'gtags)
-  (if (and (locate-dominating-file default-directory "GRTAGS")
-           (executable-find "global" t))
-      (xref-backend-references 'gtags identifier)
-    (cl-call-next-method)))
-
-(after-load! ctags-xref
-  (after-load! cc-mode
-    (require 'ctags-xref-c)))
-
-;;;; gtags
-
-(autoload 'gtags-update "gtags.el" nil t)
-(autoload 'gtags-single-update "gtags.el" nil)
-(add-hook 'after-save-hook #'gtags-single-update)
+(after-load! (citre cc-mode)
+  (require 'citre-lang-c))
+(after-load! (citre dired)
+  (require 'citre-lang-fileref))
+(after-load! (citre verilog-mode)
+  (require 'citre-lang-verilog))
+(add-hook 'find-file-hook #'citre-auto-enable-citre-mode)
 
 ;;;; good-doc
 
@@ -2375,8 +2360,7 @@ Otherwise disable it."
   "f" #'tui-find
   "d" #'tui-locate
   "e" #'+eshell/here
-  "s" #'+eat/here
-  "c" #'ctags-menu)
+  "s" #'+eat/here)
 
 (defvar-keymap doc-map
   :doc "Documentation commands."
