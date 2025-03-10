@@ -9,6 +9,7 @@
  ("cape" . "cc9cf45c651ad4784444cfdbdf238ac18dce39c9")
  ("chez" . "605a81ff7b2d2b275a3ec68e3ce7e5b50f85014d")
  ("chicken" . "5f2c1bb446af6ae4aec9c8d74d4ecb34031706fd")
+ ("citre" . "2c8284d3eb2651b0a27e3bbfe6d278b05b95f79d")
  ("clipetty" . "01b39044b9b65fa4ea7d3166f8b1ffab6f740362")
  ("cmake-mode" . "b08b5d9045308362a623a4f576896d55ffecfd52")
  ("colorful-mode" . "8268137a52f4cb9ba7dd7b4caba79acfee0a496b")

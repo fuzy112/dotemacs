@@ -41,6 +41,10 @@
 
 ;;; Development
 
+;;;; Tags
+
+(straight-use-package 'citre)
+
 ;;;; Copilot
 (straight-use-package 'copilot)
 (straight-use-package 'copilot-chat)
