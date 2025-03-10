@@ -38,7 +38,8 @@
 ;;                                   (height . 1.0)
 ;;                                   (left . 0.0)
 ;;                                   (top . 0.0)
-;;                                   (keep-ratio . t))))
+;;                                   (keep-ratio . t)
+;;                                   (auto-hide-function . delete-frame))))
 
 ;;; Code:
 
