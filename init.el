@@ -1604,6 +1604,7 @@ Buffers in the project are added to the perspective."
   (add-to-list 'activities-after-switch-functions #'+activities--fix-consult--source-buffer)
   (add-to-list 'activities-after-resume-functions #'+activities--fix-consult--source-buffer)
   (add-to-list 'tab-bar-tab-post-select-functions #'+activities--fix-consult--source-buffer)
+  (add-to-list 'tab-bar-tab-post-open-functions #'+activities--fix-consult--source-buffer)
   (add-to-list 'consult-buffer-sources '+activities-tab-buffer-source))
 
 (defvar-keymap activities-prefix-map
