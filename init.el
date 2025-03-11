@@ -1658,6 +1658,14 @@ Buffers in the project are added to the perspective."
           nil t nil nil)))))
   (vc-dir default-directory backend))
 
+(defun +project/vc-diff ()
+  (interactive)
+  (let* ((project (project-current t))
+         (root (project-root project))
+         (default-directory root))
+    (vc-diff nil t (list (vc-deduce-backend) (list root)))))
+(keymap-set project-prefix-map "=" #'+project/vc-diff)
+
 ;;;; magit
 
 (after-load! project
