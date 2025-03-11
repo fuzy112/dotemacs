@@ -51,7 +51,7 @@
  ("ftable" . "b70448464de92ca9cc93c766044dc6f39f4ad11a")
  ("geiser" . "c1c27072a46a959fa28f963c5e381e219916f85a")
  ("goggles" . "d71e85ff8d9e7f8966e4cccece3efa545afc41da")
- ("gptel" . "95eefe4fa7cb2deda18aa415cd3ed36069d7763e")
+ ("gptel" . "8889e27c5b53478248b05a660778ae744848c1cd")
  ("gptel-quick" . "d7a3aedefdc656a136d5664f2dac165a1f6ebf0e")
  ("guile" . "a0f111f8dedd31c593c4ed12c0b99745f3c1340f")
  ("hl-todo" . "0ce21c329b686802121df45bf4ae15ae201137bf")
