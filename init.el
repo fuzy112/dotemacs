@@ -1567,8 +1567,8 @@ Buffers in the project are added to the perspective."
   (setq activities-kill-buffers t)
   (activities-mode)
   (activities-tabs-mode)
-  (require 'activities-persist-buffers)
-  (activities-persist-buffers-mode)
+  ;; (require 'activities-persist-buffers)
+  ;; (activities-persist-buffers-mode)
   (setopt edebug-inhibit-emacs-lisp-mode-bindings t))
 
 (defvar +activities-tab-buffer-source
