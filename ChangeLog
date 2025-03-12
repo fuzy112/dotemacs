@@ -1,7 +1,19 @@
 2025-03-12  Zhengyi Fu  <i@fuzy.me>
 
+	Do not enable gpg sign by default
+
+	* transient/values.el (magit-am, magit-cherry-pick, magit-commit)
+	(magit-merge, magit-rebase): Remove values for these prefixes.
+
+2025-03-12  Zhengyi Fu  <i@fuzy.me>
+
+	Move persp-mode configuration to a separate file
+
 	* init.el: Remove persp-mode configuration.
 	* packages.el: Remove persp-mode.
+	* site-lisp/persp-mode-config.el: New file.
+
+2025-03-12  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (+vc/dir-here): Use vc-responsible-backend.
 	(+project/vc-diff): Use project-vc and vc-responsible-backend to get
@@ -372,4 +384,4 @@
 
 This file records repository revisions from
 commit 01a16e7e4b30471bebf4d5c746ef8040a825e15c (exclusive) to
-commit 9fc419439d5cdc4ac423da91e92dcc605cc62106 (inclusive).
+commit 41bf747d71fcd6d2444aa914e293163c848ba8a4 (inclusive).
