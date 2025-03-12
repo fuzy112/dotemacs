@@ -1,5 +1,8 @@
 2025-03-12  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Remove persp-mode configuration.
+	* packages.el: Remove persp-mode.
+
 	* init.el (+vc/dir-here): Use vc-responsible-backend.
 	(+project/vc-diff): Use project-vc and vc-responsible-backend to get
 	the backend.
