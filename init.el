@@ -1650,21 +1650,20 @@ Buffers in the project are added to the perspective."
 (defun +vc/dir-here (&optional backend)
   (interactive
    (list
-    (if current-prefix-arg
-        (intern
-         (completing-read
-          "Use VC backend: "
-          (mapcar (lambda (b) (list (symbol-name b)))
-                  vc-handled-backends)
-          nil t nil nil)))))
+    (and current-prefix-arg
+         (vc-read-backend "Prompt: "))))
   (vc-dir default-directory backend))
 
 (defun +project/vc-diff ()
   (interactive)
   (let* ((project (project-current t))
          (root (project-root project))
+         (vc-backend (or (and (eq (car-safe project) 'vc)
+                              (cadr project))
+                         (vc-responsible-backend root "no-error")
+                         (vc-read-backend "Backend: ")))
          (default-directory root))
-    (vc-diff nil t (list (vc-deduce-backend) (list root)))))
+    (vc-diff nil nil (list vc-backend (list root)))))
 (keymap-set project-prefix-map "=" #'+project/vc-diff)
 
 ;;;; magit
