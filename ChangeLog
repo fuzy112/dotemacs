@@ -1,0 +1,372 @@
+2025-03-12  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (+vc/dir-here): Use vc-responsible-backend.
+	(+project/vc-diff): Use project-vc and vc-responsible-backend to get
+	the backend.
+
+2025-03-11  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Add +activities--fix-consult--source-buffer to tab-bar-tab-post-open-functions
+
+	* init.el (+project/vc-diff): New command.
+
+2025-03-10  Zhengyi Fu  <i@fuzy.me>
+
+	Replace home-grown ctags with citre
+
+	* site-lisp/gtags.el:
+	* site-lisp/ctags-xref.el:
+	* site-lisp/ctags-xref-c.el:
+	* site-lisp/ctags-menu.el:
+	* site-lisp/ctags-core.el:
+	* site-lisp/ctags-capf.el: Removed files.
+	* init.el: Remove ctags configurations.  Add citre configurations.
+	* packages.el: Add citre.
+
+2025-03-07  Zhengyi Fu  <i@fuzy.me>
+
+	Workaround gptel transient problem by disabling compilation
+
+	* packages.el (gptel): Disable compilation of gptel.  Transient stores
+	histories in the history.el file.  If compilation is enabled, the
+	stored object is not readable.
+
+2025-03-07  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/activities-persist-buffers.el (activities-persist-buffers):
+	New group.
+
+	* init.el (activities-kill-buffers):  Set to t.
+
+2025-03-07  Zhengyi Fu  <i@fuzy.me>
+
+	Quit xrefs window when not using it
+
+	* init.el (+xref-window-quit): New function. Quit the xrefs window.
+	(+xref--show-definition): Call it.
+
+2025-03-07  Zhengyi Fu  <i@fuzy.me>
+
+	Improve ctags-xref-c
+
+	* site-lisp/ctags-xref-c.el (ctags-xref-c--filter): Handle
+	enumerators.
+	Increase scores of local variables where the scope matches.
+
+2025-03-07  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/activities-persist-buffers.el: Fix typos.
+
+	* init.el (gptel-default-mode): Set to markdown-mode
+
+2025-03-07  Zhengyi Fu  <i@fuzy.me>
+
+	Refactor activities-persist-buffers
+
+	* site-lisp/activities-persist-buffers.el (activities-persist-buffers-ant-save-predicates):
+	New variable.
+	* site-lisp/activities-persist-buffers.el (activities-persist-buffers--error-buffer-p):
+	(activities-persist-buffers--backtrace-p):
+	(activities-persist-buffers-ant-save-predicates): New function.
+	(activities-persist-buffers-activity-state): Renamed from
+	activities-activity-state-with-buffers.
+	(activities-persist-buffers--save-activity-buffers): Renamed from
+	+activities-state--with-buffers.
+	(activities-persist-buffers--restore-buffers):
+	Renamed from +activities--restore-buffers.
+	(activities-persist-buffers--restore-activity-buffers): Renamed from
+	+activities--restore-activity-buffers.
+
+2025-03-06  Zhengyi Fu  <i@fuzy.me>
+
+	Improve telega bookmark implementation
+
+	* site-lisp/bookmark-extras.el (telega-root-bookmark-handler):
+	Explicitly set the telega root buffer as the current buffer.
+	* site-lisp/bookmark-extras.el (telega-chat-bookmark-make-record):
+	Use chat-id instead of the chat plist.
+	(telega-chat-bookmark-handler): Optimise.
+
+2025-03-06  Zhengyi Fu  <i@fuzy.me>
+
+	Add bookmark support for telega
+
+	* site-lisp/bookmark-extras.el (telega-root-bookmark-make-record):
+	(telega-root-bookmark-handler):
+	(telega-root-bookmark-enable):
+	(telega-chat-bookmark-make-record):
+	(telega-chat-bookmark-handler):
+	(telega-chat-bookmark-enable):
+	(telega-bookmark-install):
+	(bookmark-extras-install): New functions.
+
+2025-03-06  Zhengyi Fu  <i@fuzy.me>
+
+	Improve consult integration of activities
+
+	* init.el (+activities-tab-buffer-source): Remove the current buffer.
+	Use consult--buffer-pair as conversion function.
+	(+activities--fix-consult--source-buffer): Renamed from
+	+activities-tabs-mode-h.  Added to activities-after-switch-functions
+	and activities-after-resume-functions.
+
+2025-03-06  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (activities): Enable bookmark-extras.
+
+	* site-lisp/bookmark-extras.el (bookmark-extras-install): New
+	function.  Install bookmark supports explicitly.
+
+2025-03-06  Zhengyi Fu  <i@fuzy.me>
+
+	bookmark-extras: add support for eat
+
+	* site-lisp/bookmark-extras.el (eat-bookmark-make-record):
+	(eat-bookmark-handler):
+	(eat-bookmark-enable): New functions.
+
+2025-03-06  Zhengyi Fu  <i@fuzy.me>
+
+	Make buffers visible when not in any activity
+
+	* init.el (+activities-tabs-mode-h): Simplify code.  Add to
+	tab-bar-tab-post-select-functions.
+
+2025-03-06  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: call +activities-tabs-mode-h after loading consult
+
+2025-03-06  Zhengyi Fu  <i@fuzy.me>
+
+	Activities-Persist-Buffers-Mode
+
+	* site-lisp/activities-persist-buffers.el: New file. Add new global
+	minor mode activities-persist-buffers-mode.
+	* init.el (activities): Activate it on load of activities.el.
+
+2025-03-06  Zhengyi Fu  <i@fuzy.me>
+
+	Consult-buffer integration for activities-tabs-mode
+
+	* init.el (+activities-tab-buffer-source): New consult buffer source.
+	(+activities-tabs-mode-h): Turn on/off consult--source-buffer.
+	(activities-tabs-mode-hook): Add it to activities-tabs-mode-hook.
+
+2025-03-06  Zhengyi Fu  <i@fuzy.me>
+
+	Update magit configuration
+
+	* init.el (activities-prefix-map): Add documentation.
+	(magit): Change default level of magit:--signoff to 1.
+	* transient/levels.el: Set level of magit-commit to 5.
+	* transient/values.el: Save magit-log arguments, including
+	--show-signature.
+
+2025-03-05  Zhengyi Fu  <i@fuzy.me>
+
+	Add `activities'
+
+	* init.el (activities): Enable `activities-mode' and `activities-tabs-mode' on load.
+	(activities-prefix-map): Define a prefix keymap for `activities'.
+	("C-x C-a"): Bind to it.
+	* packages.el (persp-mode): Install `activities'.
+
+2025-03-05  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Disable loading of persp-mode
+
+2025-03-04  Zhengyi Fu  <i@fuzy.me>
+
+	Update magit gpg sign options
+
+	* transient/levels.el: Removed.
+	* init.el (magit): Set default level of magit:--gpg-sign to 1.
+	Set magit-openpgp-default-signing-key.
+
+2025-03-04  Zhengyi Fu  <i@fuzy.me>
+
+	Add --gpg-sign to more prefix
+
+	* transient/levels.el:
+	* transient/values.el: Add --gpg-sign to more prefix.
+
+2025-03-04  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/ctags-xref-c.el (ctags-xref-c--filter):
+	Handle constructors.
+
+2025-03-04  Zhengyi Fu  <i@fuzy.me>
+
+	Add --gpg-sign to more prefix
+
+	* transient/values.el:
+	* transient/levels.el: Add --gpg-sign to more prefix.
+
+2025-03-04  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (persp-key-map): Change key binding of
+	+persp/project-to-persp to "O" to avoid conflict
+
+	* site-lisp/ctags-core.el (ctags-universal-ctags-program): Try ctags
+	in ctags-universal is not found.
+
+	* transient/values.el: Add --kinds-all=* to ctags-menu arguments.
+
+	* init.el: Fix persp-common-buffer-filter-functions.
+
+	* site-lisp/ctags-xref-c.el (ctags-xref-c--filter):  Increase score
+	for typedefs.
+
+2025-03-04  Zhengyi Fu  <i@fuzy.me>
+
+	Update transient config
+
+	* transient/levels.el: New file.  Modify default levels for some magit
+	commit commands.
+	* transient/values.el (gptel-menu): Add --gpg-sign= option.
+
+2025-03-04  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Fixed save and load of magit buffers.
+
+2025-03-04  Zhengyi Fu  <i@fuzy.me>
+
+	Improve perspective configuration
+
+	* init.el (persp-add-buffer-on-after-change-major-mode): Set to t.
+	(persp-common-buffer-filter-functions): Add function to filter out
+	magit-process-mode buffers.
+
+	* init.el (+persp/project-to-persp):
+	(+persp/add-project): Use persp-after-change-major-mode-h to add
+	buffers to perspectives.
+
+	* init.el: Fix save and load of magit-status-mode buffers.
+
+2025-03-04  Zhengyi Fu  <i@fuzy.me>
+
+	Move project integration for persp-mode
+
+	* init.el (+persp/project-to-persp): Open dired in newly created
+	persp.
+	(+persp/switch-project-and-persp): New command.
+	(persp-key-map): Add keybindings for new commands.
+
+2025-03-04  Zhengyi Fu  <i@fuzy.me>
+
+	Project integration for persp-mode
+
+	* init.el (+persp/project-to-persp):
+	(+persp/add-project):
+	(+persp/remove-project):
+	(+persp/shrink-to-project): New commands.
+
+2025-03-04  Zhengyi Fu  <i@fuzy.me>
+
+	Remove buffer-terminator as it deletes buffers from perspectives
+
+	* init.el: Remove configuration of buffer-terminator.
+	(+buffer-terminator-load): Removed.
+	(+buffer-terminator-load-timer): Removed.
+
+2025-03-04  Zhengyi Fu  <i@fuzy.me>
+
+	Use olivetti-mode instead of visual-line-fill-column-mode in org-mode buffers
+
+	* init.el (gptel-mode-hook): Remove visual-line-fill-column-mode.
+	Add olivetti-mode.
+	(+gptel-mode-h): Remove assignment of visual-fill-column-center-text.
+	(org-mode-map):  Bind "C-c o c" to olivetti-mode.
+
+2025-03-03  Zhengyi Fu  <i@fuzy.me>
+
+	* packages.el (consult-eglot): Switch back to upstream version.
+
+2025-03-03  Zhengyi Fu  <i@fuzy.me>
+
+	Remove discourse
+
+	* init.el (discourse-topic-mode-hook):
+	(discourse-login):
+	(discourse):
+	(doc-map): Removed.
+	* packages.el (straight-built-in-pseudo-packages): Remove image.
+	(discourse): Removed.
+
+2025-03-03  Zhengyi Fu  <i@fuzy.me>
+
+	Ibuffer group by perspectives
+
+	* init.el (+persp-mode--setup-ibuffer-filter-groups): New function.
+
+2025-03-03  Zhengyi Fu  <i@fuzy.me>
+
+	Install persp-mode
+
+	* init.el (wg-morph-on): Set to nil.
+	(persp-autokill-buffer-on-remove): Set to kill-weak.
+	(window-setup-hook): Enable persp-mode.
+	(persp-keymap-prefix): Set to C-c M-p.
+	* init.el: Add persp support for eshell, compilation and magit.
+	* init.el: Add persp support for ibuffer.
+	* init.el: Add persp support for consult.
+	* packages.el: Add persp-mode.
+
+2025-03-03  Zhengyi Fu  <i@fuzy.me>
+
+	Move customization of fonts to +custom-faces
+
+	* init.el (+custom-fontset): Set :family for default and italic face
+	(+custom-faces): Call +custom-fontset
+
+2025-03-03  Zhengyi Fu  <i@fuzy.me>
+
+	Revert "* init.el (uptime-notify): Call notify-send to send to notification."
+
+	This reverts commit 70c2be361b8bdcea89b542366ffbfa887b42cd13.
+
+2025-02-27  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Add .pc to project-vc-ignores
+
+	* init.el (uptime-notify): Call notify-send to send to notification.
+
+2025-02-26  Zhengyi Fu  <i@fuzy.me>
+
+	Use Inconsolata as default font
+
+	* init.el (+custom-fonts-alist): Use Inconsolata for latin.
+	(default): Set :family to Inconsolata.
+	(italic): Set :family to Iosevka SS04.
+
+2025-02-26  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (auth-sources): Set auth-source-gpg-encrypt-to.
+	  Set auth-source-save-behavior to t.
+	* (epg-pinentry-mode): Unset this variable.
+
+2025-02-26  Zhengyi Fu  <i@fuzy.me>
+
+	Do not use auth-source-pass anymore.
+
+	* init.el (auth-source): Remove password-store.
+
+2025-02-26  Zhengyi Fu  <i@fuzy.me>
+
+	Fix line ending issues in sftp.
+
+	* site-lisp/sftp.el (sftp--password-function): strip ^M from the input.
+
+2025-02-26  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (elisp-mode): Use trusted-content instead of trusted-contents.
+
+2025-02-25  Zhengyi Fu  <i@fuzy.me>
+
+	Add new major mode: xiaoshuo-mode
+
+	* site-lisp/xiaoshuo.el: New file.
+
+This file records repository revisions from
+commit 01a16e7e4b30471bebf4d5c746ef8040a825e15c (exclusive) to
+commit 9fc419439d5cdc4ac423da91e92dcc605cc62106 (inclusive).
