@@ -1,5 +1,12 @@
 2025-03-14  Zhengyi Fu  <i@fuzy.me>
 
+	Setup `log-edit' for `git-commit-mode'
+
+	* init.el (+git-commit--log-edit-h): New function.  Added to
+	`git-commit-setup-hook'.
+
+2025-03-14  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Load gnus-diff after gnus-art.
 
 2025-03-14  Zhengyi Fu  <i@fuzy.me>
