@@ -203,7 +203,7 @@
 (defvar +custom-fonts-alist
   '((han      "Sarasa Gothic CL")
     (cjk-misc "Sarasa Gothic CL")
-    (latin    "Inconsolata"       prepend)
+    (latin    "Iosevka SS04"       prepend)
     (greek    "Iosevka SS04"      prepend)
     (emoji    "Noto Color Emoji"  prepend)))
 
@@ -215,7 +215,7 @@
     (apply #'+apply-font-setting item)))
 
 (defun +custom-fontset ()
-  (set-face-attribute 'default nil :family "Inconsolata" :height 140)
+  (set-face-attribute 'default nil :family "Iosevka SS04" :height 140)
   (set-face-attribute 'italic nil :family "Iosevka SS04")
 
   (+apply-custom-fonts +custom-fonts-alist))
