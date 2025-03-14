@@ -1784,6 +1784,9 @@ Display the result in a posframe." t)
 
 (setq mm-discouraged-alternatives '("text/html" "text/richtext"))
 
+(after-load! gnus-art
+  (require 'gnus-diff))
+
 ;;;; emacs-server
 
 ;; Workaround windows encoding issue

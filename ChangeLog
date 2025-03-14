@@ -1,5 +1,9 @@
 2025-03-14  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Load gnus-diff after gnus-art.
+
+2025-03-14  Zhengyi Fu  <i@fuzy.me>
+
 	Add package `repeat-fu'
 
 	* init.el (+repeat-fu--meow-mode-h): New function.  Added to
