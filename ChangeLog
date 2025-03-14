@@ -1,5 +1,20 @@
 2025-03-14  Zhengyi Fu  <i@fuzy.me>
 
+	Add package `repeat-fu'
+
+	* init.el (+repeat-fu--meow-mode-h): New function.  Added to
+	`meow-mode-hook'.
+	(repeat-fu-mode-map): New variable.  Bind C-' to
+	`repeat-fu-execute'.
+	(rpeat-fu-preset): Set to `meow'.
+	(meow-normal-state-keymap): Bind " to `repeat-fu-execute'.
+
+2025-03-14  Zhengyi Fu  <i@fuzy.me>
+
+	Do not lock scratch buffers any more.  Because it causes more trouble
+	than benefits.
+	* init.el (get-scratch-buffer-create): Remove function.
+
 	* init.el (git-commit-major-mode): Set to `log-edit-mode'.
 
 	* init.el (+eshell/here, +eat/here): Commands removed.
@@ -396,4 +411,4 @@
 
 This file records repository revisions from
 commit 01a16e7e4b30471bebf4d5c746ef8040a825e15c (exclusive) to
-commit b1ec7ef4961b413bda9c8d6f8142be1d65a670ef (inclusive).
+commit 8a1b649129183c2b889cc4496b85f6be5a963831 (inclusive).

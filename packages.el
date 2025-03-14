@@ -140,6 +140,7 @@
 ;;; Modal editing
 (straight-use-package 'meow)
 (straight-use-package 'meow-tree-sitter)
+(straight-use-package '(repeat-fu :host codeberg :repo "ideasman42/emacs-repeat-fu"))
 
 ;;; Help and documentation
 
