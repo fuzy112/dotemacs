@@ -150,6 +150,20 @@
 (when (treesit-available-p)
   (meow-tree-sitter-register-defaults))
 
+;;;; repeat-fu
+
+(defun +repeat-fu--meow-mode-h ()
+  (when (and (not (minibufferp)) (not (derived-mode-p 'special-mode)))
+    (repeat-fu-mode)))
+(add-hook 'meow-mode-hook #'+repeat-fu--meow-mode-h)
+
+(defvar-keymap repeat-fu-mode-map
+  "C-'" #'repeat-fu-execute)
+
+(after-load! repeat-fu
+  (setq repeat-fu-preset 'meow)
+  (keymap-set meow-normal-state-keymap "\"" #'repeat-fu-execute))
+
 
 ;;;; straight commands
 
