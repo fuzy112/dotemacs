@@ -1,3 +1,15 @@
+2025-03-14  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (git-commit-major-mode): Set to `log-edit-mode'.
+
+	* init.el (+eshell/here, +eat/here): Commands removed.
+	(tool-map) <"e", "s">: Bind to `eshell' and `eat' instead.
+
+	* init.el (p-search): Fix loading of psx-info.
+
+	* init.el (+custom-fonts-alist, +custom-fontset): Switch back to
+	Iosevka SS04.  Inconsolata doesn't work well without cairo.
+
 2025-03-12  Zhengyi Fu  <i@fuzy.me>
 
 	Do not enable gpg sign by default
@@ -384,4 +396,4 @@
 
 This file records repository revisions from
 commit 01a16e7e4b30471bebf4d5c746ef8040a825e15c (exclusive) to
-commit 41bf747d71fcd6d2444aa914e293163c848ba8a4 (inclusive).
+commit b1ec7ef4961b413bda9c8d6f8142be1d65a670ef (inclusive).
