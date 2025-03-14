@@ -1579,8 +1579,9 @@ Display the result in a posframe." t)
 
         ;; quick-window-jump
         [?\e ?o]))
-(add-hook 'eshell-load-hook #'eat-eshell-mode)
-(add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
+(unless (memq system-type '(ms-dos windows-nt))
+  (add-hook 'eshell-load-hook #'eat-eshell-mode)
+  (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
 
 (after-load! project
   (define-key project-other-window-map "s" #'eat-project-other-window)
