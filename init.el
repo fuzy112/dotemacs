@@ -1520,6 +1520,8 @@ Display the result in a posframe." t)
   (setopt magit-wip-mode-lighter "")
   (magit-wip-mode))
 
+(setq git-commit-major-mode #'log-edit-mode)
+
 ;;;; diff-hl
 
 (autoload 'diff-hl-magit-post-refresh "diff-hl.el")
