@@ -1051,20 +1051,6 @@ value for USE-OVERLAYS."
 
 ;;;; eshell
 
-(defun +eshell/here ()
-  "Open an EShell buffer in `default-directory'."
-  (interactive)
-  (defvar eshell-buffer-name)
-  (with-suppressed-warnings ((obsolete display-comint-buffer-action))
-    (defvar display-comint-buffer-action)
-    (let ((eshell-buffer-name (format "*%s : eshell*" (abbreviate-file-name default-directory)))
-          (display-comint-buffer-action '(() (inhibit-same-window . t)))
-          (display-buffer-alist (cons '((category . comint)
-                                        nil
-                                        (inhibit-same-window . t))
-                                      display-buffer-alist)))
-      (eshell))))
-
 (defun +eshell/other-window ()
   "Open an EShell buffer in other window."
   (interactive)
@@ -1593,24 +1579,6 @@ Display the result in a posframe." t)
   (when (consp project-switch-commands)
     (alist-delq! project-switch-commands project-shell)
     (add-to-list 'project-switch-commands '(eat-project "Eat") t)))
-
-(defvar eat-buffer-name)
-(defun +eat/here (&optional arg)
-  "Run `eat' in the current directory.
-With non-nil prefix-argument ARG, the directory will be read from the
-minibuffer."
-  (interactive "P") (require 'eat)
-  (let ((dir
-         (if arg
-             (expand-file-name
-              (read-directory-name "Run eat in directory:"))
-           default-directory)))
-    (let
-        ((default-directory dir)
-         (eat-buffer-name (concat "*"
-                                  (abbreviate-file-name dir)
-                                  " : eat*")))
-      (eat nil nil))))
 
 (defvar eat-terminal)
 (declare-function eat-term-send-string "eat.el" (terminal string))
@@ -2215,8 +2183,8 @@ Otherwise disable it."
   "l" #'tui-line
   "f" #'tui-find
   "d" #'tui-locate
-  "e" #'+eshell/here
-  "s" #'+eat/here)
+  "e" #'eshell
+  "s" #'eat)
 
 (defvar-keymap doc-map
   :doc "Documentation commands."
