@@ -2096,7 +2096,7 @@ minibuffer."
 ;;;; p-search
 
 (after-load! p-search
-  (require 'extensions/psx-info))
+  (require 'psx-info "extensions/psx-info.el"))
 (autoload 'p-search "p-search" nil t)
 
 ;;;; copyright
