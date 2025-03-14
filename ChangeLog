@@ -1,3 +1,10 @@
+2025-03-14  Zhengyi Fu <i@fuzy.me>
+
+	Do not enable Eat integration for Eshell on Windows
+
+	* init.el <eat>: Do not enable `eat-eshell-mode' and
+	`eat-eshell-visual-command-mode' on windows.
+
 2025-03-14  Zhengyi Fu  <i@fuzy.me>
 
 	Setup `log-edit' for `git-commit-mode'
