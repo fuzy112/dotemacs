@@ -1521,6 +1521,13 @@ Display the result in a posframe." t)
 
 (setq git-commit-major-mode #'log-edit-mode)
 
+(defun +git-commit--log-edit-h ()
+  (let ((params
+         `((log-edit-listfun . ,#'magit-staged-files)
+           (log-edit-diff-function . ,#'magit-diff-while-committing))))
+    (log-edit #'ignore nil params)))
+(add-hook 'git-commit-setup-hook #'+git-commit--log-edit-h)
+
 ;;;; diff-hl
 
 (autoload 'diff-hl-magit-post-refresh "diff-hl.el")
