@@ -43,10 +43,10 @@
 (setq straight-enable-use-package-integration t)
 (defvar straight-current-profile)
 (setq straight-current-profile nil)
-(setq straight-profiles '((nil . "default.el")
+(setq straight-profiles '((nil      . "default.el")
                           (dotemacs . "dotemacs.el")
-                          (user . "user.el")
-                          (custom . "custom.el")))
+                          (user     . "user.el")
+                          (custom   . "custom.el")))
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -84,12 +84,12 @@
 ;;;; emacs core
 
 (setq-default cursor-in-non-selected-windows nil)
-(setq highlight-nonselected-windows nil)
-(setq inhibit-compacting-font-caches t)
-(setq use-file-dialog nil)
-(setq system-time-locale "C")
-(setq bidi-paragraph-direction 'left-to-right
-      bidi-inhibit-bpa t)
+(setq highlight-nonselected-windows          nil)
+(setq inhibit-compacting-font-caches         t)
+(setq use-file-dialog                        nil)
+(setq system-time-locale                     "C")
+(setq bidi-paragraph-direction               'left-to-right
+      bidi-inhibit-bpa                       t)
 
 ;; workaround WSL wayland clipboard issue
 (setq select-active-regions nil)
@@ -99,21 +99,21 @@
 (setq menu-bar-mode nil)
 (setq tool-bar-mode nil)
 
-(setq inhibit-default-init t
+(setq inhibit-default-init  t
       inhibit-splash-screen t)
 
-(setq default-frame-alist `((vertical-scroll-bars . nil)
+(setq default-frame-alist `((vertical-scroll-bars   . nil)
                             (horizontal-scroll-bars . nil)))
 
 (setq auto-save-no-message t)
 
 ;;;; files
 
-(setq confirm-kill-emacs 'y-or-n-p)
-(setq version-control t
+(setq confirm-kill-emacs  'y-or-n-p)
+(setq version-control     t
       delete-old-versions t
-      kept-old-versions 9
-      kept-new-versions 9)
+      kept-old-versions   9
+      kept-new-versions   9)
 
 ;;;; startup
 

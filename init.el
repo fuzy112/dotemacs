@@ -57,11 +57,11 @@
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
   (setq meow-use-clipboard t)
   (alist-setq! meow-mode-state-list
-    eat-mode 'insert
-    term-mode 'insert
-    shell-mode 'insert
-    eshell-mode 'insert
-    vterm-mode 'insert
+    eat-mode         'insert
+    term-mode        'insert
+    shell-mode       'insert
+    eshell-mode      'insert
+    vterm-mode       'insert
     telega-chat-mode 'normal)
   (meow-leader-define-key
    '("1" . meow-digit-argument)
@@ -78,71 +78,71 @@
    '("?" . meow-cheatsheet))
   (meow-motion-define-key '("<escape>" . ignore))
   (meow-normal-define-key
-   '("0" . meow-expand-0)
-   '("9" . meow-expand-9)
-   '("8" . meow-expand-8)
-   '("7" . meow-expand-7)
-   '("6" . meow-expand-6)
-   '("5" . meow-expand-5)
-   '("4" . meow-expand-4)
-   '("3" . meow-expand-3)
-   '("2" . meow-expand-2)
-   '("1" . meow-expand-1)
-   '("-" . negative-argument)
-   '(";" . meow-reverse)
-   '("," . meow-inner-of-thing)
-   '("." . meow-bounds-of-thing)
-   '("<" . meow-beginning-of-thing)
-   '(">" . meow-end-of-thing)
-   '("a" . meow-append)
-   '("A" . meow-open-below)
-   '("b" . meow-back-word)
-   '("B" . meow-back-symbol)
-   '("c" . meow-change)
-   '("d" . meow-delete)
-   '("D" . meow-backward-delete)
-   '("e" . meow-line)
-   '("E" . meow-goto-line)
-   '("f" . meow-find)
-   '("g" . meow-cancel-selection)
-   '("G" . meow-grab)
-   '("h" . meow-left)
-   '("H" . meow-left-expand)
-   '("i" . meow-insert)
-   '("I" . meow-open-above)
-   '("j" . meow-join)
-   '("k" . meow-kill)
-   '("l" . meow-till)
-   '("m" . meow-mark-word)
-   '("M" . meow-mark-symbol)
-   '("n" . meow-next)
-   '("N" . meow-next-expand)
-   '("o" . meow-block)
-   '("O" . meow-to-block)
-   '("p" . meow-prev)
-   '("P" . meow-prev-expand)
-   '("q" . meow-quit)
-   '("Q" . meow-goto-line)
-   '("r" . meow-replace)
-   '("R" . meow-swap-grab)
-   '("s" . meow-search)
-   '("t" . meow-right)
-   '("T" . meow-right-expand)
-   '("u" . meow-undo)
-   '("U" . meow-undo-in-selection)
-   '("v" . meow-visit)
-   '("w" . meow-next-word)
-   '("W" . meow-next-symbol)
-   '("x" . meow-save)
-   '("X" . meow-sync-grab)
-   '("y" . meow-yank)
-   '("z" . meow-pop-selection)
-   '("'" . repeat)
+   '("0"        . meow-expand-0)
+   '("9"        . meow-expand-9)
+   '("8"        . meow-expand-8)
+   '("7"        . meow-expand-7)
+   '("6"        . meow-expand-6)
+   '("5"        . meow-expand-5)
+   '("4"        . meow-expand-4)
+   '("3"        . meow-expand-3)
+   '("2"        . meow-expand-2)
+   '("1"        . meow-expand-1)
+   '("-"        . negative-argument)
+   '(";"        . meow-reverse)
+   '(","        . meow-inner-of-thing)
+   '("."        . meow-bounds-of-thing)
+   '("<"        . meow-beginning-of-thing)
+   '(">"        . meow-end-of-thing)
+   '("a"        . meow-append)
+   '("A"        . meow-open-below)
+   '("b"        . meow-back-word)
+   '("B"        . meow-back-symbol)
+   '("c"        . meow-change)
+   '("d"        . meow-delete)
+   '("D"        . meow-backward-delete)
+   '("e"        . meow-line)
+   '("E"        . meow-goto-line)
+   '("f"        . meow-find)
+   '("g"        . meow-cancel-selection)
+   '("G"        . meow-grab)
+   '("h"        . meow-left)
+   '("H"        . meow-left-expand)
+   '("i"        . meow-insert)
+   '("I"        . meow-open-above)
+   '("j"        . meow-join)
+   '("k"        . meow-kill)
+   '("l"        . meow-till)
+   '("m"        . meow-mark-word)
+   '("M"        . meow-mark-symbol)
+   '("n"        . meow-next)
+   '("N"        . meow-next-expand)
+   '("o"        . meow-block)
+   '("O"        . meow-to-block)
+   '("p"        . meow-prev)
+   '("P"        . meow-prev-expand)
+   '("q"        . meow-quit)
+   '("Q"        . meow-goto-line)
+   '("r"        . meow-replace)
+   '("R"        . meow-swap-grab)
+   '("s"        . meow-search)
+   '("t"        . meow-right)
+   '("T"        . meow-right-expand)
+   '("u"        . meow-undo)
+   '("U"        . meow-undo-in-selection)
+   '("v"        . meow-visit)
+   '("w"        . meow-next-word)
+   '("W"        . meow-next-symbol)
+   '("x"        . meow-save)
+   '("X"        . meow-sync-grab)
+   '("y"        . meow-yank)
+   '("z"        . meow-pop-selection)
+   '("'"        . repeat)
    '("<escape>" . ignore)
-   '("(" . meow-backward-slurp)
-   '(")" . meow-forward-slurp)
-   '("{" . meow-backward-barf)
-   '("}" . meow-forward-barf)))
+   '("("        . meow-backward-slurp)
+   '(")"        . meow-forward-slurp)
+   '("{"        . meow-backward-barf)
+   '("}"        . meow-forward-barf)))
 
 (meow-setup)
 (meow-global-mode)
@@ -182,28 +182,28 @@
 
 ;; Define a prefix keymap for `straight' commands.
 (defvar-keymap straight-prefix-map
-  :doc "Prefix map for straight.el commands."
+  :doc    "Prefix map for straight.el commands."
   :prefix 'straight-prefix-map
-  :name "Straight map"
-  "c" #'straight-check-package
-  "C" #'straight-check-all
-  "p" #'straight-pull-package
-  "P" #'straight-pull-all
-  "f" #'straight-fetch-package
-  "F" #'straight-fetch-all
-  "b" #'straight-rebuild-package
-  "B" #'straight-rebuild-all
-  "v" #'straight-freeze-versions
-  "V" #'straight-thaw-versions
-  "n" #'straight-normalize-package
-  "N" #'straight-normalize-all
-  "m" #'straight-merge-package
-  "M" #'straight-merge-all
-  "u" #'straight-use-package
-  "d" #'straight-visit-package
-  "w" #'straight-visit-package-website
-  "g" #'straight-magit-package-status
-  "x f" #'straight-x-fetch-all)
+  :name   "Straight map"
+  "c"     #'straight-check-package
+  "C"     #'straight-check-all
+  "p"     #'straight-pull-package
+  "P"     #'straight-pull-all
+  "f"     #'straight-fetch-package
+  "F"     #'straight-fetch-all
+  "b"     #'straight-rebuild-package
+  "B"     #'straight-rebuild-all
+  "v"     #'straight-freeze-versions
+  "V"     #'straight-thaw-versions
+  "n"     #'straight-normalize-package
+  "N"     #'straight-normalize-all
+  "m"     #'straight-merge-package
+  "M"     #'straight-merge-all
+  "u"     #'straight-use-package
+  "d"     #'straight-visit-package
+  "w"     #'straight-visit-package-website
+  "g"     #'straight-magit-package-status
+  "x f"   #'straight-x-fetch-all)
 
 
 ;;;; fonts
@@ -217,7 +217,7 @@
 (defvar +custom-fonts-alist
   '((han      "Sarasa Gothic CL")
     (cjk-misc "Sarasa Gothic CL")
-    (latin    "Iosevka SS04"       prepend)
+    (latin    "Iosevka SS04"      prepend)
     (greek    "Iosevka SS04"      prepend)
     (emoji    "Noto Color Emoji"  prepend)))
 
@@ -249,12 +249,12 @@
 ;;;; modus-theme
 
 (after-load! modus-themes
-  (setq modus-themes-to-toggle '(modus-vivendi modus-operandi))
+  (setq modus-themes-to-toggle                  '(modus-vivendi modus-operandi))
   (setopt modus-themes-common-palette-overrides modus-themes-preset-overrides-faint
-          modus-themes-mixed-fonts t
-          modus-themes-bold-constructs t
-          modus-themes-slanted-constructs t
-          modus-themes-variable-pitch-ui t))
+          modus-themes-mixed-fonts              t
+          modus-themes-bold-constructs          t
+          modus-themes-slanted-constructs       t
+          modus-themes-variable-pitch-ui        t))
 
 (when (not custom-enabled-themes)
   (require 'modus-themes)
@@ -332,11 +332,11 @@
 ;;;; nerd-icons
 
 (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
-(add-hook 'marginalia-mode-hook #'nerd-icons-completion-mode)
-(add-hook 'ibuffer-mode-hook #'nerd-icons-ibuffer-mode)
-(add-hook 'dired-mode-hook #'nerd-icons-multimodal-mode)
-(add-hook 'archive-mode-hook #'nerd-icons-multimodal-mode)
-(add-hook 'tar-mode-hook #'nerd-icons-multimodal-mode)
+(add-hook 'marginalia-mode-hook    #'nerd-icons-completion-mode)
+(add-hook 'ibuffer-mode-hook       #'nerd-icons-ibuffer-mode)
+(add-hook 'dired-mode-hook         #'nerd-icons-multimodal-mode)
+(add-hook 'archive-mode-hook       #'nerd-icons-multimodal-mode)
+(add-hook 'tar-mode-hook           #'nerd-icons-multimodal-mode)
 
 ;; Fonts for nerd-icons need to be configured in graphical frames.
 (defun +nerd-icons--after-make-frame-h (&optional frame)
@@ -434,14 +434,14 @@
 (setq completion-styles '(orderless basic))
 (setq completion-category-defaults nil)
 (setq completion-category-overrides
-      '((file . ((styles . (basic partial-completion))))
-        (symbol . ((styles . (orderless+flex))))
+      '((file        . ((styles . (basic partial-completion))))
+        (symbol      . ((styles . (orderless+flex))))
         (symbol-help . ((styles . (orderless+flex))))
-        (command . ((styles . (orderless+initialism))))
-        (variable . ((styles . (orderless+initialism))))
-        (eglot . ((styles . (orderless))))
-        (eglot-capf . ((styles . (orderless))))
-        (magit-rev . ((styles . (orderless+flex))))))
+        (command     . ((styles . (orderless+initialism))))
+        (variable    . ((styles . (orderless+initialism))))
+        (eglot       . ((styles . (orderless))))
+        (eglot-capf  . ((styles . (orderless))))
+        (magit-rev   . ((styles . (orderless+flex))))))
 
 ;; copied from orderless wiki:
 (defun +orderless--consult-suffix ()
@@ -483,15 +483,15 @@
   (keymap-global-set "M-R" #'vertico-repeat)
   (define-keymap :keymap vertico-map
     ;; vertico-repeat
-    "M-P" #'vertico-repeat-previous
-    "M-N" #'vertico-repeat-next
+    "M-P"   #'vertico-repeat-previous
+    "M-N"   #'vertico-repeat-next
     ;; vertico-directory
-    "RET" #'vertico-directory-enter
-    "DEL" #'vertico-directory-delete-char
+    "RET"   #'vertico-directory-enter
+    "DEL"   #'vertico-directory-delete-char
     "M-DEL" #'vertico-directory-delete-word
     ;; vertico-quick
-    "C-q" #'vertico-quick-insert
-    "M-q" #'vertico-quick-exit))
+    "C-q"   #'vertico-quick-insert
+    "M-q"   #'vertico-quick-exit))
 
 ;;;; marginalia
 
@@ -562,10 +562,10 @@ ARGS: see `completion-read-multiple'."
   (corfu-history-mode)
   (corfu-popupinfo-mode)
   (define-keymap :keymap corfu-map
-    "C-q" #'corfu-quick-insert
-    "M-q" #'corfu-quick-complete
-    "TAB" #'corfu-next
-    "S-TAB" #'corfu-previous
+    "C-q"       #'corfu-quick-insert
+    "M-q"       #'corfu-quick-complete
+    "TAB"       #'corfu-next
+    "S-TAB"     #'corfu-previous
     "<backtab>" #'corfu-previous))
 
 (unless (featurep 'tty-child-frames)
@@ -681,52 +681,52 @@ value for USE-OVERLAYS."
 
 (define-keymap
   :keymap global-map
-  "C-c M-x" #'consult-mode-command
-  "C-c h" #'consult-history
-  "C-c k" #'consult-kmacro
-  "C-c m" #'consult-man
-  "C-c i" #'consult-info
+  "C-c M-x"               #'consult-mode-command
+  "C-c h"                 #'consult-history
+  "C-c k"                 #'consult-kmacro
+  "C-c m"                 #'consult-man
+  "C-c i"                 #'consult-info
   "<remap> <Info-search>" #'consult-info
   ;; C-x bindings in `ctl-x-map'
-  "C-x M-:" #'consult-complex-command ;; orig. repeat-complex-command
-  "C-x b" #'consult-buffer ;; orig. switch-to-buffer
-  "C-c b" #'consult-buffer
-  "C-x 4 b" #'consult-buffer-other-window ;; orig. switch-to-buffer-other-window
-  "C-x 5 b" #'consult-buffer-other-frame ;; orig. switch-to-buffer-other-frame
-  "C-x t b" #'consult-buffer-other-tab ;; orig. switch-to-buffer-other-tab
-  "C-x r b" #'consult-bookmark         ;; orig. bookmark-jump
-  "C-x p b" #'consult-project-buffer ;; orig. project-switch-to-buffer
-  ;; Custom M-# bindings for fast register access
-  "M-#" #'consult-register-load
-  "M-'" #'consult-register-store ;; orig. abbrev-prefix-mark (unrelated)
-  "C-M-#" #'consult-register
+  "C-x M-:"               #'consult-complex-command     ; orig. repeat-complex-command
+  "C-x b"                 #'consult-buffer              ; orig. switch-to-buffer
+  "C-c b"                 #'consult-buffer
+  "C-x 4 b"               #'consult-buffer-other-window ; orig. switch-to-buffer-other-window
+  "C-x 5 b"               #'consult-buffer-other-frame  ; orig. switch-to-buffer-other-frame
+  "C-x t b"               #'consult-buffer-other-tab    ; orig. switch-to-buffer-other-tab
+  "C-x r b"               #'consult-bookmark            ; orig. bookmark-jump
+  "C-x p b"               #'consult-project-buffer      ; orig. project-switch-to-buffer
+  ;; Custom M-            # bindings for fast register access
+  "M-                     #" #'consult-register-load
+  "M-'"                   #'consult-register-store      ; orig. abbrev-prefix-mark (unrelated)
+  "C-M-                   #" #'consult-register
   ;; Other custom bindings
-  "M-y" #'consult-yank-pop ;; orig. yank-pop
+  "M-y"                   #'consult-yank-pop            ; orig. yank-pop
   ;; M-g bindings in `goto-map'
-  "M-g e" #'consult-compile-error
-  "M-g f" #'consult-flymake ;; Alternative: consult-flycheck
-  "M-g g" #'consult-goto-line   ;; orig. goto-line
-  "M-g M-g" #'consult-goto-line ;; orig. goto-line
-  "M-g o" #'consult-outline ;; Alternative: consult-org-heading
-  "M-g m" #'consult-mark
-  "M-g k" #'consult-global-mark
-  "M-g i" #'consult-imenu
-  "M-g I" #'consult-imenu-multi
+  "M-g e"                 #'consult-compile-error
+  "M-g f"                 #'consult-flymake             ; Alternative: consult-flycheck
+  "M-g g"                 #'consult-goto-line           ; orig. goto-line
+  "M-g M-g"               #'consult-goto-line           ; orig. goto-line
+  "M-g o"                 #'consult-outline             ; Alternative: consult-org-heading
+  "M-g m"                 #'consult-mark
+  "M-g k"                 #'consult-global-mark
+  "M-g i"                 #'consult-imenu
+  "M-g I"                 #'consult-imenu-multi
   ;; M-s bindings in `search-map'
-  "M-s d" #'consult-find ;; Alternative: consult-fd
-  "M-s c" #'consult-locate
-  "M-s g" #'consult-grep
-  "M-s G" #'consult-git-grep
-  "M-s r" #'consult-ripgrep
-  "M-s l" #'consult-line
-  "M-s L" #'consult-line-multi
-  "M-s k" #'consult-keep-lines
-  "M-s u" #'consult-focus-lines
+  "M-s d"                 #'consult-find                ; Alternative: consult-fd
+  "M-s c"                 #'consult-locate
+  "M-s g"                 #'consult-grep
+  "M-s G"                 #'consult-git-grep
+  "M-s r"                 #'consult-ripgrep
+  "M-s l"                 #'consult-line
+  "M-s L"                 #'consult-line-multi
+  "M-s k"                 #'consult-keep-lines
+  "M-s u"                 #'consult-focus-lines
   ;; Isearch integration
-  "M-s e" #'consult-isearch-history)
+  "M-s e"                 #'consult-isearch-history)
 
 (define-keymap :keymap isearch-mode-map
-  "M-e" #'consult-isearch-history
+  "M-e"   #'consult-isearch-history
   "M-s e" #'consult-isearch-history
   "M-s l" #'consult-line
   "M-s L" #'consult-line-multi)
@@ -778,14 +778,14 @@ value for USE-OVERLAYS."
   (require 'consult)
   (consult--read-1
    #'internal-complete-buffer
-   :state (consult--buffer-preview)
-   :default def
-   :prompt (format-prompt (replace-regexp-in-string ":[[:space:]]*\\'" "" prompt) def)
+   :state         (consult--buffer-preview)
+   :default       def
+   :prompt        (format-prompt (replace-regexp-in-string ":[[:space:]]*\\'" "" prompt) def)
    :require-match mustmatch
-   :predicate pred
-   :preview-key consult-preview-key
-   :sort t
-   :lookup (lambda (selected &rest _) selected)))
+   :predicate     pred
+   :preview-key   consult-preview-key
+   :sort          t
+   :lookup        (lambda (selected &rest _) selected)))
 
 (setq read-buffer-function #'+consult--read-buffer-function)
 
@@ -887,10 +887,10 @@ value for USE-OVERLAYS."
 ;;;; windmove
 
 (define-keymap :keymap global-map
-  "S-<left>" #'windmove-left
+  "S-<left>"  #'windmove-left
   "S-<right>" #'windmove-right
-  "S-<up>" #'windmove-up
-  "S-<down>" #'windmove-down)
+  "S-<up>"    #'windmove-up
+  "S-<down>"  #'windmove-down)
 
 ;;;; popper
 
@@ -898,8 +898,8 @@ value for USE-OVERLAYS."
 (autoload 'popper-toggle-type "popper" nil t)
 (autoload 'popper-toggle "popper" nil t)
 (define-keymap :keymap global-map
-  "C-`" #'popper-toggle
-  "M-`" #'popper-cycle
+  "C-`"   #'popper-toggle
+  "M-`"   #'popper-cycle
   "C-M-`" #'popper-toggle-type)
 (defvar popper-reference-buffers)
 (setq popper-reference-buffers '("\\*Messages\\*" "Output\\*$"
@@ -1320,10 +1320,10 @@ Display the result in a posframe." t)
 ;;;; find-func
 
 (define-keymap :keymap ctl-x-map
-  "F" #'find-function
-  "V" #'find-variable
-  "K" #'find-function-on-key
-  "L" #'find-library
+  "F"   #'find-function
+  "V"   #'find-variable
+  "K"   #'find-function-on-key
+  "L"   #'find-library
   "4 F" #'find-function-other-window
   "4 V" #'find-variable-other-window
   "4 K" #'find-function-on-key-other-window
@@ -1444,18 +1444,18 @@ Display the result in a posframe." t)
   (add-to-list 'consult-buffer-sources '+activities-tab-buffer-source))
 
 (defvar-keymap activities-prefix-map
-  :doc "Prefix map for `activities' commands."
+  :doc    "Prefix map for `activities' commands."
   :prefix 'activities-prefix-map
-  "C-n" #'activities-new
-  "C-d" #'activities-define
-  "C-a" #'activities-resume
-  "C-s" #'activities-suspend
-  "C-k" #'activities-kill
-  "C-r" #'activities-rename
-  "RET" #'activities-switch
-  "b" #'activities-switch-buffer
-  "g" #'activities-revert
-  "l" #'activities-list)
+  "C-n"   #'activities-new
+  "C-d"   #'activities-define
+  "C-a"   #'activities-resume
+  "C-s"   #'activities-suspend
+  "C-k"   #'activities-kill
+  "C-r"   #'activities-rename
+  "RET"   #'activities-switch
+  "b"     #'activities-switch-buffer
+  "g"     #'activities-revert
+  "l"     #'activities-list)
 
 (keymap-global-set "C-x C-a" #'activities-prefix-map)
 
@@ -1819,13 +1819,13 @@ Display the result in a posframe." t)
 
 ;;;; tui
 
-(autoload 'tui-run "tui" nil t)
-(autoload 'tui-rg "tui" nil t)
-(autoload 'tui-ugrep "tui" nil t)
-(autoload 'tui-yazi "tui" nil t)
-(autoload 'tui-kill "tui" nil t)
-(autoload 'tui-line "tui" nil t)
-(autoload 'tui-find "tui" nil t)
+(autoload 'tui-run    "tui" nil t)
+(autoload 'tui-rg     "tui" nil t)
+(autoload 'tui-ugrep  "tui" nil t)
+(autoload 'tui-yazi   "tui" nil t)
+(autoload 'tui-kill   "tui" nil t)
+(autoload 'tui-line   "tui" nil t)
+(autoload 'tui-find   "tui" nil t)
 (autoload 'tui-locate "tui" nil t)
 (after-load! tui
   (alist-setq! display-buffer-alist "^\\*tui-" '((display-buffer-same-window))))
@@ -1956,7 +1956,7 @@ Display the result in a posframe." t)
     "C-c o M" #'+org/toggle-emphasis-markers
     "C-c o m" #'org-modern-mode
     "C-c o c" #'olivetti-mode
-    "M-g o" #'consult-org-heading)
+    "M-g o"   #'consult-org-heading)
   (setopt org-export-backends '(html latex texinfo))
   (setq org-agenda-hide-tags-regexp ".")
   (setq org-agenda-prefix-format
@@ -2035,7 +2035,7 @@ Display the result in a posframe." t)
 (after-load! copilot
   ;; TODO choose better keybindings
   (define-keymap :keymap copilot-mode-map
-    "<tab>" #'copilot-accept-completion
+    "<tab>"   #'copilot-accept-completion
     "C-<tab>" #'copilot-accept-completion-by-word))
 
 ;;;; browser-hist
@@ -2070,10 +2070,10 @@ Display the result in a posframe." t)
 ;;;; markdown
 
 (after-load! markdown-mode
-  (keymap-set markdown-mode-map "C-x C-q" #'markdown-view-mode)
+  (keymap-set markdown-mode-map      "C-x C-q" #'markdown-view-mode)
   (keymap-set markdown-view-mode-map "C-x C-q" #'markdown-mode)
-  (keymap-set gfm-mode-map "C-x C-q" #'gfm-view-mode)
-  (keymap-set gfm-view-mode-map "C-x C-q" #'gfm-mode)
+  (keymap-set gfm-mode-map           "C-x C-q" #'gfm-view-mode)
+  (keymap-set gfm-view-mode-map      "C-x C-q" #'gfm-mode)
   (add-hook 'markdown-mode-hook #'visual-line-mode))
 
 ;;;; p-search
@@ -2185,103 +2185,103 @@ Otherwise disable it."
   "s" #'eat-project)
 
 (defvar-keymap tool-map
-  :doc "Keymap for calling external tools."
+  :doc    "Keymap for calling external tools."
   :prefix 'tool-map
-  :name "Tool map"
-  "A" #'gptel
-  "a" #'gptel-menu
-  "t" #'tui-run
-  "r" #'tui-rg
-  "g" #'tui-ugrep
-  "y" #'tui-yazi
-  "k" #'tui-kill
-  "l" #'tui-line
-  "f" #'tui-find
-  "d" #'tui-locate
-  "e" #'eshell
-  "s" #'eat)
+  :name   "Tool map"
+  "A"     #'gptel
+  "a"     #'gptel-menu
+  "t"     #'tui-run
+  "r"     #'tui-rg
+  "g"     #'tui-ugrep
+  "y"     #'tui-yazi
+  "k"     #'tui-kill
+  "l"     #'tui-line
+  "f"     #'tui-find
+  "d"     #'tui-locate
+  "e"     #'eshell
+  "s"     #'eat)
 
 (defvar-keymap doc-map
-  :doc "Documentation commands."
+  :doc    "Documentation commands."
   :prefix 'doc-map
-  :name "Doc map"
-  "d" #'devdocs-lookup
-  "i" #'devdocs-install
-  "p" #'devdocs-peruse
-  "r" #'rust-docs-lookup
-  "g" #'good-doc-lookup)
+  :name   "Doc map"
+  "d"     #'devdocs-lookup
+  "i"     #'devdocs-install
+  "p"     #'devdocs-peruse
+  "r"     #'rust-docs-lookup
+  "g"     #'good-doc-lookup)
 
 (defvar-keymap file-map
-  :doc "Open file commands."
+  :doc    "Open file commands."
   :prefix 'file-map
-  :name "File map"
-  "e" #'find-early-init-file
-  "i" #'find-user-init-file
-  "a" #'ffap
-  "r" #'ff-find-related-file
-  "R" #'recentf-open
-  "n" #'rename-visited-file
-  "b" #'backup-list-backups)
+  :name   "File map"
+  "e"     #'find-early-init-file
+  "i"     #'find-user-init-file
+  "a"     #'ffap
+  "r"     #'ff-find-related-file
+  "R"     #'recentf-open
+  "n"     #'rename-visited-file
+  "b"     #'backup-list-backups)
 
 (defvar-keymap toggle-map
-  :doc "Keymap for toggling options."
+  :doc    "Keymap for toggling options."
   :prefix 'toggle-map
-  :name "Toggle map"
-  "f" #'display-fill-column-indicator-mode
-  "l" #'display-line-numbers-mode
-  "o" #'outline-minor-mode
-  "c" #'+visual-fill-column/toggle-visual-fill-and-center
-  "x" #'+toggle-transparent
-  "v" #'visual-line-mode
-  "w" #'whitespace-mode)
+  :name   "Toggle map"
+  "f"     #'display-fill-column-indicator-mode
+  "l"     #'display-line-numbers-mode
+  "o"     #'outline-minor-mode
+  "c"     #'+visual-fill-column/toggle-visual-fill-and-center
+  "x"     #'+toggle-transparent
+  "v"     #'visual-line-mode
+  "w"     #'whitespace-mode)
 
 (defvar-keymap debug-map
-  :doc "Keymap for debugging commands."
+  :doc    "Keymap for debugging commands."
   :prefix 'debug-map
-  :name "Debug map"
-  "e" #'toggle-debug-on-error
-  "q" #'toggle-debug-on-quit
-  "f" #'debug-on-entry
-  "v" #'debug-on-variable-change
-  "c f" #'cancel-debug-on-entry
-  "c v" #'cancel-debug-on-variable-change)
+  :name   "Debug map"
+  "e"     #'toggle-debug-on-error
+  "q"     #'toggle-debug-on-quit
+  "f"     #'debug-on-entry
+  "v"     #'debug-on-variable-change
+  "c f"   #'cancel-debug-on-entry
+  "c v"   #'cancel-debug-on-variable-change)
 
 (define-keymap :keymap mode-specific-map
-  "A" #'org-agenda
-  "C" #'org-capture
-  "D" debug-map
-  "L" #'org-store-link
-  "S" straight-prefix-map
-  "G" #'gnus
-  "T" toggle-map
-  "V" #'vundo
-  "P" #'p-search
-  "a" #'embark-act
-  "t" tool-map
-  "d" doc-map
-  "e" #'cape-prefix-map
-  "f" file-map
-  "o" toggle-map
+  "A"   #'org-agenda
+  "C"   #'org-capture
+  "D"   debug-map
+  "L"   #'org-store-link
+  "S"   straight-prefix-map
+  "G"   #'gnus
+  "T"   toggle-map
+  "V"   #'vundo
+  "P"   #'p-search
+  "a"   #'embark-act
+  "t"   tool-map
+  "d"   doc-map
+  "e"   #'cape-prefix-map
+  "f"   file-map
+  "o"   toggle-map
   "M-g" #'magit-file-dispatch
-  "p" #'project-prefix-map
-  "q" quilt-prefix-map
-  "s" #'deadgrep
-  "v" #'vc-prefix-map
-  "w" #'window-prefix-map)
+  "p"   #'project-prefix-map
+  "q"   quilt-prefix-map
+  "s"   #'deadgrep
+  "v"   #'vc-prefix-map
+  "w"   #'window-prefix-map)
 
 (define-keymap :keymap ctl-x-4-map
   "s" #'eat-other-window
   "e" #'+eshell/other-window)
 
 (define-keymap :keymap ctl-x-map
-  "k" #'kill-current-buffer
-  "g" #'magit-status-quick
+  "k"   #'kill-current-buffer
+  "g"   #'magit-status-quick
   "M-g" #'magit-dispatch)
 
 (define-keymap :keymap global-map
-  "M-c" #'capitalize-dwim
-  "M-l" #'downcase-dwim
-  "M-u" #'upcase-dwim
+  "M-c"  #'capitalize-dwim
+  "M-l"  #'downcase-dwim
+  "M-u"  #'upcase-dwim
   "<f5>" #'project-recompile)
 
 
