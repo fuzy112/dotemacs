@@ -1177,6 +1177,9 @@ value for USE-OVERLAYS."
 (after-load! consult
   (add-to-list 'consult-async-split-styles-alist `(space :separator ?\s :function ,#'consult--split-separator)))
 
+(keymap-set search-map "s" #'consult-eglot-symbols)
+(keymap-set search-map "M-s" #'consult-eglot-symbols)
+
 (defun consult-eglot--async-wrap (async)
   (consult--async-pipeline
    (consult--async-split 'space)
