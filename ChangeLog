@@ -1,5 +1,10 @@
 2025-03-17  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (consult-eglot-symbols): Bind M-s M-s and M-s s to
+	`consult-eglot-symbols'.
+
+2025-03-17  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (auto-mode-alist): Open .clangd and .clang-format files
 	with YAML mode.
 
