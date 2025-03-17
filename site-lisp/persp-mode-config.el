@@ -41,7 +41,7 @@
                  compilation-environment compilation-arg))
 
   ;; magit
-  (autoload 'magit-refresh "magit-mode.el" nil t)
+  (autoload 'magit-refresh "magit-mode" nil t)
   (autoload 'magit-status-mode "magit")
   (persp-def-buffer-save/load
    :predicate (lambda (buf) (buffer-match-p '(derived-mode . magit-mode) buf))
