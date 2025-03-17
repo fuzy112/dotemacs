@@ -1095,6 +1095,10 @@ value for USE-OVERLAYS."
     (add-hook 'flymake-diagnostics-functions nil #'flymake-xmllint)))
 (add-hook 'nxml-mode-hook #'+nxml-mode--flymake)
 
+;;;; yaml
+
+(add-to-list 'auto-mode-alist '("/\\.clang\\(?:d\\|-format\\)\\'" . yaml-mode))
+
 ;;;; outline
 
 (defun +outline-minor-faces ()

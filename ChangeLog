@@ -1,5 +1,10 @@
 2025-03-17  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (auto-mode-alist): Open .clangd and .clang-format files
+	with YAML mode.
+
+2025-03-17  Zhengyi Fu  <i@fuzy.me>
+
 	Allow autoload to load byte-compiled Lisp files
 
 	* init.el:
