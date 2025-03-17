@@ -14,9 +14,9 @@
   "TUI tools support."
   :group 'tools)
 
-(autoload 'tui-eat-exec "tui-eat.el")
-(autoload 'tui-vterm-exec "tui-vterm.el")
-(autoload 'tui-term-exec "tui-term.el")
+(autoload 'tui-eat-exec "tui-eat")
+(autoload 'tui-vterm-exec "tui-vterm")
+(autoload 'tui-term-exec "tui-term")
 
 (defcustom tui-external-terminal-program "x-terminal-emulator"
   "The default external terminal terminal emulator."

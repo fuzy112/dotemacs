@@ -1,5 +1,14 @@
 2025-03-17  Zhengyi Fu  <i@fuzy.me>
 
+	Allow autoload to load byte-compiled Lisp files
+
+	* init.el:
+	* site-lisp/persp-mode-config.el:
+	* site-lisp/tui/tui.el: Remove .el suffix from the second
+	arguments of `autoload'.
+
+2025-03-17  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (corfu--minibuffer-on): Autoload this function and add
 	it to `minibuffer-setup-hook'.
 

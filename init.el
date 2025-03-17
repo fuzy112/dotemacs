@@ -469,7 +469,7 @@
 
 (setq enable-recursive-minibuffers t)
 
-(autoload 'vertico--advice "vertico.el")
+(autoload 'vertico--advice "vertico")
 (advice-add #'completing-read-default :around #'vertico--advice)
 (advice-add #'completing-read-multiple :around #'vertico--advice)
 
@@ -495,7 +495,7 @@
 
 ;;;; marginalia
 
-(autoload 'marginalia--minibuffer-setup "marginalia.el")
+(autoload 'marginalia--minibuffer-setup "marginalia")
 (add-hook 'minibuffer-setup-hook #'marginalia--minibuffer-setup)
 (keymap-set minibuffer-local-map "M-A" #'marginalia-cycle)
 
@@ -547,7 +547,7 @@ ARGS: see `completion-read-multiple'."
 (define-advice completion-in-region (:before (&rest _) corfu)
   (require 'corfu))
 
-(autoload 'corfu--minibuffer-on "corfu.el")
+(autoload 'corfu--minibuffer-on "corfu")
 (add-hook 'minibuffer-setup-hook #'corfu--minibuffer-on 100)
 
 (defvar corfu-map)
@@ -876,7 +876,7 @@ value for USE-OVERLAYS."
 
 
 ;; Custom consult commands.
-(autoload 'consult-kill "consult-kill.el" nil t)
+(autoload 'consult-kill "consult-kill" nil t)
 
 ;;;; indent-aux
 
@@ -894,9 +894,9 @@ value for USE-OVERLAYS."
 
 ;;;; popper
 
-(autoload 'popper-cycle "popper.el" nil t)
-(autoload 'popper-toggle-type "popper.el" nil t)
-(autoload 'popper-toggle "popper.el" nil t)
+(autoload 'popper-cycle "popper" nil t)
+(autoload 'popper-toggle-type "popper" nil t)
+(autoload 'popper-toggle "popper" nil t)
 (define-keymap :keymap global-map
   "C-`" #'popper-toggle
   "M-`" #'popper-cycle
@@ -996,7 +996,7 @@ value for USE-OVERLAYS."
 
 ;;;; recentf
 
-(autoload 'recentf-track-opened-file "recentf.el"
+(autoload 'recentf-track-opened-file "recentf"
   "Insert the name of the file just opened or written into the recent list." )
 (add-hook 'find-file-hook #'recentf-track-opened-file)
 (after-load! recentf
@@ -1010,8 +1010,8 @@ value for USE-OVERLAYS."
 
 ;;;; saveplace
 
-(autoload 'save-place-find-file-hook "saveplace.el")
-(autoload 'save-place-dired-hook "saveplace.el")
+(autoload 'save-place-find-file-hook "saveplace")
+(autoload 'save-place-dired-hook "saveplace")
 (add-hook 'find-file-hook #'save-place-find-file-hook)
 (add-hook 'dired-initial-position-hook #'save-place-dired-hook)
 (after-load! saveplace
@@ -1019,7 +1019,7 @@ value for USE-OVERLAYS."
 
 ;;;; autorevert
 
-(autoload 'auto-revert--global-adopt-current-buffer "autorevert.el")
+(autoload 'auto-revert--global-adopt-current-buffer "autorevert")
 (add-hook 'find-file-hook #'auto-revert--global-adopt-current-buffer)
 
 (after-load! autorevert
@@ -1305,12 +1305,12 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 
 ;; Show results of `eval-last-sexp' in posframes.
 
-(autoload 'pp-posframe-eval-last-sexp "pp-posframe.el"
+(autoload 'pp-posframe-eval-last-sexp "pp-posframe"
   "Evaluate sexp before point; display the value in a posframe." t)
-(autoload 'pp-posframe-compile-defun "pp-posframe.el"
+(autoload 'pp-posframe-compile-defun "pp-posframe"
   "Compile and evaluate the current top-level form.
 Display the result in a posframe." t)
-(autoload 'pp-posframe-macroexpand-last-sexp "pp-posframe.el"
+(autoload 'pp-posframe-macroexpand-last-sexp "pp-posframe"
   "Macroexpand the sexp before point; display the result in a posframe." t)
 (keymap-global-set "C-x C-e" #'pp-posframe-eval-last-sexp)
 (after-load! elisp-mode
@@ -1346,7 +1346,7 @@ Display the result in a posframe." t)
 
 (setq c-tab-always-indent nil
       c-insert-tab-function #'completion-at-point)
-(autoload 'flymake-clang-tidy "flymake-clang-tidy.el")
+(autoload 'flymake-clang-tidy "flymake-clang-tidy")
 (defun +cc-mode--hook ()
   (add-hook 'flymake-diagnostics-functions #'flymake-clang-tidy nil t))
 (add-hook 'c-mode-common-hook '+cc-mode--hook)
@@ -1533,7 +1533,7 @@ Display the result in a posframe." t)
 
 ;;;; diff-hl
 
-(autoload 'diff-hl-magit-post-refresh "diff-hl.el")
+(autoload 'diff-hl-magit-post-refresh "diff-hl")
 (add-hook 'tty-setup-hook #'diff-hl-margin-mode)
 (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
 (after-load! (:or diff-hl vc magit)
@@ -1879,7 +1879,7 @@ Display the result in a posframe." t)
 
 ;;;; image-slicing
 
-(autoload 'image-slicing-mode "image-slicing.el" nil t)
+(autoload 'image-slicing-mode "image-slicing" nil t)
 (add-hook 'eww-mode-hook #'image-slicing-mode)
 
 ;;;; eww
@@ -1922,7 +1922,7 @@ Display the result in a posframe." t)
   (let ((pp-default-function 'pp-28))
     (apply args)))
 
-(autoload 'url-bookmark-add "bookmark-extras.el" "" t)
+(autoload 'url-bookmark-add "bookmark-extras" "" t)
 (keymap-global-set "C-x r u" #'url-bookmark-add)
 (after-load! bookmark
   (advice-add #'bookmark-write-file :around '+bookmark--pp-28)
@@ -1935,7 +1935,7 @@ Display the result in a posframe." t)
 
 ;;;; org
 
-(autoload 'org-store-link "ol.el" nil t)
+(autoload 'org-store-link "ol" nil t)
 
 (defun +org/toggle-emphasis-markers ()
   "Toggle the display of emphasis markers."
