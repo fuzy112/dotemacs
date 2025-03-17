@@ -547,6 +547,9 @@ ARGS: see `completion-read-multiple'."
 (define-advice completion-in-region (:before (&rest _) corfu)
   (require 'corfu))
 
+(autoload 'corfu--minibuffer-on "corfu.el")
+(add-hook 'minibuffer-setup-hook #'corfu--minibuffer-on 100)
+
 (defvar corfu-map)
 (after-load! corfu
   (advice-remove 'completion-in-region #'completion-in-region@corfu)
