@@ -1,3 +1,8 @@
+2025-03-17  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (corfu--minibuffer-on): Autoload this function and add
+	it to `minibuffer-setup-hook'.
+
 2025-03-14  Zhengyi Fu <i@fuzy.me>
 
 	Do not enable Eat integration for Eshell on Windows
