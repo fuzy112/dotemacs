@@ -1,3 +1,10 @@
+2025-03-18  Zhengyi Fu  <i@fuzy.me>
+
+	Recenter after jumping through Xref
+
+	* init.el (xref-after-return-hook, xref-after-jump-hook): Add
+	recenter.
+
 2025-03-17  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (consult-eglot-symbols): Bind M-s M-s and M-s s to
