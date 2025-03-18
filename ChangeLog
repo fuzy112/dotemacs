@@ -1,5 +1,12 @@
 2025-03-18  Zhengyi Fu  <i@fuzy.me>
 
+	Autoload should not contain .elc? suffixes
+
+	* templates/emacs-lisp.eld <autoloadf>: Remove suffixe from the
+	file name.
+
+2025-03-18  Zhengyi Fu  <i@fuzy.me>
+
 	Recenter after jumping through Xref
 
 	* init.el (xref-after-return-hook, xref-after-jump-hook): Add
