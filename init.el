@@ -1541,6 +1541,28 @@ Display the result in a posframe." t)
     (log-edit #'ignore nil params)))
 (add-hook 'git-commit-setup-hook #'+git-commit--log-edit-h)
 
+;;;; Add-Log
+
+(defun add-log/vc-dwim-commit ()
+  (interactive)
+  (let ((default-directory (vc-root-dir))
+        exitcode)
+    (with-output-to-temp-buffer "*vc-dwim*"
+      (setq exitcode
+            (process-file "vc-dwim" nil standard-output nil
+                          "--commit"
+                          (file-relative-name (buffer-file-name))))
+      (with-current-buffer "*vc-dwim*"
+        (delay-mode-hooks
+          (diff-mode))
+        (font-lock-ensure)
+        (unless (zerop exitcode)
+          (goto-char (point-min))
+          (add-face-text-property (point) (line-end-position) 'error 'append))))))
+
+(after-load! add-log
+  (keymap-set change-log-mode-map "C-c RET" #'add-log/vc-dwim-commit))
+
 ;;;; diff-hl
 
 (autoload 'diff-hl-magit-post-refresh "diff-hl")
