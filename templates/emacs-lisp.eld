@@ -29,9 +29,11 @@ emacs-lisp-mode
 		       (lib (find-function-library f))
 		       (full-file (cdr-safe lib))
 		       (file (file-name-nondirectory full-file)))
-	     (if (string-suffix-p ".elc" file)
-		 (substring file 0 -1)
-	       file))
+	     (cond ((string-suffix-p ".elc" file)
+		    (substring file 0 -4))
+		   ((string-suffix-p ".el" file)
+		    (substring file 0 -3))
+		   (t file)))
 	   "\"" n
 	   "\""
 	   (if (functionp (intern func))
