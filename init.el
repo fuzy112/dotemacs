@@ -1558,6 +1558,7 @@ Display the result in a posframe." t)
         (font-lock-ensure)
         (unless (zerop exitcode)
           (goto-char (point-min))
+          (user-error "%s" (buffer-substring-no-properties (point) (line-end-position)))
           (add-face-text-property (point) (line-end-position) 'error 'append))))))
 
 (after-load! add-log
