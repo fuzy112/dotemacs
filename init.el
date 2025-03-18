@@ -1230,6 +1230,9 @@ See `xref-show-xrefs' for FETCHER and ALIST."
         xref-show-definitions-function #'+xref--show-definition
         xref-auto-jump-to-first-definition t))
 
+(add-hook 'xref-after-jump-hook #'recenter)
+(add-hook 'xref-after-return-hook #'recenter)
+
 ;;;; citre
 
 (after-load! (citre cc-mode)
