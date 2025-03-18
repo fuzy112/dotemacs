@@ -1,5 +1,12 @@
 2025-03-18  Zhengyi Fu  <i@fuzy.me>
 
+	Add convenient command for vc-dwim
+
+	* init.el (add-log/vc-dwim-commit): New command.
+	Bind "C-c RET" to this command in `change-log-mode-map'.
+
+2025-03-18  Zhengyi Fu  <i@fuzy.me>
+
 	Autoload should not contain .elc? suffixes
 
 	* templates/emacs-lisp.eld <autoloadf>: Remove suffixe from the
