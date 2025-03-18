@@ -1,5 +1,10 @@
 2025-03-18  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (add-log/vc-dwim-commit): Signal a user-error if vc-dwim
+	exits with non-zero values.
+
+2025-03-18  Zhengyi Fu  <i@fuzy.me>
+
 	Add convenient command for vc-dwim
 
 	* init.el (add-log/vc-dwim-commit): New command.
