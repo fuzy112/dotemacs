@@ -1,5 +1,14 @@
 2025-03-19  Zhengyi Fu  <i@fuzy.me>
 
+	Add a hook that is run after vc-dwim --commit succeeds
+
+	* init.el (vc-dwim-post-commit-hook): New variable. Add
+	`vc-refresh-state' and `magit-refresh'.
+	(add-log/vc-dwim-commit): Run `vc-dwim-post-commit-hook' if
+	success.
+
+2025-03-19  Zhengyi Fu  <i@fuzy.me>
+
 	Scroll the window so that current line is at top 30% after jumping
 
 	* init.el (+recenter-top-30%): New function.
