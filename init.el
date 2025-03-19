@@ -736,6 +736,9 @@ value for USE-OVERLAYS."
   "M-r" #'consult-history)
 
 (after-load! consult
+  (remove-hook 'consult-after-jump-hook #'recenter)
+  (add-hook 'consult-after-jump-hook #'+recenter-top-30%)
+
   (add-to-list 'consult-buffer-filter "\\`\\*EGLOT")
   (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode))
 
@@ -820,6 +823,10 @@ value for USE-OVERLAYS."
 
   ;; url-only bookmark type
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow))))
+
+
+(defun +recenter-top-30% ()
+  (recenter (ceiling (* (window-height) 0.3))))
 
 
 ;; Put EXWM buffers for FireFox windows to a separate buffer source that
@@ -1230,8 +1237,8 @@ See `xref-show-xrefs' for FETCHER and ALIST."
         xref-show-definitions-function #'+xref--show-definition
         xref-auto-jump-to-first-definition t))
 
-(add-hook 'xref-after-jump-hook #'recenter)
-(add-hook 'xref-after-return-hook #'recenter)
+(add-hook 'xref-after-jump-hook #'+recenter-top-30%)
+(add-hook 'xref-after-return-hook #'+recenter-top-30%)
 
 ;;;; citre
 

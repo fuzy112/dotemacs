@@ -1,3 +1,11 @@
+2025-03-19  Zhengyi Fu  <i@fuzy.me>
+
+	Scroll the window so that current line is at top 30% after jumping
+
+	* init.el (+recenter-top-30%): New function.
+	(consult-after-jump-hook, xref-after-jump-hook)
+	(xref-after-return-hook): Add it and remove `recenter'.
+
 2025-03-18  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (add-log/vc-dwim-commit): Signal a user-error if vc-dwim
