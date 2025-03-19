@@ -1,5 +1,9 @@
 2025-03-19  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+citre/remove-tags-file): New command.
+
+2025-03-19  Zhengyi Fu  <i@fuzy.me>
+
 	Add a hook that is run after vc-dwim --commit succeeds
 
 	* init.el (vc-dwim-post-commit-hook): New variable. Add

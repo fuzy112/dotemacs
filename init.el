@@ -1250,6 +1250,11 @@ See `xref-show-xrefs' for FETCHER and ALIST."
   (require 'citre-lang-verilog))
 (add-hook 'find-file-hook #'citre-auto-enable-citre-mode)
 
+(defun +citre/remove-tags-file ()
+  (interactive)
+  (when-let* ((tagsfile (citre-tags-file-path)))
+    (delete-file tagsfile)))
+
 ;;;; good-doc
 
 (autoload 'good-doc-lookup "good-doc" nil t)
