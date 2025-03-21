@@ -1187,7 +1187,7 @@ value for USE-OVERLAYS."
 (keymap-set search-map "s" #'consult-eglot-symbols)
 (keymap-set search-map "M-s" #'consult-eglot-symbols)
 
-(defun consult-eglot--async-wrap (async)
+(defun +consult--async-wrap--split-space (async)
   (consult--async-pipeline
    (consult--async-split 'space)
    async
@@ -1196,7 +1196,7 @@ value for USE-OVERLAYS."
 
 (after-load! (:and consult-eglot consult)
   (eval `(consult-customize consult-eglot-symbols
-                            :async-wrap #'consult-eglot--async-wrap)))
+                            :async-wrap #'+consult--async-wrap--split-space)))
 
 ;;;; xref
 
