@@ -1,5 +1,15 @@
 2025-03-21  Zhengyi Fu  <i@fuzy.me>
 
+	Manage citre-mode like eglot
+
+	* init.el: Removed `citre-auto-enable-citre-mode' from `find-file-hook'.
+	Do not turn on `citre-mode' automatically.
+	(+citre--managed-project-modes, +citre--managed-hook): New variables.
+	(+citre--enable, +citre--get-major-modes-for-citre): New functions.
+	(+citre-enable): New command.
+
+2025-03-21  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el <consult-eglot>: Remap `xref-find-apropos' to
 	`consult-eglot-symbols' in `eglot-mode-map'.
 
