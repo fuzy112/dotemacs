@@ -1875,7 +1875,7 @@ Run hook `vc-dwim-post-commit-hook'."
 
     :strings-fn
     (lambda (color)
-      (prism-blend color "white" 0.5))))
+      (prism-blend color (face-attribute 'default :foreground) 0.5))))
 
 (defun +prism--enable-theme-f (_theme)
   (run-with-timer 0 nil #'+prism--set-colors))
