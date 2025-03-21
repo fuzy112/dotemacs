@@ -1847,6 +1847,44 @@ Run hook `vc-dwim-post-commit-hook'."
 ;; Highlight the current gnus header buffer item.
 (add-hook 'gnus-visual-mark-article-hook #'hl-line-highlight)
 
+;;;; prism
+
+(defun +prism--set-colors ()
+  "Configure colors used by prism according to the current theme."
+  (prism-set-colors :num 16
+    :desaturations (cl-loop for i from 0 below 16
+                            collect (* i 2.5))
+    :lightens (cl-loop for i from 0 below 16
+                       collect (* i 2.5))
+    :colors (cond ((modus-themes--list-enabled-themes)
+                   (modus-themes-with-colors
+                     (list pink fg-alt green indigo)))
+                  ((and (fboundp 'ef-themes--list-enabled-themes)
+                        (ef-themes--list-enabled-themes))
+                   (ef-themes-with-colors
+                     (list red green magenta cyan)))
+                  (t
+                   (let ((foreground (face-attribute 'default :foreground)))
+                     (mapcar (lambda (c) (prism-blend c foreground 0.5))
+                             (list "pink" "green" "magenta" "cyan")))))
+
+    :comments-fn
+    (lambda (color)
+      (prism-blend color
+                   (face-attribute 'font-lock-comment-face :foreground) 0.25))
+
+    :strings-fn
+    (lambda (color)
+      (prism-blend color "white" 0.5))))
+
+(defun +prism--enable-theme-f (_theme)
+  (run-with-timer 0 nil #'+prism--set-colors))
+
+(after-load! prism
+  (+prism--set-colors)
+  (add-hook 'enable-theme-functions #'+prism--enable-theme-f 100)
+  (add-hook 'eglot-managed-mode-hook #'prism-mode))
+
 ;;;; email and gnus
 
 (setq mm-discouraged-alternatives '("text/html" "text/richtext"))
