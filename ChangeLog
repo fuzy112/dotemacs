@@ -1,5 +1,10 @@
 2025-03-21  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el <consult-eglot>: Remap `xref-find-apropos' to
+	`consult-eglot-symbols' in `eglot-mode-map'.
+
+2025-03-21  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+prism--set-colors): Blend string colors with the
 	foreground color instead of white.
 
