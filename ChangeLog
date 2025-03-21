@@ -1,3 +1,13 @@
+2025-03-21  Zhengyi Fu  <i@fuzy.me>
+
+	Add package `prism'
+
+	* packages.el (prism): Add package.
+
+	* init.el: Add `prism-mode' to `eglot-managed-mode-hook'.
+	(+prism--set-colors): New function.  Call it after loading prism.
+	(+prism--enable-theme-f): New function.  Added to `enable-theme-functions'.
+
 2025-03-19  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (+citre/remove-tags-file): New command.

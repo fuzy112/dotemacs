@@ -102,6 +102,7 @@
 (straight-use-package 'goggles)
 (straight-use-package 'pulsar)
 (straight-use-package 'lin)
+(straight-use-package 'prism)
 
 ;;;; Scrolling
 (straight-use-package '(image-slicing :host github :repo "ginqi7/image-slicing"))
