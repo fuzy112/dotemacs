@@ -1251,7 +1251,38 @@ See `xref-show-xrefs' for FETCHER and ALIST."
   (require 'citre-lang-fileref))
 (after-load! (citre verilog-mode)
   (require 'citre-lang-verilog))
-(add-hook 'find-file-hook #'citre-auto-enable-citre-mode)
+
+(defvar +citre--managed-project-modes
+  (make-hash-table :test #'equal)
+  "Citre managed projects and modes.
+Keys are projects, values are a list mode symbols.")
+
+(defvar +citre--managed-hook nil)
+
+(defun +citre--enable (&optional buf)
+  (with-current-buffer (or buf (current-buffer))
+    (when-let* ((modes (gethash (project-current) +citre--managed-project-modes))
+                ((derived-mode-p modes))
+                ((not citre-mode)))
+      (citre-mode)
+      (run-hooks '+citre--managed-hook))))
+
+(defun +citre--get-major-modes-for-citre ()
+  (list major-mode))
+
+(defun +citre-enable ()
+  (interactive)
+  (if-let* ((project (project-current))
+            ((progn (citre-auto-enable-citre-mode)
+                    citre-mode))
+            (modes (+citre--get-major-mode-for-citre)))
+      (progn
+        (dolist (mode modes)
+          (cl-pushnew mode
+                      (gethash project +citre--managed-project-modes))
+          (add-hook (intern (format "%S-hook" mode)) #'+citre--enable))
+        (mapc #'+citre--enable (project-buffers project)))
+    (user-error "Failed to enable citre-mode")))
 
 (defun +citre/remove-tags-file ()
   (interactive)
