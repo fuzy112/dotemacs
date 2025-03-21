@@ -1,5 +1,10 @@
 2025-03-21  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+prism--set-colors): Blend string colors with the
+	foreground color instead of white.
+
+2025-03-21  Zhengyi Fu  <i@fuzy.me>
+
 	Rename `consult-eglot--async-wrap' to `+consult--async-wrap--split-space'
 
 	* init.el (+consult--async-wrap--split-space): Renamed from
