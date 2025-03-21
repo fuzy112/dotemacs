@@ -1187,6 +1187,9 @@ value for USE-OVERLAYS."
 (keymap-set search-map "s" #'consult-eglot-symbols)
 (keymap-set search-map "M-s" #'consult-eglot-symbols)
 
+(after-load! eglot
+  (keymap-set eglot-mode-map "<remap> <xref-find-apropos>" 'consult-eglot-symbols))
+
 (defun +consult--async-wrap--split-space (async)
   (consult--async-pipeline
    (consult--async-split 'space)
