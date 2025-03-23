@@ -155,6 +155,10 @@
 (straight-use-package 'org)
 (straight-use-package 'org-modern)
 
+;;; TeX
+
+(straight-use-package 'auctex)
+
 ;;; Editing
 
 (straight-use-package 'valign)

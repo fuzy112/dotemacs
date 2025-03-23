@@ -1,5 +1,9 @@
 2025-03-23  Zhengyi Fu  <i@fuzy.me>
 
+	* packages.el: Add package AUCTeX.
+
+2025-03-23  Zhengyi Fu  <i@fuzy.me>
+
 	Set `file-name-handler-alist' to nil during startup
 
 	* init.el (+saved-file-name-handler-alist): New variable.  Save
