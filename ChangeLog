@@ -1,3 +1,15 @@
+2025-03-23  Zhengyi Fu  <i@fuzy.me>
+
+	Implement a project-specific hook mechanism
+
+	* init.el (+citre--enable): Removed function.
+	(+citre--managed-hook, +citre--enable): Removed variables.
+	(+citre-enable): Use `project-add-hook!'.
+
+	* site-lisp/dotemacs-core.el (dotemacs--project-hook-function)
+	(project-add-hook!): New functions.
+	(dotemacs--project-hooks): New variable.
+
 2025-03-21  Zhengyi Fu  <i@fuzy.me>
 
 	Manage citre-mode like eglot
