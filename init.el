@@ -24,6 +24,9 @@
 
 ;;; Code:
 
+(defconst +saved-file-name-handler-alist file-name-handler-alist)
+(setq file-name-handler-alist nil)
+
 (require 'early-init early-init-file t)
 (when (featurep 'init)
   (load early-init-file nil t))
@@ -2427,6 +2430,10 @@ Otherwise disable it."
 ;;;; _
 
 (provide 'init)
+
+(when (bound-and-true-p +saved-file-name-handler-alist)
+  (setq file-name-handler-alist +saved-file-name-handler-alist)
+  (makunbound '+saved-file-name-handler-alist))
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
