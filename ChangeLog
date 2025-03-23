@@ -1,5 +1,12 @@
 2025-03-23  Zhengyi Fu  <i@fuzy.me>
 
+	Set `file-name-handler-alist' to nil during startup
+
+	* init.el (+saved-file-name-handler-alist): New variable.  Save
+	value for `file-name-handler-alist' during startup.
+
+2025-03-23  Zhengyi Fu  <i@fuzy.me>
+
 	Implement a project-specific hook mechanism
 
 	* init.el (+citre--enable): Removed function.
