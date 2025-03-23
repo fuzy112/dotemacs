@@ -110,5 +110,20 @@ See `after-load-1!' for SPEC."
   (declare (indent 1))
   `(after-load-1! ,spec (with-no-warnings ,@body)))
 
+(defvar dotemacs--project-hooks nil)
+
+(defun dotemacs--project-hook-function (hook &rest args)
+  (when-let* ((project (project-current))
+              (hooks (alist-get project dotemacs--project-hooks nil t #'equal))
+              (function (alist-get hook hooks)))
+    (apply function args)))
+
+(defun project-add-hook! (hook function &optional depth)
+  (let ((project (project-current))
+        (project-hook-function (intern (format "dotemacs--project-hook:%S" hook))))
+    (fset project-hook-function (apply-partially #'dotemacs--project-hook-function hook))
+    (setf (alist-get hook (alist-get project dotemacs--project-hooks nil t #'equal)) function)
+    (add-hook hook project-hook-function depth)))
+
 (provide 'dotemacs-core)
 ;;; dotemacs-core.el ends here
