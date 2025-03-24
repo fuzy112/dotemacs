@@ -1,5 +1,9 @@
 2025-03-24  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (prism-project): Better predicate and default values.
+
+2025-03-24  Zhengyi Fu  <i@fuzy.me>
+
 	Add command for enabling `prism-mode' in projects
 
 	* init.el (prism-project): New command.
