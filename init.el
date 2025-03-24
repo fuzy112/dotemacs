@@ -1906,8 +1906,30 @@ Run hook `vc-dwim-post-commit-hook'."
 
 (after-load! prism
   (+prism--set-colors)
-  (add-hook 'enable-theme-functions #'+prism--enable-theme-f 100)
-  (add-hook 'eglot-managed-mode-hook #'prism-mode))
+  (add-hook 'enable-theme-functions #'+prism--enable-theme-f 100))
+
+(defvar prism-project-mode-history nil)
+
+(defun prism-project (modes)
+  (interactive
+   (list
+    (mapcar #'intern
+            (completing-read-multiple
+             "Modes: "
+             obarray
+             (lambda (s) (string-suffix-p "-mode" s))
+             t nil 'prism-project-mode-history
+             (list major-mode)))))
+  (let ((project (project-current t))
+        (hooks (mapcar (lambda (mode) (intern (format "%S-hook" mode)))
+                       modes)))
+    (let ((default-directory (project-root project)))
+      (dolist (hook hooks)
+        (project-add-hook! hook #'prism-mode)))
+    (dolist (buf (project-buffers project))
+      (with-current-buffer buf
+        (when (derived-mode-p modes)
+          (prism-mode))))))
 
 ;;;; email and gnus
 
