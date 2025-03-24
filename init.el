@@ -1917,9 +1917,14 @@ Run hook `vc-dwim-post-commit-hook'."
             (completing-read-multiple
              "Modes: "
              obarray
-             (lambda (s) (string-suffix-p "-mode" s))
+             (lambda (s) (and (string-suffix-p "-mode" s)
+                         (fboundp (intern-soft (car (last (split-string s crm-separator)))))))
              t nil 'prism-project-mode-history
-             (list major-mode)))))
+             (let ((mode major-mode)
+                   (default-values (list (symbol-name major-mode))))
+               (while (setq mode (get mode 'derived-mode-parent))
+                 (push (symbol-name mode) default-values))
+               (nreverse default-values))))))
   (let ((project (project-current t))
         (hooks (mapcar (lambda (mode) (intern (format "%S-hook" mode)))
                        modes)))
