@@ -1880,13 +1880,14 @@ Run hook `vc-dwim-post-commit-hook'."
                             collect (* i 2.5))
     :lightens (cl-loop for i from 0 below 16
                        collect (* i 2.5))
-    :colors (cond ((modus-themes--list-enabled-themes)
-                   (modus-themes-with-colors
-                     (list pink fg-alt green indigo)))
+    :colors (cond ((and (fboundp 'modus-themes--list-enabled-themes)
+                        (modus-themes--list-enabled-themes))
+                   (eval '(modus-themes-with-colors
+                            (list pink fg-alt green indigo))))
                   ((and (fboundp 'ef-themes--list-enabled-themes)
                         (ef-themes--list-enabled-themes))
-                   (ef-themes-with-colors
-                     (list red green magenta cyan)))
+                   (eval '(ef-themes-with-colors
+                           (list red green magenta cyan))))
                   (t
                    (let ((foreground (face-attribute 'default :foreground)))
                      (mapcar (lambda (c) (prism-blend c foreground 0.5))

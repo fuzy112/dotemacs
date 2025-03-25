@@ -1,3 +1,8 @@
+2025-03-25  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (+prism--set-colors): Wrap `modus-themes-with-colors'
+	and `ef-themes-with-colors' in eval forms.
+
 2025-03-24  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (prism-project): Better predicate and default values.
