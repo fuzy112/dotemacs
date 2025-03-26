@@ -1573,7 +1573,9 @@ Display the result in a posframe." t)
   (let ((params
          `((log-edit-listfun . ,#'magit-staged-files)
            (log-edit-diff-function . ,#'magit-diff-while-committing))))
-    (log-edit #'ignore nil params)))
+    (dolist (crt params)
+      (set (make-local-variable (car crt)) (cdr crt)))
+    (run-hooks 'log-edit-hook)))
 (add-hook 'git-commit-setup-hook #'+git-commit--log-edit-h)
 
 ;;;; Add-Log
