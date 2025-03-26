@@ -1,3 +1,7 @@
+2025-03-26  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Remove names of keymaps.
+
 2025-03-25  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (+prism--set-colors): Wrap `modus-themes-with-colors'
