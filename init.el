@@ -187,7 +187,6 @@
 (defvar-keymap straight-prefix-map
   :doc    "Prefix map for straight.el commands."
   :prefix 'straight-prefix-map
-  :name   "Straight map"
   "c"     #'straight-check-package
   "C"     #'straight-check-all
   "p"     #'straight-pull-package
@@ -2333,7 +2332,6 @@ Otherwise disable it."
 (defvar-keymap tool-map
   :doc    "Keymap for calling external tools."
   :prefix 'tool-map
-  :name   "Tool map"
   "A"     #'gptel
   "a"     #'gptel-menu
   "t"     #'tui-run
@@ -2350,7 +2348,6 @@ Otherwise disable it."
 (defvar-keymap doc-map
   :doc    "Documentation commands."
   :prefix 'doc-map
-  :name   "Doc map"
   "d"     #'devdocs-lookup
   "i"     #'devdocs-install
   "p"     #'devdocs-peruse
@@ -2360,7 +2357,6 @@ Otherwise disable it."
 (defvar-keymap file-map
   :doc    "Open file commands."
   :prefix 'file-map
-  :name   "File map"
   "e"     #'find-early-init-file
   "i"     #'find-user-init-file
   "a"     #'ffap
@@ -2372,7 +2368,6 @@ Otherwise disable it."
 (defvar-keymap toggle-map
   :doc    "Keymap for toggling options."
   :prefix 'toggle-map
-  :name   "Toggle map"
   "f"     #'display-fill-column-indicator-mode
   "l"     #'display-line-numbers-mode
   "o"     #'outline-minor-mode
@@ -2384,7 +2379,6 @@ Otherwise disable it."
 (defvar-keymap debug-map
   :doc    "Keymap for debugging commands."
   :prefix 'debug-map
-  :name   "Debug map"
   "e"     #'toggle-debug-on-error
   "q"     #'toggle-debug-on-quit
   "f"     #'debug-on-entry
