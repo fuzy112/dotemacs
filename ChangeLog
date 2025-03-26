@@ -1,5 +1,12 @@
 2025-03-26  Zhengyi Fu  <i@fuzy.me>
 
+	Improve Log-Edit support for Git-Commit mode
+
+	* init.el (+git-commit--log-edit-h): Do not call `log-edit'.
+	Directly set params and run `log-edit-hook'.
+
+2025-03-26  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Remove names of keymaps.
 
 2025-03-25  Zhengyi Fu  <i@fuzy.me>
