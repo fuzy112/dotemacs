@@ -1,5 +1,10 @@
 2025-03-31  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el <xref>: Avoid overwrite standard values for
+	`xref-after-jump-hook' and `xref-after-return-hook'.
+
+2025-03-31  Zhengyi Fu  <i@fuzy.me>
+
 	* templates/cc-mode.eld: Add snippets for writing tevent
 	asynchronous operations.
 

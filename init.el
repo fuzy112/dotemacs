@@ -1240,10 +1240,9 @@ See `xref-show-xrefs' for FETCHER and ALIST."
               ((executable-find "ugrep") 'ugrep)
               (t 'grep))
         xref-show-definitions-function #'+xref--show-definition
-        xref-auto-jump-to-first-definition t))
-
-(add-hook 'xref-after-jump-hook #'+recenter-top-30%)
-(add-hook 'xref-after-return-hook #'+recenter-top-30%)
+        xref-auto-jump-to-first-definition t)
+  (add-hook 'xref-after-jump-hook #'+recenter-top-30%)
+  (add-hook 'xref-after-return-hook #'+recenter-top-30%))
 
 ;;;; citre
 
