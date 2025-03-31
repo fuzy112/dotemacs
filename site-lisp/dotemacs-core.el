@@ -137,7 +137,7 @@ See `after-load-1!' for SPEC."
      (list hook function project)))
   (let ((project (or project (project-current)))
         (functions (alist-get hook (alist-get project dotemacs--project-hooks nil t #'equal))))
-    (setf (alist-get hook (alist-get project dotemacs--project-hooks nil t #'equal))
+    (setf (alist-get hook (alist-get project dotemacs--project-hooks nil t #'equal) nil t)
           (delq function functions))))
 
 (defvar emmip--minor-mode-history nil)
