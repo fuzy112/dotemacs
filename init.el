@@ -1574,8 +1574,11 @@ Display the result in a posframe." t)
            (log-edit-diff-function . ,#'magit-diff-while-committing))))
     (dolist (crt params)
       (set (make-local-variable (car crt)) (cdr crt)))
-    (run-hooks 'log-edit-hook)))
-(add-hook 'git-commit-setup-hook #'+git-commit--log-edit-h)
+    (run-hooks 'log-edit-hook)
+    (save-buffer)))
+
+(after-load! git-commit
+  (add-hook 'git-commit-setup-hook #'+git-commit--log-edit-h 90))
 
 ;;;; Add-Log
 
