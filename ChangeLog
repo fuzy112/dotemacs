@@ -1,5 +1,9 @@
 2025-03-31  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/dotemacs-core.el (project-remove-hook!): New command.
+
+2025-03-31  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el <git-commit>: Hide log-edit files buffer after commit.
 
 2025-03-31  Zhengyi Fu  <i@fuzy.me>
