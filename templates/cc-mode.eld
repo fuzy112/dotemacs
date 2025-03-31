@@ -39,6 +39,42 @@ c-mode
 	     "  }" n>
 	     "}" n)
 
+(_state "struct " (p "name" name) "_state {" n>
+	n
+	"};" n)
+
+(_send "struct tevent_req *" (p "name" name) "_send(TALLOC_CTX *mem_ctx, struct tevent_context *ev)" n
+       "{" n>
+       "struct tevent_req *req;" n>
+       "struct " name "_state *state = NULL;" n>
+       "errno_t ret = 0;" n n>
+       "req = tevent_req_create(mem_ctx, &state, struct " name "_state);" n>
+       "if (req == NULL)" n>
+       "return NULL;" n n>
+       "return req;" n n
+       "immediately:" n>
+       "if (ret == 0)" n>
+       "tevent_req_done(req);" n>
+       "else" n>
+       "tevent_req_error(req, ret);" n>
+       "tevent_req_post(req, ev);" n>
+       "return req;" n
+       "}")
+
+(_done "static void " (p "name" name) "_done(struct tevent_req *subreq)" n
+       "{" n>
+       "struct tevent_req *req;" n>
+       "struct " name "_state *state;" n>
+       "errno_t ret = 0;" n n>
+       "req = tevent_req_callback_data(subreq, struct tevent_req);" n>
+       "state = tevent_req_data(req, struct " name "_state);" n> n
+       "done:" n>
+       "if (ret == 0)" n>
+       "tevent_req_done(req);" n>
+       "else" n>
+       "tevent_req_error(req, ret);" n
+       "}" n)
+
 c++-mode
 
 (header "#ifndef " (p (upcase (replace-regexp-in-string "[^a-zA-Z0-9_]" "_" (file-name-nondirectory (buffer-file-name)))) guard) n

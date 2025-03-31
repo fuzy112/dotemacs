@@ -1,3 +1,8 @@
+2025-03-31  Zhengyi Fu  <i@fuzy.me>
+
+	* templates/cc-mode.eld: Add snippets for writing tevent
+	asynchronous operations.
+
 2025-03-26  Zhengyi Fu  <i@fuzy.me>
 
 	Improve Log-Edit support for Git-Commit mode
