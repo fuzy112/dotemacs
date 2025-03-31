@@ -1,5 +1,13 @@
 2025-03-31  Zhengyi Fu  <i@fuzy.me>
 
+	Fix the incorrect buffer modified flag state
+
+	* init.el <git-commit>: Do not overwrite standard-value of
+	`git-commit-setup-hook'.
+	(+git-commit--log-edit-h): Save the log buffer.
+
+2025-03-31  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el <xref>: Avoid overwrite standard values for
 	`xref-after-jump-hook' and `xref-after-return-hook'.
 
