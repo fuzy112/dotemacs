@@ -127,6 +127,19 @@ See `after-load-1!' for SPEC."
     (cl-pushnew function (alist-get hook (alist-get project dotemacs--project-hooks nil t #'equal)))
     (add-hook hook project-hook-function depth)))
 
+(defun project-remove-hook! (hook function &optional project)
+  (interactive
+   (let* ((project (project-current t))
+          (hooks (alist-get project dotemacs--project-hooks nil t #'equal))
+          (hook (intern (completing-read "Hook: " hooks nil t)))
+          (functions (alist-get hook hooks nil t #'equal))
+          (function (intern (completing-read "Function: " functions nil t))))
+     (list hook function project)))
+  (let ((project (or project (project-current)))
+        (functions (alist-get hook (alist-get project dotemacs--project-hooks nil t #'equal))))
+    (setf (alist-get hook (alist-get project dotemacs--project-hooks nil t #'equal))
+          (delq function functions))))
+
 (defvar emmip--minor-mode-history nil)
 (defvar emmip--major-modes-history nil)
 
