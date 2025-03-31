@@ -1578,6 +1578,7 @@ Display the result in a posframe." t)
     (save-buffer)))
 
 (after-load! git-commit
+  (add-hook 'git-commit-post-finish-hook #'log-edit-hide-buf)
   (add-hook 'git-commit-setup-hook #'+git-commit--log-edit-h 90))
 
 ;;;; Add-Log
