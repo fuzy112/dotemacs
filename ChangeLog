@@ -1,5 +1,16 @@
 2025-03-31  Zhengyi Fu  <i@fuzy.me>
 
+	Add new command `enable-minor-mode-in-project'
+
+	* site-lisp/dotemacs-core.el
+	(dotemacs--project-hook-function, project-add-hook!): Allow
+	multiple functions to be added to a single hook.
+	(emmip--minor-mode-history, emmip--major-modes-history): New variables.
+	(dotemacs--major-mode-completion-table): New function.
+	(enable-minor-mode-in-project): New command.
+
+2025-03-31  Zhengyi Fu  <i@fuzy.me>
+
 	Fix the incorrect buffer modified flag state
 
 	* init.el <git-commit>: Do not overwrite standard-value of

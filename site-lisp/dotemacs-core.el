@@ -115,15 +115,71 @@ See `after-load-1!' for SPEC."
 (defun dotemacs--project-hook-function (hook &rest args)
   (when-let* ((project (project-current))
               (hooks (alist-get project dotemacs--project-hooks nil t #'equal))
-              (function (alist-get hook hooks)))
-    (apply function args)))
+              (functions (alist-get hook hooks)))
+    (if (functionp functions)
+        (funcall functions)
+      (mapcar #'funcall functions))))
 
 (defun project-add-hook! (hook function &optional depth)
   (let ((project (project-current))
         (project-hook-function (intern (format "dotemacs--project-hook:%S" hook))))
-    (fset project-hook-function (apply-partially #'dotemacs--project-hook-function hook))
-    (setf (alist-get hook (alist-get project dotemacs--project-hooks nil t #'equal)) function)
+    (defalias project-hook-function (apply-partially #'dotemacs--project-hook-function hook))
+    (cl-pushnew function (alist-get hook (alist-get project dotemacs--project-hooks nil t #'equal)))
     (add-hook hook project-hook-function depth)))
+
+(defvar emmip--minor-mode-history nil)
+(defvar emmip--major-modes-history nil)
+
+(defun dotemacs--major-mode-completion-table ()
+  (let ((modes (seq-filter
+                (lambda (x)
+                  (and (symbolp x)
+                       x
+                       (string-suffix-p "-mode" (symbol-name x))))
+                (map-values auto-mode-alist))))
+    (lambda (str pred action)
+      (if (eq action 'metadata)
+          '(metadata . ((category . command)))
+        (complete-with-action action modes str pred)))))
+
+(defun enable-minor-mode-in-project (mode project major-modes)
+  "Enable MODE in all buffers of any MAJOR-MODES in PROJECT."
+  (interactive
+   (list
+    (intern-soft
+     (completing-read "Minor mode to enable: "
+                      (describe-minor-mode-completion-table-for-symbol)
+                      (lambda (mode)
+                        (local-variable-if-set-p (intern mode)))
+                      'require-match
+                      nil
+                      'emmip--minor-mode-history))
+    (project-current 'maybe-prompt)
+    (mapcar #'intern-soft
+            (completing-read-multiple
+             "Major modes: "
+             (dotemacs--major-mode-completion-table)
+             nil
+             'require-match
+             nil
+             'emmip--major-modes-history
+             (let ((values nil)
+                   (mode major-mode))
+               (while mode
+                 (push (symbol-name mode) values)
+                 (setq mode (get mode 'derived-mode-parent)))
+               (nreverse values))))))
+  (let ((default-directory (project-root project)))
+    (dolist (mm major-modes)
+      (custom-load-symbol mm)
+      (let ((hook (intern-soft (format "%S-hook" mm))))
+        (unless hook
+          (error "Major mode hook `%S' is not defined" hook))
+        (project-add-hook! hook mode))))
+  (dolist (buf (project-buffers project))
+    (with-current-buffer buf
+      (when (derived-mode-p major-modes)
+        (funcall mode)))))
 
 (provide 'dotemacs-core)
 ;;; dotemacs-core.el ends here
