@@ -1914,34 +1914,6 @@ Run hook `vc-dwim-post-commit-hook'."
   (+prism--set-colors)
   (add-hook 'enable-theme-functions #'+prism--enable-theme-f 100))
 
-(defvar prism-project-mode-history nil)
-
-(defun prism-project (modes)
-  (interactive
-   (list
-    (mapcar #'intern
-            (completing-read-multiple
-             "Modes: "
-             obarray
-             (lambda (s) (and (string-suffix-p "-mode" s)
-                         (fboundp (intern-soft (car (last (split-string s crm-separator)))))))
-             t nil 'prism-project-mode-history
-             (let ((mode major-mode)
-                   (default-values (list (symbol-name major-mode))))
-               (while (setq mode (get mode 'derived-mode-parent))
-                 (push (symbol-name mode) default-values))
-               (nreverse default-values))))))
-  (let ((project (project-current t))
-        (hooks (mapcar (lambda (mode) (intern (format "%S-hook" mode)))
-                       modes)))
-    (let ((default-directory (project-root project)))
-      (dolist (hook hooks)
-        (project-add-hook! hook #'prism-mode)))
-    (dolist (buf (project-buffers project))
-      (with-current-buffer buf
-        (when (derived-mode-p modes)
-          (prism-mode))))))
-
 ;;;; email and gnus
 
 (setq mm-discouraged-alternatives '("text/html" "text/richtext"))
