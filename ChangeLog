@@ -1,3 +1,13 @@
+2025-04-01  Zhengyi Fu  <i@fuzy.me>
+
+	Improve `enable-minor-mode-in-project'
+
+	* site-lisp/dotemacs-core.el (dotemacs--project-hook-function):
+	Use args.  Add docstring.
+	(project-add-hook!): Add docstring to the hook function.
+	(project-remove-hook!): Add docstring.  Add default value for
+	PROJECT.
+
 2025-03-31  Zhengyi Fu  <i@fuzy.me>
 
 	* site-lisp/dotemacs-core.el (project-remove-hook!): Remove empty hooks.
