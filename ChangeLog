@@ -1,5 +1,9 @@
 2025-04-01  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (meow-setup): Bind "`" to `meow-universal-argument'.
+
+2025-04-01  Zhengyi Fu  <i@fuzy.me>
+
 	Improve `enable-minor-mode-in-project'
 
 	* site-lisp/dotemacs-core.el (dotemacs--project-hook-function):
