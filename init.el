@@ -1254,25 +1254,6 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 (after-load! (citre verilog-mode)
   (require 'citre-lang-verilog))
 
-(defun +citre--get-major-modes-for-citre ()
-  (list major-mode))
-
-(defun +citre-enable ()
-  (interactive)
-  (if-let* ((project (project-current))
-            ((progn (citre-auto-enable-citre-mode)
-                    citre-mode))
-            (modes (+citre--get-major-mode-for-citre)))
-      (progn
-        (dolist (mode modes)
-          (project-add-hook! (intern (format "%S-hook" mode)) #'citre-mode))
-        (dolist (buf (project-buffers project))
-          (with-current-buffer buf
-            (and (derived-mode-p modes)
-                 (not citre-mode)
-                 (citre-mode)))))
-    (user-error "Failed to enable citre-mode")))
-
 (defun +citre/remove-tags-file ()
   (interactive)
   (when-let* ((tagsfile (citre-tags-file-path)))

@@ -1,5 +1,13 @@
 2025-04-01  Zhengyi Fu  <i@fuzy.me>
 
+	Remove command `+citre-enable'
+
+	* init.el (+citre--get-major-modes-for-citre): Remove function.
+	(+citre-enable): Remove command.  Use
+	`enable-minor-mode-in-project' instead.
+
+2025-04-01  Zhengyi Fu  <i@fuzy.me>
+
 	Remove command `prism-project'
 
 	* init.el (prism-project): Remove commmand.  Use
