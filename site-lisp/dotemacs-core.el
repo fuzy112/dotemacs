@@ -113,21 +113,29 @@ See `after-load-1!' for SPEC."
 (defvar dotemacs--project-hooks nil)
 
 (defun dotemacs--project-hook-function (hook &rest args)
+  "Call registered functions for HOOK in the current project with ARGS.
+
+See `project-add-hook!'."
   (when-let* ((project (project-current))
               (hooks (alist-get project dotemacs--project-hooks nil t #'equal))
               (functions (alist-get hook hooks)))
     (if (functionp functions)
-        (funcall functions)
-      (mapcar #'funcall functions))))
+        (apply functions args)
+      (dolist (fun functions)
+        (apply fun args)))))
 
 (defun project-add-hook! (hook function &optional depth)
   (let ((project (project-current))
         (project-hook-function (intern (format "dotemacs--project-hook:%S" hook))))
-    (defalias project-hook-function (apply-partially #'dotemacs--project-hook-function hook))
+    (defalias project-hook-function (apply-partially #'dotemacs--project-hook-function hook)
+      (format "Equivalent to `(apply #\\='dotemacs--project-hook-function \\='%S REST)'.
+
+See `dotemacs--project-hook-function' for details." hook))
     (cl-pushnew function (alist-get hook (alist-get project dotemacs--project-hooks nil t #'equal)))
     (add-hook hook project-hook-function depth)))
 
-(defun project-remove-hook! (hook function &optional project)
+(cl-defun project-remove-hook! (hook function &optional (project (project-current)))
+  "Remove FUNCTION from HOOK in PROJECT."
   (interactive
    (let* ((project (project-current t))
           (hooks (alist-get project dotemacs--project-hooks nil t #'equal))
@@ -135,8 +143,7 @@ See `after-load-1!' for SPEC."
           (functions (alist-get hook hooks nil t #'equal))
           (function (intern (completing-read "Function: " functions nil t))))
      (list hook function project)))
-  (let ((project (or project (project-current)))
-        (functions (alist-get hook (alist-get project dotemacs--project-hooks nil t #'equal))))
+  (let ((functions (alist-get hook (alist-get project dotemacs--project-hooks nil t #'equal))))
     (setf (alist-get hook (alist-get project dotemacs--project-hooks nil t #'equal) nil t)
           (delq function functions))))
 
