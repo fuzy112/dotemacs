@@ -888,6 +888,26 @@ value for USE-OVERLAYS."
 ;; Custom consult commands.
 (autoload 'consult-kill "consult-kill" nil t)
 
+
+(defun send-password-to-buffer-process (buffer)
+  "Read a password and send it to the process in BUFFER."
+  (interactive
+   (list
+    (if (or current-prefix-arg (not (get-buffer-process (current-buffer))))
+        (consult--read
+         (consult--buffer-query
+          :predicate (lambda (buf)
+                       (get-buffer-process buf))
+          :as #'consult--buffer-pair)
+         :prompt "Buffer: "
+         :category 'buffer
+         :lookup #'consult--lookup-cdr)
+      (current-buffer))))
+  (process-send-string (get-buffer-process buffer)
+                       (concat
+                        (read-passwd "Password: ")
+                        "\n")))
+
 ;;;; indent-aux
 
 ;; New minor mode in Emacs 30.1: deindents code copied into kill-ring.
