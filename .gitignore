@@ -52,7 +52,6 @@ elpa/archives
 /.dir-locals.el
 /good-doc
 /request
-/forge-database.sqlite
-/forge-database-v13-20250113-0950.sqlite
+/forge-database*.sqlite
 /multisession/
 /persp-confs/
