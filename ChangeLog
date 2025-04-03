@@ -1,3 +1,7 @@
+2025-04-03  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el <eglot>: Bind "C-c C-a" to `eglot-code-actions'.
+
 2025-04-01  Zhengyi Fu  <i@fuzy.me>
 
 	Remove command `+citre-enable'
