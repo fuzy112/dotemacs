@@ -1009,6 +1009,7 @@ value for USE-OVERLAYS."
 (autoload 'recentf-track-opened-file "recentf"
   "Insert the name of the file just opened or written into the recent list." )
 (add-hook 'find-file-hook #'recentf-track-opened-file)
+(add-hook 'buffer-list-update-hook #'recentf-track-opened-file)
 (after-load! recentf
   (setq recentf-max-saved-items 8192)
   (let ((inhibit-message t))
