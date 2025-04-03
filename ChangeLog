@@ -1,5 +1,9 @@
 2025-04-03  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (send-password-to-buffer-process): New command.
+
+2025-04-03  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el <eglot>: Add --query-driver= arguments to clangd.
 
 2025-04-03  Zhengyi Fu  <i@fuzy.me>
