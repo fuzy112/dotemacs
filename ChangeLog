@@ -1,5 +1,9 @@
 2025-04-03  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el <eglot>: Add --query-driver= arguments to clangd.
+
+2025-04-03  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (buffer-list-update-hook): Add `recentf-track-opened-file'.
 
 2025-04-03  Zhengyi Fu  <i@fuzy.me>
