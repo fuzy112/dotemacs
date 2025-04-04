@@ -146,7 +146,7 @@
    '(")"        . meow-forward-slurp)
    '("{"        . meow-backward-barf)
    '("}"        . meow-forward-barf)
-   '("`'"        . meow-universal-argument)))
+   '("`"        . meow-universal-argument)))
 
 (meow-setup)
 (meow-global-mode)
