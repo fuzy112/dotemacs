@@ -1,5 +1,9 @@
 2025-04-04  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (meow-setup): Fix key binding for `meow-universal-argument'.
+
+2025-04-04  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (straight-magit-package-status): Fix `interactive' form.
 
 2025-04-03  Zhengyi Fu  <i@fuzy.me>
