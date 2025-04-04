@@ -1,3 +1,7 @@
+2025-04-04  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (straight-magit-package-status): Fix `interactive' form.
+
 2025-04-03  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (send-password-to-buffer-process): New command.
