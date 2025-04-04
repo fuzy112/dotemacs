@@ -173,10 +173,15 @@
 
 ;; Define a command to run `magit' in package repos.
 
+(eval-when-compile
+  (require 'llama))
+
 (defvar straight--recipe-cache)
 (defun straight-magit-package-status (pkg)
   "Run `magit-dispatch' in the repo of PKG."
-  (interactive (list (straight--select-package "Visit: ")))
+  (interactive
+   (list (straight--select-package
+          "Visit" (##plist-get %1 :local-repo))))
   (let ((repo (plist-get (gethash pkg straight--recipe-cache)
                          :local-repo)))
     (magit-status-setup-buffer (straight--repos-dir repo))))
