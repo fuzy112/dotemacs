@@ -1637,6 +1637,8 @@ Run hook `vc-dwim-post-commit-hook'."
   (add-hook 'vc-dwim-post-commit-hook #'vc-refresh-state))
 (after-load! magit
   (add-hook 'vc-dwim-post-commit-hook #'magit-refresh))
+(after-load! diff-hl
+  (add-hook 'vc-dwim-post-commit-hook #'diff-hl-update))
 
 ;;;; diff-hl
 

@@ -1,3 +1,10 @@
+2025-04-06  Zhengyi Fu  <i@fuzy.me>
+
+	Update `diff-hl' state after committing with vc-dwim
+
+	* init.el <diff-hl>: Add `diff-hl-update' to
+	`vc-dwim-post-commit-hook'.
+
 2025-04-04  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (meow-setup): Fix key binding for `meow-universal-argument'.
