@@ -1,3 +1,12 @@
+2025-04-07  Zhengyi Fu  <i@fuzy.me>
+
+	Improve flymake configurations
+
+	* init.el (+nxml-mode--flymake, +cc-mode--hook): Fix typo
+	(`flymake-diagnostic-functions').
+	(flymake-systemd): Autoload this function.
+	(+systemd-mode--setup): New function.  Added to `systemd-mode-hook'.
+
 2025-04-06  Zhengyi Fu  <i@fuzy.me>
 
 	Update `diff-hl' state after committing with vc-dwim
