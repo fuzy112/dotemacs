@@ -1841,7 +1841,7 @@ Run hook `vc-dwim-post-commit-hook'."
 ;;;; repeat
 
 (defun +repeat--post-command ()
-  (when (function-get this-command 'repeat-map)
+  (when (and (symbolp this-command) (function-get this-command 'repeat-map))
     (message "Command %S has a `repeat-map'" this-command)
     (require 'repeat)
     (declare-function repeat-post-hook "repeat.el")
