@@ -835,6 +835,8 @@ value for USE-OVERLAYS."
 
 (defun +recenter-top-30% ()
   (recenter (ceiling (* (window-height) 0.3))))
+(defun +recenter-bottom-30% ()
+  (recenter (ceiling (* (window-height) 0.7))))
 
 
 ;; Put EXWM buffers for FireFox windows to a separate buffer source that
@@ -1293,8 +1295,9 @@ See `xref-show-xrefs' for FETCHER and ALIST."
               (t 'grep))
         xref-show-definitions-function #'+xref--show-definition
         xref-auto-jump-to-first-definition t)
+  (remove-hook 'xref-after-jump-hook #'recenter)
   (add-hook 'xref-after-jump-hook #'+recenter-top-30%)
-  (add-hook 'xref-after-return-hook #'+recenter-top-30%))
+  (add-hook 'xref-after-return-hook #'+recenter-bottom-30%))
 
 ;;;; citre
 

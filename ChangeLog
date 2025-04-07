@@ -1,5 +1,13 @@
 2025-04-07  Zhengyi Fu  <i@fuzy.me>
 
+	Better window scrolling after xref jump and return
+
+	* init.el (+recenter-bottom-30%): New function.  Added to
+	`xref-after-return-hook'.
+	<xref>: Remove `recenter' from `xref-after-jump-hook'.
+
+2025-04-07  Zhengyi Fu  <i@fuzy.me>
+
 	Improve flymake configurations
 
 	* init.el (+nxml-mode--flymake, +cc-mode--hook): Fix typo
