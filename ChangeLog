@@ -1,5 +1,12 @@
 2025-04-07  Zhengyi Fu  <i@fuzy.me>
 
+	Add keybinding for `flymake-mode'
+
+	* init.el (toggle-map): Bind "f" to `flymake-mode'.
+	Bind "q" to `display-fill-column-indicator-mode'.
+
+2025-04-07  Zhengyi Fu  <i@fuzy.me>
+
 	Better window scrolling after xref jump and return
 
 	* init.el (+recenter-bottom-30%): New function.  Added to

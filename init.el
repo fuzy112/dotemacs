@@ -2383,7 +2383,8 @@ Otherwise disable it."
 (defvar-keymap toggle-map
   :doc    "Keymap for toggling options."
   :prefix 'toggle-map
-  "f"     #'display-fill-column-indicator-mode
+  "f"     #'flymake-mode
+  "q"     #'display-fill-column-indicator-mode
   "l"     #'display-line-numbers-mode
   "o"     #'outline-minor-mode
   "c"     #'+visual-fill-column/toggle-visual-fill-and-center
