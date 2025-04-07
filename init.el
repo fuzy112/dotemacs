@@ -124,7 +124,7 @@
    '("O"        . meow-to-block)
    '("p"        . meow-prev)
    '("P"        . meow-prev-expand)
-   '("q"        . meow-quit)
+   '("q"        . quit-window)
    '("Q"        . meow-goto-line)
    '("r"        . meow-replace)
    '("R"        . meow-swap-grab)
