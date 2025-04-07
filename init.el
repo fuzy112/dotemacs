@@ -1128,12 +1128,23 @@ value for USE-OVERLAYS."
 
 (defun +nxml-mode--flymake ()
   (when (fboundp 'flymake-xmllint)
-    (add-hook 'flymake-diagnostics-functions nil #'flymake-xmllint)))
+    (add-hook 'flymake-diagnostic-functions #'flymake-xmllint nil t)))
 (add-hook 'nxml-mode-hook #'+nxml-mode--flymake)
 
 ;;;; yaml
 
 (add-to-list 'auto-mode-alist '("/\\.clang\\(?:d\\|-format\\)\\'" . yaml-mode))
+
+;;;; systemd-mode
+
+(autoload 'flymake-systemd "flymake-systemd"
+"Verify the systemd unit file.")
+
+(defun +systemd-mode--setup ()
+  (when (fboundp 'flymake-systemd)
+    (add-hook 'flymake-diagnostic-functions #'flymake-systemd nil t)))
+
+(add-hook 'systemd-mode-hook #'+systemd-mode--setup)
 
 ;;;; outline
 
@@ -1414,7 +1425,7 @@ Display the result in a posframe." t)
       c-insert-tab-function #'completion-at-point)
 (autoload 'flymake-clang-tidy "flymake-clang-tidy")
 (defun +cc-mode--hook ()
-  (add-hook 'flymake-diagnostics-functions #'flymake-clang-tidy nil t))
+  (add-hook 'flymake-diagnostic-functions #'flymake-clang-tidy nil t))
 (add-hook 'c-mode-common-hook '+cc-mode--hook)
 
 ;;;; rust-mode
