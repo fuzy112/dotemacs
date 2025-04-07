@@ -1,5 +1,10 @@
 2025-04-07  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+repeat--post-command): Fixed the error where
+	`this-command` is not a symbol.
+
+2025-04-07  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (meow-setup): Bind "q" to `quit-window'.
 
 2025-04-07  Zhengyi Fu  <i@fuzy.me>
