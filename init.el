@@ -1347,6 +1347,15 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 (add-hook 'lisp-data-mode-hook #'paren-face-mode)
 (add-hook 'scheme-mode-hook #'paren-face-mode)
 
+;;;; paredit
+
+(add-hook 'lisp-data-mode-hook #'paredit-mode)
+(add-hook 'scheme-mode-hook #'paredit-mode)
+
+(after-load! paredit
+  (keymap-unset paredit-mode-map "M-s")
+  (keymap-set paredit-mode-map "M-p" #'paredit-splice-sexp))
+
 ;;;; elec-pair
 
 (after-load! elec-pair
