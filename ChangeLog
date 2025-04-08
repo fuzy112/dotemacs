@@ -1,5 +1,15 @@
 2025-04-08  Zhengyi Fu  <i@fuzy.me>
 
+	Add package `paredit'
+
+	* init.el <paredit>: Enable `paredit-mode' in `lisp-data-mode' and
+	`scheme-mode'.  Unbind M-s in `paredit-mode-map'.  Bind M-p to
+	`paredit-splice-sexp'.
+
+	* packages.el: Add package `paredit'.
+
+2025-04-08  Zhengyi Fu  <i@fuzy.me>
+
 	Remove `puni'
 
 	* packages.el:

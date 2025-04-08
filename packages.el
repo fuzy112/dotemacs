@@ -167,6 +167,7 @@
 (straight-use-package 'adaptive-wrap)
 (straight-use-package 'visual-fill-column)
 (straight-use-package 'logos)
+(straight-use-package 'paredit)
 
 ;;; Extra major modes
 (straight-use-package 'yaml-mode)
