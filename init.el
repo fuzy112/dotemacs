@@ -1347,17 +1347,7 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 (add-hook 'lisp-data-mode-hook #'paren-face-mode)
 (add-hook 'scheme-mode-hook #'paren-face-mode)
 
-;;;; puni
-
-(add-hook 'prog-mode-hook #'puni-mode)
-(add-hook 'conf-mode-hook #'puni-mode)
-(add-hook 'puni-mode-hook #'electric-pair-local-mode)
-(after-load! elisp-mode
-  (define-keymap :keymap lisp-mode-shared-map
-    "C-)" #'puni-slurp-forward
-    "C-(" #'puni-slurp-backward
-    "C-}" #'puni-barf-forward
-    "C-{" #'puni-barf-backward))
+;;;; elec-pair
 
 (after-load! elec-pair
   (keymap-set electric-pair-mode-map "]" #'up-list))

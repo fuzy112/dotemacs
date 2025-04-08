@@ -1,3 +1,10 @@
+2025-04-08  Zhengyi Fu  <i@fuzy.me>
+
+	Remove `puni'
+
+	* packages.el:
+	* init.el: Remove `puni' configuration.
+
 2025-04-07  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (+repeat--post-command): Fixed the error where
