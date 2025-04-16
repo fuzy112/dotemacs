@@ -1,3 +1,9 @@
+2025-04-16  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/dotemacs-core.el (enable-minor-mode-in-project): Try
+	loading the minor mode if input doesn't match any candidates from
+	the completion table.
+
 2025-04-15  Zhengyi Fu  <i@fuzy.me>
 
 	* packages.el: Add package `go-mode'.
