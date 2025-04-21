@@ -1148,6 +1148,13 @@ value for USE-OVERLAYS."
 
 (add-hook 'systemd-mode-hook #'+systemd-mode--setup)
 
+;;;; pdf
+
+(autoload 'pdf-view-mode "pdf-tools" nil t)
+
+(alist-setq! auto-mode-alist "\\.pdf\\'" #'pdf-view-mode)
+(alist-setq! magic-mode-alist "%PDF" #'pdf-view-mode)
+
 ;;;; outline
 
 (defun +outline-minor-faces ()
