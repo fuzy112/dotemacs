@@ -1,3 +1,10 @@
+2025-04-21  Zhengyi Fu  <i@fuzy.me>
+
+	Enable `pdf-view-mode' by default
+
+	* init.el: Use `pdf-view-mode' by default.
+	(pdf-view-mode): Autoload this function.
+
 2025-04-16  Zhengyi Fu  <i@fuzy.me>
 
 	* site-lisp/dotemacs-core.el (enable-minor-mode-in-project): Try
