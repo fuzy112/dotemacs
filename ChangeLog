@@ -1,3 +1,11 @@
+2025-04-24  Zhengyi Fu  <i@fuzy.me>
+
+	Minor fixes
+
+	* init.el (completion-cycle-threshold): Set to nil.
+	* init.el (cmake-mode-hook, cmake-ts-mode-hook): Add `cmake-capf-setup'.
+	* init.el <eglot>: Add /usr/bin/cc and /usr/bin/c++ to clangd query-drivers.
+
 2025-04-21  Zhengyi Fu  <i@fuzy.me>
 
 	Enable `pdf-view-mode' by default

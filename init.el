@@ -547,7 +547,7 @@ ARGS: see `completion-read-multiple'."
 
 ;;;; corfu
 
-(setopt completion-cycle-threshold 0
+(setopt completion-cycle-threshold nil
         tab-always-indent 'complete
         text-mode-ispell-word-completion nil
         read-extended-command-predicate #'command-completion-default-include-p)
@@ -1137,10 +1137,16 @@ value for USE-OVERLAYS."
 
 (add-to-list 'auto-mode-alist '("/\\.clang\\(?:d\\|-format\\)\\'" . yaml-mode))
 
+;;;; cmake
+
+(autoload 'cmake-capf-setup "cmake-capf")
+(add-hook 'cmake-mode-hook #'cmake-capf-setup)
+(add-hook 'cmake-ts-mode-hook #'cmake-capf-setup)
+
 ;;;; systemd-mode
 
 (autoload 'flymake-systemd "flymake-systemd"
-"Verify the systemd unit file.")
+  "Verify the systemd unit file.")
 
 (defun +systemd-mode--setup ()
   (when (fboundp 'flymake-systemd)
@@ -1232,6 +1238,8 @@ value for USE-OVERLAYS."
 (after-load! (:and eglot cc-mode)
   (setf (alist-get '(c-mode c-ts-mode c++-mode c++-ts-mode objc-mode) eglot-server-programs nil nil 'equal)
         (list "clangd" (string-join '("--query-driver="
+                                      "/usr/bin/cc"
+                                      "/usr/bin/c++"
                                       "/usr/bin/gcc"
                                       "/usr/bin/g++"
                                       "/usr/bin/gcc-*"
@@ -1764,8 +1772,9 @@ Run hook `vc-dwim-post-commit-hook'."
   (if (boundp 'corfu-auto)
       (set (make-local-variable 'corfu-auto)
            +pyim--corfu)))
-(add-hook 'pyim-activate-hook '+pyim--activate)
-(add-hook 'pyim-deactivate-hook '+pyim--deactivate)
+(after-load! corfu
+  (add-hook 'pyim-activate-hook '+pyim--activate)
+  (add-hook 'pyim-deactivate-hook '+pyim--deactivate))
 
 (after-load! orderless
   ;; 通过拼音搜索中文
