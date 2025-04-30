@@ -1235,21 +1235,6 @@ value for USE-OVERLAYS."
   (keymap-set eglot-mode-map "C-c C-a" #'eglot-code-actions)
   (eglot-tempel-mode))
 
-(after-load! (:and eglot cc-mode)
-  (setf (alist-get '(c-mode c-ts-mode c++-mode c++-ts-mode objc-mode) eglot-server-programs nil nil 'equal)
-        (list "clangd" (string-join '("--query-driver="
-                                      "/usr/bin/cc"
-                                      "/usr/bin/c++"
-                                      "/usr/bin/gcc"
-                                      "/usr/bin/g++"
-                                      "/usr/bin/gcc-*"
-                                      "/usr/bin/g++-*"
-                                      "/usr/bin/clang"
-                                      "/usr/bin/clang++"
-                                      "/usr/bin/clang-*"
-                                      "/usr/bin/clang++-*")
-                                    ","))))
-
 ;;;;; consult-eglot
 
 (after-load! consult

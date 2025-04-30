@@ -1,3 +1,8 @@
+2025-04-30  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el <eglot>: Do not specify clangd query-drivers.  Clang
+	builtin headers should be preferred.
+
 2025-04-24  Zhengyi Fu  <i@fuzy.me>
 
 	Minor fixes
