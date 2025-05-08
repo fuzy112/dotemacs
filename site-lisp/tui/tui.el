@@ -273,19 +273,22 @@ When called interactively, the symbol at point is used as the initial query."
 ;;;###autoload
 (defun tui-recentf ()
   (interactive)
+  (require 'recentf)
+  (when recentf-mode
+    (recentf-save-list))
   (tui-run "tui-recentf"
 	   (fuzzy-finder-command
 	    :ansi t
 	    :bind '("ctrl-k:kill-line")
 	    :cmd (format "%s -Q --batch --eval %s"
 			 (expand-file-name invocation-name invocation-directory)
-			    (shell-quote-argument
-			     (prin1-to-string
-			      `(progn
-				 (load ,recentf-save-file)
-				 (dolist (file recentf-list)
-				   (princ (expand-file-name file))
-				   (princ "\n"))))))
+			 (shell-quote-argument
+			  (prin1-to-string
+			   `(progn
+			      (load ,recentf-save-file)
+			      (dolist (file recentf-list)
+				(princ (expand-file-name file))
+				(princ "\n"))))))
 	    :preview "[ -d {} ] && ls -lBh --color=always {} || bat --force-colorization -- {}"
 	    :preview-window "up:60%:+{2}/3")
 	   #'tui--file-callback))
