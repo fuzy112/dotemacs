@@ -1,5 +1,10 @@
 2025-05-08  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/tui/tui.el (tui--grep-preview, tui--file-preview): New
+	variables.
+
+2025-05-08  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/tui/tui.el (tui-recentf): Save recentf list.
 
 	* init.el (auto-mode-alist): Treat .ipp and .tpp files as c++.
