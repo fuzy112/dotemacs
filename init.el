@@ -1430,6 +1430,9 @@ Display the result in a posframe." t)
   (add-hook 'flymake-diagnostic-functions #'flymake-clang-tidy nil t))
 (add-hook 'c-mode-common-hook '+cc-mode--hook)
 
+(alist-setq! auto-mode-alist
+  "\\.\\[cti\\]pp\\'" #'c++-mode)
+
 ;;;; rust-mode
 
 (declare-function project-prefixed-buffer-name "project.el" (arg1))
@@ -2373,6 +2376,7 @@ Otherwise disable it."
   :doc    "Open file commands."
   :prefix 'file-map
   "e"     #'find-early-init-file
+  "f"     #'find-file
   "i"     #'find-user-init-file
   "a"     #'ffap
   "r"     #'ff-find-related-file
@@ -2421,7 +2425,8 @@ Otherwise disable it."
   "M-g" #'magit-file-dispatch
   "p"   #'project-prefix-map
   "q"   quilt-prefix-map
-  "s"   #'deadgrep
+  "r"   #'deadgrep
+  "s"   #'save-buffer
   "v"   #'vc-prefix-map
   "w"   #'window-prefix-map)
 

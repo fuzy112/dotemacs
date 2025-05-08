@@ -29,17 +29,23 @@
 		   (setq default-directory dir)
 		   (erase-buffer)
 		   (current-buffer)))
+	 (ofile (make-temp-file "tui-output."))
 	 (proc (start-file-process
 		name buffer tui-external-terminal-program
-		"-e" "sh" "-c" command)))
+		"-e" shell-file-name "-c"
+		(format "( %s ) >%s" command ofile))))
     (set-process-sentinel
      proc
      (lambda (p _m)
        (unwind-protect
 	   (unless (process-live-p p)
+	     (with-current-buffer buffer
+	       (erase-buffer)
+	       (insert-file-contents ofile))
 	     (funcall callback p))
 	 (unless (process-live-p p)
-	   (kill-buffer buffer)))))))
+	   (kill-buffer buffer)
+	   (delete-file ofile)))))))
 
 (defcustom tui-terminal-function (cond ((fboundp 'eat) #'tui-eat-exec)
 				       ((fboundp 'vterm) #'tui-vterm-exec)
@@ -251,7 +257,11 @@ When called interactively, the symbol at point is used as the initial query."
    (fuzzy-finder-command
     :ansi t
     :bind '("ctrl-k:kill-line")
-    :cmd "ps -ax")
+    :cmd "ps -ax"
+    :header-lines 1
+    :layout "reverse"
+    :preview "ps -p {2} -F"
+    :preview-window "up:5")
    #'tui--kill-callback))
 
 ;;;###autoload
@@ -259,6 +269,38 @@ When called interactively, the symbol at point is used as the initial query."
   (interactive "fLog file: ")
   (tui-run "tui-lnav"
 	   (format "lnav %s" (shell-quote-argument (expand-file-name file)))))
+
+;;;###autoload
+(defun tui-recentf ()
+  (interactive)
+  (tui-run "tui-recentf"
+	   (fuzzy-finder-command
+	    :ansi t
+	    :bind '("ctrl-k:kill-line")
+	    :cmd (format "%s -Q --batch --eval %s"
+			 (expand-file-name invocation-name invocation-directory)
+			    (shell-quote-argument
+			     (prin1-to-string
+			      `(progn
+				 (load ,recentf-save-file)
+				 (dolist (file recentf-list)
+				   (princ (expand-file-name file))
+				   (princ "\n"))))))
+	    :preview "[ -d {} ] && ls -lBh --color=always {} || bat --force-colorization -- {}"
+	    :preview-window "up:60%:+{2}/3")
+	   #'tui--file-callback))
+
+;;;###autoload
+(defun tui-git-ls-files ()
+  (interactive)
+  (tui-run "tui-git-ls-files"
+	   (fuzzy-finder-command
+	    :ansi t
+	    :bind '("ctrl-k:kill-line")
+	    :cmd "git ls-files"
+	    :preview "[ -d {} ] && ls -lBh --color=always {} || bat --force-colorization -- {}"
+	    :preview-window "up:60%:+{2}/3")
+	   #'tui--file-callback))
 
 (provide 'tui)
 ;;; tui.el ends here
