@@ -106,6 +106,8 @@ single argument, the process."
 	  (forward-line (1- line))
 	  (forward-char (1- col)))))))
 
+(defconst tui--grep-preview "bat --force-colorization --highlight-line={2} -- {1}")
+
 (defconst tui--dir
   (file-name-parent-directory (or load-file-name buffer-file-name)))
 
@@ -129,7 +131,7 @@ When called interactively, the symbol at point is used as the initial query."
       :cmd-prompt "ripgrep> "
       :cmd "rg --column --color=always --line-number --smart-case -- {}"
       :delimiter ":"
-      :preview "bat --force-colorization --highlight-line={2} -- {1}"
+      :preview tui--grep-preview
       :preview-window "+{2}-/3")
      #'tui--grep-callback)))
 
@@ -148,7 +150,7 @@ When called interactively, the symbol at point is used as the initial query."
       :cmd-prompt "ugrep> "
       :cmd "ugrep --with-filename --color=always --line-number --column-number --smart-case --ignore-binary -- {}"
       :delimiter ":"
-      :preview "bat --force-colorization --highlight-line={2} -- {1}"
+      :preview tui--grep-preview
       :preview-window "+{2}-/3")
      #'tui--grep-callback)))
 
@@ -170,7 +172,7 @@ When called interactively, the symbol at point is used as the initial query."
       :prompt "line> "
       :cmd (format "rg --column --color=always --with-filename --line-number --smart-case -- {} %s" (shell-quote-argument file))
       :delimiter ":"
-      :preview "bat --force-colorization --highlight-line={2} -- {1}"
+      :preview tui--grep-preview
       :preview-window "up:60%:+{2}-/3")
      #'tui--grep-callback)))
 
@@ -183,6 +185,7 @@ When called interactively, the symbol at point is used as the initial query."
 	  (when (file-exists-p file)
 	    (find-file file)))))))
 
+
 ;;;###autoload
 (defun tui-yazi (arg)
   (interactive "P")
@@ -190,6 +193,9 @@ When called interactively, the symbol at point is used as the initial query."
     (tui-run "tui-yazi"
 	     "tmpfile=$(mktemp) && yazi --chooser-file=$tmpfile && cat $tmpfile ; rm -f $tmpfile"
 	     #'tui--file-callback)))
+
+(defconst tui--file-preview
+  "[ -d {} ] && ls -lBh --color=always {} || bat --force-colorization -- {}")
 
 ;;;###autoload
 (defun tui-find (arg)
@@ -201,7 +207,7 @@ When called interactively, the symbol at point is used as the initial query."
       :ansi t
       :bind '("ctrl-k:kill-line")
       :cmd "fd . || fd-find . || find ."
-      :preview "[ -d {} ] && ls -lBh --color=always {} || bat --force-colorization -- {}"
+      :preview tui--file-preview
       :preview-window "up:60%:+{2}/3")
      #'tui--file-callback)))
 
@@ -215,7 +221,7 @@ When called interactively, the symbol at point is used as the initial query."
     :bind '("ctrl-k:kill-line")
     :cmd-prompt "locate> "
     :cmd "locate {}"
-    :preview "[ -d {} ] && ls -lBh --color=always {} || bat --force-colorization -- {}")
+    :preview tui--file-preview)
    #'tui--file-callback))
 
 ;;;###autoload
@@ -289,7 +295,7 @@ When called interactively, the symbol at point is used as the initial query."
 			      (dolist (file recentf-list)
 				(princ (expand-file-name file))
 				(princ "\n"))))))
-	    :preview "[ -d {} ] && ls -lBh --color=always {} || bat --force-colorization -- {}"
+	    :preview tui--file-preview
 	    :preview-window "up:60%:+{2}/3")
 	   #'tui--file-callback))
 
@@ -301,7 +307,7 @@ When called interactively, the symbol at point is used as the initial query."
 	    :ansi t
 	    :bind '("ctrl-k:kill-line")
 	    :cmd "git ls-files"
-	    :preview "[ -d {} ] && ls -lBh --color=always {} || bat --force-colorization -- {}"
+	    :preview tui--file-preview
 	    :preview-window "up:60%:+{2}/3")
 	   #'tui--file-callback))
 
