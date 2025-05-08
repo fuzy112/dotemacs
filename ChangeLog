@@ -1,3 +1,21 @@
+2025-05-08  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (auto-mode-alist): Treat .ipp and .tpp files as c++.
+	(file-map): Bind "f" to `find-file'.
+	(mode-specific-map): Bind "s" to `save-buffer'.
+	Bind "r" to `deadgrep'.
+
+	Improve tui and fuzzy-finder
+
+	* site-lisp/tui/tui.el (tui-external-terminal-exec): Redirect
+	output to a temp file.
+	(tui-kill): Add header line.  Add preview.
+	(tui-recentf): New command.
+	* site-lisp/tui/fuzzy-finder.el (fuzzy-finder):
+	(fuzzy-finder-build): New slot `layout'.
+	(fuzzy-finder-fzf): Do not default to --preview-window noborder
+
+
 2025-04-30  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el <eglot>: Do not specify clangd query-drivers.  Clang

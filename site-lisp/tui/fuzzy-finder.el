@@ -1,6 +1,6 @@
 ;;; fuzzy-finder.el --- Fuzzy-Finder command line builder            -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024  Zhengyi Fu
+;; Copyright (C) 2024, 2025  Zhengyi Fu
 
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Keywords: tools
@@ -28,20 +28,21 @@
 
 (defclass fuzzy-finder
   ()
-  ((ansi	:initform t	:initarg :ansi)
-   (bind	:initform nil	:initarg :bind)
-   (cmd		:initform "fd . || fd-find . || find ."	:initarg :cmd)
-   (case	:initform 'smart	:initarg :case)
-   (cmd-prompt	:initform "c> "	:initarg :cmd-prompt)
-   (cmd-query	:initform ""	:initarg :cmd-query)
-   (delimiter	:initform "\n"	:initarg :delimiter)
-   (header	:initform ""	:initarg :header)
-   (header-lines	:initform 0	:initarg :header-lines)
-   (height	:initform "100%"	:initarg :height)
-   (interactive	:initform nil	:initarg :interactive)
-   (prompt	:initform "> "	:initarg :prompt)
-   (preview	:initform "true"	:initarg :preview)
-   (preview-window	:initform "right:50%"	:initarg :preview-window))
+  ((ansi		:initform  t					:initarg :ansi)
+   (bind		:initform  nil					:initarg :bind)
+   (cmd			:initform  "fd . || fd-find . || find ."	:initarg :cmd)
+   (case		:initform  'smart				:initarg :case)
+   (cmd-prompt		:initform  "c> "				:initarg :cmd-prompt)
+   (cmd-query		:initform  ""					:initarg :cmd-query)
+   (delimiter		:initform  "[[:space:]]+"			:initarg :delimiter)
+   (header		:initform  ""					:initarg :header)
+   (header-lines	:initform 0					:initarg :header-lines)
+   (height		:initform  "100%"				:initarg :height)
+   (layout		:initform  "default"				:initarg :layout)
+   (interactive		:initform  nil					:initarg :interactive)
+   (prompt		:initform  "> "					:initarg :prompt)
+   (preview		:initform  "true"				:initarg :preview)
+   (preview-window	:initform "right:50%"				:initarg :preview-window))
   :abstract t
   :documentation "Bass class of all fuzzy-finders.")
 
@@ -49,7 +50,6 @@
   :documentation "Command builder for `skim'.")
 
 (defclass fuzzy-finder-fzf (fuzzy-finder)
-  ((preview-window :initform "noborder,right:50%"))
   :documentation "Command builder for `fzf'.")
 
 (cl-defmethod fuzzy-finder-build ((obj fuzzy-finder-skim))
@@ -68,6 +68,7 @@
 	    "--header" (oref obj header)
 	    "--header-lines" (number-to-string (oref obj header-lines))
 	    "--height" (oref obj height)
+	    "--layout" (oref obj layout)
 	    (and (oref obj interactive) "-i")
 	    "--prompt" (oref obj prompt)
 	    "--preview" (oref obj preview)
@@ -88,8 +89,9 @@
 	    "--delimiter" (oref obj delimiter)
 	    "--header" (oref obj header)
 	    "--header-lines" (number-to-string (oref obj header-lines))
+	    "--layout" (oref obj layout)
 	    "--preview" (oref obj preview)
-	    "--preview-window" (concat "noborder," (oref obj preview-window))
+	    "--preview-window" (oref obj preview-window)
 	    (if (oref obj interactive)
 		(list "--prompt" (oref obj cmd-prompt)
 		      "--disabled"
