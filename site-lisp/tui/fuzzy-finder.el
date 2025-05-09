@@ -49,7 +49,7 @@
 (defclass fuzzy-finder-skim (fuzzy-finder) ()
   :documentation "Command builder for `skim'.")
 
-(defclass fuzzy-finder-fzf (fuzzy-finder)
+(defclass fuzzy-finder-fzf (fuzzy-finder) ()
   :documentation "Command builder for `fzf'.")
 
 (cl-defmethod fuzzy-finder-build ((obj fuzzy-finder-skim))
