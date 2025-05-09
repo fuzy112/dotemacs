@@ -1448,6 +1448,21 @@ Display the result in a posframe." t)
   (add-hook 'sh-mode-hook #'sh-electric-here-document-mode))
 (add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
 
+;;;; udev rules
+
+;; Use prog-mode to edit udev rules.
+
+(defun udev-rules-mode ()
+  "Turn on `prog-mode' mode and set up for udev rules."
+  (interactive)
+  (prog-mode)
+  (let ((st (syntax-table)))
+    (modify-syntax-entry ?# "<" st)
+    (modify-syntax-entry ?\n ">" st)))
+
+(alist-setq! auto-mode-alist
+  "\\.rules\\'" #'udev-rules-mode)
+
 ;;;; project
 
 (declare-function project-root "project.el" (&rest rest))

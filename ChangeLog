@@ -1,5 +1,9 @@
 2025-05-09  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (udev-rules-mode): New command.
+
+2025-05-09  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/tui/tui.el (tui--kill-callback): Fix the regexp.
 
 2025-05-09  Zhengyi Fu  <i@fuzy.me>
