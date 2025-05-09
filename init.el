@@ -2369,7 +2369,9 @@ Otherwise disable it."
   "a"     #'gptel-menu
   "t"     #'tui-run
   "r"     #'tui-rg
+  "R"     #'tui-recentf
   "g"     #'tui-ugrep
+  "G"     #'tui-git-ls-files
   "y"     #'tui-yazi
   "k"     #'tui-kill
   "l"     #'tui-line

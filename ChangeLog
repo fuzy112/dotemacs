@@ -1,5 +1,10 @@
 2025-05-09  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (tool-map): Bind "R" to `tui-recentf' and "G" to
+	`tui-git-ls-files'.
+
+2025-05-09  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (udev-rules-mode): New command.
 
 2025-05-09  Zhengyi Fu  <i@fuzy.me>
