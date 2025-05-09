@@ -1431,7 +1431,7 @@ Display the result in a posframe." t)
 (add-hook 'c-mode-common-hook '+cc-mode--hook)
 
 (alist-setq! auto-mode-alist
-  "\\.\\[cti\\]pp\\'" #'c++-mode)
+  "\\.[cti]pp\\'" #'c++-mode)
 
 ;;;; rust-mode
 

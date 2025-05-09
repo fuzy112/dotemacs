@@ -1,5 +1,9 @@
 2025-05-09  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (auto-mode-alist): Fix entry for `c++-mode'.
+
+2025-05-09  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (tool-map): Bind "R" to `tui-recentf' and "G" to
 	`tui-git-ls-files'.
 
