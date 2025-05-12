@@ -109,7 +109,6 @@
 
 ;;;; files
 
-(setq confirm-kill-emacs  'y-or-n-p)
 (setq version-control     t
       delete-old-versions t
       kept-old-versions   9
