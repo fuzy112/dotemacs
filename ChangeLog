@@ -1,5 +1,10 @@
 2025-05-12  Zhengyi Fu  <i@fuzy.me>
 
+	* early-init.el (confirm-kill-emacs): Do not require confirmation
+	on exit.
+
+2025-05-12  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/cmake-capf.el (cmake-capf--candidates): Use
 	`with-temp-buffer' instead of `with-work-buffer'.
 
