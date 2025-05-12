@@ -1,5 +1,9 @@
 2025-05-12  Zhengyi Fu  <i@fuzy.me>
 
+	* templates/cc-mode.eld: Add new snippet `pheader'.
+
+2025-05-12  Zhengyi Fu  <i@fuzy.me>
+
 	* early-init.el (confirm-kill-emacs): Do not require confirmation
 	on exit.
 

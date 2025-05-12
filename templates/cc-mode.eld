@@ -5,6 +5,10 @@ c-mode
 	"#define " guard r n n
 	"#endif " comment-start "!" guard comment-end)
 
+(pheader "#ifndef " (p (upcase (replace-regexp-in-string "[^a-zA-Z0-9_]" "_" (file-relative-name (buffer-file-name) (if-let* ((project (project-current))) (project-root project) default-directory)))) guard) n
+	"#define " guard r n n
+	"#endif " comment-start "!" guard comment-end)
+
 (options "static const struct option " (p "options") "[] = " "{" n>
 	 "{ \"help\", no_argument, NULL, 'h' }," n>
 	 "{ \"verbose\", no_argument, NULL, 'v' }," n>
@@ -78,6 +82,10 @@ c-mode
 c++-mode
 
 (header "#ifndef " (p (upcase (replace-regexp-in-string "[^a-zA-Z0-9_]" "_" (file-name-nondirectory (buffer-file-name)))) guard) n
+	"#define " guard r n n
+	"#endif " comment-start "!" guard comment-end)
+
+(pheader "#ifndef " (p (upcase (replace-regexp-in-string "[^a-zA-Z0-9_]" "_" (file-relative-name (buffer-file-name) (if-let* ((project (project-current))) (project-root project) default-directory)))) guard) n
 	"#define " guard r n n
 	"#endif " comment-start "!" guard comment-end)
 
