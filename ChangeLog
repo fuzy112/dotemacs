@@ -1,3 +1,8 @@
+2025-05-12  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/cmake-capf.el (cmake-capf--candidates): Use
+	`with-temp-buffer' instead of `with-work-buffer'.
+
 2025-05-09  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (auto-mode-alist): Fix entry for `c++-mode'.

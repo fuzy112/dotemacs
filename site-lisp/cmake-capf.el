@@ -79,7 +79,7 @@ The returned value can be used to lookup the document."
                     ("property" . property)
                     ("variable" . variable)
                     ("policy" . magic)))
-      (with-work-buffer
+      (with-temp-buffer
         (call-process cmake-capf-executable nil t nil
                       (format "--help-%s-list" (car type)))
         (dolist (line (string-lines (buffer-string) t))
