@@ -31,7 +31,7 @@
 
 (defcustom consult-ugrep-args
   "ugrep --null --color=never --smart-case --line-number \
---with-filename --ignore-binary --decompress -r -P"
+--with-filename --ignore-binary --ignore-files --decompress -r -P"
   "Command line arguments for ugrep, see `consult-ugrep'.
 The dynamically computed arguments are appended.
 Can be either a string, or a list of strings or expressions."
