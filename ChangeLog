@@ -1,5 +1,10 @@
 2025-05-13  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+embark-consult-export-grep--headings): Remove function.
+	grep heading is directly supported by consult now.
+
+2025-05-13  Zhengyi Fu  <i@fuzy.me>
+
 	Prefer `visual-fill-column-mode' over `olivetti-mode' and
 	`visual-line-fill-column-mode'
 
