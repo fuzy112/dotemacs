@@ -1,5 +1,9 @@
 2025-05-13  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el <consult>: Bind M-s D to `consult-fd', M-s R to `consult-ugrep'.
+
+2025-05-13  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (auto-mode-alist): Use `makefile-mode' to visit qmake
 	files.
 

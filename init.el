@@ -683,6 +683,8 @@ value for USE-OVERLAYS."
 
 ;;;; consult
 
+(autoload 'consult-ugrep "consult-ugrep" nil t)
+
 (define-keymap
   :keymap global-map
   "C-c M-x"               #'consult-mode-command
@@ -717,11 +719,13 @@ value for USE-OVERLAYS."
   "M-g i"                 #'consult-imenu
   "M-g I"                 #'consult-imenu-multi
   ;; M-s bindings in `search-map'
-  "M-s d"                 #'consult-find                ; Alternative: consult-fd
+  "M-s d"                 #'consult-find
+  "M-s D"                 #'consult-fd
   "M-s c"                 #'consult-locate
   "M-s g"                 #'consult-grep
   "M-s G"                 #'consult-git-grep
   "M-s r"                 #'consult-ripgrep
+  "M-s R"                 #'consult-ugrep
   "M-s l"                 #'consult-line
   "M-s L"                 #'consult-line-multi
   "M-s k"                 #'consult-keep-lines
