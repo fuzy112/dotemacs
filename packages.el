@@ -85,6 +85,7 @@
 (straight-use-package 'nerd-icons-corfu)
 (straight-use-package 'nerd-icons-ibuffer)
 (straight-use-package '(nerd-icons-multimodal :host github :repo "abougouffa/nerd-icons-multimodal"))
+(straight-use-package '(nerd-icons-grep :host github :repo "hron/nerd-icons-grep"))
 
 ;;;; Themes
 (straight-use-package 'modus-themes)
