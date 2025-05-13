@@ -1735,18 +1735,6 @@ Run hook `vc-dwim-post-commit-hook'."
 (defvar eat-terminal)
 (declare-function eat-term-send-string "eat.el" (terminal string))
 (declare-function eat-self-input "eat.el" (n &optional e))
-(defun eat-send-pass nil
-  "Send a password from Password-Store to the terminal."
-  (interactive)
-  (if eat-terminal nil
-    (user-error "Process not running"))
-  (require 'password-store)
-  (password-store-get
-   (completing-read "Password-store entry: " nil 'require-match t)
-   (let ((my-term eat-terminal))
-     (lambda (password)
-       (eat-term-send-string my-term password)
-       (eat-self-input 1 'return)))))
 
 (setopt eat-kill-buffer-on-exit t)
 
@@ -1887,9 +1875,6 @@ Run hook `vc-dwim-post-commit-hook'."
   (setopt auth-source-save-behavior t
           auth-source-gpg-encrypt-to "0xBBE2757FC7BFC23B")
   (auth-source-forget-all-cached))
-
-(after-load! password-store
-  (add-hook 'savehist-save-hook #'password-store-clear))
 
 ;;;; lin
 

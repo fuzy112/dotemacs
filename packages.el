@@ -185,7 +185,6 @@
 (straight-use-package 'pdf-tools)
 
 ;;; Applications
-(straight-use-package 'pass)
 (straight-use-package 'erc)
 (straight-use-package 'show-font)
 
