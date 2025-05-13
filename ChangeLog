@@ -1,5 +1,14 @@
 2025-05-13  Zhengyi Fu  <i@fuzy.me>
 
+	Prefer `visual-fill-column-mode' over `olivetti-mode' and
+	`visual-line-fill-column-mode'
+
+	* init.el (+visual-fill-column/toggle-visual-fill-and-center): Use
+	`visual-fill-column-mode' instead of `visual-line-fill-column-mode'.
+	(org-mode-map): Remove local keybinding for `olivetti-mode'.
+
+2025-05-13  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el <consult>: Bind M-s D to `consult-fd', M-s R to `consult-ugrep'.
 
 2025-05-13  Zhengyi Fu  <i@fuzy.me>
