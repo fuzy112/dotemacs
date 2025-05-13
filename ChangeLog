@@ -1,5 +1,15 @@
 2025-05-13  Zhengyi Fu  <i@fuzy.me>
 
+	Remove doom-modeline
+
+	* packages.el (blackout): Add package.
+	(doom-modeline): Remove package.
+
+	* init.el: Remove configuration for `doom-modeline'.
+	Remove some minor mode lighters using `blackout'.
+
+2025-05-13  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (add-change-log-entry): Temporarily bind
 	`add-log-always-start-new-record' to t if WHOMAI is non-nil.
 

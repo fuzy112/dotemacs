@@ -268,10 +268,6 @@
   (require 'modus-themes)
   (modus-themes-load-theme 'modus-operandi))
 
-;;;; doom-modeline
-
-(doom-modeline-mode)
-
 ;;;; customized faces
 (defun +custom-faces (&optional _theme)
   (+custom-fontset)
@@ -2262,6 +2258,21 @@ Run hook `vc-dwim-post-commit-hook'."
 
 ;;;; sftp
 (autoload 'sftp "sftp" nil t)
+
+;;;; mode-line
+
+(blackout 'ws-butler-mode)
+(blackout 'paredit-mode)
+(blackout 'whitespace-mode)
+(blackout 'goggles-mode)
+(blackout 'jinx-mode)
+(blackout 'gcmh-mode)
+(blackout 'eldoc-mode)
+(blackout 'valign-mode)
+(blackout 'abbrev-mode)
+(blackout 'olivetti-mode)
+(blackout 'nerd-icons-multimodal-mode)
+
 
 ;;;; uptime
 
