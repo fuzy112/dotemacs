@@ -1,5 +1,9 @@
 2025-05-13  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Fix usage of `blackout'.
+
+2025-05-13  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (meow-replace-state-name-list): Customize meow state indicators.
 
 2025-05-13  Zhengyi Fu  <i@fuzy.me>
