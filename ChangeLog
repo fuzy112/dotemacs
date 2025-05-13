@@ -1,5 +1,10 @@
 2025-05-13  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/consult-ugrep.el (consult-ugrep-args): Add
+	--ignore-files to standard value of `consult-ugrep-args'.
+
+2025-05-13  Zhengyi Fu  <i@fuzy.me>
+
 	Remove password-store
 
 	* obsoletes.el: New file for removed parts.
