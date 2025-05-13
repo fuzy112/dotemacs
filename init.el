@@ -149,6 +149,13 @@
    '("`"        . meow-universal-argument)))
 
 (meow-setup)
+(alist-setq! meow-replace-state-name-list
+  normal "🅝"
+  motion "🅼"
+  keypad "🅺"
+  beacon "🅑"
+  insert "🅘")
+(meow-setup-indicator)
 (meow-global-mode)
 
 (when (treesit-available-p)
@@ -2250,6 +2257,11 @@ Run hook `vc-dwim-post-commit-hook'."
 
 ;;;; mode-line
 
+(blackout 'meow-insert-mode)
+(blackout 'meow-normal-mode)
+(blackout 'meow-motion-mode)
+(blackout 'meow-beacon-mode)
+(blackout 'meow-keypad-mode)
 (blackout 'ws-butler-mode)
 (blackout 'paredit-mode)
 (blackout 'whitespace-mode)
@@ -2261,7 +2273,6 @@ Run hook `vc-dwim-post-commit-hook'."
 (blackout 'abbrev-mode)
 (blackout 'olivetti-mode)
 (blackout 'nerd-icons-multimodal-mode)
-
 
 ;;;; uptime
 

@@ -1,5 +1,9 @@
 2025-05-13  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (meow-replace-state-name-list): Customize meow state indicators.
+
+2025-05-13  Zhengyi Fu  <i@fuzy.me>
+
 	Add `nerd-icons-grep'
 
 	* packages.el (nerd-icons-grep): Add package `nerd-icons-grep'.
