@@ -1139,6 +1139,11 @@ value for USE-OVERLAYS."
 (add-hook 'cmake-mode-hook #'cmake-capf-setup)
 (add-hook 'cmake-ts-mode-hook #'cmake-capf-setup)
 
+;;;; qmake
+
+(alist-setq! auto-mode-alist
+  "\\.pr[oi]\\'" 'makefile-mode)
+
 ;;;; systemd-mode
 
 (autoload 'flymake-systemd "flymake-systemd"

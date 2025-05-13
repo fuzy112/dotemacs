@@ -1,5 +1,10 @@
 2025-05-13  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (auto-mode-alist): Use `makefile-mode' to visit qmake
+	files.
+
+2025-05-13  Zhengyi Fu  <i@fuzy.me>
+
 	Remove doom-modeline
 
 	* packages.el (blackout): Add package.
