@@ -35,9 +35,9 @@
   "Highlight the accessible part of the buffer using `delta (1)'."
   (interactive nil gnus-article-mode)
   (when-let* ((delta-program (executable-find "delta"))
-             (start (point-min))
-             (article-buffer (current-buffer))
-             (color-buffer (get-buffer-create " *delta-color*")))
+              (start (point-min))
+              (article-buffer (current-buffer))
+              (color-buffer (get-buffer-create " *delta-color*")))
     (with-current-buffer color-buffer
       (erase-buffer))
     (call-process-region (point-min) (point-max)
@@ -61,8 +61,7 @@
 ;;;###autoload
 (with-eval-after-load 'gnus-art
   (add-to-list 'gnus-treatment-function-alist
-	       '(gnus-treat-highlight-diffs gnus-article-highlight-diffs) 'append))
+               '(gnus-treat-highlight-diffs gnus-article-highlight-diffs) 'append))
 
 (provide 'gnus-diff)
 ;;; gnus-diff.el ends here
-
