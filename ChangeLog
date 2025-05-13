@@ -1,5 +1,10 @@
 2025-05-13  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (add-change-log-entry): Temporarily bind
+	`add-log-always-start-new-record' to t if WHOMAI is non-nil.
+
+2025-05-13  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/consult-ugrep.el (consult-ugrep-args): Add
 	--ignore-files to standard value of `consult-ugrep-args'.
 

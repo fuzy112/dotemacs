@@ -1661,6 +1661,16 @@ Run hook `vc-dwim-post-commit-hook'."
     (when (zerop exitcode)
       (run-hooks 'vc-dwim-post-commit-hook))))
 
+(defvar add-log-always-start-new-record)
+
+(define-advice add-change-log-entry
+    (:around (fun whoami &rest rest) always-start-new-record)
+  "Temporarily bind `add-log-always-start-new-record' to t if WHOAMI is non-nil."
+  (let ((add-log-always-start-new-record add-log-always-start-new-record))
+    (when whoami
+      (setq add-log-always-start-new-record t))
+    (apply fun whoami rest)))
+
 (after-load! add-log
   (keymap-set change-log-mode-map "C-c RET" #'add-log/vc-dwim-commit))
 
