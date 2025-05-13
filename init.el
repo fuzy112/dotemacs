@@ -1184,13 +1184,12 @@ value for USE-OVERLAYS."
     (add-hook 'visual-line-mode-hook #'visual-wrap-prefix-mode)
   (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode))
 
-
 ;;;; visual-fill-column
 
 (defun +visual-fill-column/toggle-visual-fill-and-center ()
   (interactive)
-  (visual-line-fill-column-mode 'toggle)
-  (setq-local visual-fill-column-center-text (symbol-value 'visual-line-fill-column-mode)))
+  (visual-fill-column-mode 'toggle)
+  (setq-local visual-fill-column-center-text (symbol-value 'visual-fill-column-mode)))
 
 ;;;; hl-todo
 
@@ -2133,7 +2132,6 @@ Run hook `vc-dwim-post-commit-hook'."
   (define-keymap :keymap org-mode-map
     "C-c o M" #'+org/toggle-emphasis-markers
     "C-c o m" #'org-modern-mode
-    "C-c o c" #'olivetti-mode
     "M-g o"   #'consult-org-heading)
   (setopt org-export-backends '(html latex texinfo))
   (setq org-agenda-hide-tags-regexp ".")
