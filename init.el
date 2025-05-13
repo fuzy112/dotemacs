@@ -865,25 +865,6 @@ value for USE-OVERLAYS."
   (add-to-list 'consult-buffer-sources '+consult-source-firefox))
 
 
-;; Integrate heading support of `grep-mode'.
-
-(defun +embark-consult-export-grep--headings (&rest _)
-  "Group the results of `embark-consult-export-grep'."
-  ;; `grep--heading-filter' is a new function in Emacs 30.1.
-  (when (fboundp 'grep--heading-filter)
-    (save-excursion
-      (goto-char (point-max))
-      (let ((inhibit-read-only t))
-        (grep--heading-filter)))))
-
-(declare-function embark-consult-export-grep "embark-consult.el" (arg1))
-(after-load! embark-consult
-  (require 'grep)
-  (when (fboundp 'grep--heading-filter)
-    (advice-add #'embark-consult-export-grep
-                :after #'+embark-consult-export-grep--headings)))
-
-
 ;; Keybindings for `consult-dir' commands.
 
 (keymap-global-set "C-x C-d" #'consult-dir)
