@@ -1,3 +1,8 @@
+2025-05-14  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (completing-read-multiple): Only define this advice when
+	emacs-version < 31.
+
 2025-05-13  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Fix usage of `blackout'.
