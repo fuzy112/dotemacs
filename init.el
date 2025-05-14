@@ -848,32 +848,6 @@ value for USE-OVERLAYS."
   (recenter (ceiling (* (window-height) 0.7))))
 
 
-;; Put EXWM buffers for FireFox windows to a separate buffer source that
-;; can be narrowed indepedently.
-
-(defvar +consult-firefox-filter "\\`\\*firefox")
-(defvar +consult-source-firefox
-  `(:name      "FireFox"
-    :narrow    ?w
-    :hidden    t
-    :category  buffer
-    :face      consult-buffer
-    :history   buffer-name-history
-    ;; Specify either :action or :state
-    :action    ,#'consult--buffer-action ;; No preview
-    ;; :state  ,#'consult--buffer-state  ;; Preview
-    :items
-    ,(lambda () (consult--buffer-query
-                 :sort 'visibility
-                 :as #'buffer-name
-                 :exclude (remq +consult-firefox-filter consult-buffer-filter)
-                 :mode 'exwm-mode)))
-  "FireFox buffer source.")
-(after-load! consult
-  (add-to-list 'consult-buffer-filter +consult-firefox-filter)
-  (add-to-list 'consult-buffer-sources '+consult-source-firefox))
-
-
 ;; Keybindings for `consult-dir' commands.
 
 (keymap-global-set "C-x C-d" #'consult-dir)
@@ -2468,22 +2442,6 @@ Otherwise disable it."
   "M-l"  #'downcase-dwim
   "M-u"  #'upcase-dwim
   "<f5>" #'project-recompile)
-
-
-
-;;;; EXWM
-
-;; If emacs is started with `--exwm' or `--exde', enable EXWM.
-
-(defun +exwm--command-line-handler ()
-  (and (or (equal argi "--exwm")
-           (equal argi "--exde"))
-       (require 'exde)
-       (add-hook 'after-init-hook 'exwm-init)
-       t))
-
-(defvar command-line-functions)
-(push '+exwm--command-line-handler command-line-functions)
 
 
 ;;;; post-init
