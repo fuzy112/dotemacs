@@ -521,18 +521,19 @@
 ;;;; crm
 
 (defvar crm-separator)
-(define-advice completing-read-multiple
-    (:filter-args (args) show-crm-separator)
-  "Add prompt indicator to `completing-read-multiple'.
+(when (version< emacs-version "31.1")
+  (define-advice completing-read-multiple
+      (:filter-args (args) show-crm-separator)
+    "Add prompt indicator to `completing-read-multiple'.
 ARGS: see `completion-read-multiple'."
-  (cons (format "[`CRM': %s]  %s"
-                (propertize
-                 (replace-regexp-in-string
-                  "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                  crm-separator)
-                 'face 'error)
-                (car args))
-        (cdr args)))
+    (cons (format "[`CRM': %s]  %s"
+                  (propertize
+                   (replace-regexp-in-string
+                    "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                    crm-separator)
+                   'face 'error)
+                  (car args))
+          (cdr args))))
 
 ;;;; cursor-sensor
 
