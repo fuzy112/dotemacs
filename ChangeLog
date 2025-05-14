@@ -1,5 +1,14 @@
 2025-05-14  Zhengyi Fu  <i@fuzy.me>
 
+	Remove exwm.el
+
+	* site-lisp/exde.el: Remove file.
+	* packages.el: Remove packages needed by exwm.el.
+	* init.el (+consult-firefox-filter, +consult-source-firefox): Remove variables.
+	(+exwm--command-line-handler): Remove function.
+
+2025-05-14  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (completing-read-multiple): Only define this advice when
 	emacs-version < 31.
 

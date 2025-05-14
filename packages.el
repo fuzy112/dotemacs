@@ -191,11 +191,5 @@
 
 (straight-use-package '(eat :files (:defaults "integration" "term" "terminfo")))
 
-;;; EXWM
-(straight-use-package '(xelb :host github :repo "emacs-exwm/xelb"))
-(straight-use-package '(exwm :host github :repo "emacs-exwm/exwm"))
-(straight-use-package '(exwm-firefox :host codeberg :repo "emacs-weirdware/exwm-firefox"))
-(straight-use-package 'ednc)
-
 ;;; Email
 (straight-use-package 'autocrypt)
