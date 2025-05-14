@@ -1,5 +1,19 @@
 2025-05-14  Zhengyi Fu  <i@fuzy.me>
 
+	Add `bufferlo'
+
+	* packages.el:
+	* init.el: Add bufferlo configuration.
+	(+autoload-recursively): New function.
+	(+bufferlo-consult--source-local-buffers)
+	(+bufferlo-consult--source-other-buffers)
+	(+bufferlo-consult--source-all-buffers): New variables.  Added to
+	`consult-buffer-sources'.
+	(+bufferlo-prefix-map): New keymap.  Bind to C-c z.
+
+
+2025-05-14  Zhengyi Fu  <i@fuzy.me>
+
 	Remove activities.el
 
 	* packages.el:
