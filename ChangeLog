@@ -1,5 +1,10 @@
 2025-05-14  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/consult-kill.el (consult-kill): Delay 4 seconds and
+	send SIGKILL to the process.
+
+2025-05-14  Zhengyi Fu  <i@fuzy.me>
+
 	Add `bufferlo'
 
 	* packages.el:
