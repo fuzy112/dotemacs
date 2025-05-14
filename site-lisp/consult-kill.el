@@ -14,8 +14,6 @@
 ;;; Code:
 
 (require 'consult)
-(eval-when-compile
-  (require 'subr-x))
 
 ;;;###autoload
 (defun consult-kill (&optional initial)
@@ -30,7 +28,7 @@
 	  :category 'consult-kill
 	  :lookup (lambda (cand _ _ _)
 		    (string-to-number (nth 1 (split-string cand " " t)))))))
-    (shell-command (format "kill %d" pid))))
+    (shell-command (format "( kill %d && sleep 4 && kill -KILL %1$d || true ) &" pid))))
 
 (provide 'consult-kill)
 ;;; consult-kill.el ends here
