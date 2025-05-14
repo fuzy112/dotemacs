@@ -1632,12 +1632,23 @@ Run hook `vc-dwim-post-commit-hook'."
 (defvar add-log-always-start-new-record)
 
 (define-advice add-change-log-entry
-    (:around (fun whoami &rest rest) always-start-new-record)
-  "Temporarily bind `add-log-always-start-new-record' to t if WHOAMI is non-nil."
-  (let ((add-log-always-start-new-record add-log-always-start-new-record))
-    (when whoami
-      (setq add-log-always-start-new-record t))
-    (apply fun whoami rest)))
+    (:around (fun whoami changelog-file-name &rest rest) always-start-new-record)
+  "Temporarily bind `add-log-always-start-new-record' to t if the changelog is not modified."
+  (interactive (list current-prefix-arg
+                     (prompt-for-change-log-name)))
+  (let* ((add-log-always-start-new-record add-log-always-start-new-record)
+         (buf-file-name (funcall add-log-buffer-file-name-function))
+         (buffer-file (if buf-file-name (expand-file-name buf-file-name)))
+         (changelog-file-name (expand-file-name (find-change-log
+                                                 changelog-file-name
+                                                 buffer-file)))
+         (changelog-buf (add-log-find-changelog-buffer changelog-file-name)))
+    (unless (buffer-modified-p changelog-buf)
+      (if (vc-registered changelog-file-name)
+          (when (vc-up-to-date-p changelog-file-name)
+            (setq add-log-always-start-new-record t))
+        (setq add-log-always-start-new-record t)))
+    (apply fun whoami changelog-file-name rest)))
 
 (after-load! add-log
   (keymap-set change-log-mode-map "C-c RET" #'add-log/vc-dwim-commit))

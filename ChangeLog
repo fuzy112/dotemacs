@@ -1,5 +1,10 @@
 2025-05-14  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (add-change-log-entry): Start a new changelog record if
+	the changelog is not already modified.
+
+2025-05-14  Zhengyi Fu  <i@fuzy.me>
+
 	Remove exwm.el
 
 	* site-lisp/exde.el: Remove file.
