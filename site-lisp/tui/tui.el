@@ -253,7 +253,8 @@ When called interactively, the symbol at point is used as the initial query."
   (with-current-buffer (process-buffer proc)
     (goto-char (point-min))
     (while (re-search-forward "^[[:space:]]*\\([[:digit:]]+\\)" nil t)
-      (shell-command (format "kill -TERM %s" (match-string 1))))))
+      (let ((pid (match-string 1)))
+	(shell-command (format "kill -TERM %s && sleep 4 && kill -KILL %1$s || true" pid))))))
 
 ;;;###autoload
 (defun tui-kill ()
