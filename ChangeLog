@@ -1,5 +1,12 @@
 2025-05-14  Zhengyi Fu  <i@fuzy.me>
 
+	Remove activities.el
+
+	* packages.el:
+	* init.el: Remove configuration for activities.el.
+
+2025-05-14  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (add-change-log-entry): Start a new changelog record if
 	the changelog is not already modified.
 
