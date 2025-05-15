@@ -1200,6 +1200,7 @@ value for USE-OVERLAYS."
         eglot-extend-to-xref t)
 
 (after-load! eglot
+  (keymap-set eglot-mode-map "C-x x /" #'eglot-format)
   (keymap-set eglot-mode-map "C-c C-a" #'eglot-code-actions)
   (eglot-tempel-mode))
 
