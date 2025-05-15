@@ -1,3 +1,7 @@
+2025-05-15  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el <eglot>: Bind C-x x / to `eglot-format' in `eglot-mode-map'.
+
 2025-05-14  Zhengyi Fu  <i@fuzy.me>
 
 	* site-lisp/tui/tui.el (tui--kill-callback): Delay 4 seconds and
