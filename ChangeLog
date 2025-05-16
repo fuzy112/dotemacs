@@ -1,3 +1,8 @@
+2025-05-16  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el <eshell>: Update `eshell-visual-commands' and
+	`eshell-visual-subcommands'.
+
 2025-05-15  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el <eglot>: Bind C-x x / to `eglot-format' in `eglot-mode-map'.
