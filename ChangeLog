@@ -1,3 +1,7 @@
+2025-05-17  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (meow-setup): Do not set `meow-mode-state-list'.
+
 2025-05-16  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el <eshell>: Update `eshell-visual-commands' and
