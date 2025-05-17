@@ -1,5 +1,10 @@
 2025-05-17  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/eshell-extras.el (eshell/rg): Do not allow use of
+	`occur'.
+
+2025-05-17  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (meow-setup): Do not set `meow-mode-state-list'.
 
 2025-05-16  Zhengyi Fu  <i@fuzy.me>
