@@ -59,13 +59,6 @@
   (setq meow-keypad-leader-dispatch "C-c")
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
   (setq meow-use-clipboard t)
-  (alist-setq! meow-mode-state-list
-    eat-mode         'insert
-    term-mode        'insert
-    shell-mode       'insert
-    eshell-mode      'insert
-    vterm-mode       'insert
-    telega-chat-mode 'normal)
   (meow-leader-define-key
    '("1" . meow-digit-argument)
    '("2" . meow-digit-argument)
