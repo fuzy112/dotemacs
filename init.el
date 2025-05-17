@@ -2440,7 +2440,7 @@ Otherwise disable it."
   "i"     #'find-user-init-file
   "a"     #'ffap
   "r"     #'ff-find-related-file
-  "R"     #'recentf-open
+  "R"     #'consult-recent-file
   "n"     #'rename-visited-file
   "b"     #'backup-list-backups)
 
