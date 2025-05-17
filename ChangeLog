@@ -1,5 +1,10 @@
 2025-05-17  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (file-map): Replace `recentf-open' with
+	`consult-recent-file'.
+
+2025-05-17  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/eshell-extras.el (eshell/rg): Do not allow use of
 	`occur'.
 
