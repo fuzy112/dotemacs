@@ -1073,10 +1073,11 @@ value for USE-OVERLAYS."
   (after-load! esh-hist
     (when (fboundp 'consult-history)
       (keymap-set eshell-hist-mode-map "M-r" #'consult-history)))
-  (cl-pushnew "journalctl" eshell-visual-commands :test #'equal)
-  (alist-setq! eshell-visual-subcommands
-    "git" '("log" "diff" "show" "grep")
-    "systemctl" '("status" "cat" "show"))
+  (after-load! em-term
+   (cl-pushnew "journalctl" eshell-visual-commands :test #'equal)
+   (alist-setq! eshell-visual-subcommands
+     "git" '("log" "diff" "show" "grep")
+     "systemctl" '("status" "cat" "show")))
   (require 'eshell-extras))
 
 ;;;; text-mode
