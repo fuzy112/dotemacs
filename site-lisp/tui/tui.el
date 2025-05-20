@@ -277,6 +277,10 @@ When called interactively, the symbol at point is used as the initial query."
   (tui-run "tui-lnav"
 	   (format "lnav %s" (shell-quote-argument (expand-file-name file)))))
 
+
+(declare-function recentf-save-list "recentf")
+(defvar recentf-save-file)
+
 ;;;###autoload
 (defun tui-recentf ()
   (interactive)

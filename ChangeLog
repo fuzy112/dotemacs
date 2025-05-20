@@ -1,5 +1,9 @@
 2025-05-20  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/tui/tui.el: Fix warnings.
+
+2025-05-20  Zhengyi Fu  <i@fuzy.me>
+
 	Remove `popper'
 
 	* packages.el:
