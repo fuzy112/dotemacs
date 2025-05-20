@@ -1182,6 +1182,7 @@ value for USE-OVERLAYS."
 (keymap-global-set "C-M-<mouse-1>" #'xref-find-references-at-mouse)
 
 (defvar +xref--max-definitions-in-buffer 5)
+(defvar xref-buffer-name)
 
 (defun +xref-window-quit ()
   (when-let* ((xref-win (get-buffer-window xref-buffer-name (selected-frame))))
@@ -1629,6 +1630,7 @@ Run hook `vc-dwim-post-commit-hook'."
       (run-hooks 'vc-dwim-post-commit-hook))))
 
 (defvar add-log-always-start-new-record)
+(defvar add-log-buffer-file-name-function)
 
 (define-advice add-change-log-entry
     (:around (fun whoami changelog-file-name &rest rest) always-start-new-record)
