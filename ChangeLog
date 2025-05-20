@@ -1,5 +1,10 @@
 2025-05-20  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/consult-ugrep.el (consult--ugrep-make-builder):
+	Correctly handle -j flag.  -S is not short for --smart-case.
+
+2025-05-20  Zhengyi Fu  <i@fuzy.me>
+
 	Add forge
 
 	* packages.el:

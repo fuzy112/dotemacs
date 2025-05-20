@@ -49,7 +49,7 @@ Can be either a string, or a list of strings or expressions."
 			   'extended))
 		   (ignore-case
 		    (or (member "-i" flags) (member "--ignore-case" flags)
-			(and (or (member "-S" flags) (member "--smart-case" flags))
+			(and (or (member "-j" flags) (member "--smart-case" flags))
 			     (let (case-fold-search)
 			       ;; Case insensitive if there are no uppercase letters
 			       (not (string-match-p "[[:upper:]]" arg)))))))
