@@ -1,3 +1,10 @@
+2025-05-20  Zhengyi Fu  <i@fuzy.me>
+
+	Remove `popper'
+
+	* packages.el:
+	* init.el:
+
 2025-05-17  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (file-map): Replace `recentf-open' with
