@@ -1602,6 +1602,11 @@ Display the result in a posframe." t)
   (add-hook 'git-commit-post-finish-hook #'log-edit-hide-buf)
   (add-hook 'git-commit-setup-hook #'+git-commit--log-edit-h 90))
 
+;;;; forge
+
+(after-load! magit
+  (require 'forge))
+
 ;;;; Add-Log
 
 (defvar vc-dwim-post-commit-hook nil)
