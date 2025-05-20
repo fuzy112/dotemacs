@@ -886,58 +886,6 @@ value for USE-OVERLAYS."
   "S-<up>"    #'windmove-up
   "S-<down>"  #'windmove-down)
 
-;;;; popper
-
-(autoload 'popper-cycle "popper" nil t)
-(autoload 'popper-toggle-type "popper" nil t)
-(autoload 'popper-toggle "popper" nil t)
-(define-keymap :keymap global-map
-  "C-`"   #'popper-toggle
-  "M-`"   #'popper-cycle
-  "C-M-`" #'popper-toggle-type)
-(defvar popper-reference-buffers)
-(setq popper-reference-buffers '("\\*Messages\\*" "Output\\*$"
-                                   "\\*Async Shell Command\\*"
-                                   "-eat\\*$"
-                                   "-vterm\\*$"
-                                   ;; "\\*Warnings\\*"
-                                   ;; "\\*Compile-Log\\*"
-                                   "\\*vc-git : "
-                                   ;;xref--xref-buffer-mode
-                                   ;; help-mode
-                                   compilation-mode
-                                   flymake-diagnostics-buffer-mode))
-
-(declare-function popper-display-control-p "popper.el" (buf &optional _act))
-(defun +popper--popup-p (buffer-or-name &optional arg)
-  (and (seq-some
-        (lambda (it)
-          (buffer-match-p
-           (cond
-            ((stringp it) it)
-            ((symbolp it) `(derived-mode . ,it))
-            ((functionp it) it)
-            (t (error "Invalid element in `popper-reference-buffers': %S" it)))
-           buffer-or-name
-           arg))
-        popper-reference-buffers)
-       (progn
-         (require 'popper)
-         (popper-display-control-p buffer-or-name arg))))
-
-(defvar popper-display-function)
-(defun +popper--display (buffer alist)
-  (funcall popper-display-function buffer alist))
-
-(alist-setq! display-buffer-alist +popper--popup-p '(+popper--display))
-
-(after-load! popper
-  (alist-delq! display-buffer-alist +popper--popup-p)
-  (after-load! project
-    (setq popper-group-function #'popper-group-by-project))
-  (popper-mode)
-  (popper-echo-mode))
-
 ;;;; ibuffer
 
 ;; Replace `list-buffers' with `ibuffer-jump'.
