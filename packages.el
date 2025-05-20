@@ -121,6 +121,7 @@
 
 ;;; Version control
 (straight-use-package 'magit)
+(straight-use-package 'forge)
 (straight-use-package 'diff-hl)
 
 ;;; eldoc
