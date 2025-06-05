@@ -1,5 +1,9 @@
 2025-06-05  Zhengyi Fu  <i@fuzy.me>
 
+	* packages.el: New package `reader'.
+
+2025-06-05  Zhengyi Fu  <i@fuzy.me>
+
 	Do not force `compilation-mode` to use pipes
 
 	* init.el (+process-use-pipe): Remove function.
