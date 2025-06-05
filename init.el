@@ -979,11 +979,7 @@ value for USE-OVERLAYS."
 
 ;;;; compile
 
-(defun +process-use-pipe ()
-  (setq-local process-connection-type nil))
-
 (after-load! compile
-  (add-hook 'compilation-mode-hook #'+process-use-pipe)
   (setq compilation-always-kill t
         compilation-ask-about-save t
         compilation-scroll-output 'first-error))
