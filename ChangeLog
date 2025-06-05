@@ -1,3 +1,7 @@
+2025-06-05  Zhengyi Fu  <i@fuzy.me>
+
+	* rnc-schemas/busconfig.rnc: New file.
+
 2025-05-20  Zhengyi Fu  <i@fuzy.me>
 
 	* site-lisp/consult-ugrep.el (consult--ugrep-make-builder):

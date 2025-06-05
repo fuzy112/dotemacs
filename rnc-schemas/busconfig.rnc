@@ -1,0 +1,69 @@
+start = element busconfig {
+  (user | type | fork | keep_umask | listen | pidfile | includedir | servicedir | servicehelper | auth | include_ | policy | limit | selinux | apparmor)*
+}
+
+user = element user { text }
+type = element type { text }
+fork = element fork { empty }
+keep_umask = element keep_umask { empty }
+listen = element listen { text }
+pidfile = element pidfile { text }
+includedir = element includedir { text }
+servicedir = element servicedir { text }
+servicehelper = element servicehelper { text }
+auth = element auth { text }
+
+include_ = element include {
+  text,
+  attribute ignore_missing { "yes" | "no" }?,
+  attribute if_selinux_enabled { "yes" | "no" }?,
+  attribute selinux_root_relative { "yes" | "no" }?
+}
+
+policy = element policy {
+  (allow | deny)*,
+  attribute context { "default" | "mandatory" }?,
+  attribute user { text }?,
+  attribute group { text }?,
+  attribute at_console { "yes" | "no" }?
+}
+
+allow = element allow {
+  empty,
+  attribute user { text }?,
+  attribute send { text }?,
+  attribute receive { text }?,
+  attribute own { text }?,
+  attribute send_to { text }?,
+  attribute receive_from { text }?
+}
+
+deny = element deny {
+  empty,
+  attribute user { text }?,
+  attribute send { text }?,
+  attribute receive { text }?,
+  attribute own { text }?,
+  attribute send_to { text }?,
+  attribute receive_from { text }?
+}
+
+limit = element limit {
+  text,
+  attribute name { text }
+}
+
+selinux = element selinux {
+  associate*
+}
+
+associate = element associate {
+  empty,
+  attribute own { text },
+  attribute context { text }
+}
+
+apparmor = element apparmor {
+  empty,
+  attribute mode { "required" | "enabled" | "disabled" }?
+}
