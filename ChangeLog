@@ -1,3 +1,19 @@
+2025-06-13  Zhengyi Fu  <i@fuzy.me>
+
+	Some minor changes
+
+	* init.el (grep-use-headings): Set to t.
+	(mode-line-buffer-identification): Set the default value to show
+	nerd-icons before buffer name.
+	(frame-auto-hide-function): Default to delete frames.
+	(quit-window-kill-buffer): Delete magit-diff, magit-revision and
+	xref buffers on quit.
+	(tramp-compat-temporary-file-directory): Ensure the paths of the
+	files in `tramp-compat-temporary-file-directory' not exceed the
+	limit of unix domain socket path.
+	(vc-svn-global-switches): Add options to use kwallet for password
+	store.
+
 2025-06-05  Zhengyi Fu  <i@fuzy.me>
 
 	* packages.el: New package `reader'.

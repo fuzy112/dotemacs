@@ -353,6 +353,11 @@
 (add-hook 'after-make-frame-functions '+nerd-icons--after-make-frame-h)
 (add-hook 'server-after-make-frame-hook '+nerd-icons--after-make-frame-h)
 
+;; show nerd-icons on mode-line
+(setq-default mode-line-buffer-identification
+              (seq-union '((:eval (nerd-icons-icon-for-buffer)) " ")
+                         mode-line-buffer-identification))
+
 ;;;; ultra-scroll
 
 (setq scroll-conservatively 101)
@@ -363,7 +368,14 @@
 ;;;; window
 
 (setopt kill-buffer-quit-windows t
-        quit-restore-window-no-switch t)
+        quit-restore-window-no-switch t
+        frame-auto-hide-function #'delete-frame)
+
+(when (listp quit-window-kill-buffer)
+  (setq quit-window-kill-buffer
+        (seq-union quit-window-kill-buffer
+                   (list 'magit-diff-mode 'magit-revision-mode
+                         'xref--xref-buffer-mode))))
 
 ;;;; tab-bar
 
@@ -990,6 +1002,10 @@ value for USE-OVERLAYS."
   (setq comint-prompt-read-only t
         comint-buffer-maximum-size 2048))
 
+;;;; grep
+
+(setq grep-use-headings t)
+
 ;;;; eshell
 
 (defun +eshell/other-window ()
@@ -1534,13 +1550,26 @@ Display the result in a posframe." t)
   (alist-setq! buffer-env-command-alist "/\\.nvmrc\\'" "~/.nvm/nvm-exec env -0")
   (setopt buffer-env-script-name '(".envrc" ".nvmrc" ".env")))
 
+;;;; tramp
+
+;;; Unix domain sockets will be created in this directory.  The total
+;;; length of a unix domain socket path must not exceed 108.
+(defvar tramp-compat-temporary-file-directory)
+(after-load! tramp-compat
+  (when (length> tramp-compat-temporary-file-directory 80)
+    (setq tramp-compat-temporary-file-directory "/tmp/cache/emacs")
+    (unless (file-directory-p tramp-compat-temporary-file-directory)
+      (mkdir tramp-compat-temporary-file-directory t))))
+
 ;;;; vc
 
 (setq vc-follow-symlinks t)
 (setq vc-svn-global-switches
       '("--force-interactive"
         "--config-option"
-        "config:auth:password-stores=gpg-agent")
+        "config:auth:password-stores=gpg-agent,kwallet"
+        "--config-option"
+        "config:auth:kwallet-wallet=Secrets")
       vc-svn-diff-switches '("-x" "-u -p"))
 (keymap-set vc-prefix-map "." '+vc/dir-here)
 
