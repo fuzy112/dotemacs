@@ -1,5 +1,11 @@
 2025-06-15  Zhengyi Fu  <i@fuzy.me>
 
+	Fix compatibility problem
+
+	* init.el: Don't use quit-window-kill-buffer if not bound.
+
+2025-06-15  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/secrets.el: New file.  A modified copy of secrets.el
 	that supports encrypted transfer of secrets.
 
