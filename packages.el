@@ -188,14 +188,13 @@
 ;;; Applications
 (straight-use-package 'erc)
 (straight-use-package 'show-font)
-(straight-use-package `(reader :type git :host codeberg :repo "divyaranjan/emacs-reader"
-			       :files ("*.el" "render-core.so")
-			       :pre-build ("cc" "-fPIC" "-shared" "-o" "render-core.so" "-DLINUX"
-					   "render/elisp-helpers.c" "render/mupdf-helpers.c" "render/render-core.c"
-					   "render/render-theme.c"
-					   ,@(split-string-shell-command
-					      (string-trim-right
-					       (shell-command-to-string "pkg-config --cflags --libs mupdf"))))))
+(straight-use-package
+ `(reader :type git :host codeberg :repo "divyaranjan/emacs-reader"
+	  :files ("*.el" "render-core.so")
+	  :pre-build ("cc" "-fPIC" "-shared" "-o" "render-core.so"
+		      "-DLINUX" "render/elisp-helpers.c"
+		      "render/mupdf-helpers.c" "render/render-core.c"
+		      "render/render-theme.c" "-lmupdf")))
 
 (straight-use-package '(eat :files (:defaults "integration" "term" "terminfo")))
 
