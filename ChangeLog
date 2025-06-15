@@ -1,5 +1,12 @@
 2025-06-15  Zhengyi Fu  <i@fuzy.me>
 
+	Fix problem on Fedora
+
+	* packages.el (reader): Do not use pkg-config module for libmupdf,
+	which doesn't exist on Fedora.
+
+2025-06-15  Zhengyi Fu  <i@fuzy.me>
+
 	Fix compatibility problem
 
 	* init.el: Don't use quit-window-kill-buffer if not bound.
