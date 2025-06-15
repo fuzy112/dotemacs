@@ -1,3 +1,8 @@
+2025-06-15  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/secrets.el: New file.  A modified copy of secrets.el
+	that supports encrypted transfer of secrets.
+
 2025-06-13  Zhengyi Fu  <i@fuzy.me>
 
 	Some minor changes
