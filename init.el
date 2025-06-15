@@ -371,7 +371,7 @@
         quit-restore-window-no-switch t
         frame-auto-hide-function #'delete-frame)
 
-(when (listp quit-window-kill-buffer)
+(when (and (boundp 'quit-window-kill-buffer) (listp quit-window-kill-buffer))
   (setq quit-window-kill-buffer
         (seq-union quit-window-kill-buffer
                    (list 'magit-diff-mode 'magit-revision-mode
