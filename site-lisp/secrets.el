@@ -347,7 +347,7 @@ ENDIAN is `big' or `little'."
         (reverse str)
       str)))
 
-(defun secret-unibyte-string-to-integer (str endian)
+(defun secrets-unibyte-string-to-integer (str endian)
   "Convert STR to an integer.
 ENDIAN is `big' or `little'."
   (if (eq endian 'little)
@@ -369,19 +369,31 @@ ENDIAN is `big' or `little'."
                     b (1- b))
            finally return k))
 
-(defun secrets-generate-key-pair ()
-  "Generate a key pair with Diffie-Hellman key agreement using `secrets-dh-prime'.
-Return a list like (PRIVATE-KEY PUBLIC-KEY)."
-  (let* ((priv-key (random (ash 1 1024)))
+(defun secrets-random (bytes)
+  (cond
+   ((file-readable-p "/dev/urandom")
+    (with-temp-buffer
+      (set-buffer-multibyte nil)
+      (insert-file-contents-literally "/dev/urandom" nil nil bytes)
+      (buffer-string)))
+   (t
+    (let ((rand-num (random (ash 1 (* bytes 8)))))
+      (secrets-integer-to-unibyte-string rand-num bytes 'big)))))
+
+(defun secrets-generate-priv-key ()
+  "Generate a private key."
+  (secrets-random 128))
+
+(defun secrets-priv-key-to-pub-key (priv-key)
+  "Generate public key from PRIV-KEY."
+  (let* ((priv-key (secrets-unibyte-string-to-integer priv-key 'big))
          (pub-key (secrets-pow-mod 2 priv-key secrets-dh-prime)))
-    (list
-     (secrets-integer-to-unibyte-string priv-key 128 'big)
-     (secrets-integer-to-unibyte-string pub-key 128 'big))))
+    (secrets-integer-to-unibyte-string pub-key 128 'big)))
 
 (defun secrets-compute-aes-key (priv-key peer-pub-key)
   "Compute the symmetric key used for AES encryption."
-  (setq priv-key (secret-unibyte-string-to-integer priv-key 'big))
-  (setq peer-pub-key (secret-unibyte-string-to-integer peer-pub-key 'big))
+  (setq priv-key (secrets-unibyte-string-to-integer priv-key 'big))
+  (setq peer-pub-key (secrets-unibyte-string-to-integer peer-pub-key 'big))
   (let* ((shared-secret (secrets-pow-mod peer-pub-key priv-key secrets-dh-prime))
          (shared-secret (secrets-integer-to-unibyte-string shared-secret 128 'big))
          (salt (make-string 32 0))
@@ -412,8 +424,9 @@ session will be used.  The object path of the session will be
 returned, and it will be stored in `secrets-session-path'."
   (when reopen (secrets-close-session))
   (when (secrets-empty-path secrets-session-path)
-    (let* ((key-pair (secrets-generate-key-pair))
-           (pub-key (secrets-unibyte-string-to-byte-array (cadr key-pair)))
+    (let* ((priv-key (secrets-generate-priv-key))
+           (pub-key (secrets-priv-key-to-pub-key priv-key))
+           (pub-key (secrets-unibyte-string-to-byte-array pub-key))
            (results
             (condition-case err
                 (dbus-call-method
@@ -435,7 +448,7 @@ returned, and it will be stored in `secrets-session-path'."
            (peer-pub-key (apply #'unibyte-string (caar results))))
       (when secrets-session-algorithm
           (setq secrets-session-aes-key
-                (secrets-compute-aes-key (car key-pair) peer-pub-key)))
+                (secrets-compute-aes-key priv-key peer-pub-key)))
       (setq secrets-session-path (cadr results))))
   (when secrets-debug
     (message "Secret Service session: %s" secrets-session-path))
@@ -798,8 +811,8 @@ The object path of the created item is returned."
 		`((:dict-entry ,(concat secrets-interface-item ".Attributes")
 			       (:variant ,(append '(:array) props))))))
 	     ;; Secret.
-	     `(:struct :object-path ,secrets-session-path
-                       ,@(secret-encrypt-secret password)
+             `(:struct :object-path ,secrets-session-path
+                       ,@(secrets-encrypt-secret password)
                        ,secrets-struct-secret-content-type)
 	     ;; Do not replace. Replace does not seem to work.
 	     nil))
