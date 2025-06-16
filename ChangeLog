@@ -1,5 +1,16 @@
 2025-06-16  Zhengyi Fu  <i@fuzy.me>
 
+	Update secrets.el
+
+	* site-lisp/secrets.el (secrets-unibyte-string-to-integer): Fix typo.
+	(secrets-random, secrets-generate-priv-key)
+	(secrets-priv-key-to-pub-key): New function.
+	(secrets-generate-key-pair): Remove function.
+	(secrets-compute-aes-key, secrets-open-session): Use the new
+	functions.
+
+2025-06-16  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (vc-svn-global-switches): Only use kwallet for password-store.
 
 2025-06-15  Zhengyi Fu  <i@fuzy.me>
