@@ -1556,7 +1556,7 @@ Display the result in a posframe." t)
 ;;; length of a unix domain socket path must not exceed 108.
 (defvar tramp-compat-temporary-file-directory)
 (after-load! tramp-compat
-  (when (length> tramp-compat-temporary-file-directory 80)
+  (when (length> tramp-compat-temporary-file-directory 50)
     (setq tramp-compat-temporary-file-directory "/tmp/cache/emacs")
     (unless (file-directory-p tramp-compat-temporary-file-directory)
       (mkdir tramp-compat-temporary-file-directory t))))

@@ -1,5 +1,9 @@
 2025-06-16  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Force shorter `tramp-compat-temporary-file-directory' value.
+
+2025-06-16  Zhengyi Fu  <i@fuzy.me>
+
 	Update secrets.el
 
 	* site-lisp/secrets.el (secrets-unibyte-string-to-integer): Fix typo.
