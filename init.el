@@ -1567,7 +1567,7 @@ Display the result in a posframe." t)
 (setq vc-svn-global-switches
       '("--force-interactive"
         "--config-option"
-        "config:auth:password-stores=gpg-agent,kwallet"
+        "config:auth:password-stores=kwallet"
         "--config-option"
         "config:auth:kwallet-wallet=Secrets")
       vc-svn-diff-switches '("-x" "-u -p"))
