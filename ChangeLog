@@ -1,5 +1,20 @@
 2025-06-17  Zhengyi Fu  <i@fuzy.me>
 
+	Update secrets.el
+
+	* site-lisp/secrets.el (secrets-open-session-functions): New variable
+	(secrets-session-algorithm): Change to generic object.
+	(secrets-session-aes-key): Remove variable.
+	(secrets-algorithm-encrypt, secrets-algorithm-decrypt): New method.
+	(secrets-open-session-plain)
+	(secrets-open-session-dh-ietf1024-sha256-aes128-cbc-pkcs7): New functions.
+	(secrets-open-session): Use `secrets-open-session-functions'.
+	(secrets-close-session): Reset `secrets-session-algorithm'.
+	(secrets-create-item): Use `secrets-algorithm-encrypt'.
+	(secrets-get-secret): Use `secrets-algorithm-decrypt'.
+
+2025-06-17  Zhengyi Fu  <i@fuzy.me>
+
 	* packages.el: Remove copilot-chat.
 
 2025-06-17  Zhengyi Fu  <i@fuzy.me>

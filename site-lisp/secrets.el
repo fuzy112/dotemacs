@@ -325,13 +325,17 @@ It returns t if not."
 
 ;;; Sessions.
 
+(defvar secrets-open-session-functions
+  '(secrets-open-session-dh-ietf1024-sha256-aes128-cbc-pkcs7
+    secrets-open-session-plain)
+  "A list of functions used to open sessions.")
+
 (defvar secrets-session-path secrets-empty-path
   "The D-Bus session path of the active session.
 A session path `secrets-empty-path' indicates there is no open session.")
 
-(defvar secrets-session-algorithm "dh-ietf1024-sha256-aes128-cbc-pkcs7")
-
-(defvar secrets-session-aes-key nil)
+(defvar secrets-session-algorithm nil
+  "The algorithm used by the session.")
 
 (defconst secrets-dh-prime #xFFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B139B22514A08798E3404DDEF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245E485B576625E7EC6F44C42E9A637ED6B0BFF5CB6F406B7EDEE386BFB5A899FA5AE9F24117C4B1FE649286651ECE65381FFFFFFFFFFFFFFFF)
 
@@ -408,52 +412,6 @@ ENDIAN is `big' or `little'."
                   (list :byte byte))
                 ustr)))
 
-(defun secrets-close-session ()
-  "Close the secret service session, if any."
-  (dbus-ignore-errors
-    (dbus-call-method
-     :session secrets-service secrets-session-path
-     secrets-interface-session "Close"))
-  (setq secrets-session-path secrets-empty-path
-        secrets-session-aes-key nil))
-
-(defun secrets-open-session (&optional reopen)
-  "Open a new session with \"plain\" algorithm.
-If there exists another active session, and REOPEN is nil, that
-session will be used.  The object path of the session will be
-returned, and it will be stored in `secrets-session-path'."
-  (when reopen (secrets-close-session))
-  (when (secrets-empty-path secrets-session-path)
-    (let* ((priv-key (secrets-generate-priv-key))
-           (pub-key (secrets-priv-key-to-pub-key priv-key))
-           (pub-key (secrets-unibyte-string-to-byte-array pub-key))
-           (results
-            (condition-case err
-                (dbus-call-method
-                 :session secrets-service secrets-path
-                 secrets-interface-service "OpenSession"
-                 secrets-session-algorithm
-                 `(:variant ,pub-key))
-              (dbus-error
-               (unless (equal (cadr err) "org.freedesktop.DBus.Error.NotSupported")
-                 (signal (car err) (cdr err)))
-               (when (equal secrets-session-algorithm "plain")
-                 (signal (car err) (cdr err)))
-               (setq secrets-session-algorithm "plain")
-               (dbus-call-method
-                :session secrets-service secrets-path
-                secrets-interface-service "OpenSession"
-                secrets-session-algorithm
-                `(:variant "")))))
-           (peer-pub-key (apply #'unibyte-string (caar results))))
-      (when secrets-session-algorithm
-          (setq secrets-session-aes-key
-                (secrets-compute-aes-key priv-key peer-pub-key)))
-      (setq secrets-session-path (cadr results))))
-  (when secrets-debug
-    (message "Secret Service session: %s" secrets-session-path))
-  secrets-session-path)
-
 (defun secrets-pkcs7-pad (data)
   "Pad DATA to 128 bits."
   (let ((padding (- 16 (mod (length data) 16))))
@@ -471,35 +429,79 @@ returned, and it will be stored in `secrets-session-path'."
       (prog1 (substring data)
         (clear-string data)))))
 
-(defun secrets-encrypt-secret (password)
-  "Encrypt PASSWORD. Return (IV ENCRYPTED-PASSWORD)."
-  (setq password (encode-coding-string password 'binary))
-  (pcase secrets-session-algorithm
-    ("dh-ietf1024-sha256-aes128-cbc-pkcs7"
-     (let* ((iv (random (ash 1 128)))
-            (iv (secrets-integer-to-unibyte-string iv))
-            (encrypted (gnutls-symmetric-encrypt
-                        "AES-128-CBC"
-                        (substring secrets-session-aes-key)
-                        iv
-                        (secrets-pkcs7-pad password))))
-       (reverse encrypted)))
-    ("plain"
-     (list "" password))))
+(cl-defmethod secrets-algorithm-encrypt ((_algorithm (eql plain)) password)
+  (list password ""))
 
-(defun secrets-decrypt-secret (iv encrypted-value)
-  "Decrypt ENCRYPTED-VALUE."
-  (let ((password
-         (pcase secrets-session-algorithm
-           ("dh-ietf1024-sha256-aes128-cbc-pkcs7"
-            (secrets-pkcs7-unpad
-             (car
-              (gnutls-symmetric-decrypt "AES-128-CBC"
-                                        (substring secrets-session-aes-key)
-                                        iv encrypted-value))))
-           ("plain"
-            encrypted-value))))
-    (decode-coding-string password 'utf-8)))
+(cl-defmethod secrets-algorithm-decrypt ((_algorithm (eql plain)) input _parameter)
+  input)
+
+(cl-defmethod secrets-algorithm-encrypt ((algorithm (head aes-128-cbc)) password)
+  (gnutls-symmetric-encrypt
+   "AES-128-CBC"
+   (substring (cadr algorithm))
+   (secrets-random 16)
+   (secrets-pkcs7-pad password)))
+
+(cl-defmethod secrets-algorithm-decrypt ((algorithm (head aes-128-cbc)) input parameter)
+  (secrets-pkcs7-unpad
+   (car (gnutls-symmetric-decrypt
+         "AES-128-CBC"
+         (substring (cadr algorithm))
+         parameter
+         input))))
+
+(defun secrets-close-session ()
+  "Close the secret service session, if any."
+  (dbus-ignore-errors
+    (dbus-call-method
+     :session secrets-service secrets-session-path
+     secrets-interface-session "Close"))
+  (setq secrets-session-path secrets-empty-path
+        secrets-session-algorithm nil))
+
+(defun secrets-open-session-plain ()
+  "Open a new session with \"plain\" algorithm."
+  (list (cadr
+         (dbus-call-method
+          :session secrets-service secrets-path
+          secrets-interface-service "OpenSession" "plain"
+          `(:variant "")))
+        'plain))
+
+(defun secrets-open-session-dh-ietf1024-sha256-aes128-cbc-pkcs7 ()
+  "Open a new session with \"dh-ietf1024-sha256-aes128-cbc-pkcs7\" algorithm."
+  (condition-case err
+      (pcase-let* ((priv-key (secrets-generate-priv-key))
+                   (pub-key (secrets-priv-key-to-pub-key priv-key))
+                   (pub-key (secrets-unibyte-string-to-byte-array pub-key))
+                   (`((,server-pub-key) ,path)
+                    (dbus-call-method
+                     :session secrets-service secrets-path
+                     secrets-interface-service "OpenSession"
+                     "dh-ietf1024-sha256-aes128-cbc-pkcs7"
+                     `(:variant ,pub-key)))
+                   (server-pub-key (apply #'unibyte-string server-pub-key))
+                   (aes-key (secrets-compute-aes-key priv-key server-pub-key)))
+        (list path `(aes-128-cbc ,aes-key)))
+    (dbus-error
+     (if (string= (cadr err) "org.freedesktop.DBus.Error.NotSupported")
+         nil
+       (signal 'dbus-error (cdr err))))))
+
+(defun secrets-open-session (&optional reopen)
+  "Open a new session with \"plain\" algorithm.
+If there exists another active session, and REOPEN is nil, that
+session will be used.  The object path of the session will be
+returned, and it will be stored in `secrets-session-path'."
+  (when reopen (secrets-close-session))
+  (when (secrets-empty-path secrets-session-path)
+    (pcase (run-hook-with-args-until-success 'secrets-open-session-functions)
+      (`(,path ,alg)
+       (setq secrets-session-path path
+             secrets-session-algorithm alg))))
+  (when secrets-debug
+    (message "Secret Service session: %s" secrets-session-path))
+  secrets-session-path)
 
 ;;; Prompts.
 
@@ -778,7 +780,7 @@ determined by this.  If no `:xdg:schema' is given,
 
 The object path of the created item is returned."
   (let ((collection-path (secrets-unlock-collection collection))
-	result props)
+        result props parameter)
     (unless (secrets-empty-path collection-path)
       ;; Set default type if needed.
       (unless (member :xdg:schema attributes)
@@ -796,7 +798,10 @@ The object path of the created item is returned."
 		     `((:dict-entry
 			,(substring (symbol-name (car attributes)) 1)
 			,(cadr attributes))))
-	      attributes (cddr attributes)))
+              attributes (cddr attributes)))
+      ;; Encrypt the password
+      (pcase-setq `(,password ,parameter)
+                  (secrets-algorithm-encrypt secrets-session-algorithm password))
       ;; Create the item.
       (setq result
 	    (dbus-call-method
@@ -812,7 +817,8 @@ The object path of the created item is returned."
 			       (:variant ,(append '(:array) props))))))
 	     ;; Secret.
              `(:struct :object-path ,secrets-session-path
-                       ,@(secrets-encrypt-secret password)
+                       ,(secrets-unibyte-string-to-byte-array parameter)
+                       ,(secrets-unibyte-string-to-byte-array password)
                        ,secrets-struct-secret-content-type)
 	     ;; Do not replace. Replace does not seem to work.
 	     nil))
@@ -867,12 +873,14 @@ one is returned.  If there is no such item, return nil.
 ITEM can also be an object path, which is used if contained in COLLECTION."
   (let ((item-path (secrets-unlock-item collection item)))
     (unless (secrets-empty-path item-path)
-      (let* ((secret (dbus-call-method
-                      :session secrets-service item-path secrets-interface-item
-                      "GetSecret" :object-path secrets-session-path)))
-        (secrets-decrypt-secret
-         (apply #'unibyte-string (nth 1 secret))
-         (apply #'unibyte-string (nth 2 secret)))))))
+      (pcase-let* ((`(,_session ,iv ,value ,_content-type)
+                    (dbus-call-method
+                     :session secrets-service item-path secrets-interface-item
+                     "GetSecret" :object-path secrets-session-path)))
+        (secrets-algorithm-decrypt
+         secrets-session-algorithm
+         (apply #'unibyte-string value)
+         (apply #'unibyte-string iv))))))
 
 (defun secrets-get-attributes (collection item)
   "Return the lookup attributes of item labeled ITEM in COLLECTION.
@@ -1090,9 +1098,5 @@ to their attributes."
 ;; * secrets-debug should be structured like auth-source-debug to
 ;;   prevent leaking sensitive information.  Right now I don't see
 ;;   anything sensitive though.
-
-;; * Check, whether the dh-ietf1024-aes128-cbc-pkcs7 algorithm can be
-;;   used for the transfer of the secrets.  Currently, we use the
-;;   plain algorithm.
 
 ;;; secrets.el ends here
