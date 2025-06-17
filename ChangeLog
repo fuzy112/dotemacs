@@ -1,5 +1,9 @@
 2025-06-17  Zhengyi Fu  <i@fuzy.me>
 
+	* packages.el: Remove copilot-chat.
+
+2025-06-17  Zhengyi Fu  <i@fuzy.me>
+
 	Add `elfeed'
 
 	* init.el (mode-specific-map): Bind E to `elfeed'.
