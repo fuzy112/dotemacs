@@ -47,7 +47,6 @@
 
 ;;;; Copilot
 (straight-use-package 'copilot)
-(straight-use-package 'copilot-chat)
 
 ;;;; LSP
 (straight-use-package 'eglot)
