@@ -1,3 +1,8 @@
+2025-06-17  Zhengyi Fu  <i@fuzy.me>
+
+	* transient/values.el (gptel-menu): Add --prune --tags to
+	`magit-fetch'.
+
 2025-06-16  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Force shorter `tramp-compat-temporary-file-directory' value.
