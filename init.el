@@ -2450,6 +2450,7 @@ Otherwise disable it."
   "A"   #'org-agenda
   "C"   #'org-capture
   "D"   debug-map
+  "E"   #'elfeed
   "L"   #'org-store-link
   "S"   straight-prefix-map
   "G"   #'gnus

@@ -195,7 +195,7 @@
 		      "-DLINUX" "render/elisp-helpers.c"
 		      "render/mupdf-helpers.c" "render/render-core.c"
 		      "render/render-theme.c" "-lmupdf")))
-
+(straight-use-package 'elfeed)
 (straight-use-package '(eat :files (:defaults "integration" "term" "terminfo")))
 
 ;;; Email
