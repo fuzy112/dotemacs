@@ -1,5 +1,13 @@
 2025-06-18  Zhengyi Fu  <i@fuzy.me>
 
+	Optimize elfeed db sync
+
+	* init.el (+elfeed-db-sync): Add --no-block option.  Send
+	notification on finish.
+	(elfeed-db-unload-hook): Add `elfeed-db-gc-safe'.
+
+2025-06-18  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+elfeed-db-sync): Remove "--pipe" option.
 
 2025-06-18  Zhengyi Fu  <i@fuzy.me>

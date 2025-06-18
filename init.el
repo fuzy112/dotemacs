@@ -2006,14 +2006,24 @@ Run hook `vc-dwim-post-commit-hook'."
                 "--slice" "background.slice"
                 "--service-type" "oneshot"
                 "--working-directory" (expand-file-name elfeed-db-directory)
+                "--no-block"
                 "--"
                 "/bin/bash" "-c"
-                "git add .
-git commit  -m \"Update $(date)\"
-git pull --rebase origin master
-git push origin master"))
+                "(
+    git add .
+    git commit  -m \"Update $(date)\"
+    git pull --rebase origin master
+    git push origin master
+) >/tmp/elfeed-db-sync.log 2>&1
+
+if [[ $? -ne 0 ]]; then
+   notify-send --icon error -u critical \"Elfeed DB sync failed\" \"$(cat /tmp/elfeed-db-sync.log)\"
+else
+  notify-send -e \"Elfeed DB sync finished\" \"\"
+fi"))
 
 (advice-add #'elfeed-db-gc :after #'+elfeed-db-sync)
+(add-hook 'elfeed-db-unload-hook #'elfeed-db-gc-safe)
 
 (after-load! elfeed-db
   (let ((default-directory elfeed-db-directory))
