@@ -1,5 +1,9 @@
 2025-06-18  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+elfeed-db-sync): Remove "--pipe" option.
+
+2025-06-18  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+elfeed-db-sync): Rename the log buffer to
 	" *+elfeed-db-sync*".
 

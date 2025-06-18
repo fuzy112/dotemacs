@@ -2005,7 +2005,6 @@ Run hook `vc-dwim-post-commit-hook'."
                 ;; "--unit" "elfeed-db-sync"
                 "--slice" "background.slice"
                 "--service-type" "oneshot"
-                "--pipe"
                 "--working-directory" (expand-file-name elfeed-db-directory)
                 "--"
                 "/bin/bash" "-c"
