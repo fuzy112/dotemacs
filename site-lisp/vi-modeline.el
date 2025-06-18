@@ -80,7 +80,7 @@
     (save-excursion
       (goto-char (point-min))
       (setq vi-modeline-var-count 0)
-      (when (re-search-forward "\\(#\\|//\\|/\\*\\|;;\\).* vim?:" nil t)
+      (when (re-search-forward "\\(?:#\\|//\\|/\\*\\|;;\\).* vim?:" (min (point-max) 65536) t)
         (save-restriction
           (narrow-to-region (point) (line-end-position))
           (while (re-search-forward "\\_<\\([[:alpha:]]+\\)=\\([[:digit:]]+\\|\"[^\"]*\"\\)\\_>" nil t)
