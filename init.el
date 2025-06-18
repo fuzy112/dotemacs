@@ -2025,6 +2025,17 @@ fi"))
 (advice-add #'elfeed-db-gc :after #'+elfeed-db-sync)
 (add-hook 'elfeed-db-unload-hook #'elfeed-db-gc-safe)
 
+(defvar +elfeed-tag-history nil)
+(define-advice elfeed-show-tag (:before (&rest args) completing-read)
+  (interactive
+   (mapcar #'intern
+           (completing-read-multiple
+            "Tags: "
+            (seq-difference (mapcar #'intern +elfeed-tag-history)
+                            (elfeed-entry-tags elfeed-show-entry))
+            nil nil nil '+elfeed-tag-history)))
+  args)
+
 (after-load! elfeed-db
   (let ((default-directory elfeed-db-directory))
     (when (file-exists-p "feeds.eld")

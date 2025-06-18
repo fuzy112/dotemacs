@@ -1,5 +1,13 @@
 2025-06-18  Zhengyi Fu  <i@fuzy.me>
 
+	Provide completion when reading elfeed tags
+
+	* init.el (+elfeed-tag-history): New variable.
+	(elfeed-show-tag): Add an advice to use `completing-read-multiple'
+	to read the tags.
+
+2025-06-18  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+elfeed-db-sync): Optimise the bash command.
 
 2025-06-18  Zhengyi Fu  <i@fuzy.me>
