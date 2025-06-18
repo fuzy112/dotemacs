@@ -14,6 +14,9 @@
 (gptel-make-kagi "Kagi"
   :key #'gptel-api-key-from-auth-source)
 
+(gptel-make-gh-copilot "Copilot")
+
+
 ;;; Tools
 
 ;; filesystem tools
