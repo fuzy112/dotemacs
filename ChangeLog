@@ -1,3 +1,7 @@
+2025-06-18  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/vi-modeline.el (vi-modeline-apply): Prevent stack overflow.
+
 2025-06-17  Zhengyi Fu  <i@fuzy.me>
 
 	Update secrets.el
