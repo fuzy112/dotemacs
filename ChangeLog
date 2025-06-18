@@ -1,5 +1,15 @@
 2025-06-18  Zhengyi Fu  <i@fuzy.me>
 
+	Configure synchronization for elfeed
+
+	* init.el: Load feeds.eld from `elfeed-db-directory'.
+	(+elfeed-feeds-inhibit-save): New variable.
+	(+elfeed-feeds-save): New function.  Called when `elfeed-feeds'	is changed.
+	(+elfeed-db-sync): New function.  Synchronize the git repo for
+	elfeed database. Called after `elfeed-db-gc'.
+
+2025-06-18  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/vi-modeline.el (vi-modeline-apply): Prevent stack overflow.
 
 2025-06-17  Zhengyi Fu  <i@fuzy.me>

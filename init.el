@@ -1981,6 +1981,50 @@ Run hook `vc-dwim-post-commit-hook'."
 (after-load! gnus-art
   (require 'gnus-diff))
 
+;;;; elfeed
+
+(defvar +elfeed-feeds-inhibit-save nil)
+
+(defun +elfeed-feeds-save (_symbol newval operation where)
+  (when (and (not +elfeed-feeds-inhibit-save)
+             (eq operation 'set))
+    (let ((default-directory elfeed-db-directory))
+      (with-temp-file "feeds.eld"
+        (add-file-local-variable-prop-line 'mode 'lisp-data-mode)
+        (add-file-local-variable-prop-line 'coding 'utf-8-emacs)
+        (goto-char (point-max))
+        (newline)
+        (insert "(\n")
+        (dolist (entry newval)
+          (pp entry (current-buffer)))
+        (insert ")\n")))))
+
+(defun +elfeed-db-sync (&optional _)
+  (process-file "systemd-run" nil (get-buffer-create "*test*") nil
+                "--user"
+                ;; "--unit" "elfeed-db-sync"
+                "--slice" "background.slice"
+                "--service-type" "oneshot"
+                "--pipe"
+                "--working-directory" (expand-file-name elfeed-db-directory)
+                "--"
+                "/bin/bash" "-c"
+                "git add .
+git commit  -m \"Update $(date)\"
+git pull --rebase origin master
+git push origin master"))
+
+(advice-add #'elfeed-db-gc :after #'+elfeed-db-sync)
+
+(after-load! elfeed-db
+  (let ((default-directory elfeed-db-directory))
+    (when (file-exists-p "feeds.eld")
+      (with-temp-buffer
+        (insert-file-contents "feeds.eld")
+        (let ((+elfeed-feeds-inhibit-save t))
+          (setq elfeed-feeds (read (current-buffer))))
+        (add-variable-watcher 'elfeed-feeds #'+elfeed-feeds-save)))))
+
 ;;;; emacs-server
 
 ;; Workaround windows encoding issue
