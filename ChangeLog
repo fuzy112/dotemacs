@@ -1,5 +1,9 @@
 2025-06-18  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+elfeed-db-sync): Optimise the bash command.
+
+2025-06-18  Zhengyi Fu  <i@fuzy.me>
+
 	Optimize elfeed db sync
 
 	* init.el (+elfeed-db-sync): Add --no-block option.  Send
