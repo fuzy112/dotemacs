@@ -2000,7 +2000,7 @@ Run hook `vc-dwim-post-commit-hook'."
         (insert ")\n")))))
 
 (defun +elfeed-db-sync (&optional _)
-  (process-file "systemd-run" nil (get-buffer-create "*test*") nil
+  (process-file "systemd-run" nil (get-buffer-create " *+elfeed-db-sync") nil
                 "--user"
                 ;; "--unit" "elfeed-db-sync"
                 "--slice" "background.slice"
