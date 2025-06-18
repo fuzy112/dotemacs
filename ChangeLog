@@ -1,5 +1,9 @@
 2025-06-19  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el: Add backend GH Copilot.
+
+2025-06-19  Zhengyi Fu  <i@fuzy.me>
+
 	Update gptel configuration
 
 	* site-lisp/gptel-config.el: New file.
