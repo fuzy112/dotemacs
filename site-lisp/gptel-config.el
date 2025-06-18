@@ -31,7 +31,8 @@
  :args (list '(:name "filepath"
 		     :type string
 		     :description "Path to the file to read. Supports relative paths and ~."))
- :category "filesystem")
+ :category "filesystem"
+ :confirm t)
 
 (gptel-make-tool
  :function (lambda (directory)
