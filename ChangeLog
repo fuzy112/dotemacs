@@ -1,5 +1,10 @@
 2025-06-19  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el: Kill unused buffers.
+	(+gptel-request-changes): Better error handling.
+
+2025-06-19  Zhengyi Fu  <i@fuzy.me>
+
 	Add a command to review PRs automatically with LLM
 
 	* site-lisp/gptel-config.el (+gptel-review-pullreq): New command.
