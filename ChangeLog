@@ -1,5 +1,10 @@
 2025-06-19  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (elfeed-show-tag): Fix calculation of the tags
+	completion tags.
+
+2025-06-19  Zhengyi Fu  <i@fuzy.me>
+
 	Update gptel configuration
 
 	* site-lisp/gptel-config.el (my-gptel--edit_file): Use `when-let*'
