@@ -1,5 +1,10 @@
 2025-06-19  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (elfeed-show-tag): Use `elfeed-db-get-all-tags' instead
+	of the tags history as the completion table.
+
+2025-06-19  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el: Kill unused buffers.
 	(+gptel-request-changes): Better error handling.
 
