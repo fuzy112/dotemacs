@@ -1,5 +1,11 @@
 2025-06-19  Zhengyi Fu  <i@fuzy.me>
 
+	Add a command to review PRs automatically with LLM
+
+	* site-lisp/gptel-config.el (+gptel-review-pullreq): New command.
+
+2025-06-19  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (elfeed-show-tag): Fix calculation of the tags
 	completion tags.
 

@@ -167,8 +167,8 @@ a old-string and a new-string, new-string will replace the old-string at the spe
  :function #'run_async_command
  :description "Run an async command."
  :args (list
-        '(:name "command"
-                :type "string"
+	'(:name "command"
+		:type "string"
 		:description "Command to run."))
  :category "command"
  :async t
@@ -260,10 +260,11 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 (gptel-make-tool
  :name "get_pullreq"
  :function (lambda (pullreq)
-	     (with-current-buffer
-		 (forge-pullreq-setup-buffer
-		  (forge-get-pullreq pullreq))
-	       (buffer-substring-no-properties (point-min) (point-max))))
+	     (save-excursion
+	       (with-current-buffer
+		   (forge-pullreq-setup-buffer
+		    (forge-get-pullreq pullreq))
+		 (buffer-substring-no-properties (point-min) (point-max)))))
  :description "Get the details of a pull request"
  :args (list '(:name "pullreq_id"
 		     :type integer
@@ -526,10 +527,30 @@ Note that the user will get a chance to edit the comments."))
 		     :description "Maximum number of results to return"))
  :category "jira")
 
-;;;
+;;; Tweaks
 
 (defun +gptel-auto-scroll-safe ()
   (ignore-errors
     (gptel-auto-scroll)))
 
 (add-hook 'gptel-post-stream-hook #'+gptel-auto-scroll-safe)
+
+;;; Commands
+
+(defun +gptel-review-pullreq (pullreq)
+  (interactive (list (or (forge-current-pullreq)
+			 (forge-get-pullreq (forge-read-pullreq "Pull-request: ")))))
+  (let* ((gptel-backend (gptel-get-backend "Copilot"))
+	 (gptel-model 'claude-3.7-sonnet)
+	 (gptel-tools (append (gptel-get-tool "filesystem")
+			      (gptel-get-tool "github")
+			      (gptel-get-tool "jira")
+			      (gptel-get-tool "command")))
+	 (gptel--system-message "You are an experienced developer and a strict code reviewer.
+You will review pull-requests in aspect of their code quality, commit messages, and JIRA ticket.")
+	 (session-buffer (gptel (format "*Review on PR #%s" (oref pullreq number)))))
+    (pop-to-buffer session-buffer)
+    (with-current-buffer session-buffer
+      (insert (format "Review pull-request #%s. " (oref pullreq number)))
+      (insert "You can approve it or request changes to it.\n")
+      (gptel-send))))
