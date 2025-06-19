@@ -2031,11 +2031,7 @@ fi"))
    (mapcar #'intern
            (completing-read-multiple
             "Tags: "
-            (seq-difference (mapcar #'intern
-                                    (mapcan (lambda (s)
-                                              (split-string s crm-separator t "[[:space:]]"))
-                                            +elfeed-tag-history))
-                            (elfeed-entry-tags elfeed-show-entry))
+            (elfeed-db-get-all-tags)
             nil nil nil '+elfeed-tag-history)))
   args)
 
