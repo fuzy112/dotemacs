@@ -1,5 +1,21 @@
 2025-06-19  Zhengyi Fu  <i@fuzy.me>
 
+	Update gptel configuration
+
+	* site-lisp/gptel-config.el (my-gptel--edit_file): Use `when-let*'
+	to avoid warnings.
+	(my-gptel--edit_file): Save the buffer after user accepts the change.
+	(gptel-backend):  Do not set it here.
+	(+gptel-auto-scroll-safe): New function.  Added to
+	`gptel-post-stream-hook'.
+	* site-lisp/gptel-config.el: Add new tools: get_pullreq,
+	approve_pullreq, request_changes, get_jira_issue,
+	create_jira_issue, comment_jira_issue, transition_jira_issue,
+	search_jira_issue.
+
+
+2025-06-19  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el: Confirm before reading files.
 
 2025-06-19  Zhengyi Fu  <i@fuzy.me>
