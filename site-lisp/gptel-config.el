@@ -1,6 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
 (require 'gptel)
+(require 'url-http)
 
 ;;; Models
 
@@ -207,12 +208,42 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 	       :description "The name of the function or variable whose documentation is to be retrieved"))
  :category "emacs")
 
+(defun +gptel-search-emacs-lists  (query)
+  (with-current-buffer
+      (+gptel-url-retrieve
+       (format "https://yhetil.org/emacs/?q=%s" query))
+    (buffer-substring-no-properties (point-min) (point-max))))
+
+(gptel-make-tool
+ :name "search_emacs_mailing_list"
+ :function #'+gptel-search-emacs-lists
+ :description "Search an online archive of Emacs-related mailing lists."
+ :args (list '(:name "query"
+		     :type string
+		     :description "The search query string"))
+ :category "emacs")
+
 ;; web tools
+
+(defvar url-http-response-status)
+
+(defun +gptel-url-retrieve (url)
+  (message "Retrieving %s..." url)
+  (let ((buffer (url-retrieve-synchronously url t t 20)))
+    (unless buffer
+      "Retrieving %s...failed" url)
+    (with-current-buffer buffer
+      (message "Retrieving %s...%s" url url-http-response-status)
+      (when (>= url-http-response-status 400)
+	(error "HTTP Error %s: %s" url-http-response-status
+	     (with-current-buffer buffer
+	       (buffer-string)))))
+    buffer))
 
 (gptel-make-tool
  :name "read_url"
  :function (lambda (url)
-	     (with-current-buffer (url-retrieve-synchronously url)
+	     (with-current-buffer (+gptel-url-retrieve url)
 	       (goto-char (point-min))
 	       (forward-paragraph)
 	       (let ((dom (libxml-parse-html-region (point) (point-max))))
@@ -236,7 +267,7 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 (defvar shr-external-rendering-functions)
 (defun +gptel-search-ddg (query)
   (let ((url (format "https://html.duckduckgo.com/html/?q=%s" query)))
-    (with-current-buffer (url-retrieve-synchronously url)
+    (with-current-buffer (+gptel-url-retrieve url)
       (goto-char (point-min))
       (forward-paragraph)
       (let ((dom (libxml-parse-html-region (point) (point-max))))
@@ -394,7 +425,7 @@ Note that the user will get a chance to edit the comments."))
 	 (url-request-extra-headers
 	  `(("authorization" . ,(format "Bearer %s" token))
 	    ("accept" . "application/json"))))
-    (with-current-buffer (url-retrieve-synchronously url)
+    (with-current-buffer (+gptel-url-retrieve url)
       (run-at-time 0 nil #'kill-buffer (current-buffer))
       (goto-char (point-min))
       (forward-paragraph)
@@ -425,7 +456,7 @@ Note that the user will get a chance to edit the comments."))
 	       ("summary" . ,summary)
 	       ("description" . ,description)
 	       ("issuetype" . (("name" . ,issue-type)))))))))
-    (with-current-buffer (url-retrieve-synchronously url)
+    (with-current-buffer (+gptel-url-retrieve url)
       (run-at-time 0 nil #'kill-buffer (current-buffer))
       (goto-char (point-min))
       (forward-paragraph)
@@ -461,7 +492,7 @@ Note that the user will get a chance to edit the comments."))
 	    ("accept" . "application/json")))
 	 (url-request-data
 	  (json-encode `(("body" . ,comment)))))
-    (with-current-buffer (url-retrieve-synchronously url)
+    (with-current-buffer (+gptel-url-retrieve url)
       (run-at-time 0 nil #'kill-buffer (current-buffer))
       (goto-char (point-min))
       (forward-paragraph)
@@ -492,7 +523,7 @@ Note that the user will get a chance to edit the comments."))
 	    ("accept" . "application/json")))
 	 (url-request-data
 	  (json-encode `(("transition" . (("id" . ,transition-id)))))))
-    (with-current-buffer (url-retrieve-synchronously url)
+    (with-current-buffer (+gptel-url-retrieve url)
       (run-at-time 0 nil #'kill-buffer (current-buffer))
       (if (eq url-http-response-status 204)
 	  (format "Successfully transitioned issue %s" issue-id)
@@ -520,7 +551,7 @@ Note that the user will get a chance to edit the comments."))
 	 (url-request-extra-headers
 	  `(("authorization" . ,(format "Bearer %s" token))
 	    ("accept" . "application/json"))))
-    (with-current-buffer (url-retrieve-synchronously url)
+    (with-current-buffer (+gptel-url-retrieve url)
       (run-at-time 0 nil #'kill-buffer (current-buffer))
       (goto-char (point-min))
       (forward-paragraph)
