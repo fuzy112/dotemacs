@@ -1,3 +1,12 @@
+2025-06-20  Zhengyi Fu  <i@fuzy.me>
+
+	Minor update to gptel configuration
+
+	* site-lisp/gptel-config.el (+gptel-edit-file): Renamed from
+	`my-gptel--edit_file'.  All calls changed.
+	(+gptel-review-pullreq): Add &rest _ args.
+	(+gptel-review-pullreq): Add a star to the end of the buffer name.
+
 2025-06-19  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (elfeed-show-tag): Use `elfeed-db-get-all-tags' instead

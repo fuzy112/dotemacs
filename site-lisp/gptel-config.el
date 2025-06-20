@@ -67,7 +67,7 @@
 	       :description "The content to write to the file"))
  :category "filesystem")
 
-(defun my-gptel--edit_file (file-path file-edits)
+(defun +gptel-edit-file (file-path file-edits)
   "In FILE-PATH, apply FILE-EDITS with pattern matching and replacing."
   (if (and file-path (not (string= file-path "")) file-edits)
       (with-current-buffer (get-buffer-create "*edit-file*")
@@ -101,7 +101,7 @@
 
 (gptel-make-tool
  :name "edit_file"
- :function #'my-gptel--edit_file
+ :function #'+gptel-edit-file
  :description "Edit file with a list of edits, each edit contains a line-number,
 a old-string and a new-string, new-string will replace the old-string at the specified line."
  :args (list '(:name "file-path"
@@ -291,7 +291,7 @@ a old-string and a new-string, new-string will replace the old-string at the spe
     (funcall +gptel-forge-post-callback "Error when submitting the post")
     (setq +gptel-forge-post-callback nil)))
 
-(defun +gptel-forge-post-submitted ()
+(defun +gptel-forge-post-submitted (&rest _)
   (when +gptel-forge-post-callback
     (funcall +gptel-forge-post-callback "Successfully submitted the post")
     (setq +gptel-forge-post-callback nil)))
@@ -560,7 +560,7 @@ Note that the user will get a chance to edit the comments."))
 			      (gptel-get-tool "command")))
 	 (gptel--system-message "You are an experienced developer and a strict code reviewer.
 You will review pull-requests in aspect of their code quality, commit messages, and JIRA ticket.")
-	 (session-buffer (gptel (format "*Review on PR #%s" (oref pullreq number)))))
+	 (session-buffer (gptel (format "*Review on PR #%s*" (oref pullreq number)))))
     (pop-to-buffer session-buffer)
     (with-current-buffer session-buffer
       (insert (format "Review pull-request #%s. " (oref pullreq number)))
