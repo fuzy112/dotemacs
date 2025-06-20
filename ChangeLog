@@ -1,5 +1,10 @@
 2025-06-20  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+elfeed-feeds-inhibit-save): Remove variable.
+	(+elfeed-feeds-save): Remove function.
+
+2025-06-20  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+elfeed-browse-eww): New command.  Assigned to "e" in
 	`elfeed-show-mode-map'.
 

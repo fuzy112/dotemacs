@@ -1983,22 +1983,6 @@ Run hook `vc-dwim-post-commit-hook'."
 
 ;;;; elfeed
 
-(defvar +elfeed-feeds-inhibit-save nil)
-
-(defun +elfeed-feeds-save (_symbol newval operation where)
-  (when (and (not +elfeed-feeds-inhibit-save)
-             (eq operation 'set))
-    (let ((default-directory elfeed-db-directory))
-      (with-temp-file "feeds.eld"
-        (add-file-local-variable-prop-line 'mode 'lisp-data-mode)
-        (add-file-local-variable-prop-line 'coding 'utf-8-emacs)
-        (goto-char (point-max))
-        (newline)
-        (insert "(\n")
-        (dolist (entry newval)
-          (pp entry (current-buffer)))
-        (insert ")\n")))))
-
 (defun +elfeed-db-sync (&optional _)
   (process-file "systemd-run" nil (get-buffer-create " *+elfeed-db-sync") nil
                 "--user"
@@ -2048,9 +2032,7 @@ fi"))
     (when (file-exists-p "feeds.eld")
       (with-temp-buffer
         (insert-file-contents "feeds.eld")
-        (let ((+elfeed-feeds-inhibit-save t))
-          (setq elfeed-feeds (read (current-buffer))))
-        (add-variable-watcher 'elfeed-feeds #'+elfeed-feeds-save)))))
+        (setq elfeed-feeds (read (current-buffer)))))))
 
 ;;;; emacs-server
 
