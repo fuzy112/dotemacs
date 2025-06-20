@@ -1,5 +1,10 @@
 2025-06-20  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+elfeed-browse-eww): New command.  Assigned to "e" in
+	`elfeed-show-mode-map'.
+
+2025-06-20  Zhengyi Fu  <i@fuzy.me>
+
 	Update gptel configuration
 
 	* site-lisp/gptel-config.el (+gptel-search-emacs-lists): New function.
