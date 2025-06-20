@@ -1,5 +1,12 @@
 2025-06-20  Zhengyi Fu  <i@fuzy.me>
 
+	Update gptel configuration
+
+	* site-lisp/gptel-config.el (+gptel-search-emacs-lists): New function.
+	(+gptel-url-retrieve): New function.
+
+2025-06-20  Zhengyi Fu  <i@fuzy.me>
+
 	Minor update to gptel configuration
 
 	* site-lisp/gptel-config.el (+gptel-edit-file): Renamed from
