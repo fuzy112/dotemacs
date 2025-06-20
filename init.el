@@ -2035,6 +2035,14 @@ fi"))
             nil nil nil '+elfeed-tag-history)))
   args)
 
+(defun +elfeed-browse-eww ()
+  (interactive)
+  (let ((browse-url-browser-function #'eww-browse-url))
+    (elfeed-show-visit)))
+
+(after-load! elfeed
+  (keymap-set elfeed-show-mode-map "e" #'+elfeed-browse-eww))
+
 (after-load! elfeed-db
   (let ((default-directory elfeed-db-directory))
     (when (file-exists-p "feeds.eld")
