@@ -2027,12 +2027,27 @@ fi"))
 (after-load! elfeed
   (keymap-set elfeed-show-mode-map "e" #'+elfeed-browse-eww))
 
-(after-load! elfeed-db
+(defvar +feeds-file-watch-descriptor nil)
+
+(defun +elfeed-load-feeds ()
   (let ((default-directory elfeed-db-directory))
-    (when (file-exists-p "feeds.eld")
-      (with-temp-buffer
-        (insert-file-contents "feeds.eld")
-        (setq elfeed-feeds (read (current-buffer)))))))
+  (when (file-exists-p "feeds.eld")
+    (with-temp-buffer
+      (insert-file-contents "feeds.eld")
+      (setq elfeed-feeds (read (current-buffer)))
+      (message "Updated feeds")))))
+
+(after-load! elfeed-db
+  (+elfeed-load-feeds)
+  (when (null +feeds-file-watch-descriptor)
+    (setq +feeds-file-watch-descriptor
+          (file-notify-add-watch
+           (expand-file-name "feeds.eld" elfeed-db-directory)
+           '(change)
+           (pcase-lambda (`(,descr ,action . ,files))
+             (pcase descr
+               (changed
+                (+elfeed-load-feeds))))))))
 
 ;;;; emacs-server
 
