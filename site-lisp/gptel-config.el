@@ -236,8 +236,8 @@ a old-string and a new-string, new-string will replace the old-string at the spe
       (message "Retrieving %s...%s" url url-http-response-status)
       (when (>= url-http-response-status 400)
 	(error "HTTP Error %s: %s" url-http-response-status
-	     (with-current-buffer buffer
-	       (buffer-string)))))
+	       (with-current-buffer buffer
+		 (buffer-string)))))
     buffer))
 
 (gptel-make-tool
