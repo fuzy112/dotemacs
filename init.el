@@ -2040,6 +2040,7 @@ fi"))
 (after-load! elfeed-db
   (+elfeed-load-feeds)
   (when (null +feeds-file-watch-descriptor)
+    (require 'filenotify)
     (setq +feeds-file-watch-descriptor
           (file-notify-add-watch
            (expand-file-name "feeds.eld" elfeed-db-directory)
