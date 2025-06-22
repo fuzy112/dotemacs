@@ -2002,8 +2002,6 @@ Run hook `vc-dwim-post-commit-hook'."
 
 if [[ $? -ne 0 ]]; then
    notify-send -a Elfeed --icon error -u critical \"Elfeed DB sync failed\" \"$(cat /tmp/elfeed-db-sync.log)\"
-else
-   notify-send -a Elfeed --icon info -e \"Elfeed DB sync finished\" \"\"
 fi"))
 
 (advice-add #'elfeed-db-gc :after #'+elfeed-db-sync)

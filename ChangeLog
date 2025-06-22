@@ -1,5 +1,10 @@
 2025-06-22  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+elfeed-db-sync): Do not send notification on
+	successful sync.
+
+2025-06-22  Zhengyi Fu  <i@fuzy.me>
+
 	Add elfeed-web
 
 	* packages.el (web-server, elfeed-web): New packages.
