@@ -1,3 +1,7 @@
+2025-06-22  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (elfeed-db): Require filenotify.
+
 2025-06-21  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (elfeed-db): New function.  Reload feeds.eld on change.
