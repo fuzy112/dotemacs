@@ -2,6 +2,10 @@
 
 (declare-function straight-use-package "straight.el")
 
+(setq straight-host-usernames
+      '((github . "fuzy112")
+	(codeberg . "fuzy")))
+
 ;;; Utility libraries
 (straight-use-package 'dash)
 (straight-use-package 'f)
@@ -195,6 +199,9 @@
 		      "render/mupdf-helpers.c" "render/render-core.c"
 		      "render/render-theme.c" "-lmupdf")))
 (straight-use-package 'elfeed)
+(straight-use-package '(web-server :host github :repo "skeeto/emacs-web-server" :fork t))
+(straight-use-package '(elfeed-web :host github :repo "skeeto/elfeed"
+				   :files ("web/*.el" "web/*.css" "web/*.js" "web/*.html")))
 (straight-use-package '(eat :files (:defaults "integration" "term" "terminfo")))
 
 ;;; Email
