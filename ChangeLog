@@ -1,3 +1,10 @@
+2025-06-23  Zhengyi Fu  <i@fuzy.me>
+
+	Enable --autostash in `magit-pull' by default
+
+	* transient/levels.el (magit-pull): Set level of --autostash to 1.
+	* transient/values.el (magit-pull): Add --autostash by default.
+
 2025-06-22  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (+elfeed-db-sync): Do not send notification on
