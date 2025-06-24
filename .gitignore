@@ -55,3 +55,5 @@ elpa/archives
 /forge-database*.sqlite
 /multisession/
 /persp-confs/
+/projects.eld
+/network-security.eld

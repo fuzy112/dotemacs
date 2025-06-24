@@ -1,3 +1,7 @@
+2025-06-24  Zhengyi Fu  <i@fuzy.me>
+
+	* .gitignore: Add project.eld and network-security.eld.
+
 2025-06-23  Zhengyi Fu  <i@fuzy.me>
 
 	Enable --autostash in `magit-pull' by default
