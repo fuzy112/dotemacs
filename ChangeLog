@@ -1,3 +1,11 @@
+2025-06-27  Zhengyi Fu  <i@fuzy.me>
+
+	Update elfeed configuration
+
+	* init.el (+elfeed-db-sync): Call `elfeed-db-gc'. Remove the tmp
+	file before exiting.
+	(elfeed-search-mode-map): Bind "q" to `elfeed-db-unload'.
+
 2025-06-24  Zhengyi Fu  <i@fuzy.me>
 
 	* .gitignore: Add project.eld and network-security.eld.
