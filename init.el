@@ -1984,6 +1984,7 @@ Run hook `vc-dwim-post-commit-hook'."
 ;;;; elfeed
 
 (defun +elfeed-db-sync (&optional _)
+  (elfeed-db-gc)
   (process-file "systemd-run" nil (get-buffer-create " *+elfeed-db-sync") nil
                 "--user"
                 ;; "--unit" "elfeed-db-sync"
@@ -2002,10 +2003,11 @@ Run hook `vc-dwim-post-commit-hook'."
 
 if [[ $? -ne 0 ]]; then
    notify-send -a Elfeed --icon error -u critical \"Elfeed DB sync failed\" \"$(cat /tmp/elfeed-db-sync.log)\"
+
+rm -f /tmp/elfeed-db-sync.log
 fi"))
 
-(advice-add #'elfeed-db-gc :after #'+elfeed-db-sync)
-(add-hook 'elfeed-db-unload-hook #'elfeed-db-gc-safe)
+(add-hook 'elfeed-db-unload-hook #'+elfeed-db-sync)
 
 (defvar +elfeed-tag-history nil)
 (define-advice elfeed-show-tag (:before (&rest args) completing-read)
@@ -2023,6 +2025,7 @@ fi"))
     (elfeed-show-visit)))
 
 (after-load! elfeed
+  (keymap-set elfeed-search-mode-map "q" #'elfeed-db-unload)
   (keymap-set elfeed-show-mode-map "e" #'+elfeed-browse-eww))
 
 (defvar +feeds-file-watch-descriptor nil)
