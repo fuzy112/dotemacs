@@ -1,5 +1,10 @@
 2025-07-01  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+meow-setup-indicator): New function.  Added to
+	`meow-global-mode-hook'.
+
+2025-07-01  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (tramp-compat-temporary-file-directory): Set to
 	"$XDG_RUNTIME_DIR/emacs".
 
