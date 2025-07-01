@@ -120,7 +120,6 @@
 ;;; Buffer management
 (straight-use-package 'buffer-env)
 (straight-use-package 'ws-butler)
-(straight-use-package 'bufferlo)
 
 ;;; Version control
 (straight-use-package 'magit)
