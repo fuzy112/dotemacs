@@ -1,3 +1,8 @@
+2025-07-01  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (tramp-compat-temporary-file-directory): Set to
+	"$XDG_RUNTIME_DIR/emacs".
+
 2025-06-27  Zhengyi Fu  <i@fuzy.me>
 
 	Update elfeed configuration
