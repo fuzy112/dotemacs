@@ -1557,7 +1557,8 @@ Display the result in a posframe." t)
 (defvar tramp-compat-temporary-file-directory)
 (after-load! tramp-compat
   (when (length> tramp-compat-temporary-file-directory 50)
-    (setq tramp-compat-temporary-file-directory "/tmp/cache/emacs")
+    (setq tramp-compat-temporary-file-directory
+          (substitute-in-file-name "$XDG_RUNTIME_DIR/emacs"))
     (unless (file-directory-p tramp-compat-temporary-file-directory)
       (mkdir tramp-compat-temporary-file-directory t))))
 
