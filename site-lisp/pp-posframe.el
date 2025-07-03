@@ -99,7 +99,7 @@
 	  (pp value))
 	(setq lexical-binding lexical)
 	(font-lock-ensure)))
-    (add-text-properties 1 2 `(display ,(concat "=> " (buffer-substring 1 2)))))
+    (add-text-properties 1 2 `(line-prefix "=> ")))
   (when (posframe-workable-p)
     (pp-posframe-mode))
   (message "=> %S" value)
