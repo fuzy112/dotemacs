@@ -344,7 +344,7 @@
 (add-hook 'dired-mode-hook         #'nerd-icons-multimodal-mode)
 (add-hook 'archive-mode-hook       #'nerd-icons-multimodal-mode)
 (add-hook 'tar-mode-hook           #'nerd-icons-multimodal-mode)
-(after-load! grep                  (require 'nerd-icons-grep))
+(add-hook 'grep-mode-hook          #'nerd-icons-grep-mode)
 
 ;; Fonts for nerd-icons need to be configured in graphical frames.
 (defun +nerd-icons--after-make-frame-h (&optional frame)
