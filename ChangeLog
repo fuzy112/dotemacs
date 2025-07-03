@@ -1,5 +1,12 @@
 2025-07-03  Zhengyi Fu  <i@fuzy.me>
 
+	Update gptel-config
+
+	* site-lisp/gptel-config.el (+gptel-run-command-sandboxed): New function.
+	(+gptel-forge-post-cancel): Change the messages.
+
+2025-07-03  Zhengyi Fu  <i@fuzy.me>
+
 	* packages.el: Fix recipe for reader.
 
 2025-07-01  Zhengyi Fu  <i@fuzy.me>
