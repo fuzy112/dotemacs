@@ -1,5 +1,9 @@
 2025-07-03  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (eat): Set default shell when using tramp.
+
+2025-07-03  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/pp-posframe.el (pp-posframe-display-value): Use
 	`line-prefix' property instead of `display' property.
 
