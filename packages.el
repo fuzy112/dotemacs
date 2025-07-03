@@ -196,7 +196,8 @@
 	  :pre-build ("cc" "-fPIC" "-shared" "-o" "render-core.so"
 		      "-DLINUX" "render/elisp-helpers.c"
 		      "render/mupdf-helpers.c" "render/render-core.c"
-		      "render/render-theme.c" "-lmupdf")))
+		      "render/render-theme.c" "render/render-threads.c"
+		      "-lmupdf")))
 (straight-use-package '(elfeed :fork t))
 (straight-use-package '(web-server :host github :repo "skeeto/emacs-web-server"))
 (straight-use-package '(elfeed-web :host github :repo "skeeto/elfeed"
