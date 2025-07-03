@@ -1646,6 +1646,11 @@ Run hook `vc-dwim-post-commit-hook'."
 
 (setopt eat-kill-buffer-on-exit t)
 
+(after-load! eat
+  (alist-setq! eat-tramp-shells
+    "sshx" "/bin/bash"
+    "ssh" "/bin/bash"))
+
 ;;;; with-editor
 
 (keymap-global-set "<remap> <async-shell-command>" #'with-editor-async-shell-command)
