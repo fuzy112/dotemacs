@@ -1,5 +1,10 @@
 2025-07-03  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/pp-posframe.el (pp-posframe-display-value): Use
+	`line-prefix' property instead of `display' property.
+
+2025-07-03  Zhengyi Fu  <i@fuzy.me>
+
 	Update gptel-config
 
 	* site-lisp/gptel-config.el (+gptel-run-command-sandboxed): New function.
