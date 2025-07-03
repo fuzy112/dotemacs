@@ -123,15 +123,32 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 
 ;; command tools
 
+(defun +gptel-run-command-sandboxed (command &optional working_dir)
+  (with-temp-message (format "Executable command: `%s'" command)
+    (let ((dir (expand-file-name default-directory))
+	  (default-directory (if (and working_dir (not (string= working_dir "")))
+				 (expand-file-name working_dir)
+			       default-directory)))
+      (with-temp-buffer
+	(process-file "/usr/bin/bwrap" nil t nil
+		      "--ro-bind" "/lib" "/lib"
+		      "--ro-bind" "/lib64" "/lib64"
+		      "--ro-bind" "/bin" "/bin"
+		      "--ro-bind" "/usr" "/usr"
+		      "--dev" "/dev"
+		      "--bind" dir dir
+		      "--new-session"
+		      "--unshare-all"
+		      "--share-net"
+		      "--chdir" default-directory
+		      "bash" "-c" command)
+	(buffer-string)))))
+
 (gptel-make-tool
  :name "run_command"
- :function (lambda (command &optional working_dir)
-	     (with-temp-message (format "Executing command: `%s`" command)
-	       (let ((default-directory (if (and working_dir (not (string= working_dir "")))
-					    (expand-file-name working_dir)
-					  default-directory)))
-		 (shell-command-to-string command))))
- :description "Executes a shell command and returns the output as a string. IMPORTANT: This tool allows execution of arbitrary code; user confirmation will be required before any command is run."
+ :function #'+gptel-run-command-sandboxed
+ :description "Executes a shell command and returns the output as a string. IMPORTANT: This tool allows execution of arbitrary code; user confirmation will be required before any command is run.
+This tool is not meant to be used to modify files: use `edit_file` to do that."
  :args (list
 	'(:name "command"
 		:type string
@@ -140,7 +157,7 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 		:type string
 		:description "Optional: The directory in which to run the command. Defaults to the current directory if not specified."))
  :category "command"
- :confirm t
+ ;; :confirm t
  :include t)
 
 (defun run_async_command (callback command)
@@ -283,7 +300,7 @@ a old-string and a new-string, new-string will replace the old-string at the spe
  :description "Perform a web search using the DuckDuckGo search engine"
  :args (list '(:name "query"
 		     :type string
-		     :description "The search query string"))
+		     :description "The search query string.  When searching the web, one should always use English rather than their native language."))
  :category "web")
 
 ;; GitHub tools
@@ -314,7 +331,7 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 
 (defun +gptel-forge-post-cancel ()
   (when +gptel-forge-post-callback
-    (funcall +gptel-forge-post-callback "User canceled the post")
+    (funcall +gptel-forge-post-callback "User manually rejected the pull request.  Do not continue.")
     (setq +gptel-forge-post-callback nil)))
 
 (defun +gptel-forge-post-error ()
@@ -590,10 +607,14 @@ Note that the user will get a chance to edit the comments."))
 			      (gptel-get-tool "jira")
 			      (gptel-get-tool "command")))
 	 (gptel--system-message "You are an experienced developer and a strict code reviewer.
-You will review pull-requests in aspect of their code quality, commit messages, and JIRA ticket.")
+You will review pull-requests in aspect of their code quality, commit messages, and JIRA ticket.
+Remember, be strict!!!")
 	 (session-buffer (gptel (format "*Review on PR #%s*" (oref pullreq number)))))
     (pop-to-buffer session-buffer)
     (with-current-buffer session-buffer
       (insert (format "Review pull-request #%s. " (oref pullreq number)))
       (insert "You can approve it or request changes to it.\n")
       (gptel-send))))
+
+(provide 'gptel-config)
+;;; gptel-config.el ends here
