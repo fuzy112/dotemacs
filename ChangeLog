@@ -1,5 +1,13 @@
 2025-07-04  Zhengyi Fu  <i@fuzy.me>
 
+	Improve eat shell integration on remote machines
+
+	* init.el (+eat-install-helpers): New command.
+	(eat-exec): Make it connection local variables aware.
+	* early-init.el (straight-use-symlinks): Set to nil.
+
+2025-07-04  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+elfeed-db-sync): Run the commands in a new session
 	avoid various problems.
 
