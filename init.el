@@ -1651,6 +1651,30 @@ Run hook `vc-dwim-post-commit-hook'."
     "sshx" "/bin/bash"
     "ssh" "/bin/bash"))
 
+(defun +eat-install-helpers ()
+  (interactive)
+  (unless (file-remote-p default-directory)
+    (user-error "Not in a remote directory"))
+  (copy-directory eat-term-terminfo-directory
+                  (concat (file-remote-p default-directory) "~/.terminfo")
+                  nil t t)
+  (copy-directory eat-term-shell-integration-directory
+                  (concat (file-remote-p default-directory) "~/.cache/eat-shell-integration")
+                  nil t t))
+
+(connection-local-set-profile-variables
+ 'remote-eat
+ '((eat-term-shell-integration-directory . "$HOME/.cache/eat-shell-integration")
+   (eat-term-terminfo-directory . "$HOME/.terminfo")))
+
+(connection-local-set-profiles
+ '(:application eat :protocol "ssh")
+ 'remote-eat)
+
+(define-advice eat-exec (:around (&rest args) connection-local-vars)
+  (with-connection-local-application-variables 'eat
+    (apply args)))
+
 ;;;; with-editor
 
 (keymap-global-set "<remap> <async-shell-command>" #'with-editor-async-shell-command)

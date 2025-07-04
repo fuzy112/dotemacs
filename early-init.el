@@ -47,6 +47,7 @@
                           (dotemacs . "dotemacs.el")
                           (user     . "user.el")
                           (custom   . "custom.el")))
+(setq straight-use-symlinks nil)
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
