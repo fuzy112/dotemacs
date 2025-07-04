@@ -1,3 +1,8 @@
+2025-07-04  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (+elfeed-db-sync): Run the commands in a new session
+	avoid various problems.
+
 2025-07-03  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (grep-mode-hook): Fix configuration for `nerd-icons-grep'.

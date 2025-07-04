@@ -1886,6 +1886,7 @@ Run hook `vc-dwim-post-commit-hook'."
                 "--working-directory" (expand-file-name elfeed-db-directory)
                 "--no-block"
                 "--"
+                "setsid"
                 "/bin/bash" "-c"
                 "(
     git add .
