@@ -1,5 +1,13 @@
 2025-07-07  Zhengyi Fu  <i@fuzy.me>
 
+	Update configuration for svn
+
+	* init.el (send-password-to-process): New command.
+	(send-password-to-buffer-process): Remove command.
+	(vc-svn-global-switches): Remove --force-interactive.
+
+2025-07-07  Zhengyi Fu  <i@fuzy.me>
+
 	Remove reader
 
 	* packages.el:
