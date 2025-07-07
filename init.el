@@ -1455,9 +1455,7 @@ Display the result in a posframe." t)
 (setq vc-svn-global-switches
       '("--force-interactive"
         "--config-option"
-        "config:auth:password-stores=kwallet"
-        "--config-option"
-        "config:auth:kwallet-wallet=Secrets")
+        "config:auth:password-stores=gnome-keyring")
       vc-svn-diff-switches '("-x" "-u -p"))
 (keymap-set vc-prefix-map "." '+vc/dir-here)
 

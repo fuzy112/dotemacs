@@ -1,3 +1,8 @@
+2025-07-07  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (vc-svn-global-switches): Use gnome-keyring for password
+	stores.
+
 2025-07-04  Zhengyi Fu  <i@fuzy.me>
 
 	Improve eat shell integration on remote machines
