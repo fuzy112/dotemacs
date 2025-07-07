@@ -1449,6 +1449,16 @@ Display the result in a posframe." t)
     (unless (file-directory-p tramp-compat-temporary-file-directory)
       (mkdir tramp-compat-temporary-file-directory t))))
 
+(connection-local-set-profile-variables
+ 'remote-direct-async-process
+ '((tramp-direct-async-process . t)))
+
+(connection-local-set-profiles
+ '(:application tramp :protocol "ssh")
+ 'remote-direct-async-process)
+
+(setq magit-tramp-pipe-stty-settings 'pty)
+
 ;;;; vc
 
 (setq vc-follow-symlinks t)
