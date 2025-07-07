@@ -1,5 +1,11 @@
 2025-07-07  Zhengyi Fu  <i@fuzy.me>
 
+	Remove reader
+
+	* packages.el:
+
+2025-07-07  Zhengyi Fu  <i@fuzy.me>
+
 	Optimize tramp performance
 
 	* init.el (remote-direct-async-process): New connection local profile.
