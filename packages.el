@@ -190,14 +190,6 @@
 ;;; Applications
 (straight-use-package 'erc)
 (straight-use-package 'show-font)
-(straight-use-package
- `(reader :type git :host codeberg :repo "divyaranjan/emacs-reader"
-	  :files ("*.el" "render-core.so")
-	  :pre-build ("cc" "-fPIC" "-shared" "-o" "render-core.so"
-		      "-DLINUX" "render/elisp-helpers.c"
-		      "render/mupdf-helpers.c" "render/render-core.c"
-		      "render/render-theme.c" "render/render-threads.c"
-		      "-lmupdf")))
 (straight-use-package '(elfeed :fork t))
 (straight-use-package '(web-server :host github :repo "skeeto/emacs-web-server"))
 (straight-use-package '(elfeed-web :host github :repo "skeeto/elfeed"
