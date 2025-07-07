@@ -1,5 +1,12 @@
 2025-07-07  Zhengyi Fu  <i@fuzy.me>
 
+	Optimize tramp performance
+
+	* init.el (remote-direct-async-process): New connection local profile.
+	(magit-tramp-pipe-stty-settings): Set to `pty'.
+
+2025-07-07  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+elfeed-db-sync): Do not use systemd-run which causes
 	problems.
 
