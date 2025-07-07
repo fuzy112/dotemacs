@@ -1,5 +1,10 @@
 2025-07-07  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+elfeed-db-sync): Do not use systemd-run which causes
+	problems.
+
+2025-07-07  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (vc-svn-global-switches): Use gnome-keyring for password
 	stores.
 

@@ -1900,17 +1900,11 @@ Run hook `vc-dwim-post-commit-hook'."
 
 (defun +elfeed-db-sync (&optional _)
   (elfeed-db-gc)
-  (process-file "systemd-run" nil (get-buffer-create " *+elfeed-db-sync") nil
-                "--user"
-                ;; "--unit" "elfeed-db-sync"
-                "--slice" "background.slice"
-                "--service-type" "oneshot"
-                "--working-directory" (expand-file-name elfeed-db-directory)
-                "--no-block"
-                "--"
-                "setsid"
-                "/bin/bash" "-c"
-                "(
+  (start-process "elfeed-db-sync" (get-buffer-create " *+elfeed-db-sync")
+                 "setsid"
+                 "-f"
+                 "/bin/bash" "-c"
+                 "(
     git add .
     git commit  -m \"Update $(date)\"
     git pull --rebase origin master
