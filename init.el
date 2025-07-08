@@ -1094,15 +1094,6 @@ value for USE-OVERLAYS."
     (outline-minor-faces-mode)))
 (add-hook 'outline-minor-mode-hook '+outline-minor-faces)
 
-;;;; adaptive-wrap or visual-wrap
-
-;; visual-wrap is a built-in replacement of adaptive-wrap since Emacs
-;; 30.1.  However, there seems to be a bug in `visual-wrap' but I
-;; don't remember what it is.
-(static-if (locate-library "visual-wrap")
-    (add-hook 'visual-line-mode-hook #'visual-wrap-prefix-mode)
-  (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode))
-
 ;;;; visual-fill-column
 
 (defun +visual-fill-column/toggle-visual-fill-and-center ()
