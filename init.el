@@ -1641,7 +1641,8 @@ Run hook `vc-dwim-post-commit-hook'."
 (after-load! eat
   (alist-setq! eat-tramp-shells
     "sshx" "/bin/bash"
-    "ssh" "/bin/bash"))
+    "ssh" "/bin/bash"
+    "scp" "/bin/bash"))
 
 (defun +eat-install-helpers ()
   (interactive)
@@ -1892,26 +1893,6 @@ Run hook `vc-dwim-post-commit-hook'."
 
 ;;;; elfeed
 
-(defun +elfeed-db-sync (&optional _)
-  (elfeed-db-gc)
-  (start-process "elfeed-db-sync" (get-buffer-create " *+elfeed-db-sync")
-                 "setsid"
-                 "-f"
-                 "/bin/bash" "-c"
-                 "(
-    git add .
-    git commit  -m \"Update $(date)\"
-    git pull --rebase origin master
-    git push origin master
-) >/tmp/elfeed-db-sync.log 2>&1
-
-if [[ $? -ne 0 ]]; then
-   notify-send -a Elfeed --icon error -u critical \"Elfeed DB sync failed\" \"$(cat /tmp/elfeed-db-sync.log)\"
-
-rm -f /tmp/elfeed-db-sync.log
-fi"))
-
-(add-hook 'elfeed-db-unload-hook #'+elfeed-db-sync)
 
 (defvar +elfeed-tag-history nil)
 (define-advice elfeed-show-tag (:before (&rest args) completing-read)

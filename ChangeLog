@@ -1,3 +1,10 @@
+2025-07-10  Zhengyi Fu  <i@fuzy.me>
+
+	* packages.el (git-modes): Add package `git-modes'.
+
+	* init.el (+elfeed-db-sync): Remove function.
+	(eat-tramp-shells): Set shell for scp method.
+
 2025-07-08  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Disable `visual-wrap-prefix-mode', because it conflicts
