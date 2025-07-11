@@ -1,3 +1,12 @@
+2025-07-11  Zhengyi Fu  <i@fuzy.me>
+
+	Update gptel-config.el
+
+	* site-lisp/gptel-config.el (+gptel-edit-file): Optimize the UX.
+	(run_async_command): Remove.
+	(+gptel-edit-buffer): New function.
+	(+gptel-shellcheck-fix): New command.
+
 2025-07-10  Zhengyi Fu  <i@fuzy.me>
 
 	* packages.el (git-modes): Add package `git-modes'.

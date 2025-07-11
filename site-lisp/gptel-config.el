@@ -93,7 +93,9 @@
 	  (if edit-success
 	      (progn
 		;; show diffs
-		(ediff-buffers (find-file-noselect file-name) (current-buffer))
+		(save-window-excursion
+		  (ediff-buffers (find-file-noselect file-name) (current-buffer))
+		  (recursive-edit))
 		(with-current-buffer (find-buffer-visiting file-name)
 		  (save-buffer))
 		(format "Successfully edited %s" file-name))
@@ -160,38 +162,6 @@ This tool is not meant to be used to modify files: use `edit_file` to do that."
  ;; :confirm t
  :include t)
 
-(defun run_async_command (callback command)
-  "Run COMMAND asynchronously and pass output to CALLBACK."
-  (condition-case error
-      (let ((buffer (generate-new-buffer " *async output*")))
-	(with-temp-message (format "Running async command: %s" command)
-	  (async-shell-command command buffer nil))
-	(let ((proc (get-buffer-process buffer)))
-	  (when proc
-	    (set-process-sentinel
-	     proc
-	     (lambda (process _event)
-	       (unless (process-live-p process)
-		 (with-current-buffer (process-buffer process)
-		   (let ((output (buffer-substring-no-properties (point-min) (point-max))))
-		     (kill-buffer (current-buffer))
-		     (funcall callback output)))))))))
-    (t
-     ;; Handle any kind of error
-     (funcall callback (format "An error occurred: %s" error)))))
-
-(gptel-make-tool
- :name "run_async_command"
- :function #'run_async_command
- :description "Run an async command."
- :args (list
-	'(:name "command"
-		:type "string"
-		:description "Command to run."))
- :category "command"
- :async t
- :include t)
-
 ;; Emacs tools
 
 (gptel-make-tool
@@ -239,6 +209,75 @@ This tool is not meant to be used to modify files: use `edit_file` to do that."
 		     :type string
 		     :description "The search query string"))
  :category "emacs")
+
+
+(gptel-make-tool
+ :name "read_buffer"
+ :function (lambda (buffer-name)
+	     (if (string-match-p "\\`\\(?: \\|\\*\\|\\.\\)" buffer-name)
+		 (error "Buffer unreadable: %s" buffer-name))
+	     (with-current-buffer buffer-name
+	       (message "Reading buffer %s..." buffer-name)
+	       (buffer-substring-no-properties (point-min) (point-max))))
+ :description "Read the content of an Emacs buffer."
+ :args (list '(:name "buffer_name"
+		     :type string
+		     :description "The name of the buffer to read"))
+ :category "emacs")
+
+
+(defun +gptel-edit-buffer (buffer-name buffer-edits)
+  "In FILE-PATH, apply FILE-EDITS with pattern matching and replacing."
+  (if (and buffer-name (not (string= buffer-name "")) buffer-edits)
+      (with-current-buffer (get-buffer-create "*edit-file*")
+	(erase-buffer)
+	(insert-buffer-substring buffer-name)
+	(let ((inhibit-read-only t)
+	      (case-fold-search nil)
+	      ;; (file-name (expand-file-name buffer-name))
+	      (edit-success nil))
+	  ;; apply changes
+	  (dolist (buffer-edit (seq-into buffer-edits 'list))
+	    (when-let* ((line-number (plist-get buffer-edit :line_number))
+			(old-string (plist-get buffer-edit :old_string))
+			(new-string (plist-get buffer-edit :new_string))
+			(is-valid-old-string (not (string= old-string ""))))
+	      (goto-char (point-min))
+	      (forward-line (1- line-number))
+	      (when (search-forward old-string nil t)
+		(replace-match new-string t t)
+		(setq edit-success t))))
+	  ;; return result to gptel
+	  (if edit-success
+	      (progn
+		;; show diffs
+		(ediff-buffers buffer-name (current-buffer))
+		(format "Successfully edited %s" buffer-name))
+	    (format "Failed to edited %s" buffer-name))))
+    (format "Failed to edited %s" buffer-name)))
+
+
+(gptel-make-tool
+ :name "edit_buffer"
+ :function #'+gptel-edit-buffer
+ :description "Edit buffer with a list of edits, each edit contains a line-number,
+a old-string and a new-string, new-string will replace the old-string at the specified line."
+ :args (list '(:name "buffer_name"
+		     :type string
+		     :description "The full path of the file to edit")
+	     '(:name "buffer_edits"
+		     :type array
+		     :items (:type object
+				   :properties
+				   (:line_number
+				    (:type integer :description "The line number of the file where edit starts.")
+				    :old_string
+				    (:type string :description "The old-string to be replaced.")
+				    :new_string
+				    (:type string :description "The new-string to replace old-string.")))
+		     :description "The list of edits to apply on the buffer"))
+ :category "emacs")
+
 
 ;; web tools
 
@@ -595,25 +634,69 @@ Note that the user will get a chance to edit the comments."))
 
 (add-hook 'gptel-post-stream-hook #'+gptel-auto-scroll-safe)
 
+(keymap-set gptel-mode-map "C-c k" #'gptel-abort)
+
 ;;; Commands
 
 (defun +gptel-review-pullreq (pullreq)
   (interactive (list (or (forge-current-pullreq)
 			 (forge-get-pullreq (forge-read-pullreq "Pull-request: ")))))
-  (let* ((gptel-backend (gptel-get-backend "Copilot"))
-	 (gptel-model 'claude-3.7-sonnet)
-	 (gptel-tools (append (gptel-get-tool "filesystem")
-			      (gptel-get-tool "github")
-			      (gptel-get-tool "jira")
-			      (gptel-get-tool "command")))
-	 (gptel--system-message "You are an experienced developer and a strict code reviewer.
-You will review pull-requests in aspect of their code quality, commit messages, and JIRA ticket.
-Remember, be strict!!!")
-	 (session-buffer (gptel (format "*Review on PR #%s*" (oref pullreq number)))))
+  (let* ((session-buffer (gptel (format "*Review on PR #%s*" (oref pullreq number)))))
     (pop-to-buffer session-buffer)
     (with-current-buffer session-buffer
+      (setq-local gptel-backend (gptel-get-backend "Copilot")
+		  gptel-model 'claude-3.7-sonnet
+		  gptel-tools (append (gptel-get-tool "filesystem")
+				      (gptel-get-tool "github")
+				      (gptel-get-tool "jira")
+				      (gptel-get-tool "command"))
+		  gptel--system-message "You are an experienced developer and a strict code reviewer.
+You will review pull-requests in aspect of their code quality, commit messages, and JIRA ticket.
+Remember, be strict!!!")
       (insert (format "Review pull-request #%s. " (oref pullreq number)))
       (insert "You can approve it or request changes to it.\n")
+      (gptel-send))))
+
+(gptel-make-tool
+  :name "shellcheck"
+  :function (lambda (filename)
+	      (with-temp-buffer
+		(process-file "shellcheck" nil t nil
+			      (expand-file-name filename) "--exclude=SC1091,SC2034")
+		(buffer-string)))
+  :description "Run shellcheck on the file."
+  :args (list '(:name "filename"
+		      :type string
+		      :description "Path to the file to be checked."))
+  :category "command"
+  :include t)
+
+(defun +gptel-shellcheck-fix (file)
+  (interactive (list (or (and current-prefix-arg
+			      (read-file-name "File: "))
+			 (buffer-file-name))))
+  (with-current-buffer (find-buffer-visiting file)
+    (setq-local flymake-show-diagnostics-at-end-of-line t)
+    (flymake-mode))
+  (let* ((session-buffer (gptel (format "*ShellCheck/%s*" (file-name-nondirectory (buffer-file-name))))))
+    (pop-to-buffer session-buffer)
+    (with-current-buffer session-buffer
+      (setq-local gptel-backend (gptel-get-backend "Copilot")
+		  gptel-model 'claude-3.7-sonnet
+		  gptel-tools (append (gptel-get-tool "filesystem")
+				      (gptel-get-tool "web")
+				      (list (gptel-get-tool "shellcheck")))
+		  gptel-confirm-tool-calls nil
+		  gptel--system-message "You are an experienced developer and a guru of shell scripts.  You know
+that shellcheck can sometimes be wrong.  You can use directive comments like
+#shellcheck disable=RULES to disable some particular rules if they are
+wrong or could be very hard to fix.
+
+The directive comments should be put either at the top of the file
+before any commands but after copyright headers or VI modelines, or
+before a specific command or { } block.  Also add a comment explaining
+why the rule has to be disabled.")
+      (insert (format "Run shellcheck on the file `%s' and fix any problems found." file))
       (gptel-send))))
 
 (provide 'gptel-config)
