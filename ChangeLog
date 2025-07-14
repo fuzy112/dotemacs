@@ -1,3 +1,8 @@
+2025-07-14  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/gptel-config.el ("Moonshot"): Add definition for
+	Moonshot backend.
+
 2025-07-11  Zhengyi Fu  <i@fuzy.me>
 
 	Update gptel-config.el
