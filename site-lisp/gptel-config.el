@@ -5,18 +5,46 @@
 
 ;;; Models
 
-(gptel-make-openai "DeepSeek"
-  :host "api.deepseek.com"
-  :endpoint "/chat/completions"
+(gptel-make-openai "Moonshot"
+  :host "api.moonshot.cn"
   :stream t
   :key #'gptel-api-key-from-auth-source
-  :models '(deepseek-chat deepseek-reasoner))
+  :models '((moonshot-v1-auto
+	     :description "The standard Moonshot V1 model"
+	     :capabilities (tool-use json)
+	     :context-window 128
+	     :input-cost 1.50
+	     :output-cost 4.50)
+	    (kimi-latest
+	     :description "The latest model used by Kimi Assistant"
+	     :capabilities (media tool-use json)
+	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
+	     :context-window 128
+	     :input-cost 1.50
+	     :output-cost 4.50)
+	    (kimi-thinking-preview
+	     :description "The Kimi reasoning model"
+	     :capabilities (reasoning media)
+	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
+	     :context-window 128
+	     :input-cost 30
+	     :output-cost 30)
+	    (kimi-k2-0711-preview
+	     :description "A model suitable for coding"
+	     :capabilities (media tool-use json)
+	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
+	     :context-window 128
+	     :input-cost 0.15
+	     :output-cost 0.60)))
+
+(gptel-make-deepseek "DeepSeek"
+  :stream t
+  :key #'gptel-api-key-from-auth-source)
 
 (gptel-make-kagi "Kagi"
   :key #'gptel-api-key-from-auth-source)
 
 (gptel-make-gh-copilot "Copilot")
-
 
 ;;; Tools
 
@@ -468,11 +496,11 @@ Note that the user will get a chance to edit the comments."))
 
 (defun +auth-source-get-jira-token ()
   (auth-info-password
-      (car
-       (or  (auth-source-search
-	     :max 1
-	     :host +gptel-jira-host)
-	    (error "No authinfo for %s" +gptel-jira-host)))))
+   (car
+    (or  (auth-source-search
+	  :max 1
+	  :host +gptel-jira-host)
+	 (error "No authinfo for %s" +gptel-jira-host)))))
 
 (defun +gptel-get-jira-issue  (issue-id)
   (let* ((token (+auth-source-get-jira-token))
