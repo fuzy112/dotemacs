@@ -1,5 +1,10 @@
 2025-07-14  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el (+gptel-shellcheck-fix): Refactor
+	function.  Fix wrong buffer name.
+
+2025-07-14  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-cmds.el: Remove file.
 
 2025-07-14  Zhengyi Fu  <i@fuzy.me>

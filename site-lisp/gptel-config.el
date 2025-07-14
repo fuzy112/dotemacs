@@ -700,22 +700,25 @@ Remember, be strict!!!")
   :include t)
 
 (defun +gptel-shellcheck-fix (file)
-  (interactive (list (or (and current-prefix-arg
-			      (read-file-name "File: "))
-			 (buffer-file-name))))
+  (interactive
+   (list (or (and current-prefix-arg (read-file-name "File: "))
+	     (buffer-file-name))))
   (with-current-buffer (find-buffer-visiting file)
-    (setq-local flymake-show-diagnostics-at-end-of-line t)
-    (flymake-mode))
-  (let* ((session-buffer (gptel (format "*ShellCheck/%s*" (file-name-nondirectory (buffer-file-name))))))
-    (pop-to-buffer session-buffer)
-    (with-current-buffer session-buffer
-      (setq-local gptel-backend (gptel-get-backend "Copilot")
-		  gptel-model 'claude-3.7-sonnet
-		  gptel-tools (append (gptel-get-tool "filesystem")
-				      (gptel-get-tool "web")
-				      (list (gptel-get-tool "shellcheck")))
-		  gptel-confirm-tool-calls nil
-		  gptel--system-message "You are an experienced developer and a guru of shell scripts.  You know
+    (set (make-local-variable 'flymake-show-diagnostics-at-end-of-line) t)
+    (flymake-mode 1))
+  (let* ((short-name (file-name-nondirectory file))
+	 (gpt-buf (gptel (format "*ShellCheck/%s*" short-name))))
+    (pop-to-buffer gpt-buf)
+    (with-current-buffer gpt-buf
+      (setq-local gptel-backend (gptel-get-backend "Copilot"))
+      (setq-local gptel-model 'claude-3.7-sonnet)
+      (setq-local gptel-tools
+		  (append (gptel-get-tool "filesystem")
+			  (gptel-get-tool "web")
+			  (list (gptel-get-tool "shellcheck"))))
+      (setq-local gptel-confirm-tool-calls nil)
+      (setq-local gptel--system-message
+		  "You are an experienced developer and a guru of shell scripts.  You know
 that shellcheck can sometimes be wrong.  You can use directive comments like
 #shellcheck disable=RULES to disable some particular rules if they are
 wrong or could be very hard to fix.
