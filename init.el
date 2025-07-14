@@ -2175,17 +2175,7 @@ Run hook `vc-dwim-post-commit-hook'."
     "<tab>"   #'copilot-accept-completion
     "C-<tab>" #'copilot-accept-completion-by-word))
 
-;;;; browser-hist
-
-(after-load! browser-hist
-  (alist-setq! browser-hist-db-paths zen
-              (cond
-               ((memq system-type
-                      '(cygwin windows-nt ms-dos))
-                "$APPDATA/zen/Profiles/*/places.sqlite")))
-  (alist-setq! browser-hist--db-fields
-    zen '("title" "url" "moz_places" "ORDER BY last_visit_date desc"))
-  (setq browser-hist-default-browser 'zen))
+;;;; consult-browser-hist
 
 (autoload 'consult-browser-hist "consult-browser-hist" nil t)
 (keymap-global-set "M-s b" #'consult-browser-hist)
