@@ -1,5 +1,11 @@
 2025-07-14  Zhengyi Fu  <i@fuzy.me>
 
+	Remove configuration for browser-hist
+
+	* init.el:
+
+2025-07-14  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el (+gptel-shellcheck-fix): Refactor
 	function.  Fix wrong buffer name.
 
