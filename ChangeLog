@@ -1,5 +1,10 @@
 2025-07-15  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/tencent-cloud.el: New file.  Add support for Tencent
+	Cloud Object Storage.
+
+2025-07-15  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Refactor and update comments.
 	* packages.el: Remove gptel-quick.
 
