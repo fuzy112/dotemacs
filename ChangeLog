@@ -1,3 +1,7 @@
+2025-07-15  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (auth-sources-gpg-encrypt-to): Set to a list.
+
 2025-07-14  Zhengyi Fu  <i@fuzy.me>
 
 	Remove configuration for browser-hist
