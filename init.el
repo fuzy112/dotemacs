@@ -1809,7 +1809,7 @@ Run hook `vc-dwim-post-commit-hook'."
 (setopt auth-sources '("~/.authinfo.gpg"))
 (after-load! auth-sources
   (setopt auth-source-save-behavior t
-          auth-source-gpg-encrypt-to "0xBBE2757FC7BFC23B")
+          auth-source-gpg-encrypt-to (list  "0xBBE2757FC7BFC23B"))
   (auth-source-forget-all-cached))
 
 ;;;; lin
