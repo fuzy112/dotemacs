@@ -1424,13 +1424,19 @@ Display the result in a posframe." t)
 
 ;;;; tramp
 
-;;; Unix domain sockets will be created in this directory.  The total
-;;; length of a unix domain socket path must not exceed 108.
+;;; We need to ensure Unix domain sockets have paths shorter than 108 characters
+;;; (this is a system limit). If tramp-compat-temporary-file-directory is too long,
+;;; we'll use a shorter alternative location.
 (defvar tramp-compat-temporary-file-directory)
 (after-load! tramp-compat
+  ;; Check if the current directory path is longer than 50 characters.
+  ;; This provides a safety margin since socket names will be appended to this path.
   (when (length> tramp-compat-temporary-file-directory 50)
+    ;; Set a shorter alternative directory in XDG_RUNTIME_DIR
     (setq tramp-compat-temporary-file-directory
           (substitute-in-file-name "$XDG_RUNTIME_DIR/emacs"))
+    ;; Create the directory if it doesn't exist yet
+    ;; The 't' parameter creates parent directories as needed
     (unless (file-directory-p tramp-compat-temporary-file-directory)
       (mkdir tramp-compat-temporary-file-directory t))))
 
