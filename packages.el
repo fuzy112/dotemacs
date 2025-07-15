@@ -139,8 +139,6 @@
 
 ;;; LLM
 (straight-use-package '(gptel :build (:not compile)))
-(straight-use-package '(gptel-quick :host github :repo "karthink/gptel-quick"))
-
 
 ;;; Modal editing
 (straight-use-package 'meow)

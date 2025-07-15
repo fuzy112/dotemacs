@@ -24,7 +24,14 @@
 
 ;;; Code:
 
-(defconst +saved-file-name-handler-alist file-name-handler-alist)
+(defconst +saved-file-name-handler-alist file-name-handler-alist
+  "Saved value of `file-name-handler-alist' before startup optimization.
+This value will be restored later in the startup sequence.")
+
+;; Temporarily set FILE-NAME-HANDLER-ALIST to nil.
+;; This reduces GC overhead and speeds up start-up.
+;; The handlers installed in the list are restored from `+saved-file-name-handler-alist'
+;; after initialization."
 (setq file-name-handler-alist nil)
 
 (require 'early-init early-init-file t)
@@ -1855,39 +1862,61 @@ Run hook `vc-dwim-post-commit-hook'."
 ;;;; prism
 
 (defun +prism--set-colors ()
-  "Configure colors used by prism according to the current theme."
-  (prism-set-colors :num 16
-    :desaturations (cl-loop for i from 0 below 16
-                            collect (* i 2.5))
-    :lightens (cl-loop for i from 0 below 16
-                       collect (* i 2.5))
-    :colors (cond ((and (fboundp 'modus-themes--list-enabled-themes)
-                        (modus-themes--list-enabled-themes))
-                   (eval '(modus-themes-with-colors
-                            (list pink fg-alt green indigo))))
-                  ((and (fboundp 'ef-themes--list-enabled-themes)
-                        (ef-themes--list-enabled-themes))
-                   (eval '(ef-themes-with-colors
-                           (list red green magenta cyan))))
-                  (t
-                   (let ((foreground (face-attribute 'default :foreground)))
-                     (mapcar (lambda (c) (prism-blend c foreground 0.5))
-                             (list "pink" "green" "magenta" "cyan")))))
+  "Configure colors used by prism according to the current theme.
+This function sets up a palette of 16 colors with varying levels
+of saturation and lightness. For known themes (Modus and EF),
+it uses theme-specific colors. Otherwise, it blends generic colors
+with the default foreground. Special handling is also provided for
+comments and strings."
+  (prism-set-colors
+   :num 16
+   ;; Create a series of desaturations from 0 to 37.5 in steps of 2.5
+   :desaturations (cl-loop for i from 0 below 16
+                           collect (* i 2.5))
+   ;; Create a series of lightness values from 0 to 37.5 in steps of 2.5
+   :lightens (cl-loop for i from 0 below 16
+                      collect (* i 2.5))
+   ;; Choose colors based on the active theme
+   :colors (cond
+            ;; For Modus themes, use theme-specific colors
+            ((and (fboundp 'modus-themes--list-enabled-themes)
+                  (modus-themes--list-enabled-themes))
+             (eval '(modus-themes-with-colors
+                     (list pink fg-alt green indigo))))
 
-    :comments-fn
-    (lambda (color)
-      (prism-blend color
-                   (face-attribute 'font-lock-comment-face :foreground) 0.25))
+            ;; For EF themes, use theme-specific colors
+            ((and (fboundp 'ef-themes--list-enabled-themes)
+                  (ef-themes--list-enabled-themes))
+             (eval '(ef-themes-with-colors
+                    (list red green magenta cyan))))
 
-    :strings-fn
-    (lambda (color)
-      (prism-blend color (face-attribute 'default :foreground) 0.5))))
+            ;; For other themes, blend generic colors with foreground
+            (t
+             (let ((foreground (face-attribute 'default :foreground)))
+               (mapcar (lambda (c) (prism-blend c foreground 0.5))
+                       (list "pink" "green" "magenta" "cyan")))))
+
+   ;; Custom function for comments - blend with comment face color
+   :comments-fn
+   (lambda (color)
+     (prism-blend color
+                  (face-attribute 'font-lock-comment-face :foreground) 0.25))
+
+   ;; Custom function for strings - blend with default foreground
+   :strings-fn
+   (lambda (color)
+     (prism-blend color (face-attribute 'default :foreground) 0.5))))
 
 (defun +prism--enable-theme-f (_theme)
+  "Refresh prism colors when a theme is enabled.
+This is added to `enable-theme-functions'. The _THEME argument is
+not used, but is required by the hook."
   (run-with-timer 0 nil #'+prism--set-colors))
 
 (after-load! prism
+  ;; Set initial colors when prism is loaded
   (+prism--set-colors)
+  ;; Make sure prism colors are updated when themes change
   (add-hook 'enable-theme-functions #'+prism--enable-theme-f 100))
 
 ;;;; email and gnus
@@ -1899,9 +1928,14 @@ Run hook `vc-dwim-post-commit-hook'."
 
 ;;;; elfeed
 
+(defvar +elfeed-tag-history nil
+  "History variable for tags used in `elfeed-show-tag'.")
 
-(defvar +elfeed-tag-history nil)
 (define-advice elfeed-show-tag (:before (&rest args) completing-read)
+  "Replace default prompting with a completing-read interface for tags.
+This advice enhances `elfeed-show-tag' to use `completing-read-multiple'
+for selecting multiple tags from available tags in the database, with
+history support."
   (interactive
    (mapcar #'intern
            (completing-read-multiple
@@ -1911,6 +1945,9 @@ Run hook `vc-dwim-post-commit-hook'."
   args)
 
 (defun +elfeed-browse-eww ()
+  "Open the current Elfeed entry in EWW browser.
+This temporarily sets `browse-url-browser-function' to use EWW
+and then calls `elfeed-show-visit' to open the entry URL."
   (interactive)
   (let ((browse-url-browser-function #'eww-browse-url))
     (elfeed-show-visit)))
@@ -1922,24 +1959,40 @@ Run hook `vc-dwim-post-commit-hook'."
 (defvar +feeds-file-watch-descriptor nil)
 
 (defun +elfeed-load-feeds ()
+  "Load feeds from the feeds.eld file in `elfeed-db-directory'.
+If the feeds.eld file exists, it will be loaded and its contents
+will be set as `elfeed-feeds'. This allows for dynamic loading
+of feed configurations without modifying init files."
   (let ((default-directory elfeed-db-directory))
-  (when (file-exists-p "feeds.eld")
-    (with-temp-buffer
-      (insert-file-contents "feeds.eld")
-      (setq elfeed-feeds (read (current-buffer)))
-      (message "Updated feeds")))))
+    (when (file-exists-p "feeds.eld")
+      (with-temp-buffer
+        (insert-file-contents "feeds.eld")
+        (setq elfeed-feeds (read (current-buffer)))
+        (message "Updated elfeed feeds from %s"
+                 (expand-file-name "feeds.eld" elfeed-db-directory))))))
 
 (after-load! elfeed-db
+  ;; Load feeds from the feeds.eld file when elfeed-db is loaded
   (+elfeed-load-feeds)
+
+  ;; Set up a file watcher on the feeds.eld file if we haven't already
   (when (null +feeds-file-watch-descriptor)
+    ;; Make sure we have the filenotify library available
     (require 'filenotify)
+
+    ;; Create and store a file watcher that will reload feeds when the file changes
     (setq +feeds-file-watch-descriptor
           (file-notify-add-watch
+           ;; Watch the feeds.eld file in the elfeed database directory
            (expand-file-name "feeds.eld" elfeed-db-directory)
+           ;; Only watch for change events
            '(change)
-           (pcase-lambda (`(,descr ,action . ,files))
-             (pcase descr
-               (changed
+           ;; Callback function that runs when a change is detected
+           (pcase-lambda (`(,descriptor ,action . ,files))
+             ;; Check the type of notification
+             (pcase descriptor
+               ;; When the file has changed, reload the feeds
+               ('changed
                 (+elfeed-load-feeds))))))))
 
 ;;;; emacs-server
@@ -1951,8 +2004,13 @@ Run hook `vc-dwim-post-commit-hook'."
 
 (after-load! server
   (require 'org-protocol)
+
+  ;; If the operating system is either Windows (windows-nt) or DOS (ms-dos),
+  ;; add an advice around the server process filter function to correctly handle coding systems.
   (when (memq system-type '(windows-nt ms-dos))
     (add-hook #'server-process-filter :around '+server--process-filter-coding-system))
+
+  ;; Start the server if it is not already running.
   (unless (server-running-p)
     (server-start)))
 
@@ -1975,10 +2033,6 @@ Run hook `vc-dwim-post-commit-hook'."
   (alist-setq! display-buffer-alist "^\\*tui-" '((display-buffer-same-window))))
 
 ;;;; gptel
-
-(defvar embark-general-map)
-(after-load! embark
-  (keymap-set embark-general-map "?" #'gptel-quick))
 
 (setq gptel-default-mode #'markdown-mode)
 (defun +gptel-mode-h ()
@@ -2081,10 +2135,11 @@ Run hook `vc-dwim-post-commit-hook'."
 
 (autoload 'org-store-link "ol" nil t)
 
+(defvar org-hide-emphasis-markers)
+
 (defun +org/toggle-emphasis-markers ()
   "Toggle the display of emphasis markers."
   (interactive)
-  (defvar org-hide-emphasis-markers)
   (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
   (font-lock-flush))
 
@@ -2451,7 +2506,8 @@ Otherwise disable it."
 (provide 'init)
 
 (when (bound-and-true-p +saved-file-name-handler-alist)
-  (setq file-name-handler-alist +saved-file-name-handler-alist)
+  (setq file-name-handler-alist
+        (append file-name-handler-alist +saved-file-name-handler-alist))
   (makunbound '+saved-file-name-handler-alist))
 
 ;; Local Variables:
