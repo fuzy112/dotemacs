@@ -1,3 +1,8 @@
+2025-07-16  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/tencent-cos.el: Rename tencent-cloud to
+	tencent-cos.el.
+
 2025-07-15  Zhengyi Fu  <i@fuzy.me>
 
 	* site-lisp/tencent-cloud.el: New file.  Add support for Tencent
