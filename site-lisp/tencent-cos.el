@@ -6,10 +6,10 @@
 (require 'url)
 (require 'url-http)
 
-(defun tencent-cloud--binary-to-hex (input)
+(defun tencent-cos--binary-to-hex (input)
   (mapconcat (lambda (byte) (format "%02x" byte)) input ""))
 
-(defun tencent-cloud--hex-to-binary (input)
+(defun tencent-cos--hex-to-binary (input)
   "Convert hex string INPUT to binary data."
   (with-temp-buffer
     (set-buffer-multibyte nil)
@@ -21,7 +21,7 @@
         (cl-incf i 2)))
     (buffer-string)))
 
-(defun tencent-cloud-auth-info (host)
+(defun tencent-cos-auth-info (host)
   "Return the first auth-source entry matching HOST (with diminishing sub-domain specificity).
 HOST is reduced successively by dropping its left-most label until a
 credential set (:user and :secret) is found or HOST becomes empty.  Return
@@ -40,12 +40,12 @@ nil when none exists."
       (warn "No Tencent COS credentials found (tried up from \"%s\")" host))
     info))
 
-(defun tencent-cloud--hmac (key data &optional alg)
+(defun tencent-cos--hmac (key data &optional alg)
   "Return MAC for ALG (SHA1 or SHA256)."
-  (tencent-cloud--binary-to-hex
+  (tencent-cos--binary-to-hex
    (gnutls-hash-mac (or alg "SHA1") key data)))
 
-(cl-defun tencent-cloud-sign-request
+(cl-defun tencent-cos-sign-request
     (&key secret-id secret-key query-params headers method target
           start-time valid-for)
   "Create Tencent COS V4 query-string authorization signature.
@@ -69,7 +69,7 @@ containing `q-sign-algorithm`, `q-ak`, `q-sign-time`, `q-key-time`,
   (let* ((start-timestamp (or start-time (time-convert (current-time) 'integer)))
          (end-timestamp (+ start-timestamp (or valid-for 600)))
          (key-time (format "%s;%s" start-timestamp end-timestamp))
-         (sign-key (tencent-cloud--hmac (substring secret-key) key-time))
+         (sign-key (tencent-cos--hmac (substring secret-key) key-time))
          (query-params (mapcar (lambda (elt)
                                  (cons (downcase (url-hexify-string (car elt)))
                                        (url-hexify-string (cdr elt))))
@@ -96,7 +96,7 @@ containing `q-sign-algorithm`, `q-ak`, `q-sign-time`, `q-key-time`,
                                  key-time "\n"
                                  (secure-hash 'sha1 http-string)
                                  "\n"))
-         (signature (tencent-cloud--hmac (substring sign-key) string-to-sign)))
+         (signature (tencent-cos--hmac (substring sign-key) string-to-sign)))
     (clear-string sign-key)
     ;; (message "http-string: %S" http-string)
     ;; (message "string-to-sign: %S" string-to-sign)
@@ -109,12 +109,12 @@ containing `q-sign-algorithm`, `q-ak`, `q-sign-time`, `q-key-time`,
             "&q-url-param-list=" url-param-list
             "&q-signature=" signature)))
 
-(defun tencent-cloud-cos-host (bucket-appid region)
+(defun tencent-cos-host (bucket-appid region)
   (format "%s.cos.%s.myqcloud.com" bucket-appid region))
 
 (defvar url-http-response-status)
 
-(cl-defun tencent-cloud-cos-put (&key bucket-appid region file-key
+(cl-defun tencent-cos-put (&key bucket-appid region file-key
                                       content content-type
                                       content-disposition
                                       secret-id secret-key
@@ -134,7 +134,7 @@ CONTENT-TYPE: The MIME type of the content (defaults to application/octet-stream
 CONTENT-DISPOSITION: The Content-Disposition header value.
 CALLBACK: Function to call after upload completion.
          Called with nil on success, error message string on failure."
-  (let* ((host (tencent-cloud-cos-host bucket-appid region))
+  (let* ((host (tencent-cos-host bucket-appid region))
          (url-request-method "PUT")
          (url-request-data content)
          (url-request-extra-headers
@@ -144,7 +144,7 @@ CALLBACK: Function to call after upload completion.
          (target (if (string-prefix-p "/" file-key)
                      file-key
                    (concat "/" file-key)))
-         (signature (tencent-cloud-sign-request
+         (signature (tencent-cos-sign-request
                      :secret-id secret-id
                      :secret-key secret-key
                      :headers `(("host" . ,host)
@@ -182,12 +182,12 @@ CALLBACK: Function to call after upload completion.
                           (kill-buffer buffer)
                           )))))))
 
-(defvar tencent-cloud-cos-default-link-validity (* 60 60 24))
+(defvar tencent-cos-default-link-validity (* 60 60 24))
 
-(defvar tencent-cloud-cos-default-bucket nil)
-(defvar tencent-cloud-cos-default-region nil)
+(defvar tencent-cos-default-bucket nil)
+(defvar tencent-cos-default-region nil)
 
-(defun tencent-cloud-cos-get-new-url (url)
+(defun tencent-cos-get-new-url (url)
   (interactive "sOld URL: ")
   (let* ((url (url-generic-parse-url url))
          (path-and-query (url-path-and-query url))
@@ -199,8 +199,8 @@ CALLBACK: Function to call after upload completion.
                                              (split-string sign-time ";"))))
                      (- (nth 1 time-range) (nth 0 time-range))))
          (host (url-host url))
-         (secret (tencent-cloud-auth-info host))
-         (auth-string (tencent-cloud-sign-request
+         (secret (tencent-cos-auth-info host))
+         (auth-string (tencent-cos-sign-request
                        :secret-id (plist-get secret :user)
                        :secret-key (auth-info-password secret)
                        :headers `(("host" . ,host))
@@ -216,7 +216,7 @@ CALLBACK: Function to call after upload completion.
     (kill-new download-url)
     (message "New URL copied to the kill ring")))
 
-(defun tencent-cloud-cos-get-url (file-key duration)
+(defun tencent-cos-get-url (file-key duration)
   (interactive
    (list (read-string "File key: ")
          (if current-prefix-arg
@@ -225,17 +225,17 @@ CALLBACK: Function to call after upload completion.
                  (read-string
                   "How many hours will the link be valid for? "
                   nil nil
-                  (number-to-string (/ tencent-cloud-cos-default-link-validity 3600)))))
-           tencent-cloud-cos-default-link-validity)))
-  (let* ((host (tencent-cloud-cos-host tencent-cloud-cos-default-bucket
-                                       tencent-cloud-cos-default-region))
-         (secret (tencent-cloud-auth-info host))
+                  (number-to-string (/ tencent-cos-default-link-validity 3600)))))
+           tencent-cos-default-link-validity)))
+  (let* ((host (tencent-cos-host tencent-cos-default-bucket
+                                       tencent-cos-default-region))
+         (secret (tencent-cos-auth-info host))
          (download-url
           (format "https://%s%s?%s"
                   host
                   (url-hexify-string file-key url-path-allowed-chars)
                   (url-hexify-string
-                   (tencent-cloud-sign-request
+                   (tencent-cos-sign-request
                     :secret-id (plist-get secret :user)
                     :secret-key (auth-info-password secret)
                     :headers `(("host" . ,host))
@@ -246,7 +246,7 @@ CALLBACK: Function to call after upload completion.
     (kill-new download-url)
     (message "URL copied to the kill ring")))
 
-(defun tencent-cloud-cos-put-buffer (type duration)
+(defun tencent-cos-put-buffer (type duration)
   "Upload current buffer contents to Tencent Cloud COS and create a download link.
 
 Upload the buffer contents with content TYPE and generate a signed URL valid
@@ -254,10 +254,10 @@ for DURATION seconds. The URL is copied to the kill ring upon completion.
 
 When called interactively:
 - TYPE defaults to text/plain for multibyte buffers, application/octet-stream otherwise
-- DURATION defaults to `tencent-cloud-cos-default-link-validity'
+- DURATION defaults to `tencent-cos-default-link-validity'
 - With prefix arg, prompts for both TYPE and DURATION (in hours)
 
-Uses `tencent-cloud-cos-default-bucket' and `tencent-cloud-cos-default-region'
+Uses `tencent-cos-default-bucket' and `tencent-cos-default-region'
 for the target bucket configuration.
 
 The file name in COS is generated from the SHA1 hash of the contents
@@ -266,7 +266,7 @@ and the buffer name to ensure uniqueness."
    (let* ((type (if enable-multibyte-characters
                     "text/plain; charset=utf-8"
                   "application/octet-stream"))
-          (duration tencent-cloud-cos-default-link-validity))
+          (duration tencent-cos-default-link-validity))
      (when current-prefix-arg
        (setq type (mml-minibuffer-read-type (buffer-name) type))
        (setq duration
@@ -275,24 +275,24 @@ and the buffer name to ensure uniqueness."
                  (read-string
                   "How many hours will the link be valid for? "
                   nil nil
-                  (number-to-string (/ tencent-cloud-cos-default-link-validity 3600)))))))
+                  (number-to-string (/ tencent-cos-default-link-validity 3600)))))))
      (list type duration)))
   (let* ((contents (encode-coding-string (buffer-string) 'utf-8-unix))
          (file-key (concat "/"
                            (sha1 contents)
                            "-"
                            (buffer-name)))
-         (host (tencent-cloud-cos-host tencent-cloud-cos-default-bucket
-                                       tencent-cloud-cos-default-region))
-         (secret (tencent-cloud-auth-info host))
+         (host (tencent-cos-host tencent-cos-default-bucket
+                                       tencent-cos-default-region))
+         (secret (tencent-cos-auth-info host))
          (buffer (current-buffer))
          (mode-line-process-orig mode-line-process))
     (with-current-buffer buffer
       (setq mode-line-process " Uploading...")
       (force-mode-line-update))
-    (tencent-cloud-cos-put
-     :bucket-appid tencent-cloud-cos-default-bucket
-     :region tencent-cloud-cos-default-region
+    (tencent-cos-put
+     :bucket-appid tencent-cos-default-bucket
+     :region tencent-cos-default-region
      :file-key file-key
      :secret-id (plist-get secret :user)
      :secret-key (auth-info-password secret)
@@ -307,9 +307,9 @@ and the buffer name to ensure uniqueness."
            (force-mode-line-update)))
        (if error
            (message "Upload failed: %s" error)
-         (tencent-cloud-cos-get-url file-key duration))))))
+         (tencent-cos-get-url file-key duration))))))
 
-(defun tencent-cloud-cos-put-file (file type duration)
+(defun tencent-cos-put-file (file type duration)
   "Upload file to Tencent Cloud COS and create a download link.
 
 Upload FILE with content TYPE and generate a signed URL valid for
@@ -317,12 +317,12 @@ DURATION seconds. The URL is copied to the kill ring upon completion.
 
 When called interactively:
 - TYPE is determined from the file name
-- DURATION defaults to `tencent-cloud-cos-default-link-validity'
+- DURATION defaults to `tencent-cos-default-link-validity'
 - With prefix arg, prompts for DURATION (in hours)"
   (interactive
    (let* ((file (mml-minibuffer-read-file "File: "))
           (type (mml-minibuffer-read-type file))
-          (duration tencent-cloud-cos-default-link-validity))
+          (duration tencent-cos-default-link-validity))
      (when current-prefix-arg
        (setq duration
              (* 60 60
@@ -330,7 +330,7 @@ When called interactively:
                  (read-string
                   "How many hours will the link be valid for? "
                   nil nil
-                  (number-to-string (/ tencent-cloud-cos-default-link-validity 3600)))))))
+                  (number-to-string (/ tencent-cos-default-link-validity 3600)))))))
      (list file type duration)))
   (let* ((contents (with-temp-buffer
                      (set-buffer-multibyte nil)
@@ -339,16 +339,16 @@ When called interactively:
          (file-key (format "/%s-%s"
                            (sha1 contents)
                            (file-name-nondirectory file)))
-         (host (tencent-cloud-cos-host tencent-cloud-cos-default-bucket tencent-cloud-cos-default-region))
-         (secret (tencent-cloud-auth-info host))
+         (host (tencent-cos-host tencent-cos-default-bucket tencent-cos-default-region))
+         (secret (tencent-cos-auth-info host))
          (buffer (current-buffer))
          (mode-line-process-orig mode-line-process))
     (with-current-buffer buffer
       (setq mode-line-process " Uploading...")
       (force-mode-line-update))
-    (tencent-cloud-cos-put
-     :bucket-appid tencent-cloud-cos-default-bucket
-     :region tencent-cloud-cos-default-region
+    (tencent-cos-put
+     :bucket-appid tencent-cos-default-bucket
+     :region tencent-cos-default-region
      :file-key file-key
      :secret-id (plist-get secret :user)
      :secret-key (auth-info-password secret)
@@ -365,7 +365,7 @@ When called interactively:
            (force-mode-line-update)))
        (if error
            (message "Upload failed: %s" error)
-         (tencent-cloud-cos-get-url file-key duration))))))
+         (tencent-cos-get-url file-key duration))))))
 
-(provide 'tencent-cloud)
-;;; tencent-cloud.el ends here
+(provide 'tencent-cos)
+;;; tencent-cos.el ends here
