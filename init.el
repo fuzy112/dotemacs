@@ -1367,9 +1367,12 @@ Display the result in a posframe." t)
 
 ;;;; sh-script
 
-(after-load! sh-script
-  (add-hook 'sh-mode-hook #'sh-electric-here-document-mode))
+(add-hook 'sh-mode-hook #'sh-electric-here-document-mode)
 (add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
+(autoload 'flymake-checkbashisms "flymake-checkbashisms")
+(defun +sh-mode-h ()
+  (add-hook 'flymake-diagnostic-functions #'flymake-checkbashisms nil t))
+(add-hook 'sh-mode-hook #'+sh-mode-h)
 
 ;;;; udev rules
 
@@ -1417,7 +1420,7 @@ Display the result in a posframe." t)
 
 ;;;; buffer-env
 
-(add-hook 'hook-local-variables-hook #'buffer-env-update)
+(add-hook 'hack-local-variables-hook #'buffer-env-update)
 (add-hook 'comint-mode-hook #'buffer-env-update)
 (defvar buffer-env--cache)
 (defun +buffer-env/clear-cache ()
