@@ -1,5 +1,9 @@
 2025-07-17  Zhengyi Fu  <i@fuzy.me>
 
+	* transient/values.el (gptel-menu): Remove default value.
+
+2025-07-17  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el: Update description of tools.
 
 2025-07-17  Zhengyi Fu  <i@fuzy.me>
