@@ -1,5 +1,15 @@
 2025-07-17  Zhengyi Fu  <i@fuzy.me>
 
+	Update gptel-config.el
+
+	* site-lisp/gptel-config.el (gptel-read-documentation): Rename to
+	`+gptel-read-documentation'.
+	(+gptel-shellcheck-fix): Fix the prompt to make sure `edit_file'
+	tool is used.
+	; * site-lisp/gptel-config.el: Update docstring.
+
+2025-07-17  Zhengyi Fu  <i@fuzy.me>
+
 	* transient/values.el (gptel-menu): Remove default value.
 
 2025-07-17  Zhengyi Fu  <i@fuzy.me>
