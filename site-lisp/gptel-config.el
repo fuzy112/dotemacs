@@ -436,14 +436,14 @@ a old-string and a new-string, new-string will replace the old-string at the spe
  :name "approve_pullreq"
  :function #'+gptel-approve-pullreq
  :async t
- :description "Approve the pull request"
+ :description "Approve a GitHub pull request and add an optional review comment. This action marks the pull request as approved by the authenticated user and posts the provided comments as part of the review."
  :args (list '(:name "pullreq_id"
 		     :type integer
-		     :description "The id of the pull request")
+		     :description "The numeric ID of the GitHub pull request to approve")
 	     '(:name "comments"
 		     :type string
-		     :description "Comments to post to the pull request.
-Note that the user will get a chance to edit the comments."))
+		     :description "Optional review comments to post alongside the approval.
+The text will be presented in an editor buffer for review and modification before submission."))
  :category "github")
 
 (defun +gptel-request-changes (callback pull-number comments)
@@ -519,10 +519,10 @@ Note that the user will get a chance to edit the comments."))
 (gptel-make-tool
  :name "get_jira_issue"
  :function #'+gptel-get-jira-issue
- :description "Read the details of a JIRA issue"
- :args '(( :name "issue_id"
-	   :type string
-	   :description "The ID or key of the issue to be read"))
+ :description "Retrieve comprehensive information about a JIRA issue, including its summary, description, status, assignee, and related details from the JIRA API"
+ :args '((:name "issue_id"
+	  :type string
+	  :description "The JIRA issue identifier (e.g., 'PROJ-123')"))
  :category "jira")
 
 (defun +gptel-create-jira-issue (project-key summary description issue-type)
@@ -662,6 +662,18 @@ Note that the user will get a chance to edit the comments."))
 
 (add-hook 'gptel-post-stream-hook #'+gptel-auto-scroll-safe)
 
+(defun +gptel-remove-markdown-code-fences (beg end)
+  (let ((beg (copy-marker beg))
+	(end (copy-marker end)))
+    (goto-char beg)
+    (when (looking-at "\\`\\`\\`\n")
+      (delete-region (match-beginning 0) (match-end 0))
+      (goto-char end)
+      (when (looking-back "\n\\`\\`\\`[[:space:]]*" 10)
+	(delete-region (match-beginning 0) (match-end 0))))))
+
+(add-hook 'gptel-post-rewrite-functions #'+gptel-remove-markdown-code-fences)
+
 (keymap-set gptel-mode-map "C-c k" #'gptel-abort)
 
 ;;; Commands
@@ -678,11 +690,33 @@ Note that the user will get a chance to edit the comments."))
 				      (gptel-get-tool "github")
 				      (gptel-get-tool "jira")
 				      (gptel-get-tool "command"))
-		  gptel--system-message "You are an experienced developer and a strict code reviewer.
-You will review pull-requests in aspect of their code quality, commit messages, and JIRA ticket.
-Remember, be strict!!!")
-      (insert (format "Review pull-request #%s. " (oref pullreq number)))
-      (insert "You can approve it or request changes to it.\n")
+		  gptel--system-message "You are an experienced senior developer and a strict code reviewer with high standards.
+Your role is to thoroughly review pull requests focusing on:
+1. Code Quality:
+   - Clean code principles
+   - Performance implications
+   - Security considerations
+   - Design patterns and architecture
+   - Test coverage
+2. Commit Quality:
+   - Clear and descriptive commit messages
+   - Logical commit history
+   - Appropriate commit size
+3. JIRA Compliance:
+   - Ticket description matches implementation
+   - All acceptance criteria met
+   - Proper ticket status and linking
+
+Provide specific, actionable feedback and don't hesitate to request changes if standards aren't met.
+Remember to be thorough, constructive, and maintain high quality standards!")
+      (insert (format "Please review pull request #%s thoroughly.\n\n" (oref pullreq number)))
+      (insert "Consider:
+
+1. Is the code implementation clean, efficient, and secure?
+2. Are commit messages clear and history well-structured?
+3. Does the implementation fully satisfy the JIRA ticket requirements?
+
+Provide your detailed review with specific recommendations for improvement if needed.")
       (gptel-send))))
 
 (gptel-make-tool
@@ -692,10 +726,10 @@ Remember, be strict!!!")
 		(process-file "shellcheck" nil t nil
 			      (expand-file-name filename) "--exclude=SC1091,SC2034")
 		(buffer-string)))
-  :description "Run shellcheck on the file."
+  :description "Run shellcheck to analyze shell scripts for errors, bugs, and potential pitfalls. Excludes specific checks for source files (SC1091) and unused variables (SC2034)."
   :args (list '(:name "filename"
 		      :type string
-		      :description "Path to the file to be checked."))
+		      :description "Path to the shell script file to be analyzed."))
   :category "command"
   :include t)
 
@@ -718,16 +752,33 @@ Remember, be strict!!!")
 			  (list (gptel-get-tool "shellcheck"))))
       (setq-local gptel-confirm-tool-calls nil)
       (setq-local gptel--system-message
-		  "You are an experienced developer and a guru of shell scripts.  You know
-that shellcheck can sometimes be wrong.  You can use directive comments like
-#shellcheck disable=RULES to disable some particular rules if they are
-wrong or could be very hard to fix.
+		  "You are an expert shell script developer focusing on robustness and security.
+Your role is to analyze and improve shell scripts by:
 
-The directive comments should be put either at the top of the file
-before any commands but after copyright headers or VI modelines, or
-before a specific command or { } block.  Also add a comment explaining
-why the rule has to be disabled.")
-      (insert (format "Run shellcheck on the file `%s' and fix any problems found." file))
+1. Interpreting shellcheck output with expert judgment
+2. Fixing identified issues while preserving script functionality
+3. Using directive comments (#shellcheck disable=RULES) judiciously when:
+   - The rule produces false positives
+   - The fix would significantly impair readability or maintainability
+   - The current implementation is intentional and secure
+
+For directive comments:
+- Place them at file start (after headers/modelines but before commands)
+  OR immediately before affected commands/blocks
+- Always include clear explanations for why rules are disabled
+- Consider long-term maintenance implications
+
+Provide your analysis with security-focused improvements while maintaining
+script readability and reliability.")
+      (insert (format "Please analyze and improve the shell script '%s':
+
+1. Run shellcheck and examine its output
+2. Provide fixes for legitimate issues
+3. Where shellcheck rules need to be disabled, explain the rationale
+4. Ensure all changes preserve the script's original functionality
+
+Please show the complete improved version with your changes clearly marked."
+		     file))
       (gptel-send))))
 
 (provide 'gptel-config)
