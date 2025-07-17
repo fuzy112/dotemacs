@@ -203,7 +203,7 @@ This tool is not meant to be used to modify files: use `edit_file` to do that."
 	       :description "The text to send to the messages buffer"))
  :category "emacs")
 
-(defun gptel-read-documentation (symbol)
+(defun +gptel-read-documentation (symbol)
   "Read the documentation for SYMBOL, which can be a function or variable."
   (let ((sym (intern symbol)))
     (cond
@@ -216,7 +216,7 @@ This tool is not meant to be used to modify files: use `edit_file` to do that."
 
 (gptel-make-tool
  :name "read_documentation"
- :function #'gptel-read-documentation
+ :function #'+gptel-read-documentation
  :description "Read the documentation for a given function or variable"
  :args (list '(:name "name"
 	       :type string
@@ -663,14 +663,19 @@ Note that the user will get a chance to edit the comments."))
 (add-hook 'gptel-post-stream-hook #'+gptel-auto-scroll-safe)
 
 (defun +gptel-remove-markdown-code-fences (beg end)
+  "Remove markdown code fences from the given region.
+Specifically, this function will remove the '```' markers at the
+beginning and end of the region, if they exist.
+
+BEG and END define the region to process."
   (let ((beg (copy-marker beg))
 	(end (copy-marker end)))
     (goto-char beg)
-    (when (looking-at "\\`\\`\\`\n")
-      (delete-region (match-beginning 0) (match-end 0))
-      (goto-char end)
-      (when (looking-back "\n\\`\\`\\`[[:space:]]*" 10)
-	(delete-region (match-beginning 0) (match-end 0))))))
+    (when (looking-at (rx bol "```" (zero-or-more not-newline) "\n"))
+      (replace-match ""))
+    (goto-char end)
+    (when (looking-back (rx bol "```" eol) (line-beginning-position))
+      (replace-match ""))))
 
 (add-hook 'gptel-post-rewrite-functions #'+gptel-remove-markdown-code-fences)
 
@@ -679,6 +684,20 @@ Note that the user will get a chance to edit the comments."))
 ;;; Commands
 
 (defun +gptel-review-pullreq (pullreq)
+  "Initiate a review session for a pull request using GPEL.
+
+PULLREQ can be a forge pull request object or nil, in which case the
+function will prompt the user to select a pull request to review.
+
+The review session will open in a dedicated buffer where the user can
+compose their review comments. The session is configured with a specific
+backend, model, and tools to assist with the review process. The system
+message sets the context for the review, emphasizing thoroughness and high
+standards.
+
+The function inserts a prompt for the user to review the pull request,
+guiding them to consider code quality, commit quality, and JIRA compliance.
+It then sends the prompt to the GPT backend for processing."
   (interactive (list (or (forge-current-pullreq)
 			 (forge-get-pullreq (forge-read-pullreq "Pull-request: ")))))
   (let* ((session-buffer (gptel (format "*Review on PR #%s*" (oref pullreq number)))))
@@ -776,8 +795,8 @@ script readability and reliability.")
 2. Provide fixes for legitimate issues
 3. Where shellcheck rules need to be disabled, explain the rationale
 4. Ensure all changes preserve the script's original functionality
-
-Please show the complete improved version with your changes clearly marked."
+5. Use the `edit_file' tool to edit the script
+"
 		     file))
       (gptel-send))))
 
