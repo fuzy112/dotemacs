@@ -385,7 +385,7 @@ This value will be restored later in the startup sequence.")
   (setq quit-window-kill-buffer
         (seq-union quit-window-kill-buffer
                    (list 'magit-diff-mode 'magit-revision-mode
-                         'xref--xref-buffer-mode))))
+                         'xref--xref-buffer-mode 'ediff-mode))))
 
 ;;;; tab-bar
 
@@ -452,50 +452,112 @@ This value will be restored later in the startup sequence.")
 ;;;; orderless
 
 (eval-when-compile (require 'orderless))
+
+;; Define two “compound” completion styles on top of orderless and give
+;; them convenient names so that they can be re-used in
+;; completion-category-overrides without repeating a long list every
+;; time.
+
+;; orderless+flex enables “flex” (aka scatter) matching, useful for
+;; symbols where short substrings may suffice – e.g. typing “baf” →
+;; “buffer-auto-save-file-name”.
 (orderless-define-completion-style orderless+flex
   (orderless-matching-styles '(orderless-flex)))
+
+;; orderless+initialism is tuned for commands and variables where
+;; initialisms are common.  The style tries (in order):
+;;   1. exact initialism match (“tb” → “toggle-button”),
+;;   2. literal substring,
+;;   3. regexp.
 (orderless-define-completion-style orderless+initialism
   (orderless-matching-styles '(orderless-initialism
                                orderless-literal
                                orderless-regexp)))
+
+;; --- Global defaults -------------------------------------------------
+;; Search for candidates with orderless first, fall back to the “basic”
+;; style (Emacs standard prefix + substring) when orderless returns no
+;; matches.
 (setq completion-styles '(orderless basic))
+
+;; Let categories decide everything, do not force any extra defaults.
 (setq completion-category-defaults nil)
+
+;; --- Category-specific tweaks ----------------------------------------
+;; Different kinds of completions benefit from different matching
+;; behaviour, so override the style on a per-category basis:
 (setq completion-category-overrides
-      '((file        . ((styles . (basic partial-completion))))
+      '(
+        ;; For file names the default `basic' already deals with partial
+        ;; paths (“~/.e” → “~/.emacs.d/”), keep it.
+        (file        . ((styles . (basic partial-completion))))
+
+        ;; Make symbols and symbol-help use flexible matching.
         (symbol      . ((styles . (orderless+flex))))
         (symbol-help . ((styles . (orderless+flex))))
+
+        ;; Commands and variables are represented mostly by their
+        ;; command/variable names – initialism matching shines here.
         (command     . ((styles . (orderless+initialism))))
         (variable    . ((styles . (orderless+initialism))))
+
+        ;; Eglot completion and its capf backend: just plain orderless,
+        ;; no extra tweaks.
         (eglot       . ((styles . (orderless))))
         (eglot-capf  . ((styles . (orderless))))
+
+        ;; Git revisions (magit-rev) are often typed by scattered parts
+        ;; (“mwr” → “merge-request-work”), so fall back to flex.
         (magit-rev   . ((styles . (orderless+flex))))))
 
-;; copied from orderless wiki:
+
+;; Registers an orderless dispatcher that makes
+;; 1) the “$” suffix work together with Consult’s tofu suffixes, and
+;; 2) dotted file-extension patterns of the form “..EXT”.
+
 (defun +orderless--consult-suffix ()
-  "Regexp which matches the end of string with Consult tofu support."
+  "Return a regexp that matches either:
+  - the end of string “$”, or
+  - any sequence of Consult tofu characters followed by the end of string."
   (if (and (boundp 'consult--tofu-char) (boundp 'consult--tofu-range))
       (format "[%c-%c]*$" consult--tofu-char
               (+ consult--tofu-char consult--tofu-range -1))
     "$"))
 
 (defun +orderless--consult-dispatch (word _index _total)
+  "Transform WORD for orderless, producing a cons cell (STYLE . REGEXP).
+Leaves WORD untouched unless it is one of the patterns handled specially here:
+  - WORD ends with “$”           → remove trailing “$” and re-append the suffix
+  - WORD starts with “..EXT”      → turn it into a \\.EXT.*<suffix> pattern
+The return value is nil when WORD does not match either pattern, so orderless
+falls back to its default handling."
   (cond
-   ;; Ensure that $ works with consult commands, which add disambiguation suffixes
+   ;; Allow completing-read users to terminate a string with “$” even when
+   ;; Consult appends tofu suffixes such as “<taboo char>…index”.
    ((string-suffix-p "$" word)
     `(orderless-regexp . ,(concat (substring word 0 -1) (+orderless--consult-suffix))))
-   ;; File extensions
+   ;; In file-name contexts, let “..ext” expand to any file whose name ends in
+   ;; the extension “.ext”, hiding files that do not end with that extension.
    ((and (or minibuffer-completing-file-name
              (derived-mode-p 'eshell-mode))
          (string-match-p "\\`\\.." word))
     `(orderless-regexp . ,(concat "\\." (substring word 1) (+orderless--consult-suffix))))))
 
-(after-load! 'orderless
+(after-load! orderless
+  ;; The dispatcher must be added *after* orderless has been loaded;
+  ;; otherwise orderless-style-dispatchers may not be defined yet.
   (add-to-list 'orderless-style-dispatchers #'+orderless--consult-dispatch))
 
 ;;;; vertico
 
+
+;; Allow recursive minibuffers, so commands invoked from within the minibuffer
+;; (e.g., C-x C-f followed by M-:) can themselves use the minibuffer.
 (setq enable-recursive-minibuffers t)
 
+;; Autoload Vertico's main advice function and apply it around the two core
+;; completing-read entry points, ensuring Vertico is used everywhere Emacs
+;; prompts for completions.
 (autoload 'vertico--advice "vertico")
 (advice-add #'completing-read-default :around #'vertico--advice)
 (advice-add #'completing-read-multiple :around #'vertico--advice)
@@ -553,6 +615,8 @@ ARGS: see `completion-read-multiple'."
 ;;;; cursor-sensor
 
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+;; Prevent typing before the prompt.
 (setq minibuffer-prompt-properties '(read-only t face minibuffer-prompt cursor-intangible t))
 
 ;;;; pulsar
@@ -1196,18 +1260,20 @@ value for USE-OVERLAYS."
     (quit-window nil xref-win)))
 
 (declare-function xref-show-definitions-buffer-at-bottom "xref.el")
+
 (defun +xref--show-definition (fetcher alist)
   "Use `xref-show-definitions-buffer' if the candidates are few.
 Otherwise use `consult-xref'.
 
 See `xref-show-xrefs' for FETCHER and ALIST."
-  (let ((xrefs (funcall fetcher)))
-    (cond ((length= xrefs 1)
-           (+xref-window-quit)
+  (let ((xrefs (funcall fetcher)))      ; retrieve candidate xrefs list
+    (cond ((length= xrefs 1)            ; exactly one result: jump directly
+           (+xref-window-quit)          ; close any temporary xref window
            (xref-show-definitions-buffer-at-bottom fetcher alist))
           ((length< xrefs +xref--max-definitions-in-buffer)
+                                        ; few results: use a small dedicated buffer
            (xref-show-definitions-buffer-at-bottom fetcher alist))
-          (t
+          (t                            ; many results: let consult show them
            (+xref-window-quit)
            (consult-xref fetcher alist)))))
 
