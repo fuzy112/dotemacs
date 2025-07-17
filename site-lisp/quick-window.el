@@ -58,7 +58,7 @@
 (defun quick-window-jump (&optional arg)
   "Quickly jump to a window by assigned character labels.
 
-By default, considers only the windows in the current frames.
+By default, considers only the windows in the current frame.
 Prefixed with one \\[universal-argument], considers all windows on all
 visible frames.
 Prefixed with two \\[universal-argument]'s, considers all windows on
