@@ -1,5 +1,9 @@
 2025-07-17  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el: Update description of tools.
+
+2025-07-17  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+sh-mode-h): New function.  Add to `sh-mode-hook'.
 	(hack-local-variables-hook): Fix typo.
 
