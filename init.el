@@ -1560,7 +1560,24 @@ Run hook `vc-dwim-post-commit-hook'."
 
 (define-advice add-change-log-entry
     (:around (fun whoami changelog-file-name &rest rest) always-start-new-record)
-  "Temporarily bind `add-log-always-start-new-record' to t if the changelog is not modified."
+  "Ensure a new change log entry is always started if file is unmodified.
+
+This advice ensures that a new change log entry is always started if the
+current change log file has not been modified. This behavior is useful
+for automating the creation of change log entries, especially when
+running commands in bulk or using version control systems that expect a
+new entry for each change.
+
+If the change log file is managed by version control and up-to-date, or
+if no version control system is being used, this advice will set
+`add-log-always-start-new-record' to t, thereby forcing the creation of
+a new change log entry.
+
+The main logic involves checking the modification status of the current
+change log buffer and determining whether the change log file is under
+version control. If the file is up-to-date or not under version control,
+it sets the `add-log-always-start-new-record' variable to t to ensure a
+new record is started."
   (interactive (list current-prefix-arg
                      (prompt-for-change-log-name)))
   (let* ((add-log-always-start-new-record add-log-always-start-new-record)
