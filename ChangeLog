@@ -1,3 +1,7 @@
+2025-07-20  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Blackout `clipetty'.
+
 2025-07-17  Zhengyi Fu  <i@fuzy.me>
 
 	Update gptel-config.el

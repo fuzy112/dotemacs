@@ -2382,6 +2382,7 @@ of feed configurations without modifying init files."
 (after-load! abbrev (blackout 'abbrev-mode))
 (after-load! olivetti (blackout 'olivetti-mode))
 (after-load! nerd-icons-multimodal (blackout 'nerd-icons-multimodal-mode))
+(after-load! clipetty (blackout 'clipetty-mode))
 
 ;;;; uptime
 
