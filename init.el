@@ -2085,7 +2085,7 @@ of feed configurations without modifying init files."
            ;; Callback function that runs when a change is detected
            (pcase-lambda (`(,descriptor ,action . ,files))
              ;; Check the type of notification
-             (pcase descriptor
+             (pcase action
                ;; When the file has changed, reload the feeds
                ('changed
                 (+elfeed-load-feeds))))))))
