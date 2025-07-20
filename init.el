@@ -407,17 +407,23 @@ This value will be restored later in the startup sequence.")
 ;;;; help
 
 (after-load! help
+  ;; Enable editing of variable values in help buffers
   (setq help-enable-variable-value-editing t
         help-enable-completion-autoload nil)
+
+  ;; Add shortdoc examples to function help if available
   (when (fboundp 'shortdoc-help-fns-examples-function)
     (add-hook 'help-fns-describe-function-functions
               #'shortdoc-help-fns-examples-function 50))
 
+  ;; Insert the source code of the function in `describe-function' buffers.
   (add-to-list 'help-fns-describe-function-functions #'help-fns-function-source-code 'append))
 
-;; Insert the source code of the function in `describe-function' buffers.
 (defun help-fns-function-source-code (function)
-  "Insert Emacs Lisp source code for FUNCTION into the current buffer."
+  "Insert the Emacs Lisp source code for FUNCTION into current buffer.
+FUNCTION should be a symbol naming a function.  The source code is
+extracted from the function's definition and inserted with proper
+font-locking and indentation."
   (when-let* ((position (ignore-errors
                           (let ((inhibit-interaction t))
                             (find-function-noselect function))))
@@ -431,9 +437,11 @@ This value will be restored later in the startup sequence.")
                           (beginning-of-defun)
                           (font-lock-ensure (point) end)
                           (buffer-substring (point) end))))))
+    ;; Add indentation properties to make the source code align properly
     (add-text-properties 0 (length text)
                          '(line-prefix (space :align-to 2))
                          text)
+    ;; Insert the source code with section header
     (insert "\n  Source code:\n\n")
     (insert text)
     (insert "\n\n")))
@@ -445,9 +453,10 @@ This value will be restored later in the startup sequence.")
 
 ;;;; breadcrumb
 
-(add-hook 'text-mode-hook #'breadcrumb-local-mode)
-(add-hook 'conf-mode-hook #'breadcrumb-local-mode)
-(add-hook 'prog-mode-hook #'breadcrumb-local-mode)
+;; Enable breadcrumb-local-mode in various major modes
+(add-hook 'text-mode-hook #'breadcrumb-local-mode)    ; Enable for text files
+(add-hook 'conf-mode-hook #'breadcrumb-local-mode)    ; Enable for configuration files
+(add-hook 'prog-mode-hook #'breadcrumb-local-mode)    ; Enable for programming modes
 
 ;;;; orderless
 
