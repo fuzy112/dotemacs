@@ -1,5 +1,12 @@
 2025-07-22  Zhengyi Fu  <i@fuzy.me>
 
+	Add history to `elfeed-search-live-filter'
+
+	* init.el (+elfeed-search-live-filter-with-history): New command.
+	(+elfeed-search-live-filter-history): New variable.
+
+2025-07-22  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Change mode of tramp-compat-temporary-file-directory to
 	700.
 

@@ -2048,8 +2048,22 @@ and then calls `elfeed-show-visit' to open the entry URL."
   (let ((browse-url-browser-function #'eww-browse-url))
     (elfeed-show-visit)))
 
+(defvar +elfeed-search-live-filter-history nil)
+
+(defun +elfeed-search-live-filter-with-history ()
+  (interactive)
+  (unwind-protect
+      (let ((elfeed-search-filter-active :live))
+        (setq elfeed-search-filter
+              (read-from-minibuffer "Filter: " elfeed-search-filter
+                                    nil nil '+elfeed-search-live-filter-history)))
+    (elfeed-search-update :force)))
+
 (after-load! elfeed
   (keymap-set elfeed-search-mode-map "q" #'elfeed-db-unload)
+  (keymap-substitute elfeed-search-mode-map
+                     #'elfeed-search-live-filter
+                     #'+elfeed-search-live-filter-with-history)
   (keymap-set elfeed-show-mode-map "e" #'+elfeed-browse-eww))
 
 (defvar +feeds-file-watch-descriptor nil)
