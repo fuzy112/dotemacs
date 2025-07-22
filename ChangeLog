@@ -1,3 +1,8 @@
+2025-07-22  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Change mode of tramp-compat-temporary-file-directory to
+	700.
+
 2025-07-20  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (elfeed-db): Fix the file watcher callback.
