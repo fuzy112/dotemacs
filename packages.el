@@ -18,7 +18,7 @@
 (straight-use-package 'persist)
 
 ;;; Terminal integration
-(straight-use-package '(term-keys :host github :repo "CyberShadow/term-keys"))
+(straight-use-package 'kkp)
 (straight-use-package 'clipetty)
 
 ;;; Minibuffer

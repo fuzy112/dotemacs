@@ -1726,9 +1726,6 @@ new record is started."
         [C-next] [M-next] [S-next] [C-M-next] [C-S-next]
         [M-S-next] [C-M-S-next]
 
-        ;; term-keys
-        [?\e ?\C-\]]
-
         ;; quick-window-jump
         [?\e ?o]))
 (unless (memq system-type '(ms-dos windows-nt))
@@ -1827,42 +1824,10 @@ new record is started."
 
 (setq word-wrap-by-category t)
 
-;;;; term-keys
+;;;; kkp
 
-(defvar term-keys/prefix)
-(setq term-keys/prefix "\033\035")    ; ^[^]
-
-(defun +term-keys--autoload (_prompt)
-  (require 'term-keys)
-  (let* ((keys (this-command-keys))
-         (events (mapcar (lambda (ev) (cons t ev))
-                         (listify-key-sequence keys))))
-    (setq unread-command-events (append events unread-command-events))
-    nil))
-
-(defun +term-keys--tty-setup (&optional terminal)
-  ;; TERMINAL: nil means the current terminal
-  (when (and (eq (framep-on-display terminal) t)
-             (not (bound-and-true-p term-keys-mode)))
-    (with-selected-frame (car (frames-on-display-list terminal))
-      (define-key input-decode-map term-keys/prefix '+term-keys--autoload))))
-
-(add-hook 'tty-setup-hook '+term-keys--tty-setup)
-(mapc '+term-keys--tty-setup (terminal-list))
-
-(after-load! term-keys
-  (remove-hook 'tty-setup-hook '+term-keys--tty-setup)
-  ;; (fmakunbound '+term-keys--tty-setup)
-  ;; (fmakunbound '+term-keys--autoload)
-  (dolist (terminal (terminal-list))
-    (when (eq (framep-on-display terminal) t)
-      (with-selected-frame (car (frames-on-display-list terminal))
-        (define-key input-decode-map term-keys/prefix nil))))
-  (term-keys-mode)
-  (dolist (terminal (terminal-list))
-    (when (eq (framep-on-display terminal) t)
-      (with-selected-frame (car (frames-on-display-list terminal))
-        (term-keys/init)))))
+(when (or (daemonp) (not window-system))
+  (global-kkp-mode))
 
 ;;;; xterm
 
