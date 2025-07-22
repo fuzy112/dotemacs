@@ -1523,7 +1523,8 @@ Display the result in a posframe." t)
     ;; Create the directory if it doesn't exist yet
     ;; The 't' parameter creates parent directories as needed
     (unless (file-directory-p tramp-compat-temporary-file-directory)
-      (mkdir tramp-compat-temporary-file-directory t))))
+      (mkdir tramp-compat-temporary-file-directory t))
+    (chmod tramp-compat-temporary-file-directory #o700)))
 
 (connection-local-set-profile-variables
  'remote-direct-async-process
