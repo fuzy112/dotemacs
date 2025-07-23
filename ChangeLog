@@ -12,6 +12,10 @@
 	Bind "C-j" to `gptel-aibo-send' in `gptel-aibo-mode-map'.
 	Removed `olivetti-mode' from `gptel-mode-hook'.
 	(toggle-map): Bind "C" to `olivetti-mode'.
+2025-07-23  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (+custom-fontset): Only update the faces when
+	window-system is non-nil.
 
 2025-07-22  Zhengyi Fu  <i@fuzy.me>
 
