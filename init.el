@@ -247,10 +247,11 @@ This value will be restored later in the startup sequence.")
     (apply #'+apply-font-setting item)))
 
 (defun +custom-fontset ()
-  (set-face-attribute 'default nil :family "Iosevka SS04" :height 140)
-  (set-face-attribute 'italic nil :family "Iosevka SS04")
+  (when window-system
+    (set-face-attribute 'default nil :family "Iosevka SS04")
+    (set-face-attribute 'italic nil :family "Iosevka SS04")
 
-  (+apply-custom-fonts +custom-fonts-alist))
+    (+apply-custom-fonts +custom-fonts-alist)))
 
 ;; (+custom-fontset)
 (add-hook 'server-after-make-frame-hook #'+custom-fontset)
