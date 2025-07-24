@@ -1,3 +1,14 @@
+2025-07-24  Zhengyi Fu  <i@fuzy.me>
+
+	Update gptel configuration
+
+	* site-lisp/gptel-config.el (+gptel-auto-scroll-safe): Set
+	`scroll-preserve-screen-position' locally to t.
+	* init.el: Bind "C-j" to `gptel-send' in `gptel-mode-map'.
+	Bind "C-j" to `gptel-aibo-send' in `gptel-aibo-mode-map'.
+	Removed `olivetti-mode' from `gptel-mode-hook'.
+	(toggle-map): Bind "C" to `olivetti-mode'.
+
 2025-07-22  Zhengyi Fu  <i@fuzy.me>
 
 	Replace term-keys with kkp

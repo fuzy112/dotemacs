@@ -2114,7 +2114,12 @@ of feed configurations without modifying init files."
   (when (derived-mode-p 'org-mode)
     (setq-local org-hide-emphasis-markers t)))
 (add-hook 'gptel-mode-hook #'+gptel-mode-h)
-(add-hook 'gptel-mode-hook #'olivetti-mode)
+
+(after-load! gptel
+  (keymap-set gptel-mode-map "C-j" #'gptel-send))
+
+(after-load! gptel-aibo
+  (keymap-set gptel-aibo-mode-map "C-j" #'gptel-aibo-send))
 
 ;;;; logos
 
@@ -2514,6 +2519,7 @@ Otherwise disable it."
   "l"     #'display-line-numbers-mode
   "o"     #'outline-minor-mode
   "c"     #'+visual-fill-column/toggle-visual-fill-and-center
+  "C"     #'olivetti-mode
   "x"     #'+toggle-transparent
   "v"     #'visual-line-mode
   "w"     #'whitespace-mode)
