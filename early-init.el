@@ -95,7 +95,8 @@
 ;; workaround WSL wayland clipboard issue
 (setq select-active-regions nil)
 
-(setq save-interprogram-paste-before-kill t)
+(setq save-interprogram-paste-before-kill t
+      kill-do-not-save-duplicates t)
 
 (setq menu-bar-mode nil)
 (setq tool-bar-mode nil)
