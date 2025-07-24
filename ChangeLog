@@ -1,5 +1,9 @@
 2025-07-24  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (eat-tramp-shells): Configure shell for scpx method.
+
+2025-07-24  Zhengyi Fu  <i@fuzy.me>
+
 	Update gptel configuration
 
 	* site-lisp/gptel-config.el (+gptel-auto-scroll-safe): Set
