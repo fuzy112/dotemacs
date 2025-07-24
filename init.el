@@ -1748,7 +1748,8 @@ new record is started."
   (alist-setq! eat-tramp-shells
     "sshx" "/bin/bash"
     "ssh" "/bin/bash"
-    "scp" "/bin/bash"))
+    "scp" "/bin/bash"
+    "scpx" "/bin/bash" ))
 
 (defun +eat-install-helpers ()
   (interactive)
