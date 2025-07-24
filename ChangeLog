@@ -1,5 +1,14 @@
 2025-07-24  Zhengyi Fu  <i@fuzy.me>
 
+	Configuration for Niri
+
+	* init.el (+import-env-var-for-display): New function.  Add to
+	`server-after-make-frame-hook'.
+	(+niri-xdg-open): New function.  Set as default browser if Emacs
+	is running in Niri session.
+
+2025-07-24  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (eat-tramp-shells): Configure shell for scpx method.
 
 2025-07-24  Zhengyi Fu  <i@fuzy.me>

@@ -2090,6 +2090,24 @@ of feed configurations without modifying init files."
   ;; Start the server if it is not already running.
   (unless (server-running-p)
     (server-start)))
+(defun +import-env-var-for-display ()
+  (pcase x-display-name
+    ('nil nil)
+    ((pred (string-match-p "\\`wayland-"))
+     (setenv "WAYLAND_DISPLAY" x-display-name))
+    ((pred (string-match-p "\\`:"))
+     (setenv "DISPLAY" x-display-name))))
+
+(add-hook 'server-after-make-frame-hook #'+import-env-var-for-display)
+
+(defun +niri-xdg-open (url &optional _ignored)
+  (call-process "niri" nil 0 nil
+                "msg" "action" "spawn" "--" "xdg-open" url))
+
+(function-put '+niri-xdg-open 'browse-url-browser-kind 'external)
+
+(when (getenv "NIRI_SOCKET")
+  (setq browse-url-browser-function #'+niri-xdg-open))
 
 ;;;; epg
 
