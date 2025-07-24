@@ -658,6 +658,7 @@ Note that the user will get a chance to edit the comments."))
 
 (defun +gptel-auto-scroll-safe ()
   (ignore-errors
+    (setq-local scroll-preserve-screen-position t)
     (gptel-auto-scroll)))
 
 (add-hook 'gptel-post-stream-hook #'+gptel-auto-scroll-safe)
