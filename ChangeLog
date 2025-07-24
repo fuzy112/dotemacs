@@ -1,5 +1,9 @@
 2025-07-24  Zhengyi Fu  <i@fuzy.me>
 
+	* early-init.el (kill-do-not-save-duplicates): Set to t.
+
+2025-07-24  Zhengyi Fu  <i@fuzy.me>
+
 	Configuration for Niri
 
 	* init.el (+import-env-var-for-display): New function.  Add to
