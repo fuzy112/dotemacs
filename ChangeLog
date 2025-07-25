@@ -1,5 +1,9 @@
 2025-07-25  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/modify-other-keys.el: Refactor.
+
+2025-07-25  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/modify-other-keys.el: New file.
 
 2025-07-25  Zhengyi Fu  <i@fuzy.me>
