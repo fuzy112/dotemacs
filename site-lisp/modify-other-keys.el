@@ -17,71 +17,79 @@
 
 ;;; Commentary:
 
+;; This maps XTERMINAL/CSI escape sequences in the form
+;; "CSI 27 ; mod ; base ~" to appropriate Emacs key representations See:
+;; https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-Extended-keyboard-protocol
 
 ;;; Code:
 
-;; Map extended function keys with various modifiers
-;; This maps XTERMINAL/CSI escape sequences in the form "CSI base ; mod u" to appropriate Emacs key representations
-;; See: https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-Extended-keyboard-protocol
-;; - base is the base key code (ASCII value 33-126, printable characters except space)
-;; - mod is the modifier value:
-;;   2 = Shift
-;;   3 = Alt (Meta)
-;;   4 = Alt+Shift
-;;   5 = Ctrl
-;;   6 = Ctrl+Shift
-;;   7 = Ctrl+Alt
-;;   8 = Ctrl+Alt+Shift
-;;
-;; This loop handles all standard printable ASCII characters (excluding space)
+(defconst modify-other-keys--modifiers-alist
+  '(("S-" . 2)
+    ("M-" . 3)
+    ("M-S-" . 4)
+    ("C-" . 5)
+    ("C-S-" . 6)
+    ("C-M-" . 7)
+    ("C-M-S-" . 8)))
+
+(defun modify-other-keys--define-key (base key-string)
+  (cl-loop for (prefix . mod) in modify-other-keys--modifiers-alist
+           for xterm-seq = (format "\e[27;%d;%d~" mod base)
+           for csi-u-seq = (format "\e[%d;%du" base mod)
+           for emacs-key = (key-parse (concat prefix key-string))
+           do
+           (define-key input-decode-map xterm-seq emacs-key)
+           (define-key input-decode-map csi-u-seq emacs-key)))
+
+;; Printable characters
 (cl-loop for base from 33 upto 126
-         do (cl-loop for modifier-bit in '(?\S-\0 ?\M-\0 ?\M-\S-\0 ?\C-\0 ?\C-\S-\0 ?\C-\M-\0 ?\C-\M-\S-\0)
-                     for modifier-code in '(2 3 4 5 6 7 8)
-                     ;; Create the terminal escape sequence (e.g., "\e[65;5u" for Ctrl-A)
-                     for escape-sequence = (format "\e[%d;%du" base modifier-code)
-                     ;; Create the Emacs key representation with appropriate modifier
-                     for emacs-key = (vector (+ modifier-bit base))
-                     ;; Map the escape sequence to the Emacs key
-                     do (define-key input-decode-map escape-sequence emacs-key)))
+         do (modify-other-keys--define-key base (char-to-string base)))
 
-;; Handle special whitespace characters with modifiers:
-;; - ?\d = DEL (ASCII 127)
-;; - ?\t = TAB (ASCII 9)
-;; - ?\s = SPC (ASCII 32)
-;; - ?\r = RET (ASCII 13)
-;; - ?\e = ESC (ASCII 27)
-(cl-loop for base in '(?\d ?\t ?\s ?\r ?\e)
-         do (cl-loop for modifier-bit in '(?\S-\0 ?\M-\0 ?\M-\S-\0 ?\C-\0 ?\C-\S-\0 ?\C-\M-\0 ?\C-\M-\S-\0)
-                     for modifier-code in '(2 3 4 5 6 7 8)
-                     ;; Create the terminal escape sequence
-                     for escape-sequence = (format "\e[%d;%du" base modifier-code)
-                     ;; Create the Emacs key representation with appropriate modifier
-                     for emacs-key = (vector (+ modifier-bit base))
-                     ;; Map the escape sequence to the Emacs key
-                     do (define-key input-decode-map escape-sequence emacs-key)))
+;; Special whitespace characters
+(cl-loop for (key . base) in '(("DEL" . ?\d)
+                               ("RET" . ?\r)
+                               ("TAB" . ?\t)
+                               ("SPC" . ?\s)
+                               ("ESC" . ?\e))
+         do (modify-other-keys--define-key base key))
 
-;; Translate shift+digit combinations to their corresponding punctuation symbols
-;; This allows Ctrl+Shift+1 to be interpreted as Ctrl+!, Meta+Shift+4 as Meta+$, etc.
+;; Translate S-<digit> combinations to their corresponding punctuation
+;; symbols This allows C-S-1 to be interpreted as C-!, M-S-4 as M-$,
+;; etc.
 ;;
-;; Normal keyboards produce punctuation symbols when pressing Shift+digit:
-;; Shift+0 = ), Shift+1 = !, etc., but Emacs receives these as separate shifted keys.
-;; This translation maps them to what users would expect when combining with other modifiers.
-(cl-loop for (unshifted . shifted) in '((?\S-0 . ?\))  ; digit 0 to )
-                                        (?\S-1 . ?!)   ; digit 1 to !
-                                        (?\S-2 . ?@)   ; digit 2 to @
-                                        (?\S-3 . ?#)   ; digit 3 to #
-                                        (?\S-4 . ?$)   ; digit 4 to $
-                                        (?\S-5 . ?%)   ; digit 5 to %
-                                        (?\S-6 . ?^)   ; digit 6 to ^
-                                        (?\S-7 . ?&)   ; digit 7 to &
-                                        (?\S-8 . ?*)   ; digit 8 to *
-                                        (?\S-9 . ?\()) ; digit 9 to (
-         ;; For each digit and its shifted symbol
-         do (cl-loop for mod in '(?\C-\0 ?\M-\0 ?\C-\M-\0) ; Apply each modifier combination (Ctrl, Meta, Ctrl+Meta)
-                     ;; Generate the keybindings with modifiers
+;; Normal keyboards produce punctuation symbols when pressing
+;; S-<digit>: S-0 = ), S-1 = !, etc., but Emacs receives these as
+;; separate shifted keys.  This translation maps them to what users
+;; would expect when combining with other modifiers.
+(cl-loop for (unshifted . shifted) in '((?\S-0 . ?\))
+                                        (?\S-1 . ?!)
+                                        (?\S-2 . ?@)
+                                        (?\S-3 . ?#)
+                                        (?\S-4 . ?$)
+                                        (?\S-5 . ?%)
+                                        (?\S-6 . ?^)
+                                        (?\S-7 . ?&)
+                                        (?\S-8 . ?*)
+                                        (?\S-9 . ?\())
+         do (cl-loop for mod in '(?\C-\0 ?\M-\0 ?\C-\M-\0)
                      do (define-key key-translation-map
                                     (vector (+ unshifted mod))
                                     (vector (+ shifted mod)))))
+
+(defun modify-other-keys--init (&optional terminal)
+  (when (terminal-live-p terminal)
+    (with-selected-frame (car (frames-on-display-list terminal))
+      (send-string-to-terminal "\e[>4;2m")
+      ;; (send-string-to-terminal "\e[>4;1f")
+      ;; (push "\e[>4f" (terminal-parameter terminal 'tty-mode-reset-strings))
+      (push "\e[>4m" (terminal-parameter terminal 'tty-mode-reset-strings))
+      (delete "\e[>4;1m" (terminal-parameter terminal 'tty-mode-set-strings))
+      ;; (push "\e[>4;1f" (terminal-parameter terminal 'tty-mode-set-strings))
+      (push "\e[>4;2m" (terminal-parameter terminal 'tty-mode-set-strings))
+      (set-terminal-parameter terminal 'modify-other-keys-mode t))))
+
+(add-hook 'terminal-init-xterm-hook 'modify-other-keys--init)
+(mapc 'modify-other-keys--init (terminal-list))
 
 ;; Provide the feature
 (provide 'modify-other-keys)
