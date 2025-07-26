@@ -79,6 +79,7 @@
 (defun modify-other-keys--init (&optional terminal)
   (when (terminal-live-p terminal)
     (with-selected-frame (car (frames-on-display-list terminal))
+      ;; TODO: use xterm--query to query whether kkp is support
       (send-string-to-terminal "\e[>4;2m")
       ;; (send-string-to-terminal "\e[>4;1f")
       ;; (push "\e[>4f" (terminal-parameter terminal 'tty-mode-reset-strings))
