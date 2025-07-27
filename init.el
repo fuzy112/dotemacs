@@ -1341,6 +1341,22 @@ See `xref-show-xrefs' for FETCHER and ALIST."
     (define-key map (kbd "C-c C-o") #'sgml-tag)
     (define-key map (kbd "C-c C-t") #'sgml-tag)))
 
+;;;; JSON
+
+(defun copy-json-as-lisp (beg end)
+  "Convert JSON between BEG–END to Lisp data and copy to kill ring.
+With no active region, operate on the whole buffer."
+  (interactive
+   (if (use-region-p) (list (region-beginning) (region-end))
+     (list (point-min) (point-max))))
+  (let ((str (buffer-substring-no-properties beg end))
+        (pp-default-function 'pp-29))
+    (if (string-blank-p str)
+        (user-error "Empty string")
+      (kill-new
+       (pp-to-string
+        (json-parse-string str :object-type 'alist))))))
+
 ;;;; paren-face
 
 (add-hook 'lisp-data-mode-hook #'paren-face-mode)
