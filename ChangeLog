@@ -1,5 +1,9 @@
 2025-07-27  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (embark-cycle-key): Set to "C-.".
+
+2025-07-27  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (copy-json-as-lisp): New command.
 
 2025-07-25  Zhengyi Fu  <i@fuzy.me>
