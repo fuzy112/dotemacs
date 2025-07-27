@@ -770,7 +770,7 @@ value for USE-OVERLAYS."
       (ansi-color-apply-on-region beg end))))
 
 (after-load! embark
-  (setq embark-cycle-key ".")
+  (setq embark-cycle-key "C-.")
   (setq embark-indicators '(embark-minimal-indicator
                             embark-highlight-indicator
                             embark-isearch-highlight-indicator))
