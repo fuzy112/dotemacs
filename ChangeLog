@@ -1,3 +1,11 @@
+2025-07-28  Zhengyi Fu  <i@fuzy.me>
+
+	Fix modify-otehr-keys
+
+	* site-lisp/modify-other-keys.el
+	(modify-other-keys--setup-input-decode-map): New function.  Set up
+	per-terminal input-decode-map.
+
 2025-07-27  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (embark-cycle-key): Set to "C-.".
