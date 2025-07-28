@@ -73,7 +73,7 @@
  ("meow-tree-sitter" . "b05d54a5e19f8ba0258b0bbf0ffcd4bc7bad112c")
  ("meson-mode" . "0449c649daaa9322e1c439c1540d8c290501d455")
  ("modus-themes" . "f4e67c80c94fcae23f87517902a10eccc8ad99d6")
- ("nerd-icons-completion" . "bb0496fe5adf71e3cf2d210c2edfd7dc4e5e7682")
+ ("nerd-icons-completion" . "0ae16b596b6795926ddee8a758bac042874bfe5a")
  ("nerd-icons-corfu" . "55b17ee20a5011c6a9be8beed6a9daf644815b5a")
  ("nerd-icons-grep" . "7179ff3384efce53f7de2f3c1a98070a310a10da")
  ("nerd-icons-ibuffer" . "d9f41469e46bcf7b4ae0dd0b1ce1abe15c191a53")
