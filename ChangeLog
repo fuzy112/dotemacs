@@ -1,5 +1,10 @@
 2025-07-28  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (diff-hl-margin-symbols-alist): Use more Chinese
+	characters.
+
+2025-07-28  Zhengyi Fu  <i@fuzy.me>
+
 	Diff-hl: Display Chinese characters in the margins
 
 	* init.el (diff-hl-margin-symbols-alist): Set to use Chinese

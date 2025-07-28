@@ -1706,8 +1706,8 @@ new record is started."
 (setq diff-hl-margin-symbols-alist '((insert  . "增")
                                      (delete  . "刪")
                                      (update  . "改")
-                                     (unknown . "?")
-                                     (ignored . "i")))
+                                     (unknown . "疑")
+                                     (ignored . "略")))
 (setq diff-hl-update-async t)
 
 (defun +diff-hl-enlarge-margin-width ()
