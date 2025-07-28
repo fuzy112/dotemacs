@@ -2545,7 +2545,8 @@ Otherwise disable it."
   "C"     #'olivetti-mode
   "x"     #'+toggle-transparent
   "v"     #'visual-line-mode
-  "w"     #'whitespace-mode)
+  "w"     #'whitespace-mode
+  "t"     #'consult-theme)
 
 (defvar-keymap debug-map
   :doc    "Keymap for debugging commands."

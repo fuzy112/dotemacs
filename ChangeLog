@@ -1,5 +1,9 @@
 2025-07-28  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (toggle-map): Bind "t" to `consult-theme'.
+
+2025-07-28  Zhengyi Fu  <i@fuzy.me>
+
 	Fix modify-otehr-keys
 
 	* site-lisp/modify-other-keys.el
