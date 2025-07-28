@@ -79,7 +79,9 @@
                                     (kbd (concat mod shifted)))))
 
 (defun modify-other-keys--init (&optional terminal)
-  (when (terminal-live-p terminal)
+  (message "Term: %S" (frame-terminal))
+  (when (and (eq t (terminal-live-p terminal))
+             (not (string= (terminal-name terminal) "initial_terminal")))
     (with-selected-frame (car (frames-on-display-list terminal))
       (modify-other-keys--setup-input-decode-map)
       ;; TODO: use xterm--query to query whether kkp is support

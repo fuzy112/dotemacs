@@ -1,5 +1,10 @@
 2025-07-28  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/modify-other-keys.el (modify-other-keys--init): Ignore
+	initial_terminal and graphical displays.
+
+2025-07-28  Zhengyi Fu  <i@fuzy.me>
+
 	Fix diff-hl-margin
 
 	* init.el (diff-hl-margin-symbols-alist): Fix invalid key name.
