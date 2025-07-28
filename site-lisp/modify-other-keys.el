@@ -41,17 +41,19 @@
            (define-key input-decode-map xterm-seq emacs-key)
            (define-key input-decode-map csi-u-seq emacs-key)))
 
-;; Printable characters
-(cl-loop for base from 33 upto 126
-         do (modify-other-keys--define-key base (char-to-string base)))
+(defun modify-other-keys--setup-input-decode-map ()
+  "Set up `input-decode-map' for the current terminal."
+  ;; Printable characters
+  (cl-loop for base from 33 upto 126
+           do (modify-other-keys--define-key base (char-to-string base)))
 
-;; Special whitespace characters
-(cl-loop for (key . base) in '(("DEL" . ?\d)
-                               ("RET" . ?\r)
-                               ("TAB" . ?\t)
-                               ("SPC" . ?\s)
-                               ("ESC" . ?\e))
-         do (modify-other-keys--define-key base key))
+  ;; Special whitespace characters
+  (cl-loop for (key . base) in '(("DEL" . ?\d)
+                                 ("RET" . ?\r)
+                                 ("TAB" . ?\t)
+                                 ("SPC" . ?\s)
+                                 ("ESC" . ?\e))
+           do (modify-other-keys--define-key base key)))
 
 ;; Translate S-<digit> combinations to their corresponding punctuation
 ;; symbols This allows C-S-1 to be interpreted as C-!, M-S-4 as M-$,
@@ -61,24 +63,25 @@
 ;; S-<digit>: S-0 = ), S-1 = !, etc., but Emacs receives these as
 ;; separate shifted keys.  This translation maps them to what users
 ;; would expect when combining with other modifiers.
-(cl-loop for (unshifted . shifted) in '((?\S-0 . ?\))
-                                        (?\S-1 . ?!)
-                                        (?\S-2 . ?@)
-                                        (?\S-3 . ?#)
-                                        (?\S-4 . ?$)
-                                        (?\S-5 . ?%)
-                                        (?\S-6 . ?^)
-                                        (?\S-7 . ?&)
-                                        (?\S-8 . ?*)
-                                        (?\S-9 . ?\())
-         do (cl-loop for mod in '(?\C-\0 ?\M-\0 ?\C-\M-\0)
+(cl-loop for (unshifted . shifted) in '(("S-0" . ")")
+                                        ("S-1" . "!")
+                                        ("S-2" . "@")
+                                        ("S-3" . "#")
+                                        ("S-4" . "$")
+                                        ("S-5" . "%")
+                                        ("S-6" . "^")
+                                        ("S-7" . "&")
+                                        ("S-8" . "*")
+                                        ("S-9" . "("))
+         do (cl-loop for mod in '("C-" "M-" "C-M-")
                      do (define-key key-translation-map
-                                    (vector (+ unshifted mod))
-                                    (vector (+ shifted mod)))))
+                                    (kbd (concat mod unshifted))
+                                    (kbd (concat mod shifted)))))
 
 (defun modify-other-keys--init (&optional terminal)
   (when (terminal-live-p terminal)
     (with-selected-frame (car (frames-on-display-list terminal))
+      (modify-other-keys--setup-input-decode-map)
       ;; TODO: use xterm--query to query whether kkp is support
       (send-string-to-terminal "\e[>4;2m")
       ;; (send-string-to-terminal "\e[>4;1f")
