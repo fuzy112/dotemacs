@@ -1,5 +1,13 @@
 2025-07-28  Zhengyi Fu  <i@fuzy.me>
 
+	Fix diff-hl-margin
+
+	* init.el (diff-hl-margin-symbols-alist): Fix invalid key name.
+	(diff-hl-margin-ensure-visible): Override this function to set
+	margin width automatically.
+
+2025-07-28  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+custom-faces): Customize diff-hl-margin faces.
 
 2025-07-28  Zhengyi Fu  <i@fuzy.me>

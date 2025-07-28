@@ -1730,20 +1730,22 @@ new record is started."
 
 (setq diff-hl-margin-symbols-alist '((insert  . "增")
                                      (delete  . "刪")
-                                     (update  . "改")
+                                     (change  . "改")
                                      (unknown . "疑")
                                      (ignored . "略")))
 (setq diff-hl-update-async t)
 
-(defun +diff-hl-enlarge-margin-width ()
-  "Enlarge the margin width to 2 for diff-hl to properly display change indicators.
-This sets the margin width for the current value of `diff-hl-side', and
-updates all windows displaying the current buffer to show the changes."
+(define-advice diff-hl-margin-ensure-visible (:override () auto-width)
+  "Ensure that diff-hl margin is wide enough to display all symbols.
+Calculate the maximum width of all symbols in `diff-hl-margin-symbols-alist'
+and set the appropriate margin width variable accordingly.
+Then refresh all windows displaying the current buffer."
+  (require 'map)
   (let ((width-var (intern (format "%S-margin-width" diff-hl-side))))
-    (set width-var 2))
+    (set width-var (apply #'max (map-values-apply #'string-width diff-hl-margin-symbols-alist))))
   (dolist (win (get-buffer-window-list))
     (set-window-buffer win (current-buffer))))
-(add-hook 'diff-hl-margin-local-mode-hook #'+diff-hl-enlarge-margin-width)
+(add-hook 'diff-hl-margin-mode-hook #'diff-hl-margin-ensure-visible)
 
 (after-load! (:or diff-hl vc magit)
   (global-diff-hl-mode)
