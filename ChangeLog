@@ -1,5 +1,9 @@
 2025-07-28  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+custom-faces): Customize diff-hl-margin faces.
+
+2025-07-28  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (diff-hl-margin-symbols-alist): Use more Chinese
 	characters.
 

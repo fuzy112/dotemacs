@@ -298,6 +298,31 @@ This value will be restored later in the startup sequence.")
    `(fill-column-indicator
      ((((type w32 tty))
        :height 1.0 :foreground "gray50" :background ,(face-background 'default))))
+   `(diff-hl-margin-insert
+     ((t :family ,(face-attribute 'default :family)
+         :foreground ,(face-foreground 'default)
+         :slant normal :weight regular
+         :inherit diff-hl-insert)))
+   `(diff-hl-margin-delete
+     ((t :family ,(face-attribute 'default :family)
+         :foreground ,(face-foreground 'default)
+         :slant normal :weight regular
+         :inherit diff-hl-delete)))
+   `(diff-hl-margin-change
+     ((t :family ,(face-attribute 'default :family)
+         :foreground ,(face-foreground 'default)
+         :slant normal :weight regular
+         :inherit diff-hl-change)))
+   `(diff-hl-margin-ignored
+     ((t :family ,(face-attribute 'default :family)
+         :foreground ,(face-foreground 'default)
+         :slant normal :weight regular
+         :inherit diff-hl-ignored)))
+   `(diff-hl-margin-unknown
+     ((t :family ,(face-attribute 'default :family)
+         :foreground ,(face-foreground 'default)
+         :slant normal :weight regular
+         :inherit diff-hl-unknown)))
    '(whitespace-indentation ((t :underline "yellow")))
    '(whitespace-space-before-tab ((t :underline "DarkOrange")))
    '(whitespace-space-after-tab ((t :underline "yellow")))
@@ -1711,6 +1736,9 @@ new record is started."
 (setq diff-hl-update-async t)
 
 (defun +diff-hl-enlarge-margin-width ()
+  "Enlarge the margin width to 2 for diff-hl to properly display change indicators.
+This sets the margin width for the current value of `diff-hl-side', and
+updates all windows displaying the current buffer to show the changes."
   (let ((width-var (intern (format "%S-margin-width" diff-hl-side))))
     (set width-var 2))
   (dolist (win (get-buffer-window-list))
