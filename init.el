@@ -1702,8 +1702,22 @@ new record is started."
 (autoload 'diff-hl-magit-post-refresh "diff-hl")
 (add-hook 'tty-setup-hook #'diff-hl-margin-mode)
 (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
+
+(setq diff-hl-margin-symbols-alist '((insert  . "增")
+                                     (delete  . "刪")
+                                     (update  . "改")
+                                     (unknown . "?")
+                                     (ignored . "i")))
+(setq diff-hl-update-async t)
+
+(defun +diff-hl-enlarge-margin-width ()
+  (let ((width-var (intern (format "%S-margin-width" diff-hl-side))))
+    (set width-var 2))
+  (dolist (win (get-buffer-window-list))
+    (set-window-buffer win (current-buffer))))
+(add-hook 'diff-hl-margin-local-mode-hook #'+diff-hl-enlarge-margin-width)
+
 (after-load! (:or diff-hl vc magit)
-  (setopt diff-hl-update-async t)
   (global-diff-hl-mode)
   (keymap-set diff-hl-mode-map "C-c v" diff-hl-command-map))
 

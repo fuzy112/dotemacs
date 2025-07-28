@@ -1,5 +1,14 @@
 2025-07-28  Zhengyi Fu  <i@fuzy.me>
 
+	Diff-hl: Display Chinese characters in the margins
+
+	* init.el (diff-hl-margin-symbols-alist): Set to use Chinese
+	characters.
+	(+diff-hl-enlarge-margin-width): New function.  Enlarge margin
+	widths to accommodate Chinese characters.
+
+2025-07-28  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (toggle-map): Bind "t" to `consult-theme'.
 
 2025-07-28  Zhengyi Fu  <i@fuzy.me>
