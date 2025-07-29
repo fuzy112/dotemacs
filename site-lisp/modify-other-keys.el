@@ -79,7 +79,6 @@
                                     (kbd (concat mod shifted)))))
 
 (defun modify-other-keys--init (&optional terminal)
-  (message "Term: %S" (frame-terminal))
   (when (and (eq t (terminal-live-p terminal))
              (not (string= (terminal-name terminal) "initial_terminal")))
     (with-selected-frame (car (frames-on-display-list terminal))
