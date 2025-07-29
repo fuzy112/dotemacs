@@ -1,3 +1,8 @@
+2025-07-29  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/modify-other-keys.el (modify-other-keys--init): Remove
+	unneeded logging message.
+
 2025-07-28  Zhengyi Fu  <i@fuzy.me>
 
 	* site-lisp/modify-other-keys.el (modify-other-keys--init): Ignore
