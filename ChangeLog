@@ -1,5 +1,10 @@
 2025-07-29  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+custom-fonts-alist): Add Unifont and as fallback for
+	Unicode characters.
+
+2025-07-29  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/modify-other-keys.el (modify-other-keys--init): Remove
 	unneeded logging message.
 
