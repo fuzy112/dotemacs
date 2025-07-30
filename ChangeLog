@@ -1,3 +1,11 @@
+2025-07-30  Zhengyi Fu  <i@fuzy.me>
+
+	Add configuration for Moonshot built-in web search tool
+
+	* site-lisp/gptel-config.el ("Moonshot"): Add request_params for
+	built-in web search tool.
+	("$web_search): Add tool definition.
+
 2025-07-29  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (+custom-fonts-alist): Add Unifont and as fallback for
