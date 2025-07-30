@@ -2487,13 +2487,18 @@ of feed configurations without modifying init files."
     (shell-command "quilt push")
     (cl-decf arg)))
 
+(defun quilt-list-applied-patches ()
+  (interactive)
+  (shell-command "quilt applied"))
+
 (defvar-keymap quilt-prefix-map
   :prefix 'quilt-prefix-map
   "n" #'quilt-new-patch
   "a" #'quilt-add-visited-file
   "-" #'quilt-pop
   "+" #'quilt-push
-  "r" #'quilt-refresh)
+  "r" #'quilt-refresh
+  "l" #'quilt-list-applied-patches)
 
 
 ;;;; display buffer alist
