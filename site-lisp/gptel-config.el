@@ -5,6 +5,8 @@
 
 ;;; Models
 
+(assoc-delete-all "ChatGPT" gptel--known-backends)
+
 (gptel-make-openai "Moonshot"
   :host "api.moonshot.cn"
   :stream t
