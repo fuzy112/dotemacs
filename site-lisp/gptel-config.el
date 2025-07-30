@@ -9,13 +9,7 @@
   :host "api.moonshot.cn"
   :stream t
   :key #'gptel-api-key-from-auth-source
-  :models '((moonshot-v1-auto
-	     :description "The standard Moonshot V1 model"
-	     :capabilities (tool-use json)
-	     :context-window 128
-	     :input-cost 1.50
-	     :output-cost 4.50)
-	    (kimi-latest
+  :models '((kimi-latest
 	     :description "The latest model used by Kimi Assistant"
 	     :capabilities (media tool-use json)
 	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
@@ -35,7 +29,14 @@
 	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
 	     :context-window 128
 	     :input-cost 0.15
-	     :output-cost 0.60)))
+	     :output-cost 0.60)
+	    (moonshot-v1-auto
+	     :description "The standard Moonshot V1 model"
+	     :capabilities (tool-use json)
+	     :context-window 128
+	     :input-cost 1.50
+	     :output-cost 4.50))
+  :request-params '(:tools [(:type "builtin_function" :function (:name "$web_search"))]))
 
 (gptel-make-deepseek "DeepSeek"
   :stream t
@@ -368,6 +369,15 @@ a old-string and a new-string, new-string will replace the old-string at the spe
  :args (list '(:name "query"
 		     :type string
 		     :description "The search query string.  When searching the web, one should always use English rather than their native language."))
+ :category "web")
+
+(gptel-make-tool
+ :name "$web_search"
+ :function (lambda (&optional search_result)
+	     (json-serialize
+	      `(:search_result ,search_result)))
+ :description "Moonshot builtin web search.  Only usable by moonshot model (kimi), ignore this if you are not."
+ :args '((:name "search_result" :type object :optional t))
  :category "web")
 
 ;; GitHub tools
