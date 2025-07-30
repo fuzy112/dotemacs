@@ -692,6 +692,82 @@ BEG and END define the region to process."
 
 (keymap-set gptel-mode-map "C-c k" #'gptel-abort)
 
+;;; Presets
+
+(gptel-make-preset 'deepseek-translator
+  :description "High-precision English ↔ Chinese translator"
+  :system "You are a professional English-Chinese translator.
+- Translate accurately, preserving tone, nuance, and context.
+- Return only the translation, no additional commentary.
+- Use concise, idiomatic language.
+- Retain proper nouns, code, and formatting exactly as given."
+  :backend "DeepSeek"
+  :model 'deepseek-chat
+  :use-tools nil
+  :temperature 0.1
+  :stream t)
+
+(gptel-make-preset 'kimi-assistant
+  :description "Kimi with web search and URL reading"
+  :backend "Moonshot"
+  :model 'kimi-latest
+  :stream t
+  :temperature 0.6
+  :use-tools 'force
+  :tools '("$web_search" "read_url" "read_documentation" "search_emacs_mailing_list")
+  :system "You are Kimi, an Emacs-embedded LLM assistant.
+Be concise, accurate, and helpful.
+You may search the web or read URLs when needed.
+Whenever you cite external information, always include the full source URL.")
+
+(gptel-make-preset 'kimi-coder
+  :description "Fast, deterministic coding assistant using Moonshot’s Kimi-k2-0711-preview"
+  :backend "Moonshot"
+  :model 'kimi-k2-0711-preview
+  :stream t
+  :temperature 0.1
+  :max-tokens 4096
+  :use-tools nil
+  :system-message "You are an expert Emacs-Lisp and general-purpose programmer. Provide
+concise, correct, and idiomatic code. Prefer built-ins and avoid
+external dependencies unless necessary. Always return complete, runnable
+snippets.")
+
+(gptel-make-preset 'kimi-agent
+  :description "Elite coding agent powered by Moonshot Kimi-k2-0711-preview"
+  :backend "Moonshot"
+  :model 'kimi-k2-0711-preview
+  :stream t
+  :temperature 0.1
+  :max-tokens 8192
+  :use-tools t
+  :tools '("read_file" "run_command" "list_directory" "shellcheck" "edit_file")
+  :system-message "You are an expert Emacs-Lisp and polyglot programmer. Respond with
+minimal, idiomatic, and fully-functional code. Favor built-ins and avoid
+external dependencies. Always return complete, runnable snippets. When
+editing, output only the changed portions with clear context.")
+
+(gptel-make-preset 'deepseek-reasoner
+  :description "DeepSeek Reasoner – step-by-step reasoning assistant"
+  :backend "DeepSeek"
+  :model 'deepseek-reasoner
+  :stream t
+  :temperature 0.3
+  :max-tokens 8192
+  :use-tools nil
+  :system-message "You are DeepSeek Reasoner. Think step-by-step, expose your
+chain-of-thought, and verify every conclusion before presenting the
+final answer.")
+
+(gptel-make-preset 'kagi-search
+  :description "Kagi search assistant"
+  :backend "Kagi"
+  :stream t
+  :temperature 0.5
+  :use-tools nil
+  :system-message "You are a search assistant powered by Kagi. Provide accurate, concise
+answers based on search results. Always cite sources when possible.")
+
 ;;; Commands
 
 (defun +gptel-review-pullreq (pullreq)
