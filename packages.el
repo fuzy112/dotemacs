@@ -187,6 +187,7 @@
 (straight-use-package 'pdf-tools)
 
 ;;; Applications
+(straight-use-package 'telega)
 (straight-use-package 'erc)
 (straight-use-package 'show-font)
 (straight-use-package '(elfeed :fork t))

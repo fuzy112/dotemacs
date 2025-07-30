@@ -1,5 +1,13 @@
 2025-07-30  Zhengyi Fu  <i@fuzy.me>
 
+	Add configuration for telega
+
+	* site-lisp/telega-config.el: New file.
+	* packages.el: Add telega.
+	* init.el: Load configuration file for telega.
+
+2025-07-30  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el: Add presets.
 
 2025-07-30  Zhengyi Fu  <i@fuzy.me>

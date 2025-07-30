@@ -2327,6 +2327,11 @@ of feed configurations without modifying init files."
                  ,(concat "* Note (%a)\n"
                           "/Entered on/ %U\n" "\n" "%?"))))
 
+;;;; telega
+
+(after-load! telega
+  (require 'telega-config))
+
 ;;;; rcirc
 
 (after-load! rcirc
