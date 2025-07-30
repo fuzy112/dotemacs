@@ -2570,7 +2570,8 @@ Otherwise disable it."
   "f"     #'tui-find
   "d"     #'tui-locate
   "e"     #'eshell
-  "s"     #'eat)
+  "s"     #'eat
+  "c"     #'telega-chat-with)
 
 (defvar-keymap doc-map
   :doc    "Documentation commands."
@@ -2624,6 +2625,7 @@ Otherwise disable it."
   "E"   #'elfeed
   "L"   #'org-store-link
   "S"   straight-prefix-map
+  "T"   #'telega
   "G"   #'gnus
   "T"   toggle-map
   "V"   #'vundo

@@ -1,5 +1,10 @@
 2025-07-30  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (mode-specific-map): Bind "T" to `telega'.
+	(tool-map): Bind "c" to `telega-chat-with'.
+
+2025-07-30  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el: Remove the default ChatGPT backend.
 
 2025-07-30  Zhengyi Fu  <i@fuzy.me>
