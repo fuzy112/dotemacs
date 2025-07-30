@@ -36,8 +36,5 @@
 (after-load! telega
   (telega-notifications-mode))
 
-(keymap-global-set "C-c T" 'telega)
-(keymap-global-set "C-c t c" 'telega-chat-with)
-
 (provide 'telega-config)
 ;;; telega-config.el ends here
