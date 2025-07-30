@@ -1417,6 +1417,10 @@ With no active region, operate on the whole buffer."
     (keymap-set emacs-lisp-mode-map "C-c C-l" #'emacs-lisp-native-compile-and-load))
   (keymap-set lisp-interaction-mode-map "C-c C-j" #'eval-print-last-sexp))
 
+(define-advice straight--add-package-to-load-path (:after (_) flymake)
+  "Update `elisp-flymake-byte-compile-load-path' after loading a package."
+  (setq-default elisp-flymake-byte-compile-load-path load-path))
+
 ;;;; pp
 
 (keymap-global-set "M-:" #'pp-eval-expression)

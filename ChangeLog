@@ -1,5 +1,11 @@
 2025-07-30  Zhengyi Fu  <i@fuzy.me>
 
+	Set up load-path for flymake
+
+	* init.el (straight--add-package-to-load-path): New advice.
+
+2025-07-30  Zhengyi Fu  <i@fuzy.me>
+
 	Add configuration for telega
 
 	* site-lisp/telega-config.el: New file.
