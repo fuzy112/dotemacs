@@ -1,5 +1,9 @@
 2025-07-30  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (quilt-list-applied-patches): New command.
+
+2025-07-30  Zhengyi Fu  <i@fuzy.me>
+
 	Add configuration for Moonshot built-in web search tool
 
 	* site-lisp/gptel-config.el ("Moonshot"): Add request_params for
