@@ -139,6 +139,7 @@
 
 ;;; LLM
 (straight-use-package '(gptel :build (:not compile)))
+(straight-use-package 'gptel-aibo)
 
 ;;; Modal editing
 (straight-use-package 'meow)

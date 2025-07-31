@@ -1,5 +1,9 @@
 2025-07-31  Zhengyi Fu  <i@fuzy.me>
 
+	* packages.el: Add gptel-aibo.
+
+2025-07-31  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/telega-config.el: Hide telegram buffers from results
 	of `consult-buffer'.
 
