@@ -1,5 +1,9 @@
 2025-07-31  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el (kimi-coder): Update system message.
+
+2025-07-31  Zhengyi Fu  <i@fuzy.me>
+
 	Move packages I don't maintain to site-lisp/obsoletes
 
 	* site-lisp/obsoletes/quick-init.el:
