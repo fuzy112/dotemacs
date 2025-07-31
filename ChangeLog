@@ -1,5 +1,10 @@
 2025-07-31  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/treesit-config.el (treesit-language-source-alist): Set
+	revisions of c and markdown grammar to the versions of API 14.
+
+2025-07-31  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (webjump): Add yhetil.org.
 
 2025-07-31  Zhengyi Fu  <i@fuzy.me>
