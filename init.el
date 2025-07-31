@@ -2416,7 +2416,8 @@ of feed configurations without modifying init files."
     "GitHub" "https://github.com"
     "CodeBerg" "https://codeberg.org"
     "Kagi Search" [simple-query "www.kagi.com"
-                                "www.kagi.com/search?q=" ""]))
+                                "www.kagi.com/search?q=" ""]
+    "yhetil.org" "https://yhetil.org"))
 
 ;;;; vundo
 

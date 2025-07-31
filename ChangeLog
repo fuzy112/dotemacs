@@ -1,5 +1,9 @@
 2025-07-31  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (webjump): Add yhetil.org.
+
+2025-07-31  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/treesit-config.el: New file.
 
 2025-07-31  Zhengyi Fu  <i@fuzy.me>
