@@ -1,5 +1,9 @@
 2025-07-31  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (straight-prefix-map): Bind more commands.
+
+2025-07-31  Zhengyi Fu  <i@fuzy.me>
+
 	Update modify-other-keys.el
 
 	* site-lisp/modify-other-keys.el
