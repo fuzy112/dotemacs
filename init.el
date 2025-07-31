@@ -2638,7 +2638,6 @@ Otherwise disable it."
   "S"   straight-prefix-map
   "T"   #'telega
   "G"   #'gnus
-  "T"   toggle-map
   "V"   #'vundo
   "P"   #'p-search
   "a"   #'embark-act
