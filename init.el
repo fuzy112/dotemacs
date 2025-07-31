@@ -232,6 +232,12 @@ This value will be restored later in the startup sequence.")
   "d"     #'straight-visit-package
   "w"     #'straight-visit-package-website
   "g"     #'straight-magit-package-status
+  "r"     #'straight-remove-unused-repos
+  "R"     #'straight-prune-build
+  "s"     #'straight-push-package
+  "S"     #'straight-push-all
+  "l"     #'straight-get-recipe
+  "L"     #'straight-pull-recipe-repositories
   "x f"   #'straight-x-fetch-all)
 
 
