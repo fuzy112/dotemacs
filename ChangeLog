@@ -1,3 +1,18 @@
+2025-07-31  Zhengyi Fu  <i@fuzy.me>
+
+	Move packages I don't maintain to site-lisp/obsoletes
+
+	* site-lisp/obsoletes/quick-init.el:
+	* site-lisp/obsoletes/persp-mode-config.el:
+	* site-lisp/obsoletes/outline2org.el:
+	* site-lisp/obsoletes/linkding.el:
+	* site-lisp/obsoletes/gtkdoc.el:
+	* site-lisp/obsoletes/gpg-agent.el:
+	* site-lisp/obsoletes/dynamic-highlight.el:
+	* site-lisp/obsoletes/dch.el:
+	* site-lisp/obsoletes/consult-omni-kagi.el:
+	* site-lisp/obsoletes/activities-persist-buffers.el:
+
 2025-07-30  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (mode-specific-map): Bind "T" to `telega'.
