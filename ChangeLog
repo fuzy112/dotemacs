@@ -1,5 +1,10 @@
 2025-07-31  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (mode-specific-map): Remove duplicated `toggle-map'
+	binding.
+
+2025-07-31  Zhengyi Fu  <i@fuzy.me>
+
 	* packages.el: Add gptel-aibo.
 
 2025-07-31  Zhengyi Fu  <i@fuzy.me>
