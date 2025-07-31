@@ -48,41 +48,37 @@
            do (modify-other-keys--define-key base (char-to-string base)))
 
   ;; Special whitespace characters
-  (cl-loop for (key . base) in '(("DEL" . ?\d)
-                                 ("RET" . ?\r)
-                                 ("TAB" . ?\t)
-                                 ("SPC" . ?\s)
-                                 ("ESC" . ?\e))
+  (cl-loop for (key . base) in '(("<backspace>" . ?\d)
+                                 ("<return>" . ?\r)
+                                 ("<tab>" . ?\t)
+                                 ("<space>" . ?\s)
+                                 ("<escape>" . ?\e))
            do (modify-other-keys--define-key base key)))
 
-;; Translate S-<digit> combinations to their corresponding punctuation
-;; symbols This allows C-S-1 to be interpreted as C-!, M-S-4 as M-$,
-;; etc.
-;;
-;; Normal keyboards produce punctuation symbols when pressing
-;; S-<digit>: S-0 = ), S-1 = !, etc., but Emacs receives these as
-;; separate shifted keys.  This translation maps them to what users
-;; would expect when combining with other modifiers.
-(cl-loop for (unshifted . shifted) in '(("S-0" . ")")
-                                        ("S-1" . "!")
-                                        ("S-2" . "@")
-                                        ("S-3" . "#")
-                                        ("S-4" . "$")
-                                        ("S-5" . "%")
-                                        ("S-6" . "^")
-                                        ("S-7" . "&")
-                                        ("S-8" . "*")
-                                        ("S-9" . "("))
-         do (cl-loop for mod in '("C-" "M-" "C-M-")
-                     do (define-key key-translation-map
-                                    (kbd (concat mod unshifted))
-                                    (kbd (concat mod shifted)))))
+(defun modify-other-keys--translate-shifted-digits ()
+  "Translate S-<digit> combinations to their corresponding punctuation symbols.
+This allows C-S-1 to be interpreted as C-!, M-S-4 as M-$, etc."
+  (cl-loop for (unshifted . shifted) in '(("S-0" . ")")
+                                          ("S-1" . "!")
+                                          ("S-2" . "@")
+                                          ("S-3" . "#")
+                                          ("S-4" . "$")
+                                          ("S-5" . "%")
+                                          ("S-6" . "^")
+                                          ("S-7" . "&")
+                                          ("S-8" . "*")
+                                          ("S-9" . "("))
+           do (cl-loop for mod in '("C-" "M-" "C-M-")
+                       do (define-key local-function-key-map
+                                      (kbd (concat mod unshifted))
+                                      (kbd (concat mod shifted))))))
 
 (defun modify-other-keys--init (&optional terminal)
   (when (and (eq t (terminal-live-p terminal))
              (not (string= (terminal-name terminal) "initial_terminal")))
     (with-selected-frame (car (frames-on-display-list terminal))
       (modify-other-keys--setup-input-decode-map)
+      (modify-other-keys--translate-shifted-digits)
       ;; TODO: use xterm--query to query whether kkp is support
       (send-string-to-terminal "\e[>4;2m")
       ;; (send-string-to-terminal "\e[>4;1f")
