@@ -1,5 +1,10 @@
 2025-07-31  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/telega-config.el: Hide telegram buffers from results
+	of `consult-buffer'.
+
+2025-07-31  Zhengyi Fu  <i@fuzy.me>
+
 	Switch to motion state in `magit-blob-mode'
 
 	* init.el (+meow-maybe-switch-to-motion): New function.

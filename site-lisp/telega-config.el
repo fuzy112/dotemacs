@@ -36,5 +36,9 @@
 (after-load! telega
   (telega-notifications-mode))
 
+(after-load! consult
+  (add-to-list 'consult-buffer-filter (concat "\\`" (regexp-quote (telega-symbol 'telegram))))
+  (add-to-list 'consult-buffer-filter "\\`\\*Telega"))
+
 (provide 'telega-config)
 ;;; telega-config.el ends here
