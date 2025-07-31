@@ -5,7 +5,7 @@
         (bash       "https://github.com/tree-sitter/tree-sitter-bash")
         (bibtex     "https://github.com/latex-lsp/tree-sitter-bibtex")
         (blueprint  "https://github.com/huanie/tree-sitter-blueprint")
-        (c          "https://github.com/tree-sitter/tree-sitter-c")
+        (c          "https://github.com/tree-sitter/tree-sitter-c" :commit "ec69f91b23dd8630d68710b911d77127146ff7ef")  ; the last release with ABI 14
         (c-sharp    "https://github.com/tree-sitter/tree-sitter-c-sharp")
         (clojure    "https://github.com/sogaiu/tree-sitter-clojure")
         (cmake      "https://github.com/uyha/tree-sitter-cmake")
@@ -30,7 +30,7 @@
         (lua        "https://github.com/tree-sitter-grammars/tree-sitter-lua")
         (magik      "https://github.com/krn-robin/tree-sitter-magik")
         (make       "https://github.com/tree-sitter-grammars/tree-sitter-make")
-        (markdown   "https://github.com/tree-sitter-grammars/tree-sitter-markdown")
+        (markdown   "https://github.com/tree-sitter-grammars/tree-sitter-markdown" :revision "main")
         (nix        "https://github.com/nix-community/tree-sitter-nix")
         (nu         "https://github.com/nushell/tree-sitter-nu")
         (org        "https://github.com/milisims/tree-sitter-org")
