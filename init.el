@@ -164,6 +164,17 @@ This value will be restored later in the startup sequence.")
 (when (treesit-available-p)
   (meow-tree-sitter-register-defaults))
 
+;; Automatically switch to meow-motion-state when magit-blob-mode is
+;; active.  This avoids keybinding conflicts between magit-blob-mode
+;; and meow-normal-state.
+(defun +meow-maybe-switch-to-motion ()
+  "Switch to `meow-motion-state' if `magit-blob-mode' is active."
+  (when (and meow-global-mode
+             (bound-and-true-p magit-blob-mode))
+    (meow-motion-mode 1)))
+
+(add-hook 'magit-blob-mode-hook #'+meow-maybe-switch-to-motion)
+
 ;;;; repeat-fu
 
 (defun +repeat-fu--meow-mode-h ()
