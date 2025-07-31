@@ -730,10 +730,10 @@ Whenever you cite external information, always include the full source URL.")
   :temperature 0.1
   :max-tokens 4096
   :use-tools nil
-  :system-message "You are an expert Emacs-Lisp and general-purpose programmer. Provide
-concise, correct, and idiomatic code. Prefer built-ins and avoid
-external dependencies unless necessary. Always return complete, runnable
-snippets.")
+  :system-message "You are an expert Emacs-Lisp and general-purpose programmer. Return only
+complete, runnable code without any explanation or markdown code
+fences. Prefer built-ins and avoid external dependencies unless
+necessary.")
 
 (gptel-make-preset 'kimi-agent
   :description "Elite coding agent powered by Moonshot Kimi-k2-0711-preview"
