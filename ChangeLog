@@ -1,3 +1,11 @@
+2025-08-01  Zhengyi Fu  <i@fuzy.me>
+
+	Update key bindings
+
+	* init.el: Bind "C-c s" to `search-map'.
+	Bind "C-<mouse-1>" to `embark-dwim'.
+	(embark-dwim@mouse): Handle mouse click.
+
 2025-07-31  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (straight-prefix-map): Bind more commands.
