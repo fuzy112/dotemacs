@@ -1,5 +1,10 @@
 2025-08-01  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el: Fix wrong parameter in presets:
+	:system-message -> :system.
+
+2025-08-01  Zhengyi Fu  <i@fuzy.me>
+
 	Update key bindings
 
 	* init.el: Bind "C-c s" to `search-map'.
