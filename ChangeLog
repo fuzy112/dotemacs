@@ -1,5 +1,10 @@
 2025-08-01  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (consult-eglot-symbols): Hack highlight for
+	`consult-eglot-symbols'.
+
+2025-08-01  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el: Fix wrong parameter in presets:
 	:system-message -> :system.
 

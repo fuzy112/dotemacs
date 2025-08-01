@@ -1300,6 +1300,18 @@ value for USE-OVERLAYS."
   (eval `(consult-customize consult-eglot-symbols
                             :async-wrap #'+consult--async-wrap--split-space)))
 
+(define-advice consult-eglot-symbols (:around (fun) highlight)
+  (cl-letf* ((orig-highlight (symbol-function 'consult--async-highlight))
+             ((symbol-function 'consult--async-highlight)
+              (lambda (&optional highlight)
+                (funcall orig-highlight
+                         (or highlight
+                             (lambda (input)
+                               (let ((re (rx-to-string (orderless-flex input) t)))
+                                 (lambda (str)
+                                   (consult--highlight-regexps (list re) t str)))))))))
+    (funcall fun)))
+
 ;;;; xref
 
 ;; Use Ctrl and mouse click to jump to definitions, and Ctrl+Alt+mouse
