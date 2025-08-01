@@ -394,7 +394,7 @@ This value will be restored later in the startup sequence.")
 ;; Fonts for nerd-icons need to be configured in graphical frames.
 (defun +nerd-icons--after-make-frame-h (&optional frame)
   (with-selected-frame (or frame (selected-frame))
-    ;;  `framep' returns t
+    ;;  `framep' returns t on terminal
     (unless (memq (framep (selected-frame)) '(t))
       (require 'nerd-icons)
       (nerd-icons-set-font))))
