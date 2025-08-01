@@ -74,8 +74,8 @@
  :name "list_directory"
  :description "List the contents of a given directory"
  :args (list '(:name "directory"
-	       :type string
-	       :description "The path to the directory to list"))
+		     :type string
+		     :description "The path to the directory to list"))
  :category "filesystem")
 
 
@@ -89,14 +89,14 @@
 	       (format "Created file %s in %s" filename path)))
  :description "Create a new file with the specified content"
  :args (list '(:name "path"
-	       :type string
-	       :description "The directory where to create the file")
+		     :type string
+		     :description "The directory where to create the file")
 	     '(:name "filename"
-	       :type string
-	       :description "The name of the file to create")
+		     :type string
+		     :description "The name of the file to create")
 	     '(:name "content"
-	       :type string
-	       :description "The content to write to the file"))
+		     :type string
+		     :description "The content to write to the file"))
  :category "filesystem")
 
 (defun +gptel-edit-file (file-path file-edits)
@@ -202,8 +202,8 @@ This tool is not meant to be used to modify files: use `edit_file` to do that."
 	     (format "Message sent: %s" text))
  :description "Send a message to the *Messages* buffer"
  :args (list '(:name "text"
-	       :type string
-	       :description "The text to send to the messages buffer"))
+		     :type string
+		     :description "The text to send to the messages buffer"))
  :category "emacs")
 
 (defun +gptel-read-documentation (symbol)
@@ -222,8 +222,8 @@ This tool is not meant to be used to modify files: use `edit_file` to do that."
  :function #'+gptel-read-documentation
  :description "Read the documentation for a given function or variable"
  :args (list '(:name "name"
-	       :type string
-	       :description "The name of the function or variable whose documentation is to be retrieved"))
+		     :type string
+		     :description "The name of the function or variable whose documentation is to be retrieved"))
  :category "emacs")
 
 (defun +gptel-search-emacs-lists  (query)
@@ -533,8 +533,8 @@ Note that the user will get a chance to edit the comments."))
  :function #'+gptel-get-jira-issue
  :description "Retrieve comprehensive information about a JIRA issue, including its summary, description, status, assignee, and related details from the JIRA API"
  :args '((:name "issue_id"
-	  :type string
-	  :description "The JIRA issue identifier (e.g., 'PROJ-123')"))
+		:type string
+		:description "The JIRA issue identifier (e.g., 'PROJ-123')"))
  :category "jira")
 
 (defun +gptel-create-jira-issue (project-key summary description issue-type)
@@ -730,7 +730,7 @@ Whenever you cite external information, always include the full source URL.")
   :temperature 0.1
   :max-tokens 4096
   :use-tools nil
-  :system-message "You are an expert Emacs-Lisp and general-purpose programmer. Return only
+  :system "You are an expert Emacs-Lisp and general-purpose programmer. Return only
 complete, runnable code without any explanation or markdown code
 fences. Prefer built-ins and avoid external dependencies unless
 necessary.")
@@ -744,7 +744,7 @@ necessary.")
   :max-tokens 8192
   :use-tools t
   :tools '("read_file" "run_command" "list_directory" "shellcheck" "edit_file")
-  :system-message "You are an expert Emacs-Lisp and polyglot programmer. Respond with
+  :system "You are an expert Emacs-Lisp and polyglot programmer. Respond with
 minimal, idiomatic, and fully-functional code. Favor built-ins and avoid
 external dependencies. Always return complete, runnable snippets. When
 editing, output only the changed portions with clear context.")
@@ -757,7 +757,7 @@ editing, output only the changed portions with clear context.")
   :temperature 0.3
   :max-tokens 8192
   :use-tools nil
-  :system-message "You are DeepSeek Reasoner. Think step-by-step, expose your
+  :system "You are DeepSeek Reasoner. Think step-by-step, expose your
 chain-of-thought, and verify every conclusion before presenting the
 final answer.")
 
@@ -767,7 +767,7 @@ final answer.")
   :stream t
   :temperature 0.5
   :use-tools nil
-  :system-message "You are a search assistant powered by Kagi. Provide accurate, concise
+  :system "You are a search assistant powered by Kagi. Provide accurate, concise
 answers based on search results. Always cite sources when possible.")
 
 ;;; Commands
@@ -828,18 +828,18 @@ Provide your detailed review with specific recommendations for improvement if ne
       (gptel-send))))
 
 (gptel-make-tool
-  :name "shellcheck"
-  :function (lambda (filename)
-	      (with-temp-buffer
-		(process-file "shellcheck" nil t nil
-			      (expand-file-name filename) "--exclude=SC1091,SC2034")
-		(buffer-string)))
-  :description "Run shellcheck to analyze shell scripts for errors, bugs, and potential pitfalls. Excludes specific checks for source files (SC1091) and unused variables (SC2034)."
-  :args (list '(:name "filename"
-		      :type string
-		      :description "Path to the shell script file to be analyzed."))
-  :category "command"
-  :include t)
+ :name "shellcheck"
+ :function (lambda (filename)
+	     (with-temp-buffer
+	       (process-file "shellcheck" nil t nil
+			     (expand-file-name filename) "--exclude=SC1091,SC2034")
+	       (buffer-string)))
+ :description "Run shellcheck to analyze shell scripts for errors, bugs, and potential pitfalls. Excludes specific checks for source files (SC1091) and unused variables (SC2034)."
+ :args (list '(:name "filename"
+		     :type string
+		     :description "Path to the shell script file to be analyzed."))
+ :category "command"
+ :include t)
 
 (defun +gptel-shellcheck-fix (file)
   (interactive
@@ -886,7 +886,7 @@ script readability and reliability.")
 4. Ensure all changes preserve the script's original functionality
 5. Use the `edit_file' tool to edit the script
 "
-		     file))
+		      file))
       (gptel-send))))
 
 (provide 'gptel-config)
