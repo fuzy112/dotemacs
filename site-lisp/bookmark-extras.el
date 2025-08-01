@@ -347,7 +347,7 @@
 (defun telega-chat-bookmark-enable ()
   (setq-local bookmark-make-record-function #'telega-chat-bookmark-make-record))
 
-;;;###autoload(add-hook 'telega-chat-mode-hook #'telaga-chat-bookmark-enable)
+;;;###autoload(add-hook 'telega-chat-mode-hook #'telega-chat-bookmark-enable)
 
 ;;;###autoload
 (defun telega-bookmark-install ()
