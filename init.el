@@ -1474,22 +1474,6 @@ Display the result in a posframe." t)
   (keymap-set emacs-lisp-mode-map "C-M-x" #'pp-posframe-compile-defun)
   (keymap-set emacs-lisp-mode-map "C-c M-e" #'pp-posframe-macroexpand-last-sexp))
 
-;;;; find-func
-
-(define-keymap :keymap ctl-x-map
-  "F"   #'find-function
-  "V"   #'find-variable
-  "K"   #'find-function-on-key
-  "L"   #'find-library
-  "4 F" #'find-function-other-window
-  "4 V" #'find-variable-other-window
-  "4 K" #'find-function-on-key-other-window
-  "4 L" #'find-library-other-window
-  "5 F" #'find-function-other-frame
-  "5 V" #'find-variable-other-frame
-  "5 K" #'find-function-on-key-other-frame
-  "5 L" #'find-library-other-frame)
-
 ;;;; eldoc
 
 (after-load! eldoc
@@ -2682,6 +2666,18 @@ Otherwise disable it."
   "e" #'+eshell/other-window)
 
 (define-keymap :keymap ctl-x-map
+  "F"   #'find-function
+  "V"   #'find-variable
+  "K"   #'find-function-on-key
+  "L"   #'find-library
+  "4 F" #'find-function-other-window
+  "4 V" #'find-variable-other-window
+  "4 K" #'find-function-on-key-other-window
+  "4 L" #'find-library-other-window
+  "5 F" #'find-function-other-frame
+  "5 V" #'find-variable-other-frame
+  "5 K" #'find-function-on-key-other-frame
+  "5 L" #'find-library-other-frame
   "k"   #'kill-current-buffer
   "g"   #'magit-status-quick
   "M-g" #'magit-dispatch)
