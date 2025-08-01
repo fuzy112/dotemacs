@@ -763,6 +763,10 @@ ARGS: see `completion-read-multiple'."
 (keymap-global-set "C-c a" #'embark-act)
 (setq prefix-help-command #'embark-prefix-help-command)
 
+(define-advice embark-dwim (:before (&rest args) mouse)
+  (when (mouse-event-p last-command-event)
+    (mouse-set-point last-command-event)))
+
 (defun +embark/find-file-as-root (file)
   "Find FILE as root."
   (interactive "fFind file as root: ")
@@ -1302,7 +1306,7 @@ value for USE-OVERLAYS."
 ;; click to jump to references.
 (keymap-global-unset "C-<down-mouse-1>")
 (keymap-global-unset "C-M-<down-mouse-1>")
-(keymap-global-set "C-<mouse-1>" #'xref-find-definitions-at-mouse)
+(keymap-global-set "C-<mouse-1>" #'embark-dwim)
 (keymap-global-set "C-M-<mouse-1>" #'xref-find-references-at-mouse)
 
 (defvar +xref--max-definitions-in-buffer 5)
@@ -2657,7 +2661,7 @@ Otherwise disable it."
   "p"   #'project-prefix-map
   "q"   quilt-prefix-map
   "r"   #'deadgrep
-  "s"   #'save-buffer
+  "s"   search-map
   "v"   #'vc-prefix-map
   "w"   #'window-prefix-map)
 
