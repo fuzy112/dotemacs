@@ -1,5 +1,9 @@
 2025-08-02  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (gptel): Load gptel-config.el.
+
+2025-08-02  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+apply-font-setting): Rename arguments.
 	(+custom-fonts-alist, +custom-fontset): Use bolder fonts.
 
