@@ -1901,7 +1901,7 @@ Then refresh all windows displaying the current buffer."
 
 ;;;; kkp
 
-(when (or (daemonp) (not window-system))
+(when (or (daemonp) (eq t (terminal-live-p nil)))
   (global-kkp-mode))
 
 ;;;; xterm
