@@ -250,24 +250,24 @@ This value will be restored later in the startup sequence.")
 
 ;; Fonts for each script.
 (defvar +custom-fonts-alist
-  '((han      "Sarasa Gothic CL")
-    (cjk-misc "Sarasa Gothic CL")
-    (latin    "Iosevka SS04"      prepend)
-    (greek    "Iosevka SS04"      prepend)
+  `((han      ,(font-spec :family "更紗黑體 CL" :weight 'semi-bold))
+    (cjk-misc ,(font-spec :family "更紗黑體 CL" :weight 'semi-bold))
+    (latin    ,(font-spec :family "Iosevka SS04" :weight 'medium)      prepend)
+    (greek    ,(font-spec :family "Iosevka SS04" :weight 'medium)      prepend)
     (emoji    "Noto Color Emoji"  prepend)
     (unicode  "Unifont"           append)))
 
-(defun +apply-font-setting (charset family &optional add)
-  (set-fontset-font t charset family nil add))
+(defun +apply-font-setting (charset font &optional add)
+  (set-fontset-font t charset font nil add))
 
 (defun +apply-custom-fonts (alist)
   (dolist (item alist)
     (apply #'+apply-font-setting item)))
 
 (defun +custom-fontset ()
-  (when window-system
-    (set-face-attribute 'default nil :family "Iosevka SS04")
-    (set-face-attribute 'italic nil :family "Iosevka SS04")
+  (when (display-graphic-p)
+    (set-face-attribute 'default nil :family "Iosevka SS04" :weight 'medium)
+    (set-face-attribute 'italic nil :family "Iosevka SS04" :weight 'medium)
 
     (+apply-custom-fonts +custom-fonts-alist)))
 
