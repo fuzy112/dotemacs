@@ -2209,6 +2209,7 @@ of feed configurations without modifying init files."
 (add-hook 'gptel-mode-hook #'+gptel-mode-h)
 
 (after-load! gptel
+  (require 'gptel-config)
   (keymap-set gptel-mode-map "C-j" #'gptel-send))
 
 (after-load! gptel-aibo
