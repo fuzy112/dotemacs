@@ -1,5 +1,9 @@
 2025-08-02  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Fix p-search info extension name.
+
+2025-08-02  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+custom-faces): Set foreground of region and
 	secondary-selection to unspecified.
 
