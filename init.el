@@ -372,7 +372,11 @@ This value will be restored later in the startup sequence.")
    `(tab-bar
      ((((supports :box t))
        :box ( :line-width (-2 . 6)
-              :style flat-button))))))
+              :style flat-button))))
+   '(region
+     ((t :foreground unspecified)))
+   '(secondary-selection
+     ((t :foreground unspecified)))))
 
 (+custom-faces)
 (add-hook 'enable-theme-functions #'+custom-faces t)
