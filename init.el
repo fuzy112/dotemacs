@@ -2661,7 +2661,7 @@ Otherwise disable it."
   "M-g" #'magit-file-dispatch
   "p"   #'project-prefix-map
   "q"   quilt-prefix-map
-  "r"   #'deadgrep
+  "r"   #'rg-dwim
   "s"   search-map
   "v"   #'vc-prefix-map
   "w"   #'window-prefix-map)

@@ -1,5 +1,12 @@
 2025-08-03  Zhengyi Fu  <i@fuzy.me>
 
+	Replace deadgrep with rg.el
+
+	* init.el (mode-specific-map): Bind "r" to `rg-dwim'.
+	* packages.el:
+
+2025-08-03  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/pp-posframe.el (pp-posframe-display-value): Display
 	right arrow instead of =>.
 
