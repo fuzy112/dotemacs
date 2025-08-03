@@ -1,3 +1,8 @@
+2025-08-03  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/pp-posframe.el (pp-posframe-display-value): Display
+	right arrow instead of =>.
+
 2025-08-02  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (gptel): Load gptel-config.el.
