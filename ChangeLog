@@ -1,5 +1,20 @@
 2025-08-04  Zhengyi Fu  <i@fuzy.me>
 
+	Update elfeed configuration
+
+	* init.el (elfeed-search-remain-on-entry): Set to t.
+	(elfeed-show-entry-switch): Set to `+elfeed-display-buffer'.
+	(+elfeed-display-buffer):
+	(+elfeed-search-show-entry-pre): New function.
+	(elfeed-show-next, elfeed-show-prev): Adviced.
+	(elfeed-show-entry-delete): Set to lambda to kill buffer only in
+	`elfeed-show-mode'.
+	(+elfeed-scroll-up-command, +elfeed-scroll-down-command): New commands.
+	(elfeed-search-mode-map): New bindings on n, p, M-RET.
+	(elfeed-show-mode-map): New bindings SPC, S-SPC.
+
+2025-08-04  Zhengyi Fu  <i@fuzy.me>
+
 	Update font configuration
 
 	* init.el (modus-themes-variable-pitch-ui): Set to nil.

@@ -2071,6 +2071,38 @@ not used, but is required by the hook."
 
 ;;;; elfeed
 
+(setq elfeed-search-remain-on-entry t)
+(setq elfeed-show-entry-switch #'+elfeed-display-buffer)
+
+(defun +elfeed-display-buffer (buf &optional act)
+  (pop-to-buffer buf)
+  (set-window-text-height (get-buffer-window) (round (* 0.7 (frame-height)))))
+
+(defun +elfeed-search-show-entry-pre (&optional lines)
+  "Returns a function to scroll forward or back in the Elfeed
+  search results, displaying entries without switching to them."
+  (lambda (times)
+    (interactive "p")
+    (forward-line (* times (or lines 0)))
+    (recenter)
+    (call-interactively #'elfeed-search-show-entry)
+    (select-window (previous-window))
+    (unless elfeed-search-remain-on-entry (forward-line -1))))
+
+(defun +elfeed-update-search-buffer (&rest _)
+  (when-let* ((buf (elfeed-search-buffer))
+              (window (get-buffer-window buf nil)))
+    (with-selected-window window
+      (hl-line-highlight))))
+
+(advice-add #'elfeed-show-next :after #'+elfeed-update-search-buffer)
+(advice-add #'elfeed-show-prev :after #'+elfeed-update-search-buffer)
+
+(setq elfeed-show-entry-delete
+      (lambda ()
+        (when (derived-mode-p 'elfeed-show-mode)
+          (elfeed-kill-buffer))))
+
 (defvar +elfeed-tag-history nil
   "History variable for tags used in `elfeed-show-tag'.")
 
@@ -2106,12 +2138,33 @@ and then calls `elfeed-show-visit' to open the entry URL."
                                     nil nil '+elfeed-search-live-filter-history)))
     (elfeed-search-update :force)))
 
+(defun +elfeed-scroll-up-command (&optional arg)
+  "Scroll up or go to next feed item in Elfeed"
+  (interactive "^P")
+  (let ((scroll-error-top-bottom nil))
+    (condition-case-unless-debug nil
+        (scroll-up-command arg)
+      (error (elfeed-show-next)))))
+
+(defun +elfeed-scroll-down-command (&optional arg)
+  "Scroll up or go to next feed item in Elfeed"
+  (interactive "^P")
+  (let ((scroll-error-top-bottom nil))
+    (condition-case-unless-debug nil
+        (scroll-down-command arg)
+      (error (elfeed-show-prev)))))
+
 (after-load! elfeed
   (keymap-set elfeed-search-mode-map "q" #'elfeed-db-unload)
+  (keymap-set elfeed-search-mode-map "n" (+elfeed-search-show-entry-pre +1))
+  (keymap-set elfeed-search-mode-map "p" (+elfeed-search-show-entry-pre -1))
+  (keymap-set elfeed-search-mode-map "M-RET" (+elfeed-search-show-entry-pre))
   (keymap-substitute elfeed-search-mode-map
                      #'elfeed-search-live-filter
                      #'+elfeed-search-live-filter-with-history)
-  (keymap-set elfeed-show-mode-map "e" #'+elfeed-browse-eww))
+  (keymap-set elfeed-show-mode-map "e" #'+elfeed-browse-eww)
+  (keymap-set elfeed-show-mode-map "SPC" '+elfeed-scroll-up-command)
+  (keymap-set elfeed-show-mode-map "S-SPC" '+elfeed-scroll-down-command))
 
 (defvar +feeds-file-watch-descriptor nil)
 
