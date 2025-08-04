@@ -16,6 +16,7 @@
 (straight-use-package 'posframe)
 (straight-use-package 'xterm-color)
 (straight-use-package 'persist)
+(straight-use-package 'timeout)
 
 ;;; Terminal integration
 (straight-use-package 'kkp)
