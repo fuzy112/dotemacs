@@ -23,6 +23,7 @@
 (require 'telega-customize)
 
 (setq telega-translate-to-language-by-default "zh")
+(setq telega-emoji-use-images nil)
 
 (defun telega-config-workaround-gaps-on-graphic-display ()
   "Enable avatar gap workaround when running on a graphic display."
