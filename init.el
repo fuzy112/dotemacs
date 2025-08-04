@@ -376,7 +376,10 @@ This value will be restored later in the startup sequence.")
    '(region
      ((t :foreground unspecified)))
    '(secondary-selection
-     ((t :foreground unspecified)))))
+     ((t :foreground unspecified)))
+   ;; eat
+   '(eat-term-font-0
+     ((t :family "IosevkaTerm SS04" :weight medium)))))
 
 (+custom-faces)
 (add-hook 'enable-theme-functions #'+custom-faces t)
