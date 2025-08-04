@@ -2223,8 +2223,9 @@ of feed configurations without modifying init files."
   ;; Start the server if it is not already running.
   (unless (server-running-p)
     (server-start)))
+
 (defun +import-env-var-for-display ()
-  (pcase x-display-name
+  (pcase (or (frame-parameter nil 'display) x-display-name)
     ('nil nil)
     ((pred (string-match-p "\\`wayland-"))
      (setenv "WAYLAND_DISPLAY" x-display-name))
