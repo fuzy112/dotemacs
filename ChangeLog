@@ -1,5 +1,10 @@
 2025-08-04  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+import-env-var-for-display): Use frame parameter
+	DISPAY.
+
+2025-08-04  Zhengyi Fu  <i@fuzy.me>
+
 	Update elfeed configuration
 
 	* init.el (elfeed-search-remain-on-entry): Set to t.
