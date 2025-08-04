@@ -1,3 +1,7 @@
+2025-08-04  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/telega-config.el (telega-emoji-use-images): Set to false.
+
 2025-08-03  Zhengyi Fu  <i@fuzy.me>
 
 	Replace deadgrep with rg.el
