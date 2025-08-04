@@ -1,5 +1,13 @@
 2025-08-04  Zhengyi Fu  <i@fuzy.me>
 
+	Update font configuration
+
+	* init.el (modus-themes-variable-pitch-ui): Set to nil.
+	(+custom-faces): Modify `fixed-patch', `fixed-pitch-serif',
+	`variable-pitch' and `header-line-inactive'.
+
+2025-08-04  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+custom-faces): Customize `eat-term-font-0' to use
 	IosevkaTerm.
 

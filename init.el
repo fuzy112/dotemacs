@@ -291,7 +291,7 @@ This value will be restored later in the startup sequence.")
           modus-themes-mixed-fonts              t
           modus-themes-bold-constructs          t
           modus-themes-slanted-constructs       t
-          modus-themes-variable-pitch-ui        t))
+          modus-themes-variable-pitch-ui        nil))
 
 (when (not custom-enabled-themes)
   (require 'modus-themes)
@@ -310,9 +310,11 @@ This value will be restored later in the startup sequence.")
      ((((class color) (min-colors 256) (background light)) :background "#005077")
       (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
    `(fixed-pitch
-     ((t :family ,(face-attribute 'default :family))))
+     ((t :family "Iosevka Slab" :weight medium)))
+   `(fixed-pitch-serif
+     ((t :family "Iosevka Slab" :weight medium)))
    `(variable-pitch
-     ((t :family "Sarasa UI CL")))
+     ((t :family "Iosevka Aile" :weight regular)))
    `(fill-column-indicator
      ((((type w32 tty))
        :height 1.0 :foreground "gray50" :background ,(face-background 'default))))
@@ -353,6 +355,8 @@ This value will be restored later in the startup sequence.")
                     :style line
                     :position t)
        :box (:line-width 6 :style flat-button))))
+   `(header-line-inactive
+     ((t :inherit (shadow header-line))))
    `(mode-line-active
      ((((supports :overline t) (class color grayscale))
        :background ,(face-background 'default)
