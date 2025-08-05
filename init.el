@@ -381,6 +381,8 @@ This value will be restored later in the startup sequence.")
      ((t :foreground unspecified)))
    '(secondary-selection
      ((t :foreground unspecified)))
+   '(minibuffer-depth-indicator
+     ((t :inherit shadow)))
    ;; eat
    '(eat-term-font-0
      ((t :family "IosevkaTerm SS04" :weight medium)))))
@@ -618,6 +620,12 @@ falls back to its default handling."
 ;; Allow recursive minibuffers, so commands invoked from within the minibuffer
 ;; (e.g., C-x C-f followed by M-:) can themselves use the minibuffer.
 (setq enable-recursive-minibuffers t)
+(minibuffer-depth-indicate-mode)
+(setq minibuffer-depth-indicator-function
+      (lambda (depth)
+        (propertize
+         (concat (make-string depth ?⮐) " ")
+         'face 'minibuffer-depth-indicator)))
 
 ;; Autoload Vertico's main advice function and apply it around the two core
 ;; completing-read entry points, ensuring Vertico is used everywhere Emacs

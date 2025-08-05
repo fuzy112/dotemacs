@@ -1,3 +1,12 @@
+2025-08-05  Zhengyi Fu  <i@fuzy.me>
+
+	Add indicator to recursive minibuffer
+
+	* init.el: Enable `minibuffer-depth-indicate-mode'.
+	(+custom-faces): Customize `minibuffer-depth-indicator' face.
+	(minibuffer-depth-indicator-function): Set to a lambda that
+	returns unicode symbols.
+
 2025-08-04  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (+import-env-var-for-display): Use frame parameter
