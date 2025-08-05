@@ -248,37 +248,56 @@ This value will be restored later in the startup sequence.")
 ;;  - https://github.com/be5invis/Sarasa-Gothic/releases/download/v1.0.26/Sarasa-SuperTTC-1.0.26.7z
 ;;  - https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/NerdFontsSymbolsOnly.zip
 
-;; Fonts for each script.
-(defvar +custom-fonts-alist
-  `((han      ,(font-spec :family "更紗黑體 CL" :weight 'semi-bold))
-    (cjk-misc ,(font-spec :family "更紗黑體 CL" :weight 'semi-bold))
-    (latin    ,(font-spec :family "Iosevka SS04" :weight 'medium)      prepend)
-    (greek    ,(font-spec :family "Iosevka SS04" :weight 'medium)      prepend)
-    (emoji    "Noto Color Emoji"  prepend)
-    (unicode  "Unifont"           append)))
+(defun +init-fontsets ()
+  "Initialize the font configuration"
+  ;; Font spec format:
+  ;;
+  ;; -MAKER-FAMILY-WEIGHT-SLANT-WIDTHTYPE-STYLE...
+  ;; ...-PIXELS-HEIGHT-HORIZ-VERT-SPACING-WIDTH-REGISTRY-ENCODING
 
-(defun +apply-font-setting (charset font &optional add)
-  (set-fontset-font t charset font nil add))
+  (create-fontset-from-fontset-spec
+   "-*-Iosevka SS04-medium-r-normal-*-14-*-*-*-*-*-fontset-normal,\
+han:-*-Sarasa Gothic CL-semibold-*-normal-*,\
+cjk-misc:-*-Sarasa Gothic CL-semibold-*-normal-*,\
+kana:-*-Sarasa Gothic CL-semibold-*-normal-*,\
+hangul:-*-Sarasa Gothic CL-semibold-*-normal-*,\
+bopomofo:-*-Sarasa Gothic CL-semibold-*-normal-*,\
+" t)
 
-(defun +apply-custom-fonts (alist)
-  (dolist (item alist)
-    (apply #'+apply-font-setting item)))
+  (create-fontset-from-fontset-spec
+   "-*-Iosevka Aile-medium-r-normal-*-14-*-*-*-*-*-fontset-variable,\
+han:-*-Sarasa Gothic CL-semibold-*-normal-*,\
+cjk-misc:-*-Sarasa Gothic CL-semibold-*-normal-*,\
+kana:-*-Sarasa Gothic CL-semibold-*-normal-*,\
+hangul:-*-Sarasa Gothic CL-semibold-*-normal-*,\
+bopomofo:-*-Sarasa Gothic CL-semibold-*-normal-*,\
+" t)
 
-(defun +custom-fontset ()
-  (when (display-graphic-p)
-    (set-face-attribute 'default nil :family "Iosevka SS04" :weight 'medium)
-    (set-face-attribute 'italic nil :family "Iosevka SS04" :weight 'medium)
+  (create-fontset-from-fontset-spec
+   "-*-Iosevka Slab-medium-r-normal-*-14-*-*-*-*-*-fontset-fixed,\
+han:-*-Sarasa Mono CL-semibold-*-normal-*,\
+cjk-misc:-*-Sarasa Mono CL-semibold-*-normal-*,
+kana:-*-Sarasa Mono CL-semibold-*-normal-*,\
+hangul:-*-Sarasa Mono CL-semibold-*-normal-*,\
+bopomofo:-*-Sarasa Mono CL-semibold-*-normal-*,\
+" t)
 
-    (+apply-custom-fonts +custom-fonts-alist)))
+  (create-fontset-from-fontset-spec
+   "-*-IosevkaTerm SS04-medium-r-normal-*-14-*-*-*-*-*-fontset-term,\
+han:-*-Sarasa Term CL-semibold-*-normal-*,\
+kana:-*-Sarasa Term CL-semibold-*-normal-*,\
+hangul:-*-Sarasa Term CL-semibold-*-normal-*,\
+bopomofo:-*-Sarasa Term CL-semibold-*-normal-*,\
+" t)
 
-;; (+custom-fontset)
-(add-hook 'server-after-make-frame-hook #'+custom-fontset)
+  (modify-all-frames-parameters '((font . "-*-Iosevka SS04-medium-r-normal-*-14-*-*-*-*-*-fontset-normal")))
+  (set-face-attribute 'variable-pitch nil :fontset "-*-Iosevka Aile-medium-r-normal-*-14-*-*-*-*-*-fontset-variable")
+  (set-face-attribute 'fixed-pitch nil :fontset "-*-Iosevka Slab-medium-r-normal-*-14-*-*-*-*-*-fontset-fixed")
+  (set-face-attribute 'fixed-pitch-serif nil :fontset "-*-Iosevka Slab-medium-r-normal-*-14-*-*-*-*-*-fontset-fixed"))
 
-;; Fallback to Iosevka SS04 if Sarasa fonts are not available.
-(setopt face-font-family-alternatives
-        (seq-union '(("Sarasa Gothic CL" "Iosevka SS04")
-                     ("Sarasa UI CL" "Sarasa Gothic CL" "Iosevka SS04"))
-                   face-font-family-alternatives))
+(if (display-graphic-p)
+    (+init-fontsets)
+  (add-hook 'server-after-make-frame-hook #'+init-fontsets))
 
 (setq xft-ignore-color-fonts nil
       face-ignored-fonts nil)
@@ -299,7 +318,7 @@ This value will be restored later in the startup sequence.")
 
 ;;;; customized faces
 (defun +custom-faces (&optional _theme)
-  (+custom-fontset)
+  ;; (+custom-fontset)
 
   (defvar pp-posframe-parameters)
   (setq pp-posframe-parameters `( :border-color "gray"
@@ -385,7 +404,7 @@ This value will be restored later in the startup sequence.")
      ((t :inherit shadow)))
    ;; eat
    '(eat-term-font-0
-     ((t :family "IosevkaTerm SS04" :weight medium)))))
+     ((t :family "IosevkaTerm SS04")))))
 
 (+custom-faces)
 (add-hook 'enable-theme-functions #'+custom-faces t)
@@ -409,16 +428,6 @@ This value will be restored later in the startup sequence.")
 (add-hook 'archive-mode-hook       #'nerd-icons-multimodal-mode)
 (add-hook 'tar-mode-hook           #'nerd-icons-multimodal-mode)
 (add-hook 'grep-mode-hook          #'nerd-icons-grep-mode)
-
-;; Fonts for nerd-icons need to be configured in graphical frames.
-(defun +nerd-icons--after-make-frame-h (&optional frame)
-  (with-selected-frame (or frame (selected-frame))
-    ;;  `framep' returns t on terminal
-    (unless (memq (framep (selected-frame)) '(t))
-      (require 'nerd-icons)
-      (nerd-icons-set-font))))
-(add-hook 'after-make-frame-functions '+nerd-icons--after-make-frame-h)
-(add-hook 'server-after-make-frame-hook '+nerd-icons--after-make-frame-h)
 
 ;; show nerd-icons on mode-line
 (setq-default mode-line-buffer-identification
