@@ -1,5 +1,9 @@
 2025-08-05  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+init-fontsets): Modify the default fontset.
+
+2025-08-05  Zhengyi Fu  <i@fuzy.me>
+
 	Update font setting
 
 	* init.el (+custom-fonts-alist, +apply-font-setting)
