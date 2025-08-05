@@ -25,11 +25,11 @@
 (setq telega-translate-to-language-by-default "zh")
 (setq telega-emoji-use-images nil)
 
-(defun telega-config-workaround-gaps-on-graphic-display ()
-  "Enable avatar gap workaround when running on a graphic display."
-  (when (display-graphic-p)
-    (setq-local telega-avatar-workaround-gaps-for '(return t))))
-(add-hook 'telega-chat-mode-hook #'telega-config-workaround-gaps-on-graphic-display)
+;; (defun telega-config-workaround-gaps-on-graphic-display ()
+;;   "Enable avatar gap workaround when running on a graphic display."
+;;   (when (display-graphic-p)
+;;     (setq-local telega-avatar-workaround-gaps-for '(return t))))
+;; (add-hook 'telega-chat-mode-hook #'telega-config-workaround-gaps-on-graphic-display)
 
 (declare-function telega-chat-auto-fill-mode "telega-chat.el" (&optional arg1))
 (add-hook 'telega-chat-mode-hook #'telega-chat-auto-fill-mode)

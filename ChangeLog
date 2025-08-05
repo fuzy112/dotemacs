@@ -1,5 +1,14 @@
 2025-08-05  Zhengyi Fu  <i@fuzy.me>
 
+	Update font setting
+
+	* init.el (+custom-fonts-alist, +apply-font-setting)
+	(+apply-custom-fonts, +custom-fontset)
+	(+nerd-icons--after-make-frame-h): Remove.
+	(+init-fontsets): New function.
+
+2025-08-05  Zhengyi Fu  <i@fuzy.me>
+
 	Add indicator to recursive minibuffer
 
 	* init.el: Enable `minibuffer-depth-indicate-mode'.
