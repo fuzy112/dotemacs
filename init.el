@@ -255,14 +255,11 @@ This value will be restored later in the startup sequence.")
   ;; -MAKER-FAMILY-WEIGHT-SLANT-WIDTHTYPE-STYLE...
   ;; ...-PIXELS-HEIGHT-HORIZ-VERT-SPACING-WIDTH-REGISTRY-ENCODING
 
-  (create-fontset-from-fontset-spec
-   "-*-Iosevka SS04-medium-r-normal-*-14-*-*-*-*-*-fontset-normal,\
-han:-*-Sarasa Gothic CL-semibold-*-normal-*,\
-cjk-misc:-*-Sarasa Gothic CL-semibold-*-normal-*,\
-kana:-*-Sarasa Gothic CL-semibold-*-normal-*,\
-hangul:-*-Sarasa Gothic CL-semibold-*-normal-*,\
-bopomofo:-*-Sarasa Gothic CL-semibold-*-normal-*,\
-" t)
+  (set-fontset-font "fontset-default" 'han "-*-Sarasa Gothic CL-semibold-*-normal-*")
+  (set-fontset-font "fontset-default" 'cjk-misc "-*-Sarasa Gothic CL-semibold-*-normal-*")
+  (set-fontset-font "fontset-default" 'kana "-*-Sarasa Gothic CL-semibold-*-normal-*")
+  (set-fontset-font "fontset-default" 'hangul "-*-Sarasa Gothic CL-semibold-*-normal-*")
+  (set-fontset-font "fontset-default" 'bopomofo "-*-Sarasa Gothic CL-semibold-*-normal-*")
 
   (create-fontset-from-fontset-spec
    "-*-Iosevka Aile-medium-r-normal-*-14-*-*-*-*-*-fontset-variable,\
@@ -290,7 +287,7 @@ hangul:-*-Sarasa Term CL-semibold-*-normal-*,\
 bopomofo:-*-Sarasa Term CL-semibold-*-normal-*,\
 " t)
 
-  (modify-all-frames-parameters '((font . "-*-Iosevka SS04-medium-r-normal-*-14-*-*-*-*-*-fontset-normal")))
+  (set-frame-font "-*-Iosevka SS04-medium-r-normal-*-14-*" t)
   (set-face-attribute 'variable-pitch nil :fontset "-*-Iosevka Aile-medium-r-normal-*-14-*-*-*-*-*-fontset-variable")
   (set-face-attribute 'fixed-pitch nil :fontset "-*-Iosevka Slab-medium-r-normal-*-14-*-*-*-*-*-fontset-fixed")
   (set-face-attribute 'fixed-pitch-serif nil :fontset "-*-Iosevka Slab-medium-r-normal-*-14-*-*-*-*-*-fontset-fixed"))
