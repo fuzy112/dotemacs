@@ -255,42 +255,21 @@ This value will be restored later in the startup sequence.")
   ;; -MAKER-FAMILY-WEIGHT-SLANT-WIDTHTYPE-STYLE...
   ;; ...-PIXELS-HEIGHT-HORIZ-VERT-SPACING-WIDTH-REGISTRY-ENCODING
 
-  (set-fontset-font "fontset-default" 'han "-*-Sarasa Gothic CL-semibold-*-normal-*")
-  (set-fontset-font "fontset-default" 'cjk-misc "-*-Sarasa Gothic CL-semibold-*-normal-*")
-  (set-fontset-font "fontset-default" 'kana "-*-Sarasa Gothic CL-semibold-*-normal-*")
-  (set-fontset-font "fontset-default" 'hangul "-*-Sarasa Gothic CL-semibold-*-normal-*")
-  (set-fontset-font "fontset-default" 'bopomofo "-*-Sarasa Gothic CL-semibold-*-normal-*")
+  (dolist (fs '("-*-Iosevka Aile-medium-normal-normal-*-*-*-*-*-*-*-fontset-variable,"
+                "-*-Iosevka Fixed Slab-medium-normal-normal-*-*-*-*-*-*-*-fontset-fixed,"
+                "-*-IosevkaTerm SS04-medium-normal-normal-*-*-*-*-*-*-*-fontset-term,"))
+    (create-fontset-from-fontset-spec fs))
 
-  (create-fontset-from-fontset-spec
-   "-*-Iosevka Aile-medium-r-normal-*-14-*-*-*-*-*-fontset-variable,\
-han:-*-Sarasa Gothic CL-semibold-*-normal-*,\
-cjk-misc:-*-Sarasa Gothic CL-semibold-*-normal-*,\
-kana:-*-Sarasa Gothic CL-semibold-*-normal-*,\
-hangul:-*-Sarasa Gothic CL-semibold-*-normal-*,\
-bopomofo:-*-Sarasa Gothic CL-semibold-*-normal-*,\
-" t)
+  (dolist (script '(han cjk-misc kana hangul bopomofo))
+    (set-fontset-font "fontset-default" script "-*-Sarasa Gothic CL-semibold-*")
+    (set-fontset-font "fontset-variable" script "-*-Sarasa Gothic CL-semibold-*")
+    (set-fontset-font "fontset-fixed" script "-*-Sarasa Fixed CL-semibold-*")
+    (set-fontset-font "fontset-term" script "-*-Sarasa Term CL-semibold-*"))
 
-  (create-fontset-from-fontset-spec
-   "-*-Iosevka Slab-medium-r-normal-*-14-*-*-*-*-*-fontset-fixed,\
-han:-*-Sarasa Mono CL-semibold-*-normal-*,\
-cjk-misc:-*-Sarasa Mono CL-semibold-*-normal-*,
-kana:-*-Sarasa Mono CL-semibold-*-normal-*,\
-hangul:-*-Sarasa Mono CL-semibold-*-normal-*,\
-bopomofo:-*-Sarasa Mono CL-semibold-*-normal-*,\
-" t)
-
-  (create-fontset-from-fontset-spec
-   "-*-IosevkaTerm SS04-medium-r-normal-*-14-*-*-*-*-*-fontset-term,\
-han:-*-Sarasa Term CL-semibold-*-normal-*,\
-kana:-*-Sarasa Term CL-semibold-*-normal-*,\
-hangul:-*-Sarasa Term CL-semibold-*-normal-*,\
-bopomofo:-*-Sarasa Term CL-semibold-*-normal-*,\
-" t)
-
-  (set-frame-font "-*-Iosevka SS04-medium-r-normal-*-14-*" t)
-  (set-face-attribute 'variable-pitch nil :fontset "-*-Iosevka Aile-medium-r-normal-*-14-*-*-*-*-*-fontset-variable")
-  (set-face-attribute 'fixed-pitch nil :fontset "-*-Iosevka Slab-medium-r-normal-*-14-*-*-*-*-*-fontset-fixed")
-  (set-face-attribute 'fixed-pitch-serif nil :fontset "-*-Iosevka Slab-medium-r-normal-*-14-*-*-*-*-*-fontset-fixed"))
+  (set-frame-font "-*-Iosevka SS04-medium-*" t t)
+  (set-face-attribute 'variable-pitch nil :fontset "fontset-variable")
+  (set-face-attribute 'fixed-pitch nil :fontset "fontset-fixed")
+  (set-face-attribute 'fixed-pitch-serif nil :fontset "fontset-fixed"))
 
 (if (display-graphic-p)
     (+init-fontsets)
