@@ -1,3 +1,7 @@
+2025-08-06  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (+init-fontsets): Update font settings.
+
 2025-08-05  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (+init-fontsets): Simplify font settings.
