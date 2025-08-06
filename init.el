@@ -2100,8 +2100,8 @@ not used, but is required by the hook."
 (setq elfeed-search-remain-on-entry t)
 (setq elfeed-show-entry-switch #'+elfeed-display-buffer)
 
-(defun +elfeed-display-buffer (buf &optional act)
-  (pop-to-buffer buf)
+(defun +elfeed-display-buffer (buf)
+  (pop-to-buffer buf '((display-buffer-at-bottom)))
   (set-window-text-height (get-buffer-window) (round (* 0.7 (frame-height)))))
 
 (defun +elfeed-search-show-entry-pre (&optional lines)
