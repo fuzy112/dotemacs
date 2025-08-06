@@ -1,5 +1,10 @@
 2025-08-06  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+elfeed-display-buffer): Ensure the show buffer is at
+	the bottom.
+
+2025-08-06  Zhengyi Fu  <i@fuzy.me>
+
 	Prevent implied frame resize when switching themes
 
 	* init.el (+inhibit-implied-resize): New function.
