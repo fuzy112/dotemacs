@@ -32,6 +32,13 @@
 	     :context-window 128
 	     :input-cost 0.15
 	     :output-cost 0.60)
+	    (kimi-k2-turbo-preview
+	     :description "A model suitable for coding"
+	     :capabilities (media tool-use json)
+	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
+	     :context-window 128
+	     :input-cost 0.15
+	     :output-cost 0.60)
 	    (moonshot-v1-auto
 	     :description "The standard Moonshot V1 model"
 	     :capabilities (tool-use json)
@@ -706,8 +713,24 @@ BEG and END define the region to process."
   :backend "DeepSeek"
   :model 'deepseek-chat
   :use-tools nil
-  :temperature 0.1
+  :temperature 1.3
   :stream t)
+
+(gptel-make-preset 'deepseek-assistant
+  :description "General assistant powered by DeepSeek"
+  :system "You are an LLM lived in Emacs and a helpful assistant.
+Be concise, accurate, and helpful.
+You may serch the web or read URLs when needed.
+Whenever you cite external information, always include the full source URL."
+  :backend "DeepSeek"
+  :model 'deepseek-chat
+  :stream t
+  :temperature 1.3
+  :model 'deepseek-chat
+  :use-tools t
+  :max-tokens 4096
+  :include-tool-results t
+  :tools '("search_web" "read_url" "read_documentation" "search_emacs_mailing_list"))
 
 (gptel-make-preset 'kimi-assistant
   :description "Kimi with web search and URL reading"
@@ -723,9 +746,9 @@ You may search the web or read URLs when needed.
 Whenever you cite external information, always include the full source URL.")
 
 (gptel-make-preset 'kimi-coder
-  :description "Fast, deterministic coding assistant using Moonshot’s Kimi-k2-0711-preview"
+  :description "Fast, deterministic coding assistant using Moonshot’s kimi-k2"
   :backend "Moonshot"
-  :model 'kimi-k2-0711-preview
+  :model 'kimi-k2-turbo-preview
   :stream t
   :temperature 0.1
   :max-tokens 4096
@@ -736,9 +759,9 @@ fences. Prefer built-ins and avoid external dependencies unless
 necessary.")
 
 (gptel-make-preset 'kimi-agent
-  :description "Elite coding agent powered by Moonshot Kimi-k2-0711-preview"
+  :description "Elite coding agent powered by Moonshot Kimi"
   :backend "Moonshot"
-  :model 'kimi-k2-0711-preview
+  :model 'kimi-k2-turbo-preview
   :stream t
   :temperature 0.1
   :max-tokens 8192
@@ -857,8 +880,9 @@ Provide your detailed review with specific recommendations for improvement if ne
       (setq-local gptel-tools
 		  (append (gptel-get-tool "filesystem")
 			  (gptel-get-tool "web")
-			  (list (gptel-get-tool "shellcheck"))))
+			  (ensure-list (gptel-get-tool "shellcheck"))))
       (setq-local gptel-confirm-tool-calls nil)
+      (setq-local gptel-use-tools t)
       (setq-local gptel--system-message
 		  "You are an expert shell script developer focusing on robustness and security.
 Your role is to analyze and improve shell scripts by:
@@ -887,7 +911,8 @@ script readability and reliability.")
 5. Use the `edit_file' tool to edit the script
 "
 		      file))
-      (gptel-send))))
+      (let ((gptel-use-tools 'force))
+	(gptel-send)))))
 
 (provide 'gptel-config)
 ;;; gptel-config.el ends here

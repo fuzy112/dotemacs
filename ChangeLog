@@ -1,5 +1,19 @@
 2025-08-06  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el ("Moonshot"): Add model
+	"kimi-k2-turbo-preview".
+	(deepseek-translator): Change temperature to 1.3
+	(deepseek-assistant): New preset.
+	(+gptel-shellcheck-fix): Use `ensure-list'.  Force use of tools.
+
+	* site-lisp/treesit-config.el (treesit-language-source-alist):
+	Update recipe for c and markdown.
+
+	* init.el: Bind C-c R to `rg-menu'.
+	(treesit): Load treesit-config.el.
+
+2025-08-06  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+init-fontsets): Update font settings.
 
 2025-08-05  Zhengyi Fu  <i@fuzy.me>
