@@ -188,6 +188,10 @@ This value will be restored later in the startup sequence.")
 (after-load! repeat-fu
   (setq repeat-fu-preset 'meow)
   (keymap-set meow-normal-state-keymap "\"" #'repeat-fu-execute))
+
+
+(after-load! treesit
+  (load "treesit-config"))
 
 
 ;;;; straight commands
@@ -2735,6 +2739,7 @@ Otherwise disable it."
   "p"   #'project-prefix-map
   "q"   quilt-prefix-map
   "r"   #'rg-dwim
+  "R"   #'rg-menu
   "s"   search-map
   "v"   #'vc-prefix-map
   "w"   #'window-prefix-map)
