@@ -304,6 +304,16 @@ This value will be restored later in the startup sequence.")
 (setq xft-ignore-color-fonts nil
       face-ignored-fonts nil)
 
+;;;; themes
+
+(defun +inhibit-implied-resize (&rest args)
+  "Prevent implied resize when switching themes."
+  (let ((frame-inhibit-implied-resize t))
+    (apply args)))
+
+(advice-add 'enable-theme :around #'+inhibit-implied-resize)
+(advice-add 'disable-theme :around #'+inhibit-implied-resize)
+
 ;;;; modus-theme
 
 (after-load! modus-themes
