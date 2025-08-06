@@ -255,25 +255,47 @@ This value will be restored later in the startup sequence.")
   ;; -MAKER-FAMILY-WEIGHT-SLANT-WIDTHTYPE-STYLE...
   ;; ...-PIXELS-HEIGHT-HORIZ-VERT-SPACING-WIDTH-REGISTRY-ENCODING
 
+  ;; Reset the predefined fontsets
+  (set-fontset-font "fontset-startup" 'unicode (font-spec :family "Iosevka SS04" :weight 'medium))
+  (set-fontset-font "fontset-default" 'unicode (font-spec :family "Iosevka SS04" :weight 'medium))
+
+  ;; Create custom fontsets
   (dolist (fs '("-*-Iosevka Aile-medium-normal-normal-*-*-*-*-*-*-*-fontset-variable,"
                 "-*-Iosevka Fixed Slab-medium-normal-normal-*-*-*-*-*-*-*-fontset-fixed,"
                 "-*-IosevkaTerm SS04-medium-normal-normal-*-*-*-*-*-*-*-fontset-term,"))
     (create-fontset-from-fontset-spec fs))
 
+  ;; Customize fonts for CJK characters
   (dolist (script '(han cjk-misc kana hangul bopomofo))
-    (set-fontset-font "fontset-default" script "-*-Sarasa Gothic CL-semibold-*")
-    (set-fontset-font "fontset-variable" script "-*-Sarasa Gothic CL-semibold-*")
-    (set-fontset-font "fontset-fixed" script "-*-Sarasa Fixed CL-semibold-*")
+    (set-fontset-font "fontset-default" script "-*-Sarasa Gothic CL-semibold-*" nil 'append)
+    (set-fontset-font "fontset-variable" script "-*-Sarasa UI CL-semibold-*")
+    (set-fontset-font "fontset-fixed" script "-*-Sarasa Fixed Slab CL-semibold-*")
     (set-fontset-font "fontset-term" script "-*-Sarasa Term CL-semibold-*"))
 
-  (set-frame-font "-*-Iosevka SS04-medium-*" t t)
-  (set-face-attribute 'variable-pitch nil :fontset "fontset-variable")
-  (set-face-attribute 'fixed-pitch nil :fontset "fontset-fixed")
-  (set-face-attribute 'fixed-pitch-serif nil :fontset "fontset-fixed"))
+  ;; Fallback fonts
+  (set-fontset-font "fontset-default" 'unicode (font-spec :family "Unifont") nil 'append)
+  (set-fontset-font "fontset-default" 'unicode-smp (font-spec :family "Unifont Upper") nil 'append)
+  (set-fontset-font "fontset-default" 'unicode-sip (font-spec :family "Unifont Upper") nil 'append)
+  (set-fontset-font "fontset-default" 'unicode-ssp (font-spec :family "Unifont Upper") nil 'append)
 
-(if (display-graphic-p)
-    (+init-fontsets)
-  (add-hook 'server-after-make-frame-hook #'+init-fontsets))
+  ;; Assign fontsets to faces
+  (set-frame-font "-*-Iosevka SS04-medium-*" t t)  ; NOTE (set-face-attribute 'default nil :fontset "XXX") doesn't work
+  (set-face-attribute 'variable-pitch nil :family "Iosevka Aile" :weight 'medium :fontset "fontset-variable")
+  (set-face-attribute 'fixed-pitch nil :family "Iosevka Fixed Slab" :weight 'medium :fontset "fontset-fixed")
+  (set-face-attribute 'fixed-pitch-serif nil :family "Iosevka Fixed Slab" :weight 'medium :fontset "fontset-fixed"))
+
+(defvar +fontset-initialized nil)
+
+(defun +maybe-init-fontset ()
+  (and (not +fontset-initialized)
+       (display-graphic-p)
+       (progn
+         (+init-fontsets)
+         (setq +fontset-initialized t))))
+
+(+maybe-init-fontset)
+(unless +fontset-initialized
+  (add-hook 'server-after-make-frame-hook #'+maybe-init-fontset))
 
 (setq xft-ignore-color-fonts nil
       face-ignored-fonts nil)
@@ -304,12 +326,6 @@ This value will be restored later in the startup sequence.")
    `(cursor
      ((((class color) (min-colors 256) (background light)) :background "#005077")
       (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
-   `(fixed-pitch
-     ((t :family "Iosevka Slab" :weight medium)))
-   `(fixed-pitch-serif
-     ((t :family "Iosevka Slab" :weight medium)))
-   `(variable-pitch
-     ((t :family "Iosevka Aile" :weight regular)))
    `(fill-column-indicator
      ((((type w32 tty))
        :height 1.0 :foreground "gray50" :background ,(face-background 'default))))
@@ -378,9 +394,12 @@ This value will be restored later in the startup sequence.")
      ((t :foreground unspecified)))
    '(minibuffer-depth-indicator
      ((t :inherit shadow)))
+   ;; term
+   '(term
+     ((t :family "IosevkaTerm SS04" :fontset "fontset-term")))
    ;; eat
    '(eat-term-font-0
-     ((t :family "IosevkaTerm SS04")))))
+     ((t :family "IosevkaTerm SS04" :fontset "fontset-term")))))
 
 (+custom-faces)
 (add-hook 'enable-theme-functions #'+custom-faces t)
