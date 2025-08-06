@@ -1,5 +1,12 @@
 2025-08-06  Zhengyi Fu  <i@fuzy.me>
 
+	Prevent implied frame resize when switching themes
+
+	* init.el (+inhibit-implied-resize): New function.
+	(enable-theme, disable-theme): Adviced.
+
+2025-08-06  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el ("Moonshot"): Add model
 	"kimi-k2-turbo-preview".
 	(deepseek-translator): Change temperature to 1.3
