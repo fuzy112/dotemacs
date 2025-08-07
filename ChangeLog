@@ -1,5 +1,10 @@
 2025-08-07  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+custom-faces): Add some color to tab-line in dark
+	mode.
+
+2025-08-07  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+init-fontsets): Specify font for emoji.
 
 2025-08-06  Zhengyi Fu  <i@fuzy.me>
