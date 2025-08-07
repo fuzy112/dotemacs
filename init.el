@@ -276,6 +276,9 @@ This value will be restored later in the startup sequence.")
     (set-fontset-font "fontset-fixed" script "-*-Sarasa Fixed Slab CL-semibold-*")
     (set-fontset-font "fontset-term" script "-*-Sarasa Term CL-semibold-*"))
 
+  ;; Emoji
+  (set-fontset-font "fontset-default" 'emoji (font-spec :family "Noto Color Emoji"))
+
   ;; Fallback fonts
   (set-fontset-font "fontset-default" 'unicode (font-spec :family "Unifont") nil 'append)
   (set-fontset-font "fontset-default" 'unicode-smp (font-spec :family "Unifont Upper") nil 'append)
