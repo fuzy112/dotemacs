@@ -401,6 +401,14 @@ This value will be restored later in the startup sequence.")
        :box ( :line-width 6
               :color ,(face-background 'default)
               :style nil))))
+   `(tab-line-tab-current
+     ((((min-colors 256) (background dark))
+       :background "purple"
+       :box unspecified)))
+   `(tab-line-tab-inactive
+     ((((min-colors 256) (background dark))
+       :background "DarkGreen"
+       :box unspecified)))
    `(tab-bar
      ((((supports :box t))
        :box ( :line-width (-2 . 6)
