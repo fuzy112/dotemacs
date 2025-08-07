@@ -1,5 +1,11 @@
 2025-08-07  Zhengyi Fu  <i@fuzy.me>
 
+	Add OSC 8 support to comint
+
+	* init.el (+handle-osc-8, +comint-handle-osc-8): New functions.
+
+2025-08-07  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+custom-faces): Add some color to tab-line in dark
 	mode.
 
