@@ -1,5 +1,13 @@
 2025-08-08  Zhengyi Fu  <i@fuzy.me>
 
+	Remove escape key bindings from meow and set claude-code-ide backend
+
+	* init.el: Remove escape key bindings from meow-normal-define-key and
+	meow-motion-define-key.
+	* init.el: Set claude-code-ide-terminal-backend to 'eat'.
+
+2025-08-08  Zhengyi Fu  <i@fuzy.me>
+
 	Add comprehensive side window management
 
 	* init.el (+toggle-side-window): New function.  Generic function to
