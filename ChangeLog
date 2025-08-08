@@ -1,5 +1,9 @@
 2025-08-08  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (claude-code-ide-cli-path): Set to scripts/claude.
+
+2025-08-08  Zhengyi Fu  <i@fuzy.me>
+
 	* packages.el: Remove elfeed-web.
 
 2025-08-08  Zhengyi Fu  <i@fuzy.me>
