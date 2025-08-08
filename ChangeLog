@@ -1,3 +1,7 @@
+2025-08-08  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Do not start server automatically.
+
 2025-08-07  Zhengyi Fu  <i@fuzy.me>
 
 	Add OSC 8 support to comint
