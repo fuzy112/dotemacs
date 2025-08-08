@@ -2353,7 +2353,8 @@ of feed configurations without modifying init files."
 ;;;; Claude Code IDE
 
 (setq claude-code-ide-terminal-backend 'eat)
-
+(setq claude-code-ide-cli-path
+      (expand-file-name "scripts/claude" user-emacs-directory))
 
 ;;;; logos
 
