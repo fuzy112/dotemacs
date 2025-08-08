@@ -141,6 +141,7 @@
 ;;; LLM
 (straight-use-package '(gptel :build (:not compile)))
 (straight-use-package 'gptel-aibo)
+(straight-use-package '(claude-code-ide :host github :repo "manzaltu/claude-code-ide.el"))
 
 ;;; Modal editing
 (straight-use-package 'meow)
