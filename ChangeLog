@@ -1,5 +1,19 @@
 2025-08-08  Zhengyi Fu  <i@fuzy.me>
 
+	Add comprehensive side window management
+
+	* init.el (+toggle-side-window): New function.  Generic function to
+	toggle side windows with proper size restoration using window state
+	persistence.
+	(+toggle-side-window-left, +toggle-side-window-right,
+	+toggle-side-window-above, +toggle-side-window-below): New commands.
+	Specialized commands for toggling side windows on each side of the frame.
+	(window-prefix-map): Update key bindings for side window toggles.
+	(toggle-left-side-window): Remove function.  Replaced by new side window
+	management system.
+
+2025-08-08  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Add more key bindings for windows-x.el.
 
 2025-08-08  Zhengyi Fu  <i@fuzy.me>

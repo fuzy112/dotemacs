@@ -2669,6 +2669,67 @@ of feed configurations without modifying init files."
   (interactive)
   (find-file user-init-file))
 
+(defun +toggle-side-window (side &optional frame)
+  "Toggle a side window on SIDE of FRAME.
+When a side window exists on SIDE, close it and remember its state.
+When no side window exists on SIDE, restore the remembered state.
+
+SIDE is one of the symbols 'left, 'right, 'above, or 'below.
+FRAME defaults to the selected frame."
+  (let* ((frame (window-normalize-frame frame))
+         (window--sides-inhibit-check t)
+         (side-win (window-with-parameter 'window-side side frame))
+         state)
+    (cond
+     (side-win
+      (setf (alist-get side (frame-parameter frame 'side-window-states))
+            (window-state-get side-win))
+      (delete-window side-win))
+     ((setq state (alist-get side (frame-parameter frame 'side-window-states)))
+      (let* ((size (if (memq side '(left right))
+                       (alist-get 'total-width state)
+                     (alist-get 'total-height state)))
+             (new-win (split-window (frame-root-window frame) (and size (- size)) side)))
+        (window-state-put state new-win)))
+     (t
+      (user-error "No remembered side window for this frame")))))
+
+(defun +toggle-side-window-left (&optional frame)
+  "Toggle a side window on the left of FRAME.
+When a left side window exists, close it and remember its state.
+When no left side window exists, restore the remembered state.
+
+FRAME defaults to the selected frame."
+  (interactive)
+  (+toggle-side-window 'left frame))
+
+(defun +toggle-side-window-right (&optional frame)
+  "Toggle a side window on the right of FRAME.
+When a right side window exists, close it and remember its state.
+When no right side window exists, restore the remembered state.
+
+FRAME defaults to the selected frame."
+  (interactive)
+  (+toggle-side-window 'right frame))
+
+(defun +toggle-side-window-above (&optional frame)
+  "Toggle a side window above FRAME.
+When an above side window exists, close it and remember its state.
+When no above side window exists, restore the remembered state.
+
+FRAME defaults to the selected frame."
+  (interactive)
+  (+toggle-side-window 'above frame))
+
+(defun +toggle-side-window-below (&optional frame)
+  "Toggle a side window below FRAME.
+When a below side window exists, close it and remember its state.
+When no below side window exists, restore the remembered state.
+
+FRAME defaults to the selected frame."
+  (interactive)
+  (+toggle-side-window 'below frame))
+
 (defvar +toggle-transparent-alpha 80)
 
 (defun +toggle-transparent (&optional arg)
@@ -2797,7 +2858,11 @@ Otherwise disable it."
   "f 2" #'window-layout-flip-topdown
   "f 3" #'window-layout-flip-leftright
   "r r" #'window-layout-rotate-clockwise
-  "r l" #'window-layout-rotate-anticlockwise)
+  "r l" #'window-layout-rotate-anticlockwise
+  "h"   #'+toggle-side-window-left
+  "l"   #'+toggle-side-window-right
+  "k"   #'+toggle-side-window-above
+  "j"   #'+toggle-side-window-below)
 
 (define-keymap :keymap ctl-x-map
   "F"   #'find-function
