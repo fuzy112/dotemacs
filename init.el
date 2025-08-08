@@ -2023,15 +2023,12 @@ Then refresh all windows displaying the current buffer."
 
 ;;;; savehist
 
-(autoload 'savehist-minibuffer-hook "savehist")
-(add-hook 'minibuffer-setup-hook #'savehist-minibuffer-hook)
-
-(after-load! (:or savehist compile corfu clipetty)
-  (setq savehist-additional-variables '(kill-ring
-                                        register-alist
-                                        compile-command
-                                        corfu-history))
-  (savehist-mode))
+(setq savehist-file (locate-user-emacs-file "savehist.gz"))
+(setq savehist-additional-variables '(kill-ring
+                                      register-alist
+                                      compile-command
+                                      corfu-history))
+(add-hook 'after-init-hook #'savehist-mode)
 
 ;;;; auth-sources
 (setopt auth-sources '("~/.authinfo.gpg"))
