@@ -1,5 +1,9 @@
 2025-08-08  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+dired-side): New command.
+
+2025-08-08  Zhengyi Fu  <i@fuzy.me>
+
 	* scripts/claude: New file.
 
 2025-08-08  Zhengyi Fu  <i@fuzy.me>

@@ -1162,6 +1162,19 @@ value for USE-OVERLAYS."
         dired-do-revert-buffer t
         dired-x-hands-off-my-keys nil))
 
+(defun +dired-side ()
+  "Open a dired buffer in a side window. "
+  (interactive)
+  (let ((buf (dired-noselect (and (project-current) (project-root (project-current))))))
+    (with-current-buffer buf
+      (make-local-variable 'display-buffer-alist)
+      (cl-pushnew '((derived-mode . dired-mode) (display-buffer-same-window)) display-buffer-alist :test 'equal)
+      (dired-hide-details-mode))
+    (pop-to-buffer buf `((display-buffer-in-side-window)
+                         (side . left)
+                         (dedicated . t)
+                         (window-width . 40)))))
+
 ;;;; compile
 
 (after-load! compile
