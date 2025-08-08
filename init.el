@@ -2793,6 +2793,12 @@ Otherwise disable it."
   "s" #'eat-other-window
   "e" #'+eshell/other-window)
 
+(define-keymap :keymap window-prefix-map
+  "f 2" #'window-layout-flip-topdown
+  "f 3" #'window-layout-flip-leftright
+  "r r" #'window-layout-rotate-clockwise
+  "r l" #'window-layout-rotate-anticlockwise)
+
 (define-keymap :keymap ctl-x-map
   "F"   #'find-function
   "V"   #'find-variable

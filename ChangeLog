@@ -1,5 +1,9 @@
 2025-08-08  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Add more key bindings for windows-x.el.
+
+2025-08-08  Zhengyi Fu  <i@fuzy.me>
+
 	* packages.el: Add claude-code-ide.el.
 
 2025-08-08  Zhengyi Fu  <i@fuzy.me>
