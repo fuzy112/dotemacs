@@ -1,5 +1,9 @@
 2025-08-08  Zhengyi Fu  <i@fuzy.me>
 
+	* packages.el: Remove elfeed-web.
+
+2025-08-08  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+dired-side): New command.
 
 2025-08-08  Zhengyi Fu  <i@fuzy.me>
