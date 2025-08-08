@@ -79,7 +79,7 @@ This value will be restored later in the startup sequence.")
    '("0" . meow-digit-argument)
    '("/" . meow-keypad-describe-key)
    '("?" . meow-cheatsheet))
-  (meow-motion-define-key '("<escape>" . ignore))
+  ;; (meow-motion-define-key '("<escape>" . ignore))
   (meow-normal-define-key
    '("0"        . meow-expand-0)
    '("9"        . meow-expand-9)
@@ -141,7 +141,7 @@ This value will be restored later in the startup sequence.")
    '("y"        . meow-yank)
    '("z"        . meow-pop-selection)
    '("'"        . repeat)
-   '("<escape>" . ignore)
+   ;; '("<escape>" . ignore)
    '("("        . meow-backward-slurp)
    '(")"        . meow-forward-slurp)
    '("{"        . meow-backward-barf)
@@ -2336,6 +2336,11 @@ of feed configurations without modifying init files."
 
 (after-load! gptel-aibo
   (keymap-set gptel-aibo-mode-map "C-j" #'gptel-aibo-send))
+
+;;;; Claude Code IDE
+
+(setq claude-code-ide-terminal-backend 'eat)
+
 
 ;;;; logos
 
