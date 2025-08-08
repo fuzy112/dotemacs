@@ -194,10 +194,6 @@
 (straight-use-package 'erc)
 (straight-use-package 'show-font)
 (straight-use-package '(elfeed :fork t))
-(straight-use-package '(web-server :host github :repo "skeeto/emacs-web-server"))
-(straight-use-package '(elfeed-web :host github :repo "skeeto/elfeed"
-				   :files ("web/*.el" "web/*.css" "web/*.js" "web/*.html")
-				   :fork t))
 (straight-use-package '(eat :files (:defaults "integration" "term" "terminfo")))
 
 ;;; Email
