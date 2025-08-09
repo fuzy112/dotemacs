@@ -1,5 +1,10 @@
 2025-08-09  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/tui/tui.el (tui-terminal-function): Add
+	`tui-foot-exec' to choice candidates.
+
+2025-08-09  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/tui/tui.el (tui-foot-window-size): Change default
 	value of tui-foot-window-size.
 
