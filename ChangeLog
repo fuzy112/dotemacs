@@ -1,3 +1,7 @@
+2025-08-09  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (+straight-review-updated-repos): New command.
+
 2025-08-08  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (claude-code-ide-cli-path): Set to scripts/claude.

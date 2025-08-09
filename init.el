@@ -211,6 +211,23 @@ This value will be restored later in the startup sequence.")
                          :local-repo)))
     (magit-status-setup-buffer (straight--repos-dir repo))))
 
+
+(defun +straight-review-updated-repos ()
+  (interactive)
+  (require 'map)
+  (dolist (repo (map-keys straight--repo-cache))
+    (let ((default-directory (straight--repos-dir repo)))
+      (unless (string-empty-p
+               (with-temp-buffer
+                 (process-file "git" nil t nil "rev-list" "HEAD..FETCH_HEAD")
+                 (buffer-string)))
+        (let ((buf  (magit-status-setup-buffer default-directory)))
+          (unwind-protect
+              (message "%s" (substitute-command-keys "Press \\[exit-recursive-edit] when finished with this repo"))
+            (recursive-edit)
+            (kill-buffer buf))))))
+  (message "Finished processing all updated repos"))
+
 ;; Command for fetching all repos asynchronously.
 (autoload 'straight-x-fetch-all "straight-x" nil t)
 
