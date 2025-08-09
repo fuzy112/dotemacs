@@ -55,7 +55,7 @@
   "The appid used for foot terminal."
   :type 'string)
 
-(defcustom tui-foot-window-size '(1400 . 900)
+(defcustom tui-foot-window-size '(1366 . 789)
   "The window size of the terminal."
   :type '(cons natnum natnum))
 
