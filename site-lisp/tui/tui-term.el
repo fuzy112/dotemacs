@@ -56,7 +56,8 @@
 	     (when (zerop (process-exit-status proc))
 	       (quit-windows-on (process-buffer proc) nil 0)
 	       (select-frame-set-input-focus (selected-frame)))
-	     (funcall callback proc))
+	     (when callback
+	       (funcall callback proc)))
 	   (term-sentinel proc msg)))))))
 
 (provide 'tui-term)

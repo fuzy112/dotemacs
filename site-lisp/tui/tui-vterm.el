@@ -57,7 +57,8 @@
 	     (kill-local-variable 'change-major-mode-hook)
 	     (let ((inhibit-read-only t))
 	       (vterm--redraw vterm--term)))
-	   (funcall callback p)))))))
+	   (when callback
+	     (funcall callback p))))))))
 
 (provide 'tui-vterm)
 ;;; tui-vterm.el ends here

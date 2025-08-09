@@ -1,5 +1,16 @@
 2025-08-09  Zhengyi Fu  <i@fuzy.me>
 
+	Fix tui.el compatibility with htop
+
+	* site-lisp/tui/tui.el (tui-external-terminal-exec)
+	(tui-foot-exec):
+	* site-lisp/tui/tui-vterm.el (tui-vterm-exec):
+	* site-lisp/tui/tui-term.el (tui-term-exec):
+	* site-lisp/tui/tui-eat.el (tui-eat-exec): Allow the `callback'
+	argument to be nil.
+
+2025-08-09  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/tui/tui.el (tui-terminal-function): Add
 	`tui-foot-exec' to choice candidates.
 

@@ -87,7 +87,8 @@ See `ee-start-terminal-function' and
 		    (delete-region (line-beginning-position) (point-max))
 		    (when (zerop (process-exit-status p))
 		      (quit-windows-on (current-buffer) nil 0)))
-		  (funcall callback p))
+		  (when callback
+		    (funcall callback p)))
 		nil t)
       (let (eat-exec-hook)
 	(eat-exec (current-buffer) name "sh" nil (list "-c" command)))
