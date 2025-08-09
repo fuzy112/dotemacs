@@ -107,6 +107,7 @@ See `tui-run' for the function signature."
   :type '(choice (const :tag "Eat" tui-eat-exec)
 		 (const :tag "VTerm" tui-vterm-exec)
 		 (const :tag "Term" tui-term-exec)
+		 (const :tag "Foot" tui-foot-exec)
 		 (const :tag "Default terminal emulator" tui-external-terminal-exec)
 		 (function :tag "Custom")))
 
