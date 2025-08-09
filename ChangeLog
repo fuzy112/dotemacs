@@ -1,5 +1,10 @@
 2025-08-09  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+straight-review-updated-repos): Check packages before
+	exiting.
+
+2025-08-09  Zhengyi Fu  <i@fuzy.me>
+
 	Fix tui.el compatibility with htop
 
 	* site-lisp/tui/tui.el (tui-external-terminal-exec)
