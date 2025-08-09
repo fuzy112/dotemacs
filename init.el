@@ -191,7 +191,7 @@ This value will be restored later in the startup sequence.")
 
 
 (after-load! treesit
-  (load "treesit-config"))
+  (require 'treesit-config))
 
 
 ;;;; straight commands
