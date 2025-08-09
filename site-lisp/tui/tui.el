@@ -2,7 +2,7 @@
 ;; Copyright © 2024, 2025  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu
-;; Version:  0.1.1
+;; Version:  0.2.0
 ;; Keywords: tools
 
 ;;; Commentary:
@@ -46,6 +46,43 @@
 	 (unless (process-live-p p)
 	   (kill-buffer buffer)
 	   (delete-file ofile)))))))
+
+(defcustom tui-foot-file "foot"
+  "The foot terminal executable name."
+  :type 'string)
+
+(defcustom tui-foot-appid "emacs-tui"
+  "The appid used for foot terminal."
+  :type 'string)
+
+(defcustom tui-foot-window-size '(1400 . 900)
+  "The window size of the terminal."
+  :type '(cons natnum natnum))
+
+(defun tui-foot-exec (name command callback)
+  (let* ((dir default-directory)
+	 (buffer (get-buffer-create (concat "*" name "*")))
+	 (ofile (make-temp-file "tui-output."))
+	 proc)
+    (with-current-buffer buffer
+      (setq default-directory dir)
+      (erase-buffer))
+    (setq proc (start-file-process
+		name buffer tui-foot-file "-T" name "-a" tui-foot-appid
+		"-w" (format "%dx%d" (car tui-foot-window-size)
+			     (cdr tui-foot-window-size))
+		"-e" shell-file-name "-c" (format "{\n%s\n}>%s" command ofile)))
+    (set-process-sentinel proc
+			  (lambda (p _m)
+			    (unwind-protect
+				(unless (process-live-p p)
+				  (with-current-buffer buffer
+				    (erase-buffer)
+				    (insert-file-contents ofile))
+				  (funcall callback p))
+			      (unless (process-live-p p)
+				(kill-buffer buffer)
+				(delete-file ofile)))))))
 
 (defcustom tui-terminal-function (cond ((fboundp 'eat) #'tui-eat-exec)
 				       ((fboundp 'vterm) #'tui-vterm-exec)
