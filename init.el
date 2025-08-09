@@ -2506,6 +2506,15 @@ of feed configurations without modifying init files."
           (tags   . " %i %-12:c")
           (search . " %i %-12:c"))))
 
+(after-load! ox-latex
+  (alist-setq! org-latex-classes
+    "ctexart" '("\\documentclass[11pt]{ctexart}"
+                ("\\section{%s}" . "\\section*{%s}")
+                ("\\subsection{%s}" . "\\subsection*{%s}")
+                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+
 (after-load! org-capture
   (add-to-list 'org-capture-templates
                `("i" "Inbox" entry (file "inbox.org")
