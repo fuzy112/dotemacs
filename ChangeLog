@@ -1,5 +1,9 @@
 2025-08-09  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Do not clear file-name-handler-alist during startup.
+
+2025-08-09  Zhengyi Fu  <i@fuzy.me>
+
 	Improve foot support of tui.el
 
 	* site-lisp/tui/tui.el (tui-foot-file, tui-foot-appid)

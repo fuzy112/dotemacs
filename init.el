@@ -24,16 +24,6 @@
 
 ;;; Code:
 
-(defconst +saved-file-name-handler-alist file-name-handler-alist
-  "Saved value of `file-name-handler-alist' before startup optimization.
-This value will be restored later in the startup sequence.")
-
-;; Temporarily set FILE-NAME-HANDLER-ALIST to nil.
-;; This reduces GC overhead and speeds up start-up.
-;; The handlers installed in the list are restored from `+saved-file-name-handler-alist'
-;; after initialization."
-(setq file-name-handler-alist nil)
-
 (require 'early-init early-init-file t)
 (when (featurep 'init)
   (load early-init-file nil t))
@@ -1179,18 +1169,41 @@ value for USE-OVERLAYS."
         dired-do-revert-buffer t
         dired-x-hands-off-my-keys nil))
 
-(defun +dired-side ()
+(defun +dired-side-noselect ()
   "Open a dired buffer in a side window. "
   (interactive)
   (let ((buf (dired-noselect (and (project-current) (project-root (project-current))))))
     (with-current-buffer buf
       (make-local-variable 'display-buffer-alist)
       (cl-pushnew '((derived-mode . dired-mode) (display-buffer-same-window)) display-buffer-alist :test 'equal)
-      (dired-hide-details-mode))
-    (pop-to-buffer buf `((display-buffer-in-side-window)
-                         (side . left)
-                         (dedicated . t)
-                         (window-width . 40)))))
+      (dired-hide-details-mode)
+      (run-hooks '+dired-side-hook))
+    buf))
+
+(defun +dired-side ()
+  (interactive)
+  (display-buffer
+   (+dired-side-noselect)
+   `((display-buffer-in-side-window)
+     (side . left)
+     (dedicated . t)
+     (window-width . 40)
+     (window-parameters . ((dired-side . t))))))
+
+(add-hook '+dired-side-hook (lambda () (tab-line-mode -1)))
+
+(defun +dired-side-goto-current-file (frame)
+  (with-selected-frame frame
+    (when-let* ((file (buffer-file-name))
+                (side-win (window-with-parameter 'dired-side  nil frame))
+                (buf (window-buffer side-win)))
+      (with-current-buffer buf
+        (dired-insert-subdir (file-name-directory file))
+        (dired-goto-file file)
+        (recenter)
+        (hl-line-highlight)))))
+
+;; (add-hook 'window-buffer-change-functions #'+dired-side-goto-current-file)
 
 ;;;; compile
 
@@ -2932,11 +2945,6 @@ Otherwise disable it."
 ;;;; _
 
 (provide 'init)
-
-(when (bound-and-true-p +saved-file-name-handler-alist)
-  (setq file-name-handler-alist
-        (append file-name-handler-alist +saved-file-name-handler-alist))
-  (makunbound '+saved-file-name-handler-alist))
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
