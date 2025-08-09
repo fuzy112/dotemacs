@@ -1,5 +1,9 @@
 2025-08-09  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (org-latex-classes): Add ctexart.
+
+2025-08-09  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+xref-window-quit): Use `quit-windows-on'.
 
 2025-08-09  Zhengyi Fu  <i@fuzy.me>
