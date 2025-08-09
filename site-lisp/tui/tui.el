@@ -46,7 +46,9 @@
 	 (proc (start-file-process
 		name buffer tui-external-terminal-program
 		"-e" shell-file-name "-c"
-		(format "( %s ) >%s" command ofile))))
+		(if callback
+		    (format "( %s ) >%s" command ofile)
+		  command))))
     (set-process-sentinel
      proc
      (lambda (p _m)
@@ -54,11 +56,14 @@
 	   (unless (process-live-p p)
 	     (with-current-buffer buffer
 	       (erase-buffer)
-	       (insert-file-contents ofile))
-	     (funcall callback p))
+	       (when (and ofile (file-exists-p ofile))
+		 (insert-file-contents ofile)))
+	     (when callback
+	       (funcall callback p)))
 	 (unless (process-live-p p)
 	   (kill-buffer buffer)
-	   (delete-file ofile)))))))
+	   (when ofile
+	     (delete-file ofile))))))))
 
 (defcustom tui-foot-file "foot"
   "The foot terminal executable name."
@@ -75,27 +80,35 @@
 (defun tui-foot-exec (name command callback)
   (let* ((dir default-directory)
 	 (buffer (get-buffer-create (concat "*" name "*")))
-	 (ofile (make-temp-file "tui-output."))
+	 ofile
 	 proc)
     (with-current-buffer buffer
       (setq default-directory dir)
       (erase-buffer))
+    (when callback
+      (setq ofile (make-temp-file "tui-output.")))
     (setq proc (start-file-process
 		name buffer tui-foot-file "-T" name "-a" tui-foot-appid
 		"-w" (format "%dx%d" (car tui-foot-window-size)
 			     (cdr tui-foot-window-size))
-		"-e" shell-file-name "-c" (format "{\n%s\n}>%s" command ofile)))
+		"--" shell-file-name "-i"
+		"-c" (if callback
+			 (format "{\n%s\n}>%s" command ofile)
+		       command)))
     (set-process-sentinel proc
 			  (lambda (p _m)
 			    (unwind-protect
 				(unless (process-live-p p)
 				  (with-current-buffer buffer
 				    (erase-buffer)
-				    (insert-file-contents ofile))
-				  (funcall callback p))
+				    (when (and ofile (file-exists-p ofile))
+				      (insert-file-contents ofile)))
+				  (when callback
+				    (funcall callback p)))
 			      (unless (process-live-p p)
 				(kill-buffer buffer)
-				(delete-file ofile)))))))
+				(when ofile
+				  (delete-file ofile))))))))
 
 (defcustom tui-terminal-function (cond ((fboundp 'eat) #'tui-eat-exec)
 				       ((fboundp 'vterm) #'tui-vterm-exec)
@@ -120,8 +133,8 @@ the buffer name.
 
 CALLBACK is called when the process exits.  It accepts a
 single argument, the process."
-  (interactive (list "tui-run" (read-shell-command "Command: ") #'ignore))
-  (funcall tui-terminal-function name command (or callback #'ignore)))
+  (interactive (list "tui-run" (read-shell-command "Command: ")))
+  (funcall tui-terminal-function name command callback))
 
 (defcustom tui-project-function #'tui--default-project-function
   "A function that returns the root directory of the current project."
