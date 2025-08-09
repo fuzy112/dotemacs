@@ -216,6 +216,7 @@
               (message "%s" (substitute-command-keys "Press \\[exit-recursive-edit] when finished with this repo"))
             (recursive-edit)
             (kill-buffer buf))))))
+  (straight-check-all)
   (message "Finished processing all updated repos"))
 
 ;; Command for fetching all repos asynchronously.
