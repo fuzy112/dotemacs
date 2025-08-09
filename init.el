@@ -1445,8 +1445,8 @@ value for USE-OVERLAYS."
 (defvar xref-buffer-name)
 
 (defun +xref-window-quit ()
-  (when-let* ((xref-win (get-buffer-window xref-buffer-name (selected-frame))))
-    (quit-window nil xref-win)))
+  (when (bufferp xref-buffer-name)
+    (quit-windows-on xref-buffer-name)))
 
 (declare-function xref-show-definitions-buffer-at-bottom "xref.el")
 
