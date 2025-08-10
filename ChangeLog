@@ -1,5 +1,9 @@
 2025-08-10  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Use `reposition-window' instead of `+recenter-top-30%'.
+
+2025-08-10  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Update key bindings of eat.
 
 2025-08-09  Zhengyi Fu  <i@fuzy.me>
