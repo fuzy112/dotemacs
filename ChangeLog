@@ -1,3 +1,7 @@
+2025-08-10  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Update key bindings of eat.
+
 2025-08-09  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (org-latex-classes): Add ctexart.

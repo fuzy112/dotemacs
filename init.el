@@ -1936,9 +1936,9 @@ Then refresh all windows displaying the current buffer."
   (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
 
 (after-load! project
-  (define-key project-other-window-map "s" #'eat-project-other-window)
+  (keymap-set project-prefix-map "t" #'eat-project)
+  (keymap-set project-other-window-map "t" #'eat-project-other-window)
   (when (consp project-switch-commands)
-    (alist-delq! project-switch-commands project-shell)
     (add-to-list 'project-switch-commands '(eat-project "Eat") t)))
 
 (defvar eat-terminal)
@@ -2907,7 +2907,7 @@ Otherwise disable it."
   "w"   #'window-prefix-map)
 
 (define-keymap :keymap ctl-x-4-map
-  "s" #'eat-other-window
+  "t" #'eat-other-window
   "e" #'+eshell/other-window)
 
 (define-keymap :keymap window-prefix-map
