@@ -1,5 +1,10 @@
 2025-08-10  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+straight-review-updated-repos): Customize header-line
+	and mode-line.
+
+2025-08-10  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Use `reposition-window' instead of `+recenter-top-30%'.
 
 2025-08-10  Zhengyi Fu  <i@fuzy.me>

@@ -201,23 +201,39 @@
                          :local-repo)))
     (magit-status-setup-buffer (straight--repos-dir repo))))
 
-
 (defun +straight-review-updated-repos ()
   (interactive)
   (require 'map)
-  (dolist (repo (map-keys straight--repo-cache))
-    (let ((default-directory (straight--repos-dir repo)))
-      (unless (string-empty-p
-               (with-temp-buffer
-                 (process-file "git" nil t nil "rev-list" "HEAD..FETCH_HEAD")
-                 (buffer-string)))
-        (let ((buf  (magit-status-setup-buffer default-directory)))
-          (unwind-protect
-              (message "%s" (substitute-command-keys "Press \\[exit-recursive-edit] when finished with this repo"))
-            (recursive-edit)
-            (kill-buffer buf))))))
-  (straight-check-all)
-  (message "Finished processing all updated repos"))
+  (let* ((updated-repos
+          (seq-filter (lambda (repo-dir)
+                        (let ((default-directory repo-dir))
+                          (with-temp-buffer
+                            (process-file "git" nil t nil "rev-list" "HEAD..FETCH_HEAD")
+                            (not (zerop (buffer-size))))))
+                      (seq-map #'straight--repos-dir
+                               (map-keys straight--repo-cache))))
+         (total (length updated-repos))
+         (orig-modeline (default-value 'mode-line-format)))
+    (seq-do-indexed
+     (lambda (repo-dir index)
+       (let* ((default-directory repo-dir)
+              (buf (magit-status-setup-buffer)))
+         (unwind-protect
+             (progn
+               (setq mode-line-format
+                     (cons (format "(Reviewing %d/%d: %s)"
+                                   (1+ index) total
+                                   (file-name-nondirectory (directory-file-name repo-dir)))
+                           orig-modeline))
+               (setq header-line-format
+                     (list (substitute-command-keys "Press \\[exit-recursive-edit] to proccess next repo, \\[abort-recursive-edit] to abort")))
+               (force-mode-line-update)
+               (recursive-edit))
+           (kill-buffer buf))))
+     updated-repos)
+    (redisplay)
+    (straight-check-all)
+    (message "Finished processing all updated repos")))
 
 ;; Command for fetching all repos asynchronously.
 (autoload 'straight-x-fetch-all "straight-x" nil t)
