@@ -208,7 +208,7 @@
           (seq-filter (lambda (repo-dir)
                         (let ((default-directory repo-dir))
                           (with-temp-buffer
-                            (process-file "git" nil t nil "rev-list" "HEAD..FETCH_HEAD")
+                            (process-file "git" nil t nil "rev-list" "HEAD..HEAD@{upstream}")
                             (not (zerop (buffer-size))))))
                       (seq-map #'straight--repos-dir
                                (map-keys straight--repo-cache))))
