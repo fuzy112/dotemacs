@@ -1,5 +1,10 @@
 2025-08-11  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+straight-review-updated-repos): Fix the command used
+	to check whether the branch is updated.
+
+2025-08-11  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (mode-specific-map): Bind "C-'" to `claude-code-ide-menu'.
 
 2025-08-11  Zhengyi Fu  <i@fuzy.me>
