@@ -1,5 +1,10 @@
 2025-08-11  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+eglot-prefix-map): New keymap.  Bind to C-c l in
+	`eglot-mode-map'.
+
+2025-08-11  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (toggle-map): Bind "e" to `eglot'.
 
 2025-08-11  Zhengyi Fu  <i@fuzy.me>
