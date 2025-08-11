@@ -134,6 +134,8 @@ the buffer name.
 CALLBACK is called when the process exits.  It accepts a
 single argument, the process."
   (interactive (list "tui-run" (read-shell-command "Command: ")))
+  (when (or (null command) (string-empty-p command))
+    (setq command shell-file-name))
   (funcall tui-terminal-function name command callback))
 
 (defcustom tui-project-function #'tui--default-project-function
@@ -285,7 +287,8 @@ When called interactively, the symbol at point is used as the initial query."
     :bind '("ctrl-k:kill-line")
     :cmd-prompt "locate> "
     :cmd "locate {}"
-    :preview tui--file-preview)
+    :preview tui--file-preview
+    :preview-window "up:60%:+{2}-/3")
    #'tui--file-callback))
 
 ;;;###autoload
