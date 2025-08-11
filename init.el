@@ -214,26 +214,32 @@
                                (map-keys straight--repo-cache))))
          (total (length updated-repos))
          (orig-modeline (default-value 'mode-line-format)))
-    (seq-do-indexed
-     (lambda (repo-dir index)
-       (let* ((default-directory repo-dir)
-              (buf (magit-status-setup-buffer)))
-         (unwind-protect
-             (progn
-               (setq mode-line-format
-                     (cons (format "(Reviewing %d/%d: %s)"
-                                   (1+ index) total
-                                   (file-name-nondirectory (directory-file-name repo-dir)))
-                           orig-modeline))
-               (setq header-line-format
-                     (list (substitute-command-keys "Press \\[exit-recursive-edit] to proccess next repo, \\[abort-recursive-edit] to abort")))
-               (force-mode-line-update)
-               (recursive-edit))
-           (kill-buffer buf))))
-     updated-repos)
-    (redisplay)
-    (straight-check-all)
-    (message "Finished processing all updated repos")))
+    (unwind-protect
+        (seq-do-indexed
+         (lambda (repo-dir index)
+           (let* ((default-directory repo-dir)
+                  (buf (magit-status-setup-buffer)))
+             (unwind-protect
+                 (progn
+                   (add-hook 'kill-buffer-hook #'exit-recursive-edit nil t)
+                   (setq-local quit-window-kill-buffer t)
+                   (setq mode-line-format
+                         (cons (format "(Reviewing %d/%d: %s)"
+                                       (1+ index) total
+                                       (file-name-nondirectory (directory-file-name repo-dir)))
+                               orig-modeline))
+                   (setq header-line-format
+                         (list (substitute-command-keys "\\[exit-recursive-edit] process next repo, \\[abort-recursive-edit] abort processing")))
+                   (force-mode-line-update)
+                   (recursive-edit))
+               (when (buffer-live-p buf)
+                 (with-current-buffer buf
+                   (kill-local-variable 'kill-buffer-hook))
+                 (kill-buffer buf)))))
+         updated-repos)
+      (redisplay)
+      (straight-check-all)
+      (message "Finished processing all updated repos"))))
 
 ;; Command for fetching all repos asynchronously.
 (autoload 'straight-x-fetch-all "straight-x" nil t)
