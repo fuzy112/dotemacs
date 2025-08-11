@@ -2957,7 +2957,8 @@ Otherwise disable it."
   "R"   #'rg-menu
   "s"   search-map
   "v"   #'vc-prefix-map
-  "w"   #'window-prefix-map)
+  "w"   #'window-prefix-map
+  "C-'" #'claude-code-ide-menu)
 
 (define-keymap :keymap ctl-x-4-map
   "t" #'eat-other-window
