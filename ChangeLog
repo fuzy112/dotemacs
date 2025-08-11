@@ -1,5 +1,9 @@
 2025-08-11  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+mail-to-help-gnu-emacs): New command.
+
+2025-08-11  Zhengyi Fu  <i@fuzy.me>
+
 	* early-init.el (undo-limit, undo-strong-limit): Increase undo limit.
 
 2025-08-11  Zhengyi Fu  <i@fuzy.me>

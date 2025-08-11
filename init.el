@@ -563,6 +563,15 @@ font-locking and indentation."
     (insert text)
     (insert "\n\n")))
 
+(defun +mail-to-help-gnu-emacs ()
+  (interactive)
+  (compose-mail
+   "help-gnu-emacs@gnu.org"
+   (read-string "Title: ")))
+
+(after-load! help
+  (keymap-global-set "C-h H" #'+mail-to-help-gnu-emacs))
+
 ;;;; backup
 
 (autoload 'list-backups "backup" nil t)
