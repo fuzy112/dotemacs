@@ -1,5 +1,12 @@
 2025-08-11  Zhengyi Fu  <i@fuzy.me>
 
+	TeX configuration
+
+	* init.el (TeX-auto-save, TeX-parse-self): Set to t;
+	(TeX-master): Set default value to t.
+
+2025-08-11  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+straight-review-updated-repos): Fix the command used
 	to check whether the branch is updated.
 
