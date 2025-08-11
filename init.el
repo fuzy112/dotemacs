@@ -1416,9 +1416,30 @@ value for USE-OVERLAYS."
 (setopt eglot-autoshutdown t
         eglot-extend-to-xref t)
 
+(defvar-keymap +eglot-prefix-map
+  :prefix '+eglot-prefix-map
+  "d" #'eglot-find-declaration
+  "t" #'eglot-find-typeDefinition
+  "i" #'eglot-find-implementation
+  "s" #'consult-eglot-symbols
+  "a" #'eglot-code-actions
+  "n" #'eglot-code-action-inline
+  "e" #'eglot-code-action-extract
+  "r" #'eglot-code-action-rewrite
+  "f" #'eglot-code-action-quickfix
+  "o" #'eglot-code-action-organize-imports
+  "/" #'eglot-format
+  "c" #'eglot-show-call-hierarchy
+  "T" #'eglot-show-type-hierarchy
+  "w" #'eglot-show-workspace-configuration
+  "C" #'eglot-signal-didChangeConfiguration
+  "u" #'eglot-shutdown
+  "U" #'eglot-shutdown-all)
+
 (after-load! eglot
   (keymap-set eglot-mode-map "C-x x /" #'eglot-format)
   (keymap-set eglot-mode-map "C-c C-a" #'eglot-code-actions)
+  (keymap-set eglot-mode-map "C-c l" '+eglot-prefix-map)
   (eglot-tempel-mode))
 
 ;;;;; consult-eglot
