@@ -7,4 +7,4 @@ ANTHROPIC_API_KEY="$(secret-tool lookup host api.moonshot.cn)"
 export ANTHROPIC_API_KEY
 export ANTHROPIC_MODEL=kimi-k2-turbo-preview
 export ANTHROPIC_SMALL_FAST_MODEL=kimi-k2-turbo-preview
-exec npx @anthropic-ai/claude-code "$@"
+exec npm exec --package=@anthropic-ai/claude-code@latest claude "$@"
