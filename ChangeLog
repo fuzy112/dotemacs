@@ -1,5 +1,9 @@
 2025-08-11  Zhengyi Fu  <i@fuzy.me>
 
+	* early-init.el (undo-limit, undo-strong-limit): Increase undo limit.
+
+2025-08-11  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+eglot-prefix-map): New keymap.  Bind to C-c l in
 	`eglot-mode-map'.
 
