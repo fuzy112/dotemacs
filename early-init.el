@@ -92,6 +92,9 @@
 (setq bidi-paragraph-direction               'left-to-right
       bidi-inhibit-bpa                       t)
 
+(setq undo-limit        (* 16 1024 1024)
+      undo-strong-limit (* 64 1024 1024))
+
 ;; workaround WSL wayland clipboard issue
 (setq select-active-regions nil)
 
