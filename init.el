@@ -2583,6 +2583,12 @@ of feed configurations without modifying init files."
                  ,(concat "* Note (%a)\n"
                           "/Entered on/ %U\n" "\n" "%?"))))
 
+;;;; TeX
+
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master nil)
+
 ;;;; telega
 
 (after-load! telega
