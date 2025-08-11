@@ -2880,6 +2880,7 @@ Otherwise disable it."
 (defvar-keymap toggle-map
   :doc    "Keymap for toggling options."
   :prefix 'toggle-map
+  "e"     #'eglot
   "f"     #'flymake-mode
   "q"     #'display-fill-column-indicator-mode
   "l"     #'display-line-numbers-mode
