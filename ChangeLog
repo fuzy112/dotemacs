@@ -1,5 +1,11 @@
 2025-08-11  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/tui/tui.el (tui-run): Run `shell-file-name' if the
+	command is not specified.
+	(tui-locate): Display the preview window vertically.
+
+2025-08-11  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+straight-review-updated-repos): Add
 	`exit-recursive-edit' to `kill-buffer-hook'.
 
