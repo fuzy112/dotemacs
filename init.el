@@ -201,15 +201,18 @@
                          :local-repo)))
     (magit-status-setup-buffer (straight--repos-dir repo))))
 
+(defun +straight-repo-up-to-date-p ()
+  (with-temp-buffer
+    (process-file "git" nil t nil "rev-list" "HEAD..HEAD@{upstream}")
+    (zerop (buffer-size))))
+
 (defun +straight-review-updated-repos ()
   (interactive)
   (require 'map)
   (let* ((updated-repos
           (seq-filter (lambda (repo-dir)
                         (let ((default-directory repo-dir))
-                          (with-temp-buffer
-                            (process-file "git" nil t nil "rev-list" "HEAD..HEAD@{upstream}")
-                            (not (zerop (buffer-size))))))
+                          (not (+straight-repo-up-to-date-p))))
                       (seq-map #'straight--repos-dir
                                (map-keys straight--repo-cache))))
          (total (length updated-repos))
@@ -220,7 +223,7 @@
            (let* ((default-directory repo-dir)
                   (buf (magit-status-setup-buffer)))
              (unwind-protect
-                 (progn
+                 (save-window-excursion
                    (add-hook 'kill-buffer-hook #'exit-recursive-edit nil t)
                    (setq-local quit-window-kill-buffer t)
                    (setq mode-line-format
@@ -230,6 +233,11 @@
                                orig-modeline))
                    (setq header-line-format
                          (list (substitute-command-keys "\\[exit-recursive-edit] process next repo, \\[abort-recursive-edit] abort processing")))
+                   (add-hook 'magit-pre-refresh-hook
+                             (lambda ()
+                               (when (+straight-repo-up-to-date-p)
+                                 (exit-recursive-edit)))
+                             nil t)
                    (force-mode-line-update)
                    (recursive-edit))
                (when (buffer-live-p buf)
