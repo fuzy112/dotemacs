@@ -84,6 +84,8 @@
 
 ;;;; emacs core
 
+(setq native-comp-async-on-battery-power nil)
+
 (setq-default cursor-in-non-selected-windows nil)
 (setq highlight-nonselected-windows          nil)
 (setq inhibit-compacting-font-caches         t)
