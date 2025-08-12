@@ -1,5 +1,10 @@
 2025-08-12  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (LaTeX-mode-hook, latex-mode-hook): Add
+	`turn-on-reftex'.
+
+2025-08-12  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (emacs-startup-hook): Add
 	`standard-display-unicode-special-glyphs'.
 
