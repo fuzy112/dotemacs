@@ -194,7 +194,7 @@
 (straight-use-package 'telega)
 (straight-use-package 'erc)
 (straight-use-package 'show-font)
-(straight-use-package '(elfeed :fork t))
+(straight-use-package 'elfeed)
 (straight-use-package '(eat :files (:defaults "integration" "term" "terminfo")))
 
 ;;; Email
