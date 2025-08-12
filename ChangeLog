@@ -1,5 +1,11 @@
 2025-08-12  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+straight-review-updated-repos): Switch to next repo
+	when the current repo is up-to-date.
+	(+straight-repo-up-to-date-p): New function.
+
+2025-08-12  Zhengyi Fu  <i@fuzy.me>
+
 	* early-init.el: Do not clear `site-run-file'.  It does not work
 	since Emacs 31.
 
