@@ -879,7 +879,8 @@ Provide your detailed review with specific recommendations for improvement if ne
       (setq-local gptel-model 'claude-3.7-sonnet)
       (setq-local gptel-tools
 		  (append (gptel-get-tool "filesystem")
-			  (gptel-get-tool "web")
+			  (ensure-list (gptel-get-tool "search_web"))
+			  (ensure-list (gptel-get-tool "read_url"))
 			  (ensure-list (gptel-get-tool "shellcheck"))))
       (setq-local gptel-confirm-tool-calls nil)
       (setq-local gptel-use-tools t)

@@ -1,3 +1,8 @@
+2025-08-12  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/gptel-config.el (+gptel-shellcheck-fix):
+	Do not include all "web" tools.
+
 2025-08-11  Zhengyi Fu  <i@fuzy.me>
 
 	TeX configuration
