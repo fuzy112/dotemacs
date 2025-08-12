@@ -2596,6 +2596,9 @@ of feed configurations without modifying init files."
 (setq TeX-parse-self t)
 (setq-default TeX-master nil)
 
+(add-hook 'LaTeX-mode-hook #'turn-on-reftex) ; AUCTeX
+(add-hook 'latex-mode-hook #'turn-on-reftex) ; Emacs latex mode
+
 ;;;; telega
 
 (after-load! telega
