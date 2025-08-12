@@ -139,7 +139,8 @@
 (straight-use-package '(rime :fork (:host github :repo "fuzy112/emacs-rime")))
 
 ;;; LLM
-(straight-use-package '(gptel :build (:not compile)))
+(straight-use-package '(gptel :fork (:host github :repo "fuzy112/gptel")
+			      :build (:not compile)))
 (straight-use-package 'gptel-aibo)
 (straight-use-package '(claude-code-ide :host github :repo "manzaltu/claude-code-ide.el"))
 
