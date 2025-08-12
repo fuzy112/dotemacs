@@ -2091,6 +2091,13 @@ Then refresh all windows displaying the current buffer."
   (global-clipetty-mode))
 (if (eq (framep-on-display) t) (require 'clipetty))
 
+;;;; Display Table
+
+;; Set up display table to use unicode chars to display frame borders
+;; in terminal
+
+(add-hook 'emacs-startup-hook #'standard-display-unicode-special-glyphs)
+
 ;;;; repeat
 
 (defun +repeat--post-command ()
