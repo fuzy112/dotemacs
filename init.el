@@ -1633,9 +1633,88 @@ With no active region, operate on the whole buffer."
     (keymap-set emacs-lisp-mode-map "C-c C-l" #'emacs-lisp-native-compile-and-load))
   (keymap-set lisp-interaction-mode-map "C-c C-j" #'eval-print-last-sexp))
 
-(define-advice straight--add-package-to-load-path (:after (_) flymake)
-  "Update `elisp-flymake-byte-compile-load-path' after loading a package."
-  (setq-default elisp-flymake-byte-compile-load-path load-path))
+(defun straight-flymake-byte-compile (report-fn &rest _args)
+  "A Flymake backend for elisp byte compilation.
+Spawn an Emacs process that byte-compiles a file representing the
+current buffer state and calls REPORT-FN when done."
+  (unless (trusted-content-p)
+    ;; FIXME: Use `bwrap' and friends to compile untrusted content.
+    ;; FIXME: We emit a message *and* signal an error, because by default
+    ;; Flymake doesn't display the warning it puts into "*flmake log*".
+    (message "Disabling straight-flymake-byte-compile in %s (untrusted content)"
+             (buffer-name))
+    (user-error "Disabling straight-flymake-byte-compile in %s (untrusted content)"
+                (buffer-name)))
+  (when elisp-flymake--byte-compile-process
+    (when (process-live-p elisp-flymake--byte-compile-process)
+      (kill-process elisp-flymake--byte-compile-process)))
+  (let ((temp-file (make-temp-file "straight-flymake-byte-compile"))
+        (source-buffer (current-buffer))
+        (coding-system-for-write 'utf-8-unix)
+        (coding-system-for-read 'utf-8))
+    (save-restriction
+      (widen)
+      (write-region (point-min) (point-max) temp-file nil 'nomessage))
+    (let* ((output-buffer (generate-new-buffer " *straight-flymake-byte-compile*"))
+           ;; Hack: suppress warning about missing lexical cookie in
+           ;; *scratch* buffers.
+           (warning-suppression-opt
+            (and (derived-mode-p 'lisp-interaction-mode)
+                 '("--eval"
+                   "(setq bytecomp--inhibit-lexical-cookie-warning t)"))))
+      (setq
+       elisp-flymake--byte-compile-process
+       (make-process
+        :name "straight-flymake-byte-compile"
+        :buffer output-buffer
+        :command `(,(expand-file-name invocation-name invocation-directory)
+                   "-Q"
+                   "--batch"
+                   "-l"
+                   ,(locate-library "straight")
+                   "--eval"
+                   ,(prin1-to-string
+                     `(let ((recipes ',(map-into straight--recipe-cache 'list)))
+                        (setq straight-use-symlinks ,straight-use-symlinks
+                              straight-build-dir ,straight-build-dir)
+                        (dolist (recipe recipes)
+                          (straight-register-package recipe))
+                        (dolist (recipe recipes)
+                          (straight-use-package recipe))))
+                   ;; "--eval" "(setq load-prefer-newer t)" ; for testing
+                   ,@(mapcan (lambda (path) (list "-L" path))
+                             elisp-flymake-byte-compile-load-path)
+                   ,@warning-suppression-opt
+                   "-f" "elisp-flymake--batch-compile-for-flymake"
+                   ,temp-file)
+        :connection-type 'pipe
+        :sentinel
+        (lambda (proc _event)
+          (unless (process-live-p proc)
+            (unwind-protect
+                (cond
+                 ((not (and (buffer-live-p source-buffer)
+                            (eq proc (with-current-buffer source-buffer
+                                       elisp-flymake--byte-compile-process))))
+                  (flymake-log :warning
+                               "byte-compile process %s obsolete" proc))
+                 ((zerop (process-exit-status proc))
+                  (elisp-flymake--byte-compile-done report-fn
+                                                    source-buffer
+                                                    output-buffer))
+                 (t
+                  (funcall report-fn
+                           :panic
+                           :explanation
+                           (format "byte-compile process %s died " proc))))
+              (ignore-errors (delete-file temp-file))
+              ;; (with-current-buffer output-buffer
+              ;;   (message "Log: %s" (buffer-string)))
+              (kill-buffer output-buffer))))
+        :stderr " *stderr of straight-flymake-byte-compile*"
+        :noquery t)))))
+
+(advice-add 'elisp-flymake-byte-compile :override #'straight-flymake-byte-compile)
 
 ;;;; pp
 

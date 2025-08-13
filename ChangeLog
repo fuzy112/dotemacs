@@ -1,5 +1,14 @@
 2025-08-13  Zhengyi Fu  <i@fuzy.me>
 
+	Implement elisp flymake backend for straight
+
+	* init.el (straight-flymake-byte-compile): New function.  Advice
+	`elisp-flymake-byte-compile' to load packages installed with
+	`straight'.
+	(straight--add-package-to-load-path): Remove advice.
+
+2025-08-13  Zhengyi Fu  <i@fuzy.me>
+
 	Auto-quit reviewing the repo only when the local branch equals the
 	upstream branch
 
