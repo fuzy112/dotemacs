@@ -201,9 +201,12 @@
                          :local-repo)))
     (magit-status-setup-buffer (straight--repos-dir repo))))
 
-(defun +straight-repo-up-to-date-p ()
+(defun +straight-repo-up-to-date-p (&optional strictly)
   (with-temp-buffer
-    (process-file "git" nil t nil "rev-list" "HEAD..HEAD@{upstream}")
+    (process-file "git" nil t nil "rev-list"
+                  (if strictly
+                      "HEAD...HEAD@{upstream}"
+                    "HEAD..HEAD@{upstream}"))
     (zerop (buffer-size))))
 
 (defun +straight-review-updated-repos ()
@@ -235,7 +238,7 @@
                          (list (substitute-command-keys "\\[exit-recursive-edit] process next repo, \\[abort-recursive-edit] abort processing")))
                    (add-hook 'magit-pre-refresh-hook
                              (lambda ()
-                               (when (+straight-repo-up-to-date-p)
+                               (when (+straight-repo-up-to-date-p :strictly)
                                  (exit-recursive-edit)))
                              nil t)
                    (force-mode-line-update)
