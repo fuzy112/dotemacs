@@ -1,3 +1,12 @@
+2025-08-13  Zhengyi Fu  <i@fuzy.me>
+
+	Auto-quit reviewing the repo only when the local branch equals the
+	upstream branch
+
+	* init.el (+straight-repo-up-to-date-p): Add optional arg to check
+	if the local branch is strictly equal to the upstream branch.
+	(+straight-review-updated-repos): Use it in `magit-pre-refresh-hook'.
+
 2025-08-12  Zhengyi Fu  <i@fuzy.me>
 
 	* early-init.el (native-comp-async-on-battery-power):
