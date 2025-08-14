@@ -1,5 +1,11 @@
 2025-08-13  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (dotemacs): Define a theme.  Put my face customizations
+	in a theme `dotemacs'.  Otherwise, the customizations will be
+	written to `custom-file'.
+
+2025-08-13  Zhengyi Fu  <i@fuzy.me>
+
 	Implement elisp flymake backend for straight
 
 	* init.el (straight-flymake-byte-compile): New function.  Advice

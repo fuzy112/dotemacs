@@ -373,105 +373,107 @@
   (require 'modus-themes)
   (modus-themes-load-theme 'modus-operandi))
 
+(deftheme dotemacs
+  "Theme for customizing fonts.")
+
+(enable-theme 'dotemacs)
+(setq custom-enabled-themes (remq 'dotemacs custom-enabled-themes))
+
 ;;;; customized faces
-(defun +custom-faces (&optional _theme)
-  ;; (+custom-fontset)
+(defun dotemacs-theme-refresh (&optional _theme)
+  (let ((custom--inhibit-theme-enable nil))
+    (custom-theme-set-faces
+     'dotemacs
+     `(cursor
+       ((((class color) (min-colors 256) (background light)) :background "#005077")
+        (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
+     `(fill-column-indicator
+       ((((type w32 tty))
+         :height 1.0 :foreground "gray50" :background ,(face-background 'default))))
+     `(diff-hl-margin-insert
+       ((t :family ,(face-attribute 'default :family)
+           :foreground ,(face-foreground 'default)
+           :slant normal :weight regular
+           :inherit diff-hl-insert)))
+     `(diff-hl-margin-delete
+       ((t :family ,(face-attribute 'default :family)
+           :foreground ,(face-foreground 'default)
+           :slant normal :weight regular
+           :inherit diff-hl-delete)))
+     `(diff-hl-margin-change
+       ((t :family ,(face-attribute 'default :family)
+           :foreground ,(face-foreground 'default)
+           :slant normal :weight regular
+           :inherit diff-hl-change)))
+     `(diff-hl-margin-ignored
+       ((t :family ,(face-attribute 'default :family)
+           :foreground ,(face-foreground 'default)
+           :slant normal :weight regular
+           :inherit diff-hl-ignored)))
+     `(diff-hl-margin-unknown
+       ((t :family ,(face-attribute 'default :family)
+           :foreground ,(face-foreground 'default)
+           :slant normal :weight regular
+           :inherit diff-hl-unknown)))
+     '(whitespace-indentation ((t :underline "yellow")))
+     '(whitespace-space-before-tab ((t :underline "DarkOrange")))
+     '(whitespace-space-after-tab ((t :underline "yellow")))
+     '(parenthesis
+       ((t :inherit shadow)))
+     `(header-line
+       ((((supports :underline t) (class color grayscale))
+         :background ,(face-background 'default)
+         :underline ( :color ,(face-foreground 'default)
+                      :style line
+                      :position t)
+         :box (:line-width 6 :style flat-button))))
+     `(header-line-inactive
+       ((t :inherit (shadow header-line))))
+     `(mode-line-active
+       ((((supports :overline t) (class color grayscale))
+         :background ,(face-background 'default)
+         :foreground ,(face-foreground 'default)
+         :overline ,(face-foreground 'default)
+         :box ( :line-width 6
+                :color ,(face-background 'default)
+                :style nil))))
+     `(mode-line-inactive
+       ((((supports :overline t) (class color grayscale))
+         :background ,(face-background 'default)
+         :foreground ,(face-foreground 'shadow)
+         :overline t
+         :box ( :line-width 6
+                :color ,(face-background 'default)
+                :style nil))))
+     `(tab-line-tab-current
+       ((((min-colors 256) (background dark))
+         :background "purple"
+         :box unspecified)))
+     `(tab-line-tab-inactive
+       ((((min-colors 256) (background dark))
+         :background "DarkGreen"
+         :box unspecified)))
+     `(tab-bar
+       ((((supports :box t))
+         :box ( :line-width (-2 . 6)
+                :style flat-button))))
+     '(region
+       ((t :foreground unspecified)))
+     '(secondary-selection
+       ((t :foreground unspecified)))
+     '(minibuffer-depth-indicator
+       ((t :inherit shadow)))
+     ;; term
+     '(term
+       ((t :family "IosevkaTerm SS04" :fontset "fontset-term")))
+     ;; eat
+     '(eat-term-font-0
+       ((t :family "IosevkaTerm SS04" :fontset "fontset-term"))))))
 
-  (defvar pp-posframe-parameters)
-  (setq pp-posframe-parameters `( :border-color "gray"
-                                  :border-width 1
-                                  :background-color ,(face-background 'default nil '(shadow))))
-  (custom-set-faces
-   `(cursor
-     ((((class color) (min-colors 256) (background light)) :background "#005077")
-      (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
-   `(fill-column-indicator
-     ((((type w32 tty))
-       :height 1.0 :foreground "gray50" :background ,(face-background 'default))))
-   `(diff-hl-margin-insert
-     ((t :family ,(face-attribute 'default :family)
-         :foreground ,(face-foreground 'default)
-         :slant normal :weight regular
-         :inherit diff-hl-insert)))
-   `(diff-hl-margin-delete
-     ((t :family ,(face-attribute 'default :family)
-         :foreground ,(face-foreground 'default)
-         :slant normal :weight regular
-         :inherit diff-hl-delete)))
-   `(diff-hl-margin-change
-     ((t :family ,(face-attribute 'default :family)
-         :foreground ,(face-foreground 'default)
-         :slant normal :weight regular
-         :inherit diff-hl-change)))
-   `(diff-hl-margin-ignored
-     ((t :family ,(face-attribute 'default :family)
-         :foreground ,(face-foreground 'default)
-         :slant normal :weight regular
-         :inherit diff-hl-ignored)))
-   `(diff-hl-margin-unknown
-     ((t :family ,(face-attribute 'default :family)
-         :foreground ,(face-foreground 'default)
-         :slant normal :weight regular
-         :inherit diff-hl-unknown)))
-   '(whitespace-indentation ((t :underline "yellow")))
-   '(whitespace-space-before-tab ((t :underline "DarkOrange")))
-   '(whitespace-space-after-tab ((t :underline "yellow")))
-   '(parenthesis
-     ((t :inherit shadow)))
-   `(header-line
-     ((((supports :underline t) (class color grayscale))
-       :background ,(face-background 'default)
-       :underline ( :color ,(face-foreground 'default)
-                    :style line
-                    :position t)
-       :box (:line-width 6 :style flat-button))))
-   `(header-line-inactive
-     ((t :inherit (shadow header-line))))
-   `(mode-line-active
-     ((((supports :overline t) (class color grayscale))
-       :background ,(face-background 'default)
-       :foreground ,(face-foreground 'default)
-       :overline ,(face-foreground 'default)
-       :box ( :line-width 6
-              :color ,(face-background 'default)
-              :style nil))))
-   `(mode-line-inactive
-     ((((supports :overline t) (class color grayscale))
-       :background ,(face-background 'default)
-       :foreground ,(face-foreground 'shadow)
-       :overline t
-       :box ( :line-width 6
-              :color ,(face-background 'default)
-              :style nil))))
-   `(tab-line-tab-current
-     ((((min-colors 256) (background dark))
-       :background "purple"
-       :box unspecified)))
-   `(tab-line-tab-inactive
-     ((((min-colors 256) (background dark))
-       :background "DarkGreen"
-       :box unspecified)))
-   `(tab-bar
-     ((((supports :box t))
-       :box ( :line-width (-2 . 6)
-              :style flat-button))))
-   '(region
-     ((t :foreground unspecified)))
-   '(secondary-selection
-     ((t :foreground unspecified)))
-   '(minibuffer-depth-indicator
-     ((t :inherit shadow)))
-   ;; term
-   '(term
-     ((t :family "IosevkaTerm SS04" :fontset "fontset-term")))
-   ;; eat
-   '(eat-term-font-0
-     ((t :family "IosevkaTerm SS04" :fontset "fontset-term")))))
-
-(+custom-faces)
-(add-hook 'enable-theme-functions #'+custom-faces t)
-(add-hook 'after-make-frame-functions #'+custom-faces t)
-(add-hook 'server-after-make-frame-hook #'+custom-faces t)
+(dotemacs-theme-refresh)
+(add-hook 'enable-theme-functions #'dotemacs-theme-refresh)
+(add-hook 'after-make-frame-functions #'dotemacs-theme-refresh t)
+(add-hook 'server-after-make-frame-hook #'dotemacs-theme-refresh t)
 
 ;;;; libraries
 (after-load! (:or dash elisp-mode)
