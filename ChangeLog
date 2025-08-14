@@ -1,5 +1,10 @@
 2025-08-14  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el (+gptel-shellcheck-fix): Set
+	`flymake-show-diagnostics-at-end-of-line' to `fancy'.
+
+2025-08-14  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Remove `dotemacs-theme-refresh' from
 	`after-make-frame-functions'.
 

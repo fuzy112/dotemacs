@@ -869,7 +869,7 @@ Provide your detailed review with specific recommendations for improvement if ne
    (list (or (and current-prefix-arg (read-file-name "File: "))
 	     (buffer-file-name))))
   (with-current-buffer (find-buffer-visiting file)
-    (set (make-local-variable 'flymake-show-diagnostics-at-end-of-line) t)
+    (setq-local flymake-show-diagnostics-at-end-of-line 'fancy)
     (flymake-mode 1))
   (let* ((short-name (file-name-nondirectory file))
 	 (gpt-buf (gptel (format "*ShellCheck/%s*" short-name))))
