@@ -1630,7 +1630,9 @@ With no active region, operate on the whole buffer."
 (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
 (after-load! elisp-mode
   (when (boundp 'trusted-content)
-    (add-to-list 'trusted-content (locate-user-emacs-file "site-lisp/")))
+    (add-to-list 'trusted-content (locate-user-emacs-file "site-lisp/"))
+    (add-to-list 'trusted-content (abbreviate-file-name (straight--build-dir)))
+    (add-to-list 'trusted-content (abbreviate-file-name (straight--repos-dir))))
   (when (native-comp-available-p)
     (keymap-set emacs-lisp-mode-map "C-c C-l" #'emacs-lisp-native-compile-and-load))
   (keymap-set lisp-interaction-mode-map "C-c C-j" #'eval-print-last-sexp))
@@ -1664,7 +1666,7 @@ current buffer state and calls REPORT-FN when done."
             (and (derived-mode-p 'lisp-interaction-mode)
                  '("--eval"
                    "(setq bytecomp--inhibit-lexical-cookie-warning t)"))))
-      (setq
+      (setq-local
        elisp-flymake--byte-compile-process
        (make-process
         :name "straight-flymake-byte-compile"
@@ -1672,13 +1674,17 @@ current buffer state and calls REPORT-FN when done."
         :command `(,(expand-file-name invocation-name invocation-directory)
                    "-Q"
                    "--batch"
-                   "-l"
-                   ,(locate-library "straight")
                    "--eval"
                    ,(prin1-to-string
-                     `(let ((recipes ',(map-into straight--recipe-cache 'list)))
-                        (setq straight-use-symlinks ,straight-use-symlinks
-                              straight-build-dir ,straight-build-dir)
+                     `(let ((recipes ',(map-apply (lambda (p r)
+                                                    (cons (intern p) r))
+                                                  straight--recipe-cache)))
+                        (setopt straight-use-symlinks ,straight-use-symlinks
+                                straight-build-dir ,straight-build-dir)
+                        (load ,(expand-file-name
+                                "straight/repos/straight.el/bootstrap.el"
+                                (or (bound-and-true-p straight-base-dir)
+                                    user-emacs-directory)))
                         (dolist (recipe recipes)
                           (straight-register-package recipe))
                         (dolist (recipe recipes)
