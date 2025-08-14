@@ -472,7 +472,6 @@
 
 (dotemacs-theme-refresh)
 (add-hook 'enable-theme-functions #'dotemacs-theme-refresh)
-(add-hook 'after-make-frame-functions #'dotemacs-theme-refresh t)
 (add-hook 'server-after-make-frame-hook #'dotemacs-theme-refresh t)
 
 ;;;; libraries
