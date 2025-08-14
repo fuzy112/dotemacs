@@ -735,7 +735,7 @@ Whenever you cite external information, always include the full source URL."
 (gptel-make-preset 'kimi-assistant
   :description "Kimi with web search and URL reading"
   :backend "Moonshot"
-  :model 'kimi-latest
+  :model 'kimi-k2-turbo-preview
   :stream t
   :temperature 0.6
   :use-tools 'force
