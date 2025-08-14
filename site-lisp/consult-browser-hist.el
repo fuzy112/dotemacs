@@ -29,7 +29,7 @@
 (require 'consult)
 
 (defgroup consult-browser-hist ()
-  "Consult searching browser historyy"
+  "Consult searching browser history."
   :group 'consult
   :prefix "consult-browser-hist-")
 

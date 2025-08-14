@@ -864,7 +864,7 @@ ARGS: see `completion-read-multiple'."
 (keymap-global-set "C-c a" #'embark-act)
 (setq prefix-help-command #'embark-prefix-help-command)
 
-(define-advice embark-dwim (:before (&rest args) mouse)
+(define-advice embark-dwim (:before (&rest _args) mouse)
   (when (mouse-event-p last-command-event)
     (mouse-set-point last-command-event)))
 
