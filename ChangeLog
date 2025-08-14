@@ -1,5 +1,14 @@
 2025-08-14  Zhengyi Fu  <i@fuzy.me>
 
+	Fix straight flymake integration
+
+	* init.el (straight-flymake-byte-compile): Use bootstrap.el
+	instead straight.el to avoid emacs-verions-changed error.  Use
+	map-apply to convert package names from strings to symbols.
+	(trusted-content): Add straight repo dir and build dir.
+
+2025-08-14  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+import-env-var-for-display): Fix importing display name.
 
 2025-08-14  Zhengyi Fu  <i@fuzy.me>
