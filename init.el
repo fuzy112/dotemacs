@@ -2478,12 +2478,13 @@ of feed configurations without modifying init files."
     (add-hook #'server-process-filter :around '+server--process-filter-coding-system)))
 
 (defun +import-env-var-for-display ()
-  (pcase (or (frame-parameter nil 'display) x-display-name)
-    ('nil nil)
-    ((pred (string-match-p "\\`wayland-"))
-     (setenv "WAYLAND_DISPLAY" x-display-name))
-    ((pred (string-match-p "\\`:"))
-     (setenv "DISPLAY" x-display-name))))
+  (let ((display-name (or (frame-parameter nil 'display) x-display-name)))
+    (pcase display-name
+      ('nil nil)
+      ((pred (string-match-p "\\`wayland-"))
+       (setenv "WAYLAND_DISPLAY" display-name))
+      ((pred (string-match-p "\\`:"))
+       (setenv "DISPLAY" display-name)))))
 
 (add-hook 'server-after-make-frame-hook #'+import-env-var-for-display)
 

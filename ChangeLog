@@ -1,5 +1,9 @@
 2025-08-14  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+import-env-var-for-display): Fix importing display name.
+
+2025-08-14  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el (kimi-assistant): Use kimi-k2-turbo-preview.
 
 2025-08-13  Zhengyi Fu  <i@fuzy.me>
