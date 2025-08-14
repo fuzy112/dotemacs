@@ -22,6 +22,11 @@
 ;;; Commentary:
 ;;; Code:
 
+(defgroup xiaoshuo ()
+  "Chinese novels."
+  :group 'text
+  :prefix "xiaoshuo-")
+
 (defvar xiaoshuo-heading-regexp
   "第\\(\\(?:一\\|二\\|三\\|四\\|五\\|六\\|七\\|八\\|九\\|十\\|百\\|千\\|万\\)+\\)\\(章\\|节\\|回\\|部\\|卷\\)")
 
