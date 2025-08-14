@@ -1,5 +1,9 @@
 2025-08-14  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/tui/tui.el (tui-foot-exec): Simplify code.
+
+2025-08-14  Zhengyi Fu  <i@fuzy.me>
+
 	Fix straight flymake integration
 
 	* init.el (straight-flymake-byte-compile): Use bootstrap.el

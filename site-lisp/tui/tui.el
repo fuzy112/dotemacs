@@ -78,37 +78,36 @@
   :type '(cons natnum natnum))
 
 (defun tui-foot-exec (name command callback)
-  (let* ((dir default-directory)
-	 (buffer (get-buffer-create (concat "*" name "*")))
-	 ofile
-	 proc)
-    (with-current-buffer buffer
-      (setq default-directory dir)
-      (erase-buffer))
+  (let* ((buffer (generate-new-buffer (concat "*" name "*")))
+	 ofile)
     (when callback
       (setq ofile (make-temp-file "tui-output.")))
-    (setq proc (start-file-process
-		name buffer tui-foot-file "-T" name "-a" tui-foot-appid
-		"-w" (format "%dx%d" (car tui-foot-window-size)
-			     (cdr tui-foot-window-size))
-		"--" shell-file-name "-i"
-		"-c" (if callback
-			 (format "{\n%s\n}>%s" command ofile)
-		       command)))
-    (set-process-sentinel proc
-			  (lambda (p _m)
-			    (unwind-protect
-				(unless (process-live-p p)
-				  (with-current-buffer buffer
-				    (erase-buffer)
-				    (when (and ofile (file-exists-p ofile))
-				      (insert-file-contents ofile)))
-				  (when callback
-				    (funcall callback p)))
-			      (unless (process-live-p p)
-				(kill-buffer buffer)
-				(when ofile
-				  (delete-file ofile))))))))
+    (make-process
+     :name name
+     :buffer buffer
+     :command (list tui-foot-file
+		    "-T" name "-a" tui-foot-appid
+		    "-w" (format "%dx%d" (car tui-foot-window-size)
+				 (cdr tui-foot-window-size))
+		    "--" shell-file-name "-i"
+		    "-c" (if callback
+			     (format "{\n%s\n}>%s" command ofile)
+			   command))
+     :coding 'utf-8-unix
+     :connection-type 'pty
+     :sentinel (lambda (p _m)
+		 (unwind-protect
+		     (unless (process-live-p p)
+		       (with-current-buffer buffer
+			 (erase-buffer)
+			 (when (and ofile (file-exists-p ofile))
+			   (insert-file-contents ofile)))
+		       (when callback
+			 (funcall callback p)))
+		   (unless (process-live-p p)
+		     (kill-buffer buffer)
+		     (when ofile
+		       (delete-file ofile))))))))
 
 (defcustom tui-terminal-function (cond ((fboundp 'eat) #'tui-eat-exec)
 				       ((fboundp 'vterm) #'tui-vterm-exec)
