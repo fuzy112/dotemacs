@@ -1,5 +1,10 @@
 2025-08-14  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Remove `dotemacs-theme-refresh' from
+	`after-make-frame-functions'.
+
+2025-08-14  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/tui/tui.el (tui-foot-exec): Simplify code.
 
 2025-08-14  Zhengyi Fu  <i@fuzy.me>
