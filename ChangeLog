@@ -1,5 +1,9 @@
 2025-08-14  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el (shellcheck): Fix handling of remote files.
+
+2025-08-14  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (ws-butler-convert-leading-tabs-or-spaces):  Set to nil.
 
 2025-08-14  Zhengyi Fu  <i@fuzy.me>

@@ -855,7 +855,7 @@ Provide your detailed review with specific recommendations for improvement if ne
  :function (lambda (filename)
 	     (with-temp-buffer
 	       (process-file "shellcheck" nil t nil
-			     (expand-file-name filename) "--exclude=SC1091,SC2034")
+			     (file-local-name (expand-file-name filename)) "--exclude=SC1091,SC2034")
 	       (buffer-string)))
  :description "Run shellcheck to analyze shell scripts for errors, bugs, and potential pitfalls. Excludes specific checks for source files (SC1091) and unused variables (SC2034)."
  :args (list '(:name "filename"
