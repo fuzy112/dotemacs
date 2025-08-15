@@ -31,21 +31,22 @@
 	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
 	     :context-window 128
 	     :input-cost 0.15
-	     :output-cost 0.60)
+	     :output-cost 0.58)
 	    (kimi-k2-turbo-preview
 	     :description "A model suitable for coding"
 	     :capabilities (media tool-use json)
 	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
 	     :context-window 128
 	     :input-cost 0.15
-	     :output-cost 0.60)
+	     :output-cost 0.58)
 	    (moonshot-v1-auto
 	     :description "The standard Moonshot V1 model"
 	     :capabilities (tool-use json)
 	     :context-window 128
 	     :input-cost 1.50
 	     :output-cost 4.50))
-  :request-params '(:tools [(:type "builtin_function" :function (:name "$web_search"))]))
+  ;; :request-params '(:tools [(:type "builtin_function" :function (:name "$web_search"))])
+  )
 
 (gptel-make-deepseek "DeepSeek"
   :stream t
@@ -387,7 +388,7 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 	      `(:search_result ,search_result)))
  :description "Moonshot builtin web search.  Only usable by moonshot model (kimi), ignore this if you are not."
  :args '((:name "search_result" :type object :optional t))
- :category "web")
+ :category "internal")
 
 ;; GitHub tools
 
@@ -763,14 +764,42 @@ necessary.")
   :backend "Moonshot"
   :model 'kimi-k2-turbo-preview
   :stream t
-  :temperature 0.1
+  :temperature 0.2
   :max-tokens 8192
   :use-tools t
-  :tools '("read_file" "run_command" "list_directory" "shellcheck" "edit_file")
-  :system "You are an expert Emacs-Lisp and polyglot programmer. Respond with
-minimal, idiomatic, and fully-functional code. Favor built-ins and avoid
-external dependencies. Always return complete, runnable snippets. When
-editing, output only the changed portions with clear context.")
+  :tools '("read_file" "run_command" "list_directory" "edit_file" "create_file" "search_web" "read_url" "read_documentation" "search_emacs_mailing_list" "shellcheck" "read_buffer" "edit_buffer")
+  :system "You are an elite AI coding agent embedded in Emacs, specializing in Emacs-Lisp and polyglot programming.
+
+Your core capabilities:
+- Expert-level Emacs-Lisp development and Emacs internals
+- Polyglot programming (Python, JavaScript, C/C++, Go, Rust, Shell, etc.)
+- Code analysis, refactoring, and optimization
+- Debugging and troubleshooting across languages
+- Project structure analysis and architecture guidance
+- Test-driven development and CI/CD integration
+
+Workflow approach:
+1. **Analyze**: Thoroughly examine the codebase and requirements
+2. **Plan**: Create a clear todo list with prioritized tasks
+3. **Execute**: Implement solutions systematically with proper testing
+4. **Verify**: Ensure code quality, performance, and maintainability
+5. **Document**: Provide clear explanations and usage examples
+
+Best practices:
+- Write clean, idiomatic code following language conventions
+- Include comprehensive error handling and edge cases
+- Add meaningful comments and documentation
+- Optimize for readability and maintainability
+- Use appropriate design patterns and architectural principles
+- Ensure security considerations are addressed
+- Write tests for critical functionality
+
+Communication style:
+- Be precise and concise in technical explanations
+- Provide actionable insights and specific recommendations
+- Include code examples when demonstrating concepts
+- Highlight potential pitfalls and optimization opportunities
+- Use structured formatting for complex information")
 
 (gptel-make-preset 'deepseek-reasoner
   :description "DeepSeek Reasoner – step-by-step reasoning assistant"
