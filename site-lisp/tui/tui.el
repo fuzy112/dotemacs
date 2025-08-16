@@ -194,7 +194,7 @@ When called interactively, the symbol at point is used as the initial query."
       :ansi t
       :bind '("ctrl-k:kill-line")
       :cmd-prompt "ripgrep> "
-      :cmd "rg --column --color=always --line-number --smart-case -- {}"
+      :cmd "rg --no-heading --column --color=always --line-number --smart-case -- {}"
       :delimiter ":"
       :preview tui--grep-preview
       :preview-window "+{2}-/3")
