@@ -27,7 +27,7 @@
 (require 'em-unix)
 
 (defun eshell/rg (&rest args)
-  (eshell-grep "rg" args))
+  (eshell-grep "rg" (append (list "--no-heading") args)))
 
 (provide 'eshell-extras)
 ;;; eshell-extras.el ends here

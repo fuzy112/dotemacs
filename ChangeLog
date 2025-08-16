@@ -1,5 +1,10 @@
 2025-08-16  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/eshell-extras.el (eshell/rg): Disable heading so that
+	`grep-mode' can parse the output.
+
+2025-08-16  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/tui/tui.el (tui-rg): Add --no-heading to rg args.
 
 2025-08-15  Zhengyi Fu  <i@fuzy.me>
