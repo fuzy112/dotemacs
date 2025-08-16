@@ -57,7 +57,10 @@
 
 (gptel-make-gh-copilot "Copilot")
 
-;;; Tools
+(setq-default gptel-backend (gptel-get-backend "DeepSeek"))
+(setq-default gptel-model 'deepseek-chat)
+
+;;; Tool
 
 ;; filesystem tools
 
