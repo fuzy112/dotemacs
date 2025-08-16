@@ -196,7 +196,8 @@
 (straight-use-package 'erc)
 (straight-use-package 'show-font)
 (straight-use-package 'elfeed)
-(straight-use-package '(eat :files (:defaults "integration" "term" "terminfo")))
+(straight-use-package '(eat :files (:defaults "integration" "term" "terminfo")
+			    :fork (:host codeberg :repo "fuzy/emacs-eat")))
 
 ;;; Email
 (straight-use-package 'autocrypt)
