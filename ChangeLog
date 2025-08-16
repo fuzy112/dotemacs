@@ -1,5 +1,9 @@
 2025-08-16  Zhengyi Fu  <i@fuzy.me>
 
+	* scripts/claude: Add --.
+
+2025-08-16  Zhengyi Fu  <i@fuzy.me>
+
 	* packages.el (ws-butler): Use lewang's GitHub repo instead of
 	nongnu-elpa while nongnu-elpa is down.
 
