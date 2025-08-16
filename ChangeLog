@@ -1,5 +1,10 @@
 2025-08-16  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/tui/tui.el (tui-switch-project): New command.
+	(tui--project-callback): New function.
+
+2025-08-16  Zhengyi Fu  <i@fuzy.me>
+
 	* scripts/claude: Add --.
 
 2025-08-16  Zhengyi Fu  <i@fuzy.me>

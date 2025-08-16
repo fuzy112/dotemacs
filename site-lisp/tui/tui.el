@@ -382,5 +382,37 @@ When called interactively, the symbol at point is used as the initial query."
 	    :preview-window "up:60%:+{2}/3")
 	   #'tui--file-callback))
 
+(defun tui--project-callback (proc)
+  (with-current-buffer (process-buffer proc)
+    (goto-char (point-min))
+    (while (re-search-forward "^.+$" nil t)
+      (save-current-buffer
+	(let ((dir (match-string 0)))
+	  (when (file-exists-p dir)
+	    (project-switch-project dir)))))))
+
+;;;###autoload
+(defun tui-switch-project ()
+  (interactive)
+  (require 'project)
+  (project--write-project-list)
+  (tui-run "tui-switch-project"
+	   (fuzzy-finder-command
+	    :ansi t
+	    :bind '("ctrl-k:kill-line")
+	    :cmd (format "%s -Q --batch --eval %s"
+			 (expand-file-name invocation-name invocation-directory)
+			 (shell-quote-argument
+			  (prin1-to-string
+			   `(with-temp-buffer
+			      (insert-file ,project-list-file)
+			      (goto-char (point-min))
+			      (dolist (project (read (current-buffer)))
+				(princ (car project))
+				(princ "\n"))))))
+	    :preview tui--file-preview
+	    :preview-window "up:60%:+{2}/3")
+	   #'tui--project-callback))
+
 (provide 'tui)
 ;;; tui.el ends here
