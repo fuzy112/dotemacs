@@ -448,11 +448,13 @@
      `(tab-line-tab-current
        ((((min-colors 256) (background dark))
          :background "purple"
-         :box unspecified)))
+         :foreground "white"
+         :box nil)))
      `(tab-line-tab-inactive
        ((((min-colors 256) (background dark))
          :background "DarkGreen"
-         :box unspecified)))
+         :foreground "white"
+         :box nil)))
      `(tab-bar
        ((((supports :box t))
          :box ( :line-width (-2 . 6)
