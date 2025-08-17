@@ -3012,6 +3012,7 @@ Otherwise disable it."
   "l"     #'tui-line
   "f"     #'tui-find
   "d"     #'tui-locate
+  "p"     #'tui-switch-project
   "e"     #'eshell
   "s"     #'eat
   "c"     #'telega-chat-with)
