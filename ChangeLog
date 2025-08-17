@@ -1,5 +1,9 @@
 2025-08-17  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (tool-map): Bind "p" to `tui-switch-project'.
+
+2025-08-17  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (recentf-save-file, save-place-file)
 	(project-list-file, savehist-file): Use zstd to compress the
 	files.
