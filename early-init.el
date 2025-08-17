@@ -123,7 +123,7 @@
 
 ;;;; custom
 
-(setq custom-file (locate-user-emacs-file "custom.el"))
+(setq custom-file (locate-user-emacs-file "custom.el.zst" "custom.el"))
 
 
 ;;;; post-early-init
