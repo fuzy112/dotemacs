@@ -49,3 +49,9 @@ elpa/archives
 /persp-confs/
 /projects.eld
 /network-security.eld
+/custom.el.zst
+/places.eld.zst
+/projects.eld.zst
+/recentf.eld.zst
+/savehist.eld.zst
+/tramp.eld.zst
