@@ -1,5 +1,11 @@
 2025-08-17  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (recentf-save-file, save-place-file)
+	(project-list-file, savehist-file): Use zstd to compress the
+	files.
+
+2025-08-17  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (dotemacs-theme-refresh): Force `tab-line-tab-current'
 	and `tab-line-tab-inactive' to use white foreground when in dark
 	background mode.
