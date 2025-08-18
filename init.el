@@ -2862,6 +2862,10 @@ of feed configurations without modifying init files."
         (shell-command (concat "quilt add " (shell-quote-argument basename))))
     (user-error "Buffer not visiting a file")))
 
+(defun quilt-list-files ()
+  (interactive)
+  (shell-command "quilt files"))
+
 (defun quilt-refresh ()
   (interactive)
   (shell-command "quilt refresh"))
@@ -2888,7 +2892,8 @@ of feed configurations without modifying init files."
   "a" #'quilt-add-visited-file
   "-" #'quilt-pop
   "+" #'quilt-push
-  "r" #'quilt-refresh
+  "f" #'quilt-list-files
+  "g" #'quilt-refresh
   "l" #'quilt-list-applied-patches)
 
 
