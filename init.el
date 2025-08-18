@@ -212,6 +212,20 @@
     (zerop (buffer-size))))
 
 (defun +straight-review-updated-repos ()
+  "Review repositories with unmerged upstream commits interactively.
+
+This command scans all repositories managed by straight.el and identifies
+those with unmerged commits from their upstream branches. It then presents
+each such repository in a Magit status buffer sequentially.
+
+During review:
+- The mode-line shows progress (current/total) and repository name
+- Header displays navigation instructions
+- Repository automatically closes when fully synced (during refresh)
+- Press \\[exit-recursive-edit] to proceed or \\[abort-recursive-edit] to abort
+
+After processing all repositories, runs `straight-check-all' to rebuild
+changed packages."
   (interactive)
   (require 'map)
   (let* ((updated-repos
