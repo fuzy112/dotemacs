@@ -290,6 +290,7 @@ changed packages."
   "m"     #'straight-merge-package
   "M"     #'straight-merge-all
   "u"     #'straight-use-package
+  "U"     #'+straight-review-updated-repos
   "d"     #'straight-visit-package
   "w"     #'straight-visit-package-website
   "g"     #'straight-magit-package-status
