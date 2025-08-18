@@ -30,6 +30,11 @@
 
 2025-08-18  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (straight-prefix-map): Bind "U" to
+	`+straight-review-updated-repos'.
+
+2025-08-18  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/good-doc.el (good-doc--local-docs): Fix infinite loop.
 
 2025-08-18  Zhengyi Fu  <i@fuzy.me>
