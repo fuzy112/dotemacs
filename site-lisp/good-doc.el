@@ -411,7 +411,7 @@ PROMPT is passed to `completing-read'."
 (defun good-doc--local-docs ()
   "Find all locally installed devhelp2 files in well-known directories."
   (cl-loop for dir in '("/usr/share/gtk-doc/" "/usr/share/doc/")
-           nconc (directory-files-recursively dir "\\.devhelp2\\'" nil nil t)
+           nconc (directory-files-recursively dir "\\.devhelp2\\'" nil nil nil)
            into files
            finally return files))
 

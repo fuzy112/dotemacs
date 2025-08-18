@@ -1,5 +1,9 @@
 2025-08-18  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/good-doc.el (good-doc--local-docs): Fix infinite loop.
+
+2025-08-18  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (quilt-list-files): New command.
 
 2025-08-17  Zhengyi Fu  <i@fuzy.me>
