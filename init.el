@@ -390,14 +390,25 @@ changed packages."
   (require 'modus-themes)
   (modus-themes-load-theme 'modus-operandi))
 
+;; Define a dedicated theme `dotemacs' instead of using the default
+;; `user' theme to prevent the Emacs customization system from
+;; automatically persisting face customizations.
 (deftheme dotemacs
-  "Theme for customizing fonts.")
+  "Central theme for customizing fonts and face properties in this configuration.")
 
+;; Activate the custom theme immediately after definition
 (enable-theme 'dotemacs)
+
+;; Remove `dotemacs' from the list of enabled custom themes to prevent
+;; it from being disable when using commands like `consult-theme'.
 (setq custom-enabled-themes (remq 'dotemacs custom-enabled-themes))
 
-;;;; customized faces
 (defun dotemacs-theme-refresh (&optional _theme)
+  "Customize and set faces for the dotemacs theme.
+This function refreshes the dotemacs theme by setting various face
+attributes."
+  ;; Temporarily bind `custom--inhibit-theme-enable' to nil to enuser
+  ;; the face customizations take effect immediately.
   (let ((custom--inhibit-theme-enable nil))
     (custom-theme-set-faces
      'dotemacs
@@ -489,9 +500,14 @@ changed packages."
      '(eat-term-font-0
        ((t :family "IosevkaTerm SS04" :fontset "fontset-term"))))))
 
-(dotemacs-theme-refresh)
+(if (daemonp)
+    ;; Refresh theme for new frames in server mode
+    (add-hook 'server-after-make-frame-hook #'dotemacs-theme-refresh t)
+  ;; Refresh theme immediately
+  (dotemacs-theme-refresh))
+
+;; Refresh theme when themes are enabled
 (add-hook 'enable-theme-functions #'dotemacs-theme-refresh)
-(add-hook 'server-after-make-frame-hook #'dotemacs-theme-refresh t)
 
 ;;;; libraries
 (after-load! (:or dash elisp-mode)
