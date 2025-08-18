@@ -131,6 +131,8 @@
    '("y"        . meow-yank)
    '("z"        . meow-pop-selection)
    '("'"        . repeat)
+   ;; I used to follow the example.  But binding escape to ignore prevents
+   ;; me from quitting vim.
    ;; '("<escape>" . ignore)
    '("("        . meow-backward-slurp)
    '(")"        . meow-forward-slurp)
@@ -1199,6 +1201,7 @@ value for USE-OVERLAYS."
                                 "places.eld"
                                 "places")
                               ".emacs-places"))
+(setq save-place-limit 65536)
 (autoload 'save-place-find-file-hook "saveplace")
 (autoload 'save-place-dired-hook "saveplace")
 (add-hook 'find-file-hook #'save-place-find-file-hook)
@@ -1347,6 +1350,7 @@ value for USE-OVERLAYS."
   "Verify the systemd unit file.")
 
 (defun +systemd-mode--setup ()
+  (flymake-mode 1)
   (when (fboundp 'flymake-systemd)
     (add-hook 'flymake-diagnostic-functions #'flymake-systemd nil t)))
 
