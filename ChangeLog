@@ -1,5 +1,10 @@
 2025-08-19  Zhengyi Fu  <i@fuzy.me>
 
+	* early-init.el: Do not call `straight-use-package' on `straight'
+	explicitly.  Load packages.el without suffix.
+
+2025-08-19  Zhengyi Fu  <i@fuzy.me>
+
 	New macro `with-no-compile!'
 
 	* site-lisp/dotemacs-core.el (with-no-compile!): New macro.
