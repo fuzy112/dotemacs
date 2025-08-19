@@ -362,10 +362,11 @@ When called interactively, the symbol at point is used as the initial query."
 			 (shell-quote-argument
 			  (prin1-to-string
 			   `(progn
-			      (load ,recentf-save-file)
-			      (dolist (file recentf-list)
-				(princ (expand-file-name file))
-				(princ "\n"))))))
+			      (let ((standard-output #'external-debugging-output))
+				(load ,recentf-save-file)
+				(dolist (file recentf-list)
+				  (princ (expand-file-name file) t)
+				  (princ "\n" t)))))))
 	    :preview tui--file-preview
 	    :preview-window "up:60%:+{2}/3")
 	   #'tui--file-callback))
@@ -405,11 +406,12 @@ When called interactively, the symbol at point is used as the initial query."
 			 (shell-quote-argument
 			  (prin1-to-string
 			   `(with-temp-buffer
-			      (insert-file ,project-list-file)
-			      (goto-char (point-min))
-			      (dolist (project (read (current-buffer)))
-				(princ (car project))
-				(princ "\n"))))))
+			      (let ((standard-output #'external-debugging-output))
+				(insert-file ,project-list-file)
+				(goto-char (point-min))
+				(dolist (project (read (current-buffer)))
+				  (princ (car project) t)
+				  (princ "\n" t)))))))
 	    :preview tui--file-preview
 	    :preview-window "up:60%:+{2}/3")
 	   #'tui--project-callback))
