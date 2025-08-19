@@ -1,5 +1,9 @@
 2025-08-19  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+shellcheck-auto-fix): New command.
+
+2025-08-19  Zhengyi Fu  <i@fuzy.me>
+
 	* early-init.el: Do not call `straight-use-package' on `straight'
 	explicitly.  Load packages.el without suffix.
 
