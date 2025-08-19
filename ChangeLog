@@ -1,5 +1,9 @@
 2025-08-19  Zhengyi Fu  <i@fuzy.me>
 
+	* early-init.el (jka-compr-load-suffixes): Add ".zst".
+
+2025-08-19  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Use `comint-osc-process-output'.
 	(+handle-osc-8, +comint-handle-osc-8): Removed
 
