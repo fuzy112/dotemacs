@@ -112,6 +112,10 @@
 
 (setq auto-save-no-message t)
 
+;;;; jkr
+
+(setopt jka-compr-load-suffixes (seq-union '(".zst") jka-compr-load-suffixes))
+
 ;;;; files
 
 (setq version-control     t
