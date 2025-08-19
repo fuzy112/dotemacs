@@ -110,6 +110,13 @@ See `after-load-1!' for SPEC."
   (declare (indent 1))
   `(after-load-1! ,spec (with-no-warnings ,@body)))
 
+(defmacro with-no-compile! (&rest body)
+  "Evaluate BODY without byte-compiling it.
+This can be useful for code that should not be byte-compiled.
+For example, code that uses macros which might not be
+available at compile time."
+  `(eval ',(macroexp-progn body) lexical-binding))
+
 (defvar dotemacs--project-hooks nil)
 
 (defun dotemacs--project-hook-function (hook &rest args)

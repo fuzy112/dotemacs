@@ -1,5 +1,12 @@
 2025-08-19  Zhengyi Fu  <i@fuzy.me>
 
+	New macro `with-no-compile!'
+
+	* site-lisp/dotemacs-core.el (with-no-compile!): New macro.
+	* init.el: Use it.
+
+2025-08-19  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/tui/tui.el (tui-recentf, tui-switch-project): Redirect
 	error messages to stderr.
 
