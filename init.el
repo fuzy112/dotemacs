@@ -1268,35 +1268,8 @@ value for USE-OVERLAYS."
 
 ;;;; comint
 
-(defun +handle-osc-8 (beg end)
-  (save-excursion
-    (goto-char beg)
-    (while (re-search-forward "]8;\\(.*\\);\\(.*\\)\\(.*\\)]8;;" end t)
-      (let ((params (match-string-no-properties 1))
-            (link (match-string-no-properties 2))
-            (text (match-string 3)))
-        ;; (add-face-text-property 0 (length text) '(:underline t) nil text)
-        (add-text-properties 0 (length text)
-                             `( button t
-                                help-echo ,link
-                                mouse-face (highlight)
-                                keymap ,browse-url-button-map
-                                browse-url-data ,link)
-                             text)
-        (replace-match text t t)))))
-
-(defun +comint-handle-osc-8 (_ignored)
-  (let ((start-marker (if (and (markerp comint-last-output-start)
-                               (eq (marker-buffer comint-last-output-start)
-                                   (current-buffer))
-                               (marker-position comint-last-output-start))
-                          comint-last-output-start
-                        (point-min-marker)))
-        (end-marker (process-mark (get-buffer-process (current-buffer)))))
-    (+handle-osc-8 start-marker end-marker)))
-
 (after-load! comint
-  (add-hook 'comint-output-filter-functions #'+comint-handle-osc-8)
+  (add-hook 'comint-output-filter-functions #'comint-osc-process-output)
   (setq comint-prompt-read-only t
         comint-buffer-maximum-size 2048))
 
