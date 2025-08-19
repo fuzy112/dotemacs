@@ -132,6 +132,10 @@ See `project-add-hook!'."
         (apply fun args)))))
 
 (defun project-add-hook! (hook function &optional depth)
+  "Add FUNCTION to HOOK for the current project.
+HOOK is the symbol of the hook to which to add.
+FUNCTION is the function to add.
+Optional DEPTH is the depth at which to add the function (see `add-hook')."
   (let ((project (project-current))
         (project-hook-function (intern (format "dotemacs--project-hook:%S" hook))))
     (defalias project-hook-function (apply-partially #'dotemacs--project-hook-function hook)
