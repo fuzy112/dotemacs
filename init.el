@@ -1792,6 +1792,32 @@ Display the result in a posframe." t)
   (add-hook 'flymake-diagnostic-functions #'flymake-checkbashisms nil t))
 (add-hook 'sh-mode-hook #'+sh-mode-h)
 
+(defun +shellcheck-auto-fix ()
+  "Run shellcheck on current buffer to generate fix suggestions.
+Displays suggested fixes as a diff in a temporary buffer. Prompts
+user to apply the changes interactively. Requires shellcheck
+executable in PATH. Applies selected changes immediately when
+confirmed."
+  (interactive)
+  (with-output-to-temp-buffer " *shellcheck diff*"
+    (call-process-region nil nil "shellcheck" nil standard-output t "-f" "diff" "-"))
+  (let ((name (or (and buffer-file-name
+                       (file-name-nondirectory
+                        (buffer-file-name)))
+                  (buffer-name))))
+    (with-current-buffer " *shellcheck diff*"
+      (let ((inhibit-read-only t)
+            (buffer-read-only nil))
+        (replace-regexp-in-region "^\\(+++ b\\|--- a\\)/-"
+                                  (concat "\\1/"
+                                          (replace-quote name)))
+        (diff-mode)
+        (font-lock-ensure))))
+  (when (or noninteractive (yes-or-no-p "Apply the patch? "))
+    (with-current-buffer " *shellcheck diff*"
+      (diff-apply-buffer)))
+  (quit-windows-on " *shellcheck diff*" t))
+
 ;;;; udev rules
 
 ;; Use prog-mode to edit udev rules.
