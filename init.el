@@ -1070,11 +1070,12 @@ value for USE-OVERLAYS."
   (setq-default consult--regexp-compiler #'+consult--orderless-regexp-compiler)
 
   ;; consult-customize is a macro and is not autoloaded
-  (eval '(consult-customize
-          consult-xref consult-ripgrep consult-grep consult-git-grep
-          consult-line consult-focus-lines consult-keep-lines
-          consult-imenu
-          :preview-key '(:debounce 0.2 any)))
+  (with-no-compile!
+   (consult-customize
+    consult-xref consult-ripgrep consult-grep consult-git-grep
+    consult-line consult-focus-lines consult-keep-lines
+    consult-imenu
+    :preview-key '(:debounce 0.2 any)))
 
   ;; url-only bookmark type
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow))))
@@ -1490,8 +1491,9 @@ value for USE-OVERLAYS."
    (consult--async-refresh)))
 
 (after-load! (:and consult-eglot consult)
-  (eval `(consult-customize consult-eglot-symbols
-                            :async-wrap #'+consult--async-wrap--split-space)))
+  (with-no-compile!
+   (consult-customize consult-eglot-symbols
+                      :async-wrap #'+consult--async-wrap--split-space)))
 
 (define-advice consult-eglot-symbols (:around (fun) highlight)
   (cl-letf* ((orig-highlight (symbol-function 'consult--async-highlight))
@@ -2301,14 +2303,16 @@ comments and strings."
             ;; For Modus themes, use theme-specific colors
             ((and (fboundp 'modus-themes--list-enabled-themes)
                   (modus-themes--list-enabled-themes))
-             (eval '(modus-themes-with-colors
-                     (list pink fg-alt green indigo))))
+             (with-no-compile!
+              (modus-themes-with-colors
+                (list pink fg-alt green indigo))))
 
             ;; For EF themes, use theme-specific colors
             ((and (fboundp 'ef-themes--list-enabled-themes)
                   (ef-themes--list-enabled-themes))
-             (eval '(ef-themes-with-colors
-                    (list red green magenta cyan))))
+             (with-no-compile!
+              (ef-themes-with-colors
+               (list red green magenta cyan))))
 
             ;; For other themes, blend generic colors with foreground
             (t
