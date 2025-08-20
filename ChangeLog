@@ -1,5 +1,12 @@
 2025-08-20  Zhengyi Fu  <i@fuzy.me>
 
+	Remove citre configurations.
+
+	* packages.el:
+	* init.el:
+
+2025-08-20  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Do not add ws-butler-mode to find-file-hook any more.
 	Add diff-mode to ws-butler-global-exempt-modes.
 
