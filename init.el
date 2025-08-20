@@ -1561,20 +1561,6 @@ See `xref-show-xrefs' for FETCHER and ALIST."
   (remove-hook 'xref-after-jump-hook #'recenter)
   (add-hook 'xref-after-jump-hook #'reposition-window))
 
-;;;; citre
-
-(after-load! (citre cc-mode)
-  (require 'citre-lang-c))
-(after-load! (citre dired)
-  (require 'citre-lang-fileref))
-(after-load! (citre verilog-mode)
-  (require 'citre-lang-verilog))
-
-(defun +citre/remove-tags-file ()
-  (interactive)
-  (when-let* ((tagsfile (citre-tags-file-path)))
-    (delete-file tagsfile)))
-
 ;;;; good-doc
 
 (autoload 'good-doc-lookup "good-doc" nil t)
