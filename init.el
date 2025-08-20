@@ -1171,11 +1171,13 @@ value for USE-OVERLAYS."
 
 ;;;; ws-butler
 
-(add-hook 'find-file-hook #'ws-butler-mode)
+(autoload 'ws-butler--global-mode-turn-on "ws-butler")
+(add-hook 'find-file-hook #'ws-butler--global-mode-turn-on)
 (after-load! ws-butler
-  (remove-hook 'find-file-hook #'ws-butler-mode)
+  (remove-hook 'find-file-hook #'ws-butler--global-mode-turn-on)
   (setopt ws-butler-keep-whitespace-before-point nil
           ws-butler-convert-leading-tabs-or-spaces nil)
+  (add-to-list 'ws-butler-global-exempt-modes 'diff-mode)
   (ws-butler-global-mode))
 
 ;;;; whitespace
