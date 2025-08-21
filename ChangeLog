@@ -1,5 +1,9 @@
 2025-08-21  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Do not unbind M-s in `paredit-mode-map'.
+
+2025-08-21  Zhengyi Fu  <i@fuzy.me>
+
 	* packages.el (systemd): Use default systemd recipe.
 
 2025-08-20  Zhengyi Fu  <i@fuzy.me>
