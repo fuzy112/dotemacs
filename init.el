@@ -3124,10 +3124,13 @@ Otherwise disable it."
   "M-g" #'magit-dispatch)
 
 (define-keymap :keymap global-map
-  "M-c"  #'capitalize-dwim
-  "M-l"  #'downcase-dwim
-  "M-u"  #'upcase-dwim
-  "<f5>" #'project-recompile)
+  "C-h"    #'ehelp-command
+  "<help>" #'ehelp-command
+  "<f1>"   #'ehelp-command
+  "M-c"    #'capitalize-dwim
+  "M-l"    #'downcase-dwim
+  "M-u"    #'upcase-dwim
+  "<f5>"   #'project-recompile)
 
 
 ;;;; post-init
