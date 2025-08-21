@@ -56,6 +56,7 @@
   (setq meow-keypad-leader-dispatch "C-c")
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
   (setq meow-use-clipboard t)
+  (alist-delq! meow-keypad-start-keys ?h)
   (meow-leader-define-key
    '("1" . meow-digit-argument)
    '("2" . meow-digit-argument)
@@ -68,7 +69,8 @@
    '("9" . meow-digit-argument)
    '("0" . meow-digit-argument)
    '("/" . meow-keypad-describe-key)
-   '("?" . meow-cheatsheet))
+   '("?" . meow-cheatsheet)
+   '("h" . "<help>"))
   ;; (meow-motion-define-key '("<escape>" . ignore))
   (meow-normal-define-key
    '("0"        . meow-expand-0)
@@ -3124,7 +3126,8 @@ Otherwise disable it."
   "M-g" #'magit-dispatch)
 
 (define-keymap :keymap global-map
-  "C-h"    #'ehelp-command
+  "C-h"    "DEL"
+  "C-M-h"  "M-DEL"
   "<help>" #'ehelp-command
   "<f1>"   #'ehelp-command
   "M-c"    #'capitalize-dwim
