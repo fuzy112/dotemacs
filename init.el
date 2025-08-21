@@ -619,7 +619,7 @@ font-locking and indentation."
    (read-string "Title: ")))
 
 (after-load! help
-  (keymap-global-set "<help> H" #'+mail-to-help-gnu-emacs))
+  (keymap-set help-map "H" #'+mail-to-help-gnu-emacs))
 
 ;;;; backup
 
