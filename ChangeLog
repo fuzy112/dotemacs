@@ -1,5 +1,10 @@
 2025-08-21  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (global-map): Bind C-h, <help> and <f1> to
+	`ehelp-command'.
+
+2025-08-21  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Do not unbind M-s in `paredit-mode-map'.
 
 2025-08-21  Zhengyi Fu  <i@fuzy.me>
