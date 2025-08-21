@@ -177,7 +177,7 @@
 (straight-use-package 'ruby-mode)
 (straight-use-package 'rust-mode)
 (straight-use-package 'go-mode)
-(straight-use-package '(systemd-mode :files (:defaults "*.txt")))
+(straight-use-package 'systemd)
 (straight-use-package 'toml-mode)
 (straight-use-package 'vala-mode)
 (straight-use-package 'meson-mode)
