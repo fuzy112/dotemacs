@@ -1616,10 +1616,6 @@ With no active region, operate on the whole buffer."
 (add-hook 'lisp-data-mode-hook #'paredit-mode)
 (add-hook 'scheme-mode-hook #'paredit-mode)
 
-(after-load! paredit
-  (keymap-unset paredit-mode-map "M-s")
-  (keymap-set paredit-mode-map "M-p" #'paredit-splice-sexp))
-
 ;;;; elec-pair
 
 (after-load! elec-pair
