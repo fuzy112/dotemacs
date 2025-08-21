@@ -1,5 +1,13 @@
 2025-08-21  Zhengyi Fu  <i@fuzy.me>
 
+	Use C-h to delete char and adjust relevant settings
+
+	* init.el (meow-setup): Remove ?h.
+	Bind C-c h to <help>.
+	(global-map): Bind C-M-h to M-DEL.
+
+2025-08-21  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (global-map): Bind C-h, <help> and <f1> to
 	`ehelp-command'.
 
