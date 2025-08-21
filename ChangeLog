@@ -1,5 +1,9 @@
 2025-08-21  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+mail-to-help-gnu-emacs): Change binding to <help> H.
+
+2025-08-21  Zhengyi Fu  <i@fuzy.me>
+
 	Use C-h to delete char and adjust relevant settings
 
 	* init.el (meow-setup): Remove ?h.
