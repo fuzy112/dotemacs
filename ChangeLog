@@ -1,3 +1,7 @@
+2025-08-22  Zhengyi Fu  <i@fuzy.me>
+
+	* scripts/claude: Add support for DeepSeek V3.1.
+
 2025-08-21  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (+mail-to-help-gnu-emacs): Change binding to <help> H.

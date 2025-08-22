@@ -1,10 +1,40 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
-export ANTHROPIC_BASE_URL=https://api.moonshot.cn/anthropic
-ANTHROPIC_API_KEY="$(secret-tool lookup host api.moonshot.cn)"
-export ANTHROPIC_API_KEY
-export ANTHROPIC_MODEL=kimi-k2-turbo-preview
-export ANTHROPIC_SMALL_FAST_MODEL=kimi-k2-turbo-preview
-exec npm exec --package=@anthropic-ai/claude-code@latest claude -- "$@"
+declare -a args
+unset "args[@]"
+
+provider=deepseek
+
+for arg in "$@"; do
+    case "$arg" in
+        --deepseek)
+            provider=deepseek
+            ;;
+        --kimi|--moonshot)
+            provider=moonshot
+            ;;
+        *)
+            args+=("$arg")
+            ;;
+    esac
+done
+
+case "$provider" in
+    deepseek)
+        export ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic
+        ANTHROPIC_API_KEY="$(secret-tool lookup host api.deepseek.com)"
+        export ANTHROPIC_API_KEY
+        export ANTHROPIC_MODEL=deepseek-chat
+        export ANTHROPIC_SMALL_FAST_MODEL=deepseek-chat
+        ;;
+    moonshot)
+        export ANTHROPIC_BASE_URL=https://api.moonshot.cn/anthropic
+        ANTHROPIC_API_KEY="$(secret-tool lookup host api.moonshot.cn)"
+        export ANTHROPIC_MODEL=kimi-k2-turbo-preview
+        export ANTHROPIC_SMALL_FAST_MODEL=kimi-k2-turbo-preview
+        ;;
+esac
+
+exec npm exec --package=@anthropic-ai/claude-code@latest claude -- "${args[@]}"
