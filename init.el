@@ -1399,6 +1399,9 @@ value for USE-OVERLAYS."
 (alist-setq! auto-mode-alist "\\.pdf\\'" #'pdf-view-mode)
 (alist-setq! magic-mode-alist "%PDF" #'pdf-view-mode)
 
+(after-load! pdf-tools
+  (pdf-tools-install))
+
 ;;;; outline
 
 (defun +outline-minor-faces ()
