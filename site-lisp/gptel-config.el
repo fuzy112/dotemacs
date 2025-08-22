@@ -736,6 +736,20 @@ Whenever you cite external information, always include the full source URL."
   :include-tool-results t
   :tools '("search_web" "read_url" "read_documentation" "search_emacs_mailing_list"))
 
+(gptel-make-preset 'deepseek-mathematician
+  :description "Expert mathematics assistant using Moonshot's kimi-k2"
+  :backend "DeepSeek"
+  :model 'deepseek-chat
+  :stream t
+  :temperature 0.1
+  :max-tokens 4096
+  :use-tools nil
+  :system "You are an expert mathematician and problem solver. Provide accurate
+mathematical solutions, proofs, and explanations.
+Output math formulas in Latex format.
+")
+
+
 (gptel-make-preset 'kimi-assistant
   :description "Kimi with web search and URL reading"
   :backend "Moonshot"
