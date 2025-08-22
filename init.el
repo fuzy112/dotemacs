@@ -2998,8 +2998,7 @@ Otherwise disable it."
 (defalias 'project-prefix-map project-prefix-map)
 
 (define-keymap :keymap project-prefix-map
-  "m" #'magit-project-status
-  "s" #'eat-project)
+  "m" #'magit-project-status)
 
 (defvar-keymap tool-map
   :doc    "Keymap for calling external tools."
