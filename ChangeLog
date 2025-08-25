@@ -1,5 +1,12 @@
 2025-08-22  Zhengyi Fu  <i@fuzy.me>
 
+	Do not use ehelp any more
+
+	* init.el (help-window-select): Set to t.
+	Unbind `ehelp-command'.
+
+2025-08-22  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el (deepseek-mathematician): New preset.
 
 2025-08-22  Zhengyi Fu  <i@fuzy.me>

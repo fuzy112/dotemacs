@@ -575,7 +575,8 @@ attributes."
 (after-load! help
   ;; Enable editing of variable values in help buffers
   (setq help-enable-variable-value-editing t
-        help-enable-completion-autoload nil)
+        help-enable-completion-autoload nil
+        help-window-select t)
 
   ;; Add shortdoc examples to function help if available
   (when (fboundp 'shortdoc-help-fns-examples-function)
@@ -3127,8 +3128,6 @@ Otherwise disable it."
 (define-keymap :keymap global-map
   "C-h"    "DEL"
   "C-M-h"  "M-DEL"
-  "<help>" #'ehelp-command
-  "<f1>"   #'ehelp-command
   "M-c"    #'capitalize-dwim
   "M-l"    #'downcase-dwim
   "M-u"    #'upcase-dwim
