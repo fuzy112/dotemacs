@@ -1,5 +1,12 @@
 2025-08-26  Zhengyi Fu  <i@fuzy.me>
 
+	Remove some eww configuration
+
+	* init.el (eww+miniflux-trim, eww+kagi-trim)
+	(eww-reset-current-bookmark): Remove functions.
+
+2025-08-26  Zhengyi Fu  <i@fuzy.me>
+
 	* packages.el (straight-built-in-pseudo-packages): Add `map'.
 
 2025-08-26  Zhengyi Fu  <i@fuzy.me>
