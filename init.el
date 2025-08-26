@@ -2503,7 +2503,7 @@ of feed configurations without modifying init files."
   ;; If the operating system is either Windows (windows-nt) or DOS (ms-dos),
   ;; add an advice around the server process filter function to correctly handle coding systems.
   (when (memq system-type '(windows-nt ms-dos))
-    (add-hook #'server-process-filter :around '+server--process-filter-coding-system)))
+    (advice-add #'server-process-filter :around '+server--process-filter-coding-system)))
 
 (defun +import-env-var-for-display ()
   (let ((display-name (or (frame-parameter nil 'display) x-display-name)))
