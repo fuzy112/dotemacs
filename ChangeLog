@@ -1,5 +1,15 @@
 2025-08-26  Zhengyi Fu  <i@fuzy.me>
 
+	Optimizing startup speed
+
+	* init.el (+init-fontsets): Set `use-default-font-for-symbols' to t.
+	(+maybe-init-fontset): 	Ignore errors when initializing fonts.
+	(nerd-icons): Set up nerd fonts.
+	(buffer-list-update-hook): Do not add `recentf-track-opened-file'
+	to `buffer-list-update-hook' on startup.
+
+2025-08-26  Zhengyi Fu  <i@fuzy.me>
+
 	* packages.el (straight-built-in-pseudo-packages): Add built-in packages.
 
 2025-08-22  Zhengyi Fu  <i@fuzy.me>

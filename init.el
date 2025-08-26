@@ -323,6 +323,8 @@ changed packages."
   (set-fontset-font "fontset-startup" 'unicode (font-spec :family "Iosevka SS04" :weight 'medium))
   (set-fontset-font "fontset-default" 'unicode (font-spec :family "Iosevka SS04" :weight 'medium))
 
+  (setq use-default-font-for-symbols nil)
+
   ;; Create custom fontsets
   (dolist (fs '("-*-Iosevka Aile-medium-normal-normal-*-*-*-*-*-*-*-fontset-variable,"
                 "-*-Iosevka Fixed Slab-medium-normal-normal-*-*-*-*-*-*-*-fontset-fixed,"
@@ -356,7 +358,7 @@ changed packages."
 (defun +maybe-init-fontset ()
   (and (not +fontset-initialized)
        (display-graphic-p)
-       (progn
+       (ignore-errors
          (+init-fontsets)
          (setq +fontset-initialized t))))
 
@@ -533,6 +535,9 @@ attributes."
 (setq-default mode-line-buffer-identification
               (seq-union '((:eval (nerd-icons-icon-for-buffer)) " ")
                          mode-line-buffer-identification))
+
+(after-load! nerd-icons
+  (nerd-icons-set-font))
 
 ;;;; ultra-scroll
 
@@ -1220,7 +1225,7 @@ value for USE-OVERLAYS."
 (autoload 'recentf-track-opened-file "recentf"
   "Insert the name of the file just opened or written into the recent list." )
 (add-hook 'find-file-hook #'recentf-track-opened-file)
-(add-hook 'buffer-list-update-hook #'recentf-track-opened-file)
+;; (add-hook 'buffer-list-update-hook #'recentf-track-opened-file)
 (after-load! recentf
   (setq recentf-max-saved-items 8192)
   (let ((inhibit-message t))
