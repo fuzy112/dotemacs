@@ -6,6 +6,17 @@
       '((github . "fuzy112")
 	(codeberg . "fuzy")))
 
+;; Prefer built-in packages
+(add-to-list 'straight-built-in-pseudo-packages 'project)
+(add-to-list 'straight-built-in-pseudo-packages 'use-package)
+(add-to-list 'straight-built-in-pseudo-packages 'org)
+(add-to-list 'straight-built-in-pseudo-packages 'erc)
+(add-to-list 'straight-built-in-pseudo-packages 'xref)
+(add-to-list 'straight-built-in-pseudo-packages 'flymake)
+(add-to-list 'straight-built-in-pseudo-packages 'eldoc)
+(add-to-list 'straight-built-in-pseudo-packages 'eglot)
+(add-to-list 'straight-built-in-pseudo-packages 'external-completion)
+
 ;;; Utility libraries
 (straight-use-package 'dash)
 (straight-use-package 'f)
@@ -50,7 +61,6 @@
 (straight-use-package 'copilot)
 
 ;;;; LSP
-(straight-use-package 'eglot)
 (straight-use-package 'eglot-tempel)
 (straight-use-package 'breadcrumb)
 
@@ -126,7 +136,6 @@
 (straight-use-package 'diff-hl)
 
 ;;; eldoc
-(straight-use-package 'eldoc)
 (straight-use-package 'eldoc-box)
 (straight-use-package '(eldoc-diffstat :host github :repo "kljohann/eldoc-diffstat"))
 
@@ -155,7 +164,6 @@
 (straight-use-package 'vundo)
 
 ;;; Org
-(straight-use-package 'org)
 (straight-use-package 'org-modern)
 
 ;;; TeX
@@ -189,7 +197,6 @@
 
 ;;; Applications
 (straight-use-package 'telega)
-(straight-use-package 'erc)
 (straight-use-package 'show-font)
 (straight-use-package 'elfeed)
 (straight-use-package '(eat :files (:defaults "integration" "term" "terminfo")
