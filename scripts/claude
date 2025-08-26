@@ -25,7 +25,6 @@ case "$provider" in
     deepseek)
         export ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic
         ANTHROPIC_API_KEY="$(secret-tool lookup host api.deepseek.com)"
-        export ANTHROPIC_API_KEY
         export ANTHROPIC_MODEL=deepseek-chat
         export ANTHROPIC_SMALL_FAST_MODEL=deepseek-chat
         ;;
@@ -36,5 +35,6 @@ case "$provider" in
         export ANTHROPIC_SMALL_FAST_MODEL=kimi-k2-turbo-preview
         ;;
 esac
+export ANTHROPIC_API_KEY
 
 exec npm exec --package=@anthropic-ai/claude-code@latest claude -- "${args[@]}"
