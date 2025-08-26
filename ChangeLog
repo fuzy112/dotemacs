@@ -1,3 +1,7 @@
+2025-08-26  Zhengyi Fu  <i@fuzy.me>
+
+	* packages.el (straight-built-in-pseudo-packages): Add built-in packages.
+
 2025-08-22  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Auto install `pdf-tools'.
