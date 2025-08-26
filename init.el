@@ -2603,39 +2603,6 @@ of feed configurations without modifying init files."
 (autoload 'image-slicing-mode "image-slicing" nil t)
 (add-hook 'eww-mode-hook #'image-slicing-mode)
 
-;;;; eww
-
-(declare-function eww-current-url "eww.el")
-
-(defun eww+miniflux-trim ()
-  (when (string-match-p "^https://miniflux\\." (eww-current-url))
-    (let ((inhibit-read-only t))
-      (save-excursion
-        (goto-char (point-min))
-        (when-let* ((match (text-property-search-forward 'shr-target-id "page-header-title" 'member)))
-          (delete-region (point-min) (prop-match-beginning match)))))))
-
-(defun eww+kagi-trim ()
-  (when (string-match-p "^https://kagi\\.com" (eww-current-url))
-    (let ((inhibit-read-only t))
-      (save-excursion
-        (goto-char (point-min))
-        (when-let* ((match (text-property-search-forward 'shr-target-id "tonav" #'member)))
-          (delete-region (prop-match-beginning match) (prop-match-end match)))))))
-
-(defvar bookmark-current-bookmark)
-(declare-function bookmark-location "bookmark.el" (arg1))
-
-(defun eww-reset-current-bookmark ()
-  (when (and bookmark-current-bookmark
-             (not (equal (eww-current-url) (bookmark-location bookmark-current-bookmark))))
-    (setq bookmark-current-bookmark nil)))
-
-(add-hook 'eww-after-render-hook 'eww+miniflux-trim)
-(add-hook 'eww-after-render-hook 'eww+kagi-trim)
-(after-load! bookmark
-  (add-hook 'eww-after-render-hook 'eww-reset-current-bookmark))
-
 ;;;; bookmark
 
 (defvar pp-default-function)
