@@ -976,7 +976,7 @@ value for USE-OVERLAYS."
 (define-keymap
   :keymap global-map
   "C-c M-x"               #'consult-mode-command
-  "C-c h"                 #'consult-history
+  "C-c H"                 #'consult-history
   "C-c k"                 #'consult-kmacro
   "C-c m"                 #'consult-man
   "C-c i"                 #'consult-info

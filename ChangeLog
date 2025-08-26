@@ -1,5 +1,10 @@
 2025-08-26  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Change binding of `consult-history' from "C-c h" to
+	"C-c H".
+
+2025-08-26  Zhengyi Fu  <i@fuzy.me>
+
 	* packages.el: Add ement.
 
 2025-08-26  Zhengyi Fu  <i@fuzy.me>
