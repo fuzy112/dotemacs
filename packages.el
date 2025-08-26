@@ -16,6 +16,7 @@
 (add-to-list 'straight-built-in-pseudo-packages 'eldoc)
 (add-to-list 'straight-built-in-pseudo-packages 'eglot)
 (add-to-list 'straight-built-in-pseudo-packages 'external-completion)
+(add-to-list 'straight-built-in-pseudo-packages 'map)
 
 ;;; Utility libraries
 (straight-use-package 'dash)
