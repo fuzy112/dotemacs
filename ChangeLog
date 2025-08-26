@@ -1,5 +1,9 @@
 2025-08-26  Zhengyi Fu  <i@fuzy.me>
 
+	* packages.el: Add ement.
+
+2025-08-26  Zhengyi Fu  <i@fuzy.me>
+
 	Optimizing startup speed
 
 	* init.el (+init-fontsets): Set `use-default-font-for-symbols' to t.
