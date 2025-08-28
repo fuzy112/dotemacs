@@ -150,6 +150,7 @@
 			      :build (:not compile)))
 (straight-use-package 'gptel-aibo)
 (straight-use-package '(claude-code-ide :host github :repo "manzaltu/claude-code-ide.el"))
+(straight-use-package '(eca :host github :repo "editor-code-assistant/eca-emacs" :files ("*.el")))
 
 ;;; Modal editing
 (straight-use-package 'meow)
