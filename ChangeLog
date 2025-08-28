@@ -1,3 +1,7 @@
+2025-08-28  Zhengyi Fu  <i@fuzy.me>
+
+	* packages.el: Add eca.
+
 2025-08-26  Zhengyi Fu  <i@fuzy.me>
 
 	Remove some eww configuration
