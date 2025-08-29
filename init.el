@@ -351,7 +351,10 @@ changed packages."
   (set-frame-font "-*-Iosevka SS04-medium-*" t t)  ; NOTE (set-face-attribute 'default nil :fontset "XXX") doesn't work
   (set-face-attribute 'variable-pitch nil :family "Iosevka Aile" :weight 'medium :fontset "fontset-variable")
   (set-face-attribute 'fixed-pitch nil :family "Iosevka Fixed Slab" :weight 'medium :fontset "fontset-fixed")
-  (set-face-attribute 'fixed-pitch-serif nil :family "Iosevka Fixed Slab" :weight 'medium :fontset "fontset-fixed"))
+  (set-face-attribute 'fixed-pitch-serif nil :family "Iosevka Fixed Slab" :weight 'medium :fontset "fontset-fixed")
+
+  (when (fboundp 'nerd-icons-set-font)
+    (nerd-icons-set-font)))
 
 (defvar +fontset-initialized nil)
 
