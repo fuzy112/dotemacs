@@ -1,5 +1,9 @@
 2025-08-29  Zhengyi Fu  <i@fuzy.me>
 
+	* packages.el: Add whisper.
+
+2025-08-29  Zhengyi Fu  <i@fuzy.me>
+
 	* packages.el: Add clojure-mode and inf-clojure.
 
 2025-08-28  Zhengyi Fu  <i@fuzy.me>
