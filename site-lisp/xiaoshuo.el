@@ -27,8 +27,11 @@
   :group 'text
   :prefix "xiaoshuo-")
 
-(defvar xiaoshuo-heading-regexp
-  "第\\(\\(?:一\\|二\\|三\\|四\\|五\\|六\\|七\\|八\\|九\\|十\\|百\\|千\\|万\\)+\\)\\(章\\|节\\|回\\|部\\|卷\\)")
+(defcustom xiaoshuo-heading-regexp
+  "\\(?:第\\(\\(?:一\\|二\\|三\\|四\\|五\\|六\\|七\\|八\\|九\\|十\\|百\\|千\\|万\\|[0-9]+\\)+\\)\\(章\\|节\\|回\\|部\\|卷\\)\\|\\([0-9]+\\)\\)"
+  "Regular expression to match chapter/section headings in Chinese novels."
+  :type 'string
+  :group 'xiaoshuo)
 
 ;; https://emacs.stackexchange.com/questions/70326/how-can-i-apply-a-user-defined-fontset-to-a-face
 ;; You can apply a fontset to a face by setting its :fontset attribute
@@ -41,7 +44,7 @@
 ;; stripped of the "set" part and be treated as just an ASCII font.
 
 (defface xiaoshuo-content
-  '((t :family "LXGW WenKai" :height 120))
+  '((t :height 120))
   "Face for displaying XiaoShuo.")
 
 (defun xiaoshuo--outline-level ()
@@ -54,19 +57,41 @@
                         ("卷" . 2))
                       #'equal
                       '(nil . 3))))
+(defcustom xiaoshuo-fontset-name "fontset-xiaoshuo"
+  "Name of the fontset used in xiaoshuo-mode."
+  :type 'string
+  :group 'xiaoshuo)
+
+(defcustom xiaoshuo-ascii-font "DejaVu Serif"
+  "ASCII font used in xiaoshuo-mode."
+  :type 'string
+  :group 'xiaoshuo)
+
+(defcustom xiaoshuo-cjk-font "LXGW WenKai"
+  "CJK font used in xiaoshuo-mode."
+  :type 'string
+  :group 'xiaoshuo)
+
+(defcustom xiaoshuo-line-spacing 0.2
+  "Line spacing (additional space between lines) in xiaoshuo-mode.
+A value of 0.2 means 20% additional space between lines."
+  :type 'number
+  :group 'xiaoshuo)
 
 ;;;###autoload
 (define-derived-mode xiaoshuo-mode text-mode "XiaoShuo"
-  (create-fontset-from-ascii-font "DejaVu Serif" nil "xiaoshuo")
-  (set-fontset-font "fontset-xiaoshuo" 'han "LXGW WenKai")
-  (set-fontset-font "fontset-xiaoshuo" 'cjk-misc "LXGW WenKai")
-  (set-face-attribute 'xiaoshuo-content nil :fontset "fontset-xiaoshuo")
+  (create-fontset-from-ascii-font xiaoshuo-ascii-font nil
+                                  (substring xiaoshuo-fontset-name 8))
+  (set-fontset-font xiaoshuo-fontset-name 'han xiaoshuo-cjk-font)
+  (set-fontset-font xiaoshuo-fontset-name 'cjk-misc xiaoshuo-cjk-font)
+  (set-face-attribute 'xiaoshuo-content nil :fontset xiaoshuo-fontset-name)
   (visual-line-mode)
   (view-mode)
   (hi-lock-face-buffer xiaoshuo-heading-regexp 'bold)
   (hi-lock-mode)
   (setq-local buffer-face-mode-face 'xiaoshuo-content)
   (buffer-face-mode)
+  (setq-local line-spacing xiaoshuo-line-spacing)
   (setq-local outline-regexp (concat "^" xiaoshuo-heading-regexp))
   (setq-local outline-level #'xiaoshuo--outline-level)
   (outline-minor-mode)

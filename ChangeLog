@@ -1,5 +1,16 @@
 2025-08-29  Zhengyi Fu  <i@fuzy.me>
 
+	Refactor xiaoshuo-mode
+
+	* site-lisp/xiaoshuo.el (xiaoshuo-heading-regexp): Change to an
+	user option.
+	(xiaoshuo-content): Remove :family attribute.
+	(xiaoshuo-fontset-name, xiaoshuo-ascii-font, xiaoshuo-cjk-font)
+	(xiaoshuo-line-spacing): New user options.
+	(xiaoshuo-mode): Apply user options.
+
+2025-08-29  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Add ibuffer configuration.
 	(ibuffer-saved-filter-groups): Update value.
 
