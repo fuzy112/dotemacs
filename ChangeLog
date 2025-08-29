@@ -1,5 +1,10 @@
 2025-08-29  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+init-fontsets): Set nerd-icons fonts if nerd-icons is
+	loaded.
+
+2025-08-29  Zhengyi Fu  <i@fuzy.me>
+
 	* packages.el: Add whisper.
 
 2025-08-29  Zhengyi Fu  <i@fuzy.me>
