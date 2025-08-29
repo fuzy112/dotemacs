@@ -74,6 +74,9 @@
 ;;;; SLY
 (straight-use-package 'sly)
 
+;;;; Inf-clojure
+(straight-use-package 'inf-clojure)
+
 ;;;; Inf-ruby
 (straight-use-package 'inf-ruby)
 
@@ -183,6 +186,7 @@
 (straight-use-package 'paredit)
 
 ;;; Extra major modes
+(straight-use-package 'clojure-mode)
 (straight-use-package 'yaml-mode)
 (straight-use-package 'ruby-mode)
 (straight-use-package 'rust-mode)
