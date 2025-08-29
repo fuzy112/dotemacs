@@ -1175,6 +1175,98 @@ value for USE-OVERLAYS."
 ;; Replace `list-buffers' with `ibuffer-jump'.
 (keymap-global-set "<remap> <list-buffers>" #'ibuffer-jump)
 
+(setq ibuffer-expert t
+      ibuffer-show-empty-filter-groups nil
+      ibuffer-default-sorting-mode 'filename/process
+      ibuffer-use-header-line t
+      ibuffer-default-shrink-to-minimum-size nil)
+
+(setq ibuffer-saved-filter-groups
+      '(("Main"
+         ("Directories" (mode . dired-mode))
+         ("C++" (or
+                 (mode . c++-mode)
+                 (mode . c++-ts-mode)
+                 (mode . c-mode)
+                 (mode . c-ts-mode)
+                 (mode . c-or-c++-ts-mode)))
+         ("Python" (or
+                    (mode . python-mode)
+                    (mode . python-ts-mode)))
+         ("Build" (or
+                   (mode . make-mode)
+                   (mode . amkefile-gmake-mode)
+                   (name . "\\`Makefile\\'")
+                   (mode . change-log-mode)))
+         ("Scripts" (or
+                     (mode . shell-script-mode)
+                     (mode . shell-mode)))
+         ("Config" (or
+                    (mode . conf-mode)
+                    (mode . conf-toml-mode)
+                    (mode . toml-ts-mode)
+                    (mode . toml-mode)
+                    (mode . yaml-mode)
+                    (mode . yaml-ts-mode)
+                    (mode . json-ts-mode)
+                    (mode . js-json-mode)
+                    (mode . gitconfig-mode)))
+         ("Web" (or
+                 (mode . html-mode)
+                 (mode . web-mode)
+                 (mode . nxml-mode)))
+         ("Markup" (or
+                    (mode . markdown-mode)
+                    (mode . markdown-ts-mode)
+                    (mode . adoc-mode)
+                    (mode . rst-mode)))
+         ("Org-mode" (mode . org-mode))
+         ("Magit" (or
+                   (mode . magit-mode)
+                   (mode . magit-log-mode)
+                   (mode . magit-blame-mode)
+                   (mode . magit-cherry-mode)
+                   (mode . magit-diff-mode)
+                   (mode . magit-process-mode)
+                   (mode . magit-status-mode)))
+         ("Apps" (or
+                  (mode . elfeed-search-mode)
+                  (mode . elfeed-show-mode)
+                  (mode . eww-mode)
+                  (mode . telega-chat-mode)
+                  (mode . telega-root-mode)
+                  (mode . telega-webpage-mode)
+                  (mode . gnus-group-mode)
+                  (mode . gnus-summary-mode)
+                  (mode . gnus-article-mode)))
+         ("Doc" (or
+                 (mode . Info-mode)
+                 (mode . Man-mode)
+                 (mode . Woman-mode)
+                 (mode . devdocs-mode)
+                 (mode . good-doc-mode)))
+         ("Terminal" (or
+                      (mode . term-mode)
+                      (mode . eat-mode)
+                      (mode . vterm-mode)))
+         ("AI" (or
+                (mode . gptel-mode)
+                (name . "\\`<eca.*:.+>\\'")))
+         ("Emacs" (or
+                   (mode . emacs-lisp-mode)
+                   (mode . help-mode)
+                   (name . "\\*Messages\\*")
+                   (name . "\\`\\.newsrc-dribble\\'")
+                   (name . "\\*Completions\\*")
+                   (mode . lisp-interaction-mode)
+                   (name . "\\*log-edit-files\\*")
+                   (name . "\\*Process List\\*"))))))
+
+(defun ibuffer-config-saved-filter-groups ()
+  (ibuffer-switch-to-saved-filter-groups "Main"))
+
+(add-hook 'ibuffer-mode-hook #'ibuffer-config-saved-filter-groups)
+
 ;;;; apheleia
 
 (keymap-global-set "C-x x /" #'apheleia-format-buffer)
