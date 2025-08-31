@@ -540,7 +540,8 @@ attributes."
                          mode-line-buffer-identification))
 
 (after-load! nerd-icons
-  (nerd-icons-set-font))
+  (nerd-icons-set-font)
+  (add-hook 'server-after-make-frame-hook #'nerd-icons-set-font))
 
 ;;;; ultra-scroll
 
@@ -2659,6 +2660,12 @@ of feed configurations without modifying init files."
 (setq claude-code-ide-cli-path
       (expand-file-name "scripts/claude" user-emacs-directory))
 
+;;;; ECA
+
+(after-load! consult
+  (alist-setq! consult-mode-histories
+    eca-chat-mode '(eca-chat-history eca-chat-history-index markdown-beginning-of-line)))
+
 ;;;; logos
 
 (keymap-global-set "<f8>" #'logos-focus-mode)
@@ -2857,6 +2864,8 @@ of feed configurations without modifying init files."
     "CodeBerg" "https://codeberg.org"
     "Kagi Search" [simple-query "www.kagi.com"
                                 "www.kagi.com/search?q=" ""]
+    "Kagi Assistant" [simple-query "www.kagi.com/assistant/"
+                                   "www.kagi.com/assistant?q=" ""]
     "yhetil.org" "https://yhetil.org"))
 
 ;;;; vundo
@@ -3153,6 +3162,7 @@ Otherwise disable it."
   "d"   doc-map
   "e"   #'cape-prefix-map
   "f"   file-map
+  "j"   #'webjump
   "o"   toggle-map
   "M-g" #'magit-file-dispatch
   "p"   #'project-prefix-map

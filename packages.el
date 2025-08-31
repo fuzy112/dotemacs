@@ -17,6 +17,7 @@
 (add-to-list 'straight-built-in-pseudo-packages 'eglot)
 (add-to-list 'straight-built-in-pseudo-packages 'external-completion)
 (add-to-list 'straight-built-in-pseudo-packages 'map)
+(add-to-list 'straight-built-in-pseudo-packages 'peg)
 
 ;;; Utility libraries
 (straight-use-package 'dash)
@@ -209,6 +210,9 @@
 (straight-use-package 'elfeed)
 (straight-use-package '(eat :files (:defaults "integration" "term" "terminfo")
 			    :fork (:host codeberg :repo "fuzy/emacs-eat")))
+(straight-use-package '(video-trimmer :host github :repo "xenodium/video-trimmer"
+				      :fork (:host github :repo "fuzy112/video-trimmer")))
+(straight-use-package '(whisper :host github :repo "natrys/whisper.el"))
 
 ;;; Email
 (straight-use-package 'autocrypt)

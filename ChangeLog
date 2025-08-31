@@ -1,3 +1,20 @@
+2025-08-31  Zhengyi Fu  <i@fuzy.me>
+
+	Some minor updates
+
+	* transient/values.el (gptel-menu): Add --color to
+	magit-log:mode-log-mode.
+
+	* site-lisp/gptel-config.el (kimi-assistant): Use `search_web'
+	instead of the built-in `$websearch'.
+
+	* packages.el (straight-built-in-pseudo-packages): Add `peg'.
+
+	* init.el: Add `nerd-icons-set-font' to `server-after-make-frame-hook'.
+	Configure `consult-mode-histories' for `eca-chat-mode'.
+	(webjump-sites): Add "Kagi Assistant".
+	(mode-specific-map): Bind "j" to `webjump'.
+
 2025-08-29  Zhengyi Fu  <i@fuzy.me>
 
 	Refactor xiaoshuo-mode
