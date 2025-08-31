@@ -1,5 +1,10 @@
 2025-08-31  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+fontsets-initilize-hook): New variable.
+	(+init-fontsets): Run `+fontset-initialize-hook'.
+
+2025-08-31  Zhengyi Fu  <i@fuzy.me>
+
 	Do not use default save files
 
 	* init.el (recentf-save-file, save-place-file)
