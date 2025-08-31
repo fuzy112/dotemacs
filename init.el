@@ -1316,7 +1316,7 @@ value for USE-OVERLAYS."
 (add-hook 'hack-local-variables-hook #'+indent-tabs-mode--hack-local-variables-h)
 
 ;;;; recentf
-(setq recentf-save-file (locate-user-emacs-file '("recentf.eld.zst" "recentf.eld" "recentf") ".recentf"))
+(setq recentf-save-file (locate-user-emacs-file '("recentf.eld.zst")))
 
 (autoload 'recentf-track-opened-file "recentf"
   "Insert the name of the file just opened or written into the recent list." )
@@ -1334,10 +1334,7 @@ value for USE-OVERLAYS."
 ;;;; saveplace
 
 (setq save-place-file
-      (locate-user-emacs-file '("places.eld.zst"
-                                "places.eld"
-                                "places")
-                              ".emacs-places"))
+      (locate-user-emacs-file '("places.eld.zst")))
 (setq save-place-limit 65536)
 (autoload 'save-place-find-file-hook "saveplace")
 (autoload 'save-place-dired-hook "saveplace")
@@ -1934,7 +1931,7 @@ confirmed."
 
 ;;;; project
 
-(setq project-list-file (locate-user-emacs-file '("projects.eld.zst" "projects.eld" "projects")))
+(setq project-list-file (locate-user-emacs-file '("projects.eld.zst")))
 
 (declare-function project-root "project.el" (&rest rest))
 (defun +project--external-roots ()
@@ -1980,7 +1977,7 @@ confirmed."
 ;;;; tramp
 
 (setq tramp-persistency-file-name
-      (locate-user-emacs-file '("tramp.eld.zst" "tramp")))
+      (locate-user-emacs-file '("tramp.eld.zst")))
 
 ;;; We need to ensure Unix domain sockets have paths shorter than 108 characters
 ;;; (this is a system limit). If tramp-compat-temporary-file-directory is too long,
@@ -2325,9 +2322,7 @@ Then refresh all windows displaying the current buffer."
 
 ;;;; savehist
 
-(setq savehist-file (locate-user-emacs-file '("savehist.eld.zst"
-                                              "history.eld"
-                                              "history")))
+(setq savehist-file (locate-user-emacs-file '("savehist.eld.zst")))
 (setq savehist-additional-variables '(kill-ring
                                       register-alist
                                       compile-command
