@@ -1,5 +1,14 @@
 2025-08-31  Zhengyi Fu  <i@fuzy.me>
 
+	Do not use default save files
+
+	* init.el (recentf-save-file, save-place-file)
+	(project-list-file, tramp-persistency-file-name, savehist-file):
+	Remove fallback names for these files.  This prevent the default
+	names of the files being used after running emacs -Q.
+
+2025-08-31  Zhengyi Fu  <i@fuzy.me>
+
 	Some minor updates
 
 	* transient/values.el (gptel-menu): Add --color to
