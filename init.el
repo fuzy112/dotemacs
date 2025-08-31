@@ -312,6 +312,8 @@ changed packages."
 ;;  - https://github.com/be5invis/Sarasa-Gothic/releases/download/v1.0.26/Sarasa-SuperTTC-1.0.26.7z
 ;;  - https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/NerdFontsSymbolsOnly.zip
 
+(defvar +fontsets-initilize-hook nil)
+
 (defun +init-fontsets ()
   "Initialize the font configuration"
   ;; Font spec format:
@@ -348,13 +350,12 @@ changed packages."
   (set-fontset-font "fontset-default" 'unicode-ssp (font-spec :family "Unifont Upper") nil 'append)
 
   ;; Assign fontsets to faces
-  (set-frame-font "-*-Iosevka SS04-medium-*" t t)  ; NOTE (set-face-attribute 'default nil :fontset "XXX") doesn't work
+  (set-frame-font "-*-Iosevka SS04-medium-*" t t) ; NOTE (set-face-attribute 'default nil :fontset "XXX") doesn't work
   (set-face-attribute 'variable-pitch nil :family "Iosevka Aile" :weight 'medium :fontset "fontset-variable")
   (set-face-attribute 'fixed-pitch nil :family "Iosevka Fixed Slab" :weight 'medium :fontset "fontset-fixed")
   (set-face-attribute 'fixed-pitch-serif nil :family "Iosevka Fixed Slab" :weight 'medium :fontset "fontset-fixed")
 
-  (when (fboundp 'nerd-icons-set-font)
-    (nerd-icons-set-font)))
+  (run-hooks '+fontset-initialize-hook))
 
 (defvar +fontset-initialized nil)
 
@@ -541,6 +542,7 @@ attributes."
 
 (after-load! nerd-icons
   (nerd-icons-set-font)
+  (add-hook '+fontset-initialize-hook #'nerd-icons-set-font)
   (add-hook 'server-after-make-frame-hook #'nerd-icons-set-font))
 
 ;;;; ultra-scroll
