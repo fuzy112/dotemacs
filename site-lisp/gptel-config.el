@@ -757,7 +757,7 @@ Output math formulas in Latex format.
   :stream t
   :temperature 0.6
   :use-tools 'force
-  :tools '("$web_search" "read_url" "read_documentation" "search_emacs_mailing_list")
+  :tools '("search_web" "read_url" "read_documentation" "search_emacs_mailing_list")
   :system "You are Kimi, an Emacs-embedded LLM assistant.
 Be concise, accurate, and helpful.
 You may search the web or read URLs when needed.
