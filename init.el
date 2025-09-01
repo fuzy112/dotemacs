@@ -395,7 +395,7 @@ changed packages."
   (setopt modus-themes-common-palette-overrides modus-themes-preset-overrides-faint))
 
 (when (not custom-enabled-themes)
-  (require 'modus-themes)
+  (require-theme 'modus-themes)
   (modus-themes-load-theme 'modus-operandi))
 
 ;; Define a dedicated theme `dotemacs' instead of using the default
