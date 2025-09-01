@@ -501,6 +501,7 @@ attributes."
        ((t :foreground unspecified)))
      '(minibuffer-depth-indicator
        ((t :inherit shadow)))
+     ;; FIXME It seems that setting :fontset here doesn't work at all.
      ;; term
      '(term
        ((t :family "IosevkaTerm SS04" :fontset "fontset-term")))
