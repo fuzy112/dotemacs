@@ -94,6 +94,7 @@ A value of 0.2 means 20% additional space between lines."
   (setq-local line-spacing xiaoshuo-line-spacing)
   (setq-local outline-regexp (concat "^" xiaoshuo-heading-regexp))
   (setq-local outline-level #'xiaoshuo--outline-level)
+  (setq-local mode-line-format nil)
   (outline-minor-mode)
   (require 'kinsoku))
 
