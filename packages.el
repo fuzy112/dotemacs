@@ -7,17 +7,17 @@
 	(codeberg . "fuzy")))
 
 ;; Prefer built-in packages
-(add-to-list 'straight-built-in-pseudo-packages 'project)
-(add-to-list 'straight-built-in-pseudo-packages 'use-package)
-(add-to-list 'straight-built-in-pseudo-packages 'org)
-(add-to-list 'straight-built-in-pseudo-packages 'erc)
-(add-to-list 'straight-built-in-pseudo-packages 'xref)
-(add-to-list 'straight-built-in-pseudo-packages 'flymake)
-(add-to-list 'straight-built-in-pseudo-packages 'eldoc)
-(add-to-list 'straight-built-in-pseudo-packages 'eglot)
-(add-to-list 'straight-built-in-pseudo-packages 'external-completion)
-(add-to-list 'straight-built-in-pseudo-packages 'map)
-(add-to-list 'straight-built-in-pseudo-packages 'peg)
+(straight-use-package '(eglot :type built-in))
+(straight-use-package '(eldoc :type built-in))
+(straight-use-package '(erc :type built-in))
+(straight-use-package '(external-completion :type built-in))
+(straight-use-package '(flymake :type built-in))
+(straight-use-package '(map :type built-in))
+(straight-use-package '(modus-themes :type built-in))
+(straight-use-package '(org :type built-in))
+(straight-use-package '(peg :type built-in))
+(straight-use-package '(project :type built-in))
+(straight-use-package '(xref :type built-in))
 
 ;;; Utility libraries
 (straight-use-package 'dash)

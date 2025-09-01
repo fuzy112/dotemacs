@@ -1,5 +1,11 @@
 2025-09-01  Zhengyi Fu  <i@fuzy.me>
 
+	* packages.el: Instead of adding entries to
+	`straight-built-in-pseudo-packages', register those packages with
+	`:type built-in'.
+
+2025-09-01  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/xiaoshuo.el (xiaoshuo-mode): Set `mode-line-format' to nil.
 
 2025-08-31  Zhengyi Fu  <i@fuzy.me>
