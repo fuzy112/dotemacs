@@ -1,3 +1,7 @@
+2025-09-01  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/xiaoshuo.el (xiaoshuo-mode): Set `mode-line-format' to nil.
+
 2025-08-31  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (+fontsets-initilize-hook): New variable.
