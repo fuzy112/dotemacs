@@ -1,5 +1,9 @@
 2025-09-02  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/check-hooks.el: New file.
+
+2025-09-02  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Wrap some `add-hook' forms in `after-load!' to prevent
 	the standard-value from being overwritten.
 
