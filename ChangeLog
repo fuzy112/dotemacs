@@ -1,5 +1,10 @@
 2025-09-02  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Wrap some `add-hook' forms in `after-load!' to prevent
+	the standard-value from being overwritten.
+
+2025-09-02  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/xiaoshuo.el (xiaoshuo-mode-map): Define keys.
 
 2025-09-02  Zhengyi Fu  <i@fuzy.me>

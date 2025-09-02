@@ -1884,12 +1884,12 @@ Display the result in a posframe." t)
 
 ;;;; sh-script
 
-(add-hook 'sh-mode-hook #'sh-electric-here-document-mode)
 (add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
 (autoload 'flymake-checkbashisms "flymake-checkbashisms")
 (defun +sh-mode-h ()
   (add-hook 'flymake-diagnostic-functions #'flymake-checkbashisms nil t))
-(add-hook 'sh-mode-hook #'+sh-mode-h)
+(after-load! 'sh-script
+  (add-hook 'sh-mode-hook #'+sh-mode-h))
 
 (defun +shellcheck-auto-fix ()
   "Run shellcheck on current buffer to generate fix suggestions.
@@ -2157,7 +2157,8 @@ new record is started."
 
 (autoload 'diff-hl-magit-post-refresh "diff-hl")
 (add-hook 'tty-setup-hook #'diff-hl-margin-mode)
-(add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
+(after-load! magit-mode
+  (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh))
 
 (setq diff-hl-margin-symbols-alist '((insert  . "增")
                                      (delete  . "刪")
@@ -2184,8 +2185,9 @@ Then refresh all windows displaying the current buffer."
 
 ;;;; eldoc-diffstat
 
-(add-hook 'magit-mode-hook #'eldoc-diffstat-mode)
-(add-hook 'magit-blame-mode-hook #'eldoc-diffstat-mode)
+(after-load! magit-mode
+  (add-hook 'magit-mode-hook #'eldoc-diffstat-mode)
+  (add-hook 'magit-blame-mode-hook #'eldoc-diffstat-mode))
 (add-hook 'vc-annotate-mode-hook #'eldoc-diffstat-mode)
 
 ;;;; eat
@@ -2377,7 +2379,8 @@ Then refresh all windows displaying the current buffer."
 (add-hook 'next-error-hook '+lin-line--next-error-h)
 
 ;; Highlight the current gnus header buffer item.
-(add-hook 'gnus-visual-mark-article-hook #'hl-line-highlight)
+(after-load! gnus-sum
+  (add-hook 'gnus-visual-mark-article-hook #'hl-line-highlight))
 
 ;;;; prism
 
