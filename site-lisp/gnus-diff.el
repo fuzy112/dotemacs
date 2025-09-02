@@ -26,9 +26,13 @@
 ;;; Code:
 
 (require 'ansi-color)
+(require 'gnus-art)
 
 ;;;###autoload
-(defvar gnus-treat-highlight-diffs '(typep "text/plain"))
+(defcustom gnus-treat-highlight-diffs '(typep "text/plain")
+  "Highlight diff."
+  :group 'gnus-article-treat
+  :type gnus-article-treat-custom)
 
 ;;;###autoload
 (defun gnus-article-highlight-diffs ()
