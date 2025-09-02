@@ -2795,6 +2795,10 @@ of feed configurations without modifying init files."
 (after-load! telega
   (require 'telega-config))
 
+;;;; ement
+
+(setopt ement-save-sessions t)
+
 ;;;; rcirc
 
 (after-load! rcirc

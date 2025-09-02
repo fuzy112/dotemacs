@@ -1,5 +1,9 @@
 2025-09-02  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (ement-save-sessions): Set to t.
+
+2025-09-02  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (consult-mode-histories): Fix histories for
 	`eca-chat-mode'.
 
