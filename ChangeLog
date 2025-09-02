@@ -1,5 +1,9 @@
 2025-09-02  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+maybe-init-fontset): Demote errors to messages.
+
+2025-09-02  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/check-hooks.el: New file.
 
 2025-09-02  Zhengyi Fu  <i@fuzy.me>
