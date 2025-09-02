@@ -2665,7 +2665,7 @@ of feed configurations without modifying init files."
 
 (after-load! consult
   (alist-setq! consult-mode-histories
-    eca-chat-mode '(eca-chat-history eca-chat-history-index markdown-beginning-of-line)))
+    eca-chat-mode '(eca-chat--history eca-chat--history-index markdown-beginning-of-line)))
 
 ;;;; logos
 
