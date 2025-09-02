@@ -362,8 +362,8 @@ changed packages."
 (defun +maybe-init-fontset ()
   (and (not +fontset-initialized)
        (display-graphic-p)
-       (ignore-errors
-         (+init-fontsets)
+       (with-demoted-errors "Failed to setup fonts: %S"
+           (+init-fontsets)
          (setq +fontset-initialized t))))
 
 (+maybe-init-fontset)
