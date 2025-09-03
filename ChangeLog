@@ -1,5 +1,13 @@
 2025-09-03  Zhengyi Fu  <i@fuzy.me>
 
+	Fix tramp-cache configuration
+
+	* init.el (tramp-persistency-file-name): Set to "tramp.eld".
+	`tramp' reads the file with `insert-file-contents-literally', so
+	`auto-compression-mode' is not supported.
+
+2025-09-03  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Fix bootstrapping of pdf-tools.
 
 2025-09-03  Zhengyi Fu  <i@fuzy.me>
