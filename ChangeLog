@@ -1,3 +1,7 @@
+2025-09-03  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (help-window-keep-selected): Set to t.
+
 2025-09-02  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (ement-save-sessions): Set to t.
