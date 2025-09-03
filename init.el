@@ -1992,7 +1992,7 @@ confirmed."
 ;;;; tramp
 
 (setq tramp-persistency-file-name
-      (locate-user-emacs-file '("tramp.eld.zst")))
+      (locate-user-emacs-file "tramp.eld"))
 
 ;;; We need to ensure Unix domain sockets have paths shorter than 108 characters
 ;;; (this is a system limit). If tramp-compat-temporary-file-directory is too long,
