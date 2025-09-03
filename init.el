@@ -1501,8 +1501,19 @@ value for USE-OVERLAYS."
 (alist-setq! auto-mode-alist "\\.pdf\\'" #'pdf-view-mode)
 (alist-setq! magic-mode-alist "%PDF" #'pdf-view-mode)
 
-(after-load! pdf-tools
-  (pdf-tools-install))
+(after-load! (:or pdf-tool pdf-view)
+  (save-current-buffer
+    (let ((val (pdf-tools-install :no-query))
+          finished)
+      (when (bufferp val)
+        (with-current-buffer val
+          (add-hook 'compilation-finish-functions
+                    (lambda (buf status)
+                      (setq finished t)))
+          (while (not finished)
+            (redisplay)
+            (accept-process-output nil 1))
+          (quit-windows-on val))))))
 
 ;;;; outline
 
