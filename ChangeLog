@@ -1,5 +1,9 @@
 2025-09-03  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/xiaoshuo.el: Change C-p/C-n to p/n.
+
+2025-09-03  Zhengyi Fu  <i@fuzy.me>
+
 	Fix tramp-cache configuration
 
 	* init.el (tramp-persistency-file-name): Set to "tramp.eld".
