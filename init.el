@@ -355,19 +355,19 @@ changed packages."
   (set-face-attribute 'fixed-pitch nil :family "Iosevka Fixed Slab" :weight 'medium :fontset "fontset-fixed")
   (set-face-attribute 'fixed-pitch-serif nil :family "Iosevka Fixed Slab" :weight 'medium :fontset "fontset-fixed")
 
-  (run-hooks '+fontset-initialize-hook))
+  (run-hooks '+fontsets-initialize-hook))
 
-(defvar +fontset-initialized nil)
+(defvar +fontsets-initialized nil)
 
 (defun +maybe-init-fontset ()
-  (and (not +fontset-initialized)
+  (and (not +fontsets-initialized)
        (display-graphic-p)
        (with-demoted-errors "Failed to setup fonts: %S"
-           (+init-fontsets)
-         (setq +fontset-initialized t))))
+         (+init-fontsets)
+         (setq +fontsets-initialized t))))
 
 (+maybe-init-fontset)
-(unless +fontset-initialized
+(unless +fontsets-initialized
   (add-hook 'server-after-make-frame-hook #'+maybe-init-fontset))
 
 (setq xft-ignore-color-fonts nil
@@ -543,7 +543,7 @@ attributes."
 
 (after-load! nerd-icons
   (nerd-icons-set-font)
-  (add-hook '+fontset-initialize-hook #'nerd-icons-set-font)
+  (add-hook '+fontsets-initialize-hook #'nerd-icons-set-font)
   (add-hook 'server-after-make-frame-hook #'nerd-icons-set-font))
 
 ;;;; ultra-scroll
