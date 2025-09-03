@@ -101,8 +101,8 @@ A value of 0.2 means 20% additional space between lines."
 (define-keymap :keymap xiaoshuo-mode-map
   "C-c C-p" 'outline-previous-heading
   "C-c C-n" 'outline-next-heading
-  "C-p" 'scroll-down
-  "C-n" 'scroll-up)
+  "n" 'scroll-down
+  "p" 'scroll-up)
 
 (provide 'xiaoshuo)
 ;;; xiaoshuo.el ends here
