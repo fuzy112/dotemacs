@@ -132,49 +132,48 @@ This argument can also be 0, which means to read to the end of the file."))
 
 (defun +gptel-edit-file-async (callback file-path file-edits)
   "In FILE-PATH, apply FILE-EDITS with pattern matching and replacing."
-  (if (not (and file-path (not (string= file-path "")) file-edits))
-      (funcall callback (list :error "Failed to edit file"
-			      :reason "Invalid arguments"))
-    (let ((edit-buffer (generate-new-buffer "*edit-file*")))
-      (with-current-buffer edit-buffer
-	(insert-file-contents (expand-file-name file-path))
-	(let* ((inhibit-read-only t)
-	       (case-fold-search nil)
-	       (file-name (expand-file-name file-path))
-	       (orig-buffer (find-file-noselect file-name))
-	       (edit-success nil))
-	  ;; apply changes
-	  (dolist (file-edit (seq-into file-edits 'list))
-	    (when-let* ((line-number (plist-get file-edit :line_number))
-			(old-string (plist-get file-edit :old_string))
-			(new-string (plist-get file-edit :new_string))
-			(is-valid-old-string (not (string= old-string ""))))
-	      (goto-char (point-min))
-	      (forward-line (1- line-number))
-	      (when (search-forward old-string nil t)
-		(replace-match new-string t t)
-		(setq edit-success t))))
-	  ;; return result to gptel
-	  (if edit-success
-	      (progn
-		;; show diffs
-		(ediff-buffers
-		 orig-buffer edit-buffer
-		 (list (lambda ()
-			 (add-hook 'ediff-quit-hook
-				   (lambda ()
-				     (condition-case nil
-					 (if (y-or-n-p (format "Accept the changes? "))
-					     (with-current-buffer edit-buffer
-					       (write-region nil nil file-name)
-					       (funcall callback "Successfully edited file"))
-					   (funcall callback "Partially edited file."))
-				       (error (funcall callback (list :error "Failed to edit file"
-								      :reason "Internal error"))))
-				     (kill-buffer edit-buffer))
-				   nil t)))))
-	    (funcall callback (list :error "Failed to edit file"
-				    :reason "Did not find the contents to replace"))))))))
+  (condition-case err
+      (let ((edit-buffer (generate-new-buffer "*edit-file*")))
+	(with-current-buffer edit-buffer
+	  (insert-file-contents (expand-file-name file-path))
+	  (let* ((inhibit-read-only t)
+		 (case-fold-search nil)
+		 (file-name (expand-file-name file-path))
+		 (orig-buffer (find-file-noselect file-name))
+		 (edit-success nil))
+	    ;; apply changes
+	    (dolist (file-edit (seq-into file-edits 'list))
+	      (when-let* ((line-number (plist-get file-edit :line_number))
+			  (old-string (plist-get file-edit :old_string))
+			  (new-string (plist-get file-edit :new_string))
+			  (is-valid-old-string (not (string= old-string ""))))
+		(goto-char (point-min))
+		(forward-line (1- line-number))
+		(when (search-forward old-string nil t)
+		  (replace-match new-string t t)
+		  (setq edit-success t))))
+	    ;; return result to gptel
+	    (if edit-success
+		(progn
+		  ;; show diffs
+		  (ediff-buffers
+		   orig-buffer edit-buffer
+		   (list (lambda ()
+			   (add-hook 'ediff-quit-hook
+				     (lambda ()
+				       (condition-case err1
+					   (if (y-or-n-p (format "Accept the changes? "))
+					       (with-current-buffer edit-buffer
+						 (write-region nil nil file-name)
+						 (funcall callback "Successfully edited file"))
+					     (funcall callback "User rejected the changes and wants to do something else."))
+					 (error (funcall callback (list :error "Failed to edit file"
+									:reason err1))))
+				       (kill-buffer edit-buffer))
+				     nil t)))))
+	      (error "Failed to find the string to replace")))))
+    (error (funcall callback (list :error "Failed to edit the file"
+				   :internal_error err)))))
 
 (gptel-make-tool
  :name "edit_file"
@@ -250,6 +249,7 @@ This tool is not meant to be used to modify files: use `edit_file` to do that."
 		:type string
 		:description "Optional: The directory in which to run the command. Defaults to the current directory if not specified."))
  :category "command"
+ :confirm t
  ;; :confirm t
  :include t)
 

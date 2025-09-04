@@ -32,6 +32,11 @@
 
 2025-09-04  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el (+gptel-edit-file-async): More robust
+	error handling.
+
+2025-09-04  Zhengyi Fu  <i@fuzy.me>
+
 	Update gptel tools
 
 	* site-lisp/gptel-config.el (+gptel-edit-file-async): New function.
