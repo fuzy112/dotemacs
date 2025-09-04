@@ -2907,7 +2907,7 @@ of feed configurations without modifying init files."
 ;;;; p-search
 
 (after-load! p-search
-  (require 'psx-info "extensions/p-search-x-info.el"))
+  (require 'p-search-x-info "extensions/p-search-x-info.el"))
 (autoload 'p-search "p-search" nil t)
 
 ;;;; copyright

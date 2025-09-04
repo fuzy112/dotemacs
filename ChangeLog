@@ -32,6 +32,10 @@
 
 2025-09-04  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Fix configuration of p-search.
+
+2025-09-04  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el (+gptel-edit-file-async): More robust
 	error handling.
 
