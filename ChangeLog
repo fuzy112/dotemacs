@@ -1,3 +1,11 @@
+2025-09-04  Zhengyi Fu  <i@fuzy.me>
+
+	Update gptel tools
+
+	* site-lisp/gptel-config.el (+gptel-edit-file-async): New function.
+	Replaced `+gptel-edit-file'.
+	Reomoved `read_buffer' and `edit_buffer' tool.
+
 2025-09-03  Zhengyi Fu  <i@fuzy.me>
 
 	* site-lisp/xiaoshuo.el: Change C-p/C-n to p/n.

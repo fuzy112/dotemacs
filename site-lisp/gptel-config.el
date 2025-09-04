@@ -110,16 +110,19 @@
 		     :description "The content to write to the file"))
  :category "filesystem")
 
-(defun +gptel-edit-file (file-path file-edits)
+(defun +gptel-edit-file-async (callback file-path file-edits)
   "In FILE-PATH, apply FILE-EDITS with pattern matching and replacing."
-  (if (and file-path (not (string= file-path "")) file-edits)
-      (with-current-buffer (get-buffer-create "*edit-file*")
-	(erase-buffer)
+  (if (not (and file-path (not (string= file-path "")) file-edits))
+      (funcall callback (list :error "Failed to edit file"
+			      :reason "Invalid arguments"))
+    (let ((edit-buffer (generate-new-buffer "*edit-file*")))
+      (with-current-buffer edit-buffer
 	(insert-file-contents (expand-file-name file-path))
-	(let ((inhibit-read-only t)
-	      (case-fold-search nil)
-	      (file-name (expand-file-name file-path))
-	      (edit-success nil))
+	(let* ((inhibit-read-only t)
+	       (case-fold-search nil)
+	       (file-name (expand-file-name file-path))
+	       (orig-buffer (find-file-noselect file-name))
+	       (edit-success nil))
 	  ;; apply changes
 	  (dolist (file-edit (seq-into file-edits 'list))
 	    (when-let* ((line-number (plist-get file-edit :line_number))
@@ -135,18 +138,28 @@
 	  (if edit-success
 	      (progn
 		;; show diffs
-		(save-window-excursion
-		  (ediff-buffers (find-file-noselect file-name) (current-buffer))
-		  (recursive-edit))
-		(with-current-buffer (find-buffer-visiting file-name)
-		  (save-buffer))
-		(format "Successfully edited %s" file-name))
-	    (format "Failed to edited %s" file-name))))
-    (format "Failed to edited %s" file-path)))
+		(ediff-buffers
+		 orig-buffer edit-buffer
+		 (list (lambda ()
+			 (add-hook 'ediff-quit-hook
+				   (lambda ()
+				     (condition-case nil
+					 (if (y-or-n-p (format "Accept the changes? "))
+					     (with-current-buffer edit-buffer
+					       (write-region nil nil file-name)
+					       (funcall callback "Successfully edited file"))
+					   (funcall callback "Partially edited file."))
+				       (error (funcall callback (list :error "Failed to edit file"
+								      :reason "Internal error"))))
+				     (kill-buffer edit-buffer))
+				   nil t)))))
+	    (funcall callback (list :error "Failed to edit file"
+				    :reason "Did not find the contents to replace"))))))))
 
 (gptel-make-tool
  :name "edit_file"
- :function #'+gptel-edit-file
+ :function #'+gptel-edit-file-async
+ :async t
  :description "Edit file with a list of edits, each edit contains a line-number,
 a old-string and a new-string, new-string will replace the old-string at the specified line."
  :args (list '(:name "file-path"
@@ -251,75 +264,6 @@ This tool is not meant to be used to modify files: use `edit_file` to do that."
 		     :type string
 		     :description "The search query string"))
  :category "emacs")
-
-
-(gptel-make-tool
- :name "read_buffer"
- :function (lambda (buffer-name)
-	     (if (string-match-p "\\`\\(?: \\|\\*\\|\\.\\)" buffer-name)
-		 (error "Buffer unreadable: %s" buffer-name))
-	     (with-current-buffer buffer-name
-	       (message "Reading buffer %s..." buffer-name)
-	       (buffer-substring-no-properties (point-min) (point-max))))
- :description "Read the content of an Emacs buffer."
- :args (list '(:name "buffer_name"
-		     :type string
-		     :description "The name of the buffer to read"))
- :category "emacs")
-
-
-(defun +gptel-edit-buffer (buffer-name buffer-edits)
-  "In FILE-PATH, apply FILE-EDITS with pattern matching and replacing."
-  (if (and buffer-name (not (string= buffer-name "")) buffer-edits)
-      (with-current-buffer (get-buffer-create "*edit-file*")
-	(erase-buffer)
-	(insert-buffer-substring buffer-name)
-	(let ((inhibit-read-only t)
-	      (case-fold-search nil)
-	      ;; (file-name (expand-file-name buffer-name))
-	      (edit-success nil))
-	  ;; apply changes
-	  (dolist (buffer-edit (seq-into buffer-edits 'list))
-	    (when-let* ((line-number (plist-get buffer-edit :line_number))
-			(old-string (plist-get buffer-edit :old_string))
-			(new-string (plist-get buffer-edit :new_string))
-			(is-valid-old-string (not (string= old-string ""))))
-	      (goto-char (point-min))
-	      (forward-line (1- line-number))
-	      (when (search-forward old-string nil t)
-		(replace-match new-string t t)
-		(setq edit-success t))))
-	  ;; return result to gptel
-	  (if edit-success
-	      (progn
-		;; show diffs
-		(ediff-buffers buffer-name (current-buffer))
-		(format "Successfully edited %s" buffer-name))
-	    (format "Failed to edited %s" buffer-name))))
-    (format "Failed to edited %s" buffer-name)))
-
-
-(gptel-make-tool
- :name "edit_buffer"
- :function #'+gptel-edit-buffer
- :description "Edit buffer with a list of edits, each edit contains a line-number,
-a old-string and a new-string, new-string will replace the old-string at the specified line."
- :args (list '(:name "buffer_name"
-		     :type string
-		     :description "The full path of the file to edit")
-	     '(:name "buffer_edits"
-		     :type array
-		     :items (:type object
-				   :properties
-				   (:line_number
-				    (:type integer :description "The line number of the file where edit starts.")
-				    :old_string
-				    (:type string :description "The old-string to be replaced.")
-				    :new_string
-				    (:type string :description "The new-string to replace old-string.")))
-		     :description "The list of edits to apply on the buffer"))
- :category "emacs")
-
 
 ;; web tools
 
