@@ -542,7 +542,8 @@ attributes."
                          mode-line-buffer-identification))
 
 (after-load! nerd-icons
-  (nerd-icons-set-font)
+  (when (display-graphic-p)
+    (nerd-icons-set-font))
   (add-hook '+fontsets-initialize-hook #'nerd-icons-set-font)
   (add-hook 'server-after-make-frame-hook #'nerd-icons-set-font))
 
