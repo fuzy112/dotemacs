@@ -1,5 +1,18 @@
 2025-09-05  Zhengyi Fu  <i@fuzy.me>
 
+	Refactor gptel configuration
+
+	* site-lisp/gptel-config.el (gptel--known-backends)
+	(gptel--known-tools, gptel--known-presets): Reset to nil.
+	(read_file): Add start and end.
+	(grep): New tool.
+	(+gptel-run-command-sandboxed): Remove function.
+	(run_command): Now run asynchronously.
+	(kimi-coder): Remove preset.
+	(kimi-agent): Refactor.
+
+2025-09-05  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (ielm-history-file-name): Use zstd compression.
 
 2025-09-05  Zhengyi Fu  <i@fuzy.me>

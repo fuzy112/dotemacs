@@ -3,9 +3,13 @@
 (require 'gptel)
 (require 'url-http)
 
-;;; Models
+;;; Reset backends, tools, and presets
 
-(setq gptel--known-backends (assoc-delete-all "ChatGPT" gptel--known-backends))
+(setq gptel--known-backends nil
+      gptel--known-tools nil
+      gptel--known-presets nil)
+
+;;; Models
 
 (gptel-make-openai "Moonshot"
   :host "api.moonshot.cn"
@@ -66,14 +70,30 @@
 
 (gptel-make-tool
  :name "read_file"
- :function (lambda (filepath)
+ :function (lambda (filepath start end)
 	     (with-temp-buffer
 	       (insert-file-contents (expand-file-name filepath))
-	       (buffer-string)))
- :description "Read and display the contents of a file"
+	       (goto-char (point-min))
+	       (forward-line (1- start))
+	       (let ((start-pos (point-marker)))
+		 (if (zerop end)
+		     (buffer-substring-no-properties
+		      start-pos (point-max))
+		   (goto-char (point-min))
+		   (forward-line (1- end))
+		   (buffer-substring-no-properties
+		    start-pos (line-end-position))))))
+ :description "Read contents of a file"
  :args (list '(:name "filepath"
 		     :type string
-		     :description "Path to the file to read. Supports relative paths and ~."))
+		     :description "Path to the file to read. Supports relative paths and ~.")
+	     '(:name "start"
+		     :type number
+		     :description "The first line to read")
+	     '(:name "end"
+		     :type number
+		     :description "The last line of the file to read.
+This argument can also be 0, which means to read to the end of the file."))
  :category "filesystem"
  :confirm t)
 
@@ -178,32 +198,48 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 		     :description "The list of edits to apply on the file"))
  :category "filesystem")
 
-;; command tools
+(gptel-make-tool
+ :name "grep"
+ :function
+ (lambda (callback regexp)
+   (let ((buffer (grep (format "rg --color=auto --no-heading -nH --null -e %s -r . | head -n 200" (shell-quote-argument regexp)))))
+     (with-current-buffer buffer
+       (add-hook 'compilation-finish-functions
+		 (lambda (buffer how)
+		   (with-current-buffer buffer
+		     (funcall callback (buffer-string))))
+		 nil t))))
+ :async t
+ :description "Search for a pattern in the workspace."
+ :args (list '(:name "regexp"
+		     :type string
+		     :description "The pattern to search.  It should be a regular expression."))
+ :category "filesystem")
 
-(defun +gptel-run-command-sandboxed (command &optional working_dir)
-  (with-temp-message (format "Executable command: `%s'" command)
-    (let ((dir (expand-file-name default-directory))
-	  (default-directory (if (and working_dir (not (string= working_dir "")))
-				 (expand-file-name working_dir)
-			       default-directory)))
-      (with-temp-buffer
-	(process-file "/usr/bin/bwrap" nil t nil
-		      "--ro-bind" "/lib" "/lib"
-		      "--ro-bind" "/lib64" "/lib64"
-		      "--ro-bind" "/bin" "/bin"
-		      "--ro-bind" "/usr" "/usr"
-		      "--dev" "/dev"
-		      "--bind" dir dir
-		      "--new-session"
-		      "--unshare-all"
-		      "--share-net"
-		      "--chdir" default-directory
-		      "bash" "-c" command)
-	(buffer-string)))))
+;; command tools
 
 (gptel-make-tool
  :name "run_command"
- :function #'+gptel-run-command-sandboxed
+ :function
+ (lambda (callback command working-dir)
+   (let* ((default-directory  working-dir)
+	  (buffer (generate-new-buffer "*Command Output*"))
+	  (proc (start-file-process "gptel-run-command"
+				    buffer
+				    shell-file-name
+				    "-c"
+				    command)))
+     (display-buffer buffer)
+     (set-process-sentinel
+      proc
+      (lambda (p m)
+	(unless (process-live-p p)
+	  (funcall callback (with-current-buffer buffer
+			      (buffer-substring-no-properties
+			       (point-min) (point-max))))
+	  (when (zerop (process-exit-status p))
+	    (kill-buffer buffer)))))))
+ :async t
  :description "Executes a shell command and returns the output as a string. IMPORTANT: This tool allows execution of arbitrary code; user confirmation will be required before any command is run.
 This tool is not meant to be used to modify files: use `edit_file` to do that."
  :args (list
@@ -707,60 +743,59 @@ Be concise, accurate, and helpful.
 You may search the web or read URLs when needed.
 Whenever you cite external information, always include the full source URL.")
 
-(gptel-make-preset 'kimi-coder
+(gptel-make-preset 'kimi-agent
   :description "Fast, deterministic coding assistant using Moonshot’s kimi-k2"
   :backend "Moonshot"
   :model 'kimi-k2-turbo-preview
   :stream t
   :temperature 0.1
   :max-tokens 4096
-  :use-tools nil
-  :system "You are an expert Emacs-Lisp and general-purpose programmer. Return only
-complete, runnable code without any explanation or markdown code
-fences. Prefer built-ins and avoid external dependencies unless
-necessary.")
-
-(gptel-make-preset 'kimi-agent
-  :description "Elite coding agent powered by Moonshot Kimi"
-  :backend "Moonshot"
-  :model 'kimi-k2-turbo-preview
-  :stream t
-  :temperature 0.2
-  :max-tokens 8192
   :use-tools t
-  :tools '("read_file" "run_command" "list_directory" "edit_file" "create_file" "search_web" "read_url" "read_documentation" "search_emacs_mailing_list" "shellcheck" "read_buffer" "edit_buffer")
-  :system "You are an elite AI coding agent embedded in Emacs, specializing in Emacs-Lisp and polyglot programming.
+  :tools '("edit_file" "create_file" "read_file" "run_command" "grep" "list_directory")
+  :system "You are ECA (Emacs Coding Agent), an AI coding agent that operates in Emacs.
 
-Your core capabilities:
-- Expert-level Emacs-Lisp development and Emacs internals
-- Polyglot programming (Python, JavaScript, C/C++, Go, Rust, Shell, etc.)
-- Code analysis, refactoring, and optimization
-- Debugging and troubleshooting across languages
-- Project structure analysis and architecture guidance
-- Test-driven development and CI/CD integration
+Your pair programming with a USER to solve their coding task.  Each time
+the USER sends a message, we may automatically attach some context
+information about their current state, such as passed contexts, rules
+defined by USER, project structure, and more.  This information may or
+may not be relevant to the coding task -- it is up to you to decide.
 
-Workflow approach:
-1. **Analyze**: Thoroughly examine the codebase and requirements
-2. **Plan**: Create a clear todo list with prioritized tasks
-3. **Execute**: Implement solutions systematically with proper testing
-4. **Verify**: Ensure code quality, performance, and maintainability
-5. **Document**: Provide clear explanations and usage examples
+You are an agent -- please keep going until the user's query is
+completely resolved, before ending your turn and yielding back to the
+user.  Only terminate your turn when you are sure that the problem is
+solved.  Autonomously resolve the query to the best of you ability
+before coming back to the user.
 
-Best practices:
-- Write clean, idiomatic code following language conventions
-- Include comprehensive error handling and edge cases
-- Add meaningful comments and documentation
-- Optimize for readability and maintainability
-- Use appropriate design patterns and architectural principles
-- Ensure security considerations are addressed
-- Write tests for critical functionality
+NEVER show the code edits or new files to the user -- only call the
+proper tool.  The system will apply and display the edits.  For each
+file, give a short description of what needs to be edited, then use the
+available tool.  You can use the tool multiple times in a response, and
+you can keep writing text after using a tool.  Prefer multiple tool
+calls for specific code block changes instead of one big call changing
+the whole file or unnecessary parts of the code.
 
-Communication style:
-- Be precise and concise in technical explanations
-- Provide actionable insights and specific recommendations
-- Include code examples when demonstrating concepts
-- Highlight potential pitfalls and optimization opportunities
-- Use structured formatting for complex information")
+Use proper Markdown formatting in your answer.  When referring to a
+filename, function, symbol in the user's workspace, wrap it in
+backticks.  Pay attention to the language name after the code block
+backticks start, use the full language name like 'javascript' instead of
+'js'.
+
+You have tools at your disposal to solve the coding task.  Follow these
+rules regarding tool calls:
+
+1. ALWAYS follow the tool call schema exactly as specified and make sure
+to provide all necessary parameters.
+
+2. If you need additional information that you can get via tool calls,
+prefer that over asking the user.
+
+3. If you are not sure about file content or codebase structure
+pertaining to the user's request, use your tools to read files and gather
+the relevant information: do NOT guess or make up an answer.
+
+4. You have the capability to call multiple tools in a single response,
+batch your tool calls together for optimal performance.
+")
 
 (gptel-make-preset 'deepseek-reasoner
   :description "DeepSeek Reasoner – step-by-step reasoning assistant"
