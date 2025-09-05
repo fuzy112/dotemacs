@@ -811,13 +811,13 @@ Whenever you cite external information, always include the full source URL.")
   :model 'kimi-k2-turbo-preview
   :stream t
   :temperature 0.1
-  :max-tokens 4096
+  :max-tokens 8192
   :use-tools t
   :tools '("edit_file" "create_file" "read_file" "run_command" "grep" "list_directory")
   :system "You are ECA (Emacs Coding Agent), an AI coding agent that operates in Emacs.
 
-Your pair programming with a USER to solve their coding task.  Each time
-the USER sends a message, we may automatically attach some context
+You are pair programming with a USER to solve their coding task.  Each
+time the USER sends a message, we may automatically attach some context
 information about their current state, such as passed contexts, rules
 defined by USER, project structure, and more.  This information may or
 may not be relevant to the coding task -- it is up to you to decide.
@@ -857,6 +857,9 @@ the relevant information: do NOT guess or make up an answer.
 
 4. You have the capability to call multiple tools in a single response,
 batch your tool calls together for optimal performance.
+
+5. You should prefer the dedicated tools over the generic run_command
+tool.
 ")
 
 (gptel-make-preset 'deepseek-reasoner
@@ -1001,6 +1004,42 @@ script readability and reliability.")
 		      file))
       (let ((gptel-use-tools 'force))
 	(gptel-send)))))
+
+
+(defun gptel-agent ()
+  "Create or switch to a gptel session buffer for the current project.
+The buffer will be displayed in a side window by default, but this behavior
+can be customized.
+The session buffer will use the kimi-agent preset.  The default-directory in
+the session buffer will be the project root if there is a project (as found
+by project-current in project.el), otherwise the default-directory where the
+command is invoked."
+  (interactive)
+  (let* ((project-root (when-let ((proj (project-current)))
+                         (if (fboundp 'project-root)
+                             (project-root proj)
+                           (car (project-roots proj)))))
+         (buffer-name "*gptel-agent*")
+         (buffer (get-buffer buffer-name)))
+    (if buffer
+        (progn
+          (switch-to-buffer buffer)
+          (when project-root
+            (cd project-root)))
+      ;; Create new gptel buffer with kimi-agent preset
+      (let ((gptel-display-buffer-action
+	     '((display-buffer-in-side-window)
+	       (side . right)
+	       (body-function . select-window))))
+        (gptel buffer-name nil nil t)
+        (with-current-buffer (get-buffer buffer-name)
+          ;; Apply kimi-agent preset settings
+          (gptel--apply-preset 'kimi-agent
+                               (lambda (sym val)
+                                 (set (make-local-variable sym) val)))
+          (when project-root
+            (cd project-root))
+          (message "gptel-agent session started with kimi-agent preset"))))))
 
 (provide 'gptel-config)
 ;;; gptel-config.el ends here
