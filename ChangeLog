@@ -1,5 +1,9 @@
 2025-09-05  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (ielm-history-file-name): Use zstd compression.
+
+2025-09-05  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/ubuntu-source.el: New file.
 
 2025-09-05  Zhengyi Fu  <i@fuzy.me>
