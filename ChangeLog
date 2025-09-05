@@ -1,5 +1,22 @@
 2025-09-05  Zhengyi Fu  <i@fuzy.me>
 
+	Keep buffer in run_command tool instead of killing it
+
+	* site-lisp/gptel-config.el (run_command): Remove kill-buffer call
+	when command succeeds to keep the buffer open for user inspection.
+
+2025-09-05  Zhengyi Fu  <i@fuzy.me>
+
+	Fix ediff quit hook handling in gptel-edit-file-async
+
+	* site-lisp/gptel-config.el (+gptel-edit-file-async): Replace
+	'setq ediff-quit-hook' with 'add-hook' for proper hook
+	management. Remove redundant run-at-time call for window
+	configuration restoration. Simplify cleanup logic in ediff
+	completion callback.
+
+2025-09-05  Zhengyi Fu  <i@fuzy.me>
+
 	Enhance grep tool with optional working directory parameter
 
 	* site-lisp/gptel-config.el (grep): Add working_dir parameter for
