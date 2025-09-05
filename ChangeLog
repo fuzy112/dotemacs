@@ -1,5 +1,11 @@
 2025-09-05  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el (run_command): Improve
+	command output handling with persistent buffer, environment
+	variables, and proper output capture from start marker.
+
+2025-09-05  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el (grep): Update rg arguments.
 
 2025-09-05  Zhengyi Fu  <i@fuzy.me>
