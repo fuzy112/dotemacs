@@ -159,17 +159,17 @@ This argument can also be 0, which means to read to the end of the file."))
 		  (ediff-buffers
 		   orig-buffer edit-buffer
 		   (list (lambda ()
-			   (setq ediff-quit-hook
-				 (list (lambda ()
-					 (let ((accept-p (y-or-n-p "Accept the changes? ")))
-					   (if accept-p
-					       (progn
-						 (with-current-buffer edit-buffer
-						   (write-region nil nil file-name))
-						 (funcall callback "Successfully edited file"))
-					     (funcall callback "User rejected the changes and wants to do something else.")))
-					 (run-at-time 0 nil 'set-window-configuration window-config )
-					 (kill-buffer edit-buffer))))))))
+			   (add-hook 'ediff-quit-hook
+				     (lambda ()
+				       (let ((accept-p (y-or-n-p "Accept the changes? ")))
+					 (if accept-p
+					     (progn
+					       (with-current-buffer edit-buffer
+						 (write-region nil nil file-name))
+					       (funcall callback "Successfully edited file"))
+					   (funcall callback "User rejected the changes and wants to do something else.")))
+				       (kill-buffer edit-buffer))
+				     nil t)))))
 	      (error "Failed to find the string to replace")))))
     (error (funcall callback 'abort))))
 
@@ -246,8 +246,7 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 	  (funcall callback (with-current-buffer buffer
 			      (buffer-substring-no-properties
 			       (point-min) (point-max))))
-	  (when (zerop (process-exit-status p))
-	    (kill-buffer buffer)))))))
+)))))
  :async t
  :description "Executes a shell command and returns the output as a string. IMPORTANT: This tool allows execution of arbitrary code; user confirmation will be required before any command is run.
 This tool is not meant to be used to modify files: use `edit_file` to do that."
