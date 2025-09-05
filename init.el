@@ -1845,6 +1845,10 @@ current buffer state and calls REPORT-FN when done."
 
 (advice-add 'elisp-flymake-byte-compile :override #'straight-flymake-byte-compile)
 
+;;;; ielm
+
+(setq ielm-history-file-name (locate-user-emacs-file "ielm-history.eld.zst"))
+
 ;;;; pp
 
 (keymap-global-set "M-:" #'pp-eval-expression)
