@@ -167,7 +167,7 @@ This argument can also be 0, which means to read to the end of the file."))
 					       (with-current-buffer edit-buffer
 						 (write-region nil nil file-name))
 					       (funcall callback "Successfully edited file"))
-					   (funcall callback "User rejected the changes and wants to do something else.")))
+					   (funcall callback 'abort)))
 				       (kill-buffer edit-buffer))
 				     nil t)))))
 	      (error "Failed to find the string to replace")))))

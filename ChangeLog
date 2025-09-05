@@ -1,5 +1,10 @@
 2025-09-05  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el (+gptel-edit-file-async): Properly
+	abort the tool call when the user rejects the edit.
+
+2025-09-05  Zhengyi Fu  <i@fuzy.me>
+
 	Keep buffer in run_command tool instead of killing it
 
 	* site-lisp/gptel-config.el (run_command): Remove kill-buffer call
