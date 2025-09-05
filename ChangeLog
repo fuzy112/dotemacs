@@ -1,5 +1,10 @@
 2025-09-05  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el (+gptel-edit-file-async):
+	Update docstring.  Update error handling.
+
+2025-09-05  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el (create_file): Prevent exiting files
 	from being overwritten.
 
