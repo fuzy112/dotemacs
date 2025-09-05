@@ -1,5 +1,9 @@
 2025-09-05  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/ubuntu-source.el: New file.
+
+2025-09-05  Zhengyi Fu  <i@fuzy.me>
+
 	Fix font setting error in terminal
 
 	* init.el <nerd-icons>: Only call `nerd-icons-set-font' when
