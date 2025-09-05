@@ -1,3 +1,7 @@
+2025-09-05  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (+magit--ccdp-no-query): Use `bound-and-true-p'.
+
 2025-09-04  Zhengyi Fu  <i@fuzy.me>
 
 	Update gptel tools
