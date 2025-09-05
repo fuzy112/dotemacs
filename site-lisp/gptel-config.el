@@ -113,10 +113,12 @@ This argument can also be 0, which means to read to the end of the file."))
  :name "create_file"
  :function (lambda (path filename content)
 	     (let ((full-path (expand-file-name filename path)))
-	       (with-temp-buffer
-		 (insert content)
-		 (write-file full-path))
-	       (format "Created file %s in %s" filename path)))
+	       (if (file-exists-p full-path)
+		   (error "File %s already exists" filename)
+		 (with-temp-buffer
+		   (insert content)
+		   (write-file full-path))
+		 (format "Created file %s in %s" filename path))))
  :description "Create a new file with the specified content"
  :args (list '(:name "path"
 		     :type string
