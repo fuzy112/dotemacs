@@ -1,5 +1,20 @@
 2025-09-05  Zhengyi Fu  <i@fuzy.me>
 
+	Enhance grep tool with optional working directory parameter
+
+	* site-lisp/gptel-config.el (grep): Add working_dir parameter for
+	flexible directory searching. Update function signature and
+	default-directory handling.
+	(+gptel-edit-file-async): Improve error handling, use 'abort
+	symbol instead of error lists. Add :direct t property to
+	edit_file tool. Fix ediff cleanup hook to use run-at-time for
+	proper window configuration restoration.
+	(run_command): Improve command execution with comint-mode and
+	proper working directory expansion. Add :direct t property to
+	echo_message tool.
+
+2025-09-05  Zhengyi Fu  <i@fuzy.me>
+
 	gptel: asynchronous web searching and url retrieving
 
 	* site-lisp/gptel-config.el (+gptel-with-url-retrieve): New macro.
