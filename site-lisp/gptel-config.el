@@ -318,17 +318,42 @@ This tool is not meant to be used to modify files: use `edit_file` to do that."
 		 (buffer-string)))))
     buffer))
 
+(defmacro +gptel-with-url-retrieve (callback url &rest body)
+  (declare (indent 2))
+  (let ((url-var (gensym "url-"))
+	(callback-var (gensym "cb-"))
+	(status-var (gensym "status-"))
+	(err-var (gensym "err-")))
+    `(let ((,url-var ,url)
+	   (,callback-var ,callback))
+       (url-retrieve
+	,url-var
+	(lambda (,status-var)
+	  (condition-case ,err-var
+	      (progn
+		(message "Retrieving %s...%s" ,url-var url-http-response-status)
+		(if (>= url-http-response-status 400)
+		    (error "http error %s: %s"
+			   url-http-response-status
+			   (buffer-string))
+		  (funcall callback
+			   (progn ,@body))))
+	    (error (funcall ,callback-var (list :error "Failed to fetch the URL"
+						:internal-error ,err-var)))))))))
+
 (gptel-make-tool
  :name "read_url"
- :function (lambda (url)
-	     (with-current-buffer (+gptel-url-retrieve url)
-	       (goto-char (point-min))
-	       (forward-paragraph)
-	       (let ((dom (libxml-parse-html-region (point) (point-max))))
-		 (run-at-time 0 nil #'kill-buffer (current-buffer))
-		 (with-temp-buffer
-		   (shr-insert-document dom)
-		   (buffer-substring-no-properties (point-min) (point-max))))))
+ :function
+ (lambda (callback url)
+   (+gptel-with-url-retrieve callback url
+     (goto-char (point-min))
+     (forward-paragraph)
+     (let ((dom (libxml-parse-html-region (point) (point-max))))
+       (run-at-time 0 nil #'kill-buffer (current-buffer))
+       (with-temp-buffer
+	 (shr-insert-document dom)
+	 (buffer-substring-no-properties (point-min) (point-max))))))
+ :async t
  :description "Fetch and read the contents of a URL"
  :args (list '(:name "url"
 		     :type string
@@ -343,9 +368,9 @@ This tool is not meant to be used to modify files: use `edit_file` to do that."
 	(shr-insert (format " (%s)" href)))))
 
 (defvar shr-external-rendering-functions)
-(defun +gptel-search-ddg (query)
+(defun +gptel-search-ddg-async (callback query)
   (let ((url (format "https://html.duckduckgo.com/html/?q=%s" query)))
-    (with-current-buffer (+gptel-url-retrieve url)
+    (+gptel-with-url-retrieve callback url
       (goto-char (point-min))
       (forward-paragraph)
       (let ((dom (libxml-parse-html-region (point) (point-max))))
@@ -357,7 +382,8 @@ This tool is not meant to be used to modify files: use `edit_file` to do that."
 
 (gptel-make-tool
  :name "search_web"
- :function #'+gptel-search-ddg
+ :function #'+gptel-search-ddg-async
+ :async t
  :description "Perform a web search using the DuckDuckGo search engine"
  :args (list '(:name "query"
 		     :type string
