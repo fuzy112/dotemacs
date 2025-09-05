@@ -1,5 +1,9 @@
 2025-09-05  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el (grep): Update rg arguments.
+
+2025-09-05  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el (+gptel-edit-file-async): Properly
 	abort the tool call when the user rejects the edit.
 

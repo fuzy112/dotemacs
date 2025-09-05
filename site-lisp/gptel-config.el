@@ -202,7 +202,7 @@ a old-string and a new-string, new-string will replace the old-string at the spe
  (lambda (callback regexp working-dir)
    (let* ((default-directory (or (and working-dir (expand-file-name working-dir))
 				 default-directory))
-	  (buffer (grep (format "rg --color=auto --no-heading -nH --null -e %s -r . | head -n 200" (shell-quote-argument regexp)))))
+	  (buffer (grep (format "rg  --no-heading -n -e %s | head -n 200" (shell-quote-argument regexp)))))
      (with-current-buffer buffer
        (add-hook 'compilation-finish-functions
 		 (lambda (buffer how)
