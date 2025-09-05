@@ -1,5 +1,10 @@
 2025-09-06  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el (gptel-agent): Set
+	gptel-include-tool-results to t locally.
+
+2025-09-06  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el (gptel-agent): New function.
 	(kimi-agent): Update max-tokens to 8192, fix typo in system message.
 	Add guidance about preferring dedicated tools over run_command.
