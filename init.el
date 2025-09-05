@@ -2057,7 +2057,7 @@ confirmed."
 (defvar magit-credential-cache-daemon-process)
 (defun +magit--ccdp-no-query ()
   "Avoid query process status on exit."
-  (when magit-credential-cache-daemon-process
+  (when (bound-and-true-p magit-credential-cache-daemon-process)
     (set-process-query-on-exit-flag
      magit-credential-cache-daemon-process nil)))
 (after-load! magit
