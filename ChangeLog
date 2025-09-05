@@ -1,5 +1,12 @@
 2025-09-05  Zhengyi Fu  <i@fuzy.me>
 
+	Fix font setting error in terminal
+
+	* init.el <nerd-icons>: Only call `nerd-icons-set-font' when
+	`(display-graphic-p)' is non nil.
+
+2025-09-05  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+magit--ccdp-no-query): Use `bound-and-true-p'.
 
 2025-09-04  Zhengyi Fu  <i@fuzy.me>
