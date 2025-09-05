@@ -226,11 +226,16 @@ a old-string and a new-string, new-string will replace the old-string at the spe
  :function
  (lambda (callback command working-dir)
    (let* ((default-directory (expand-file-name working-dir))
-	  (buffer (generate-new-buffer "*Command Output*"))
-	  proc)
+	  (buffer (get-buffer-create "*Command Output*"))
+	  proc start-marker)
      (with-current-buffer buffer
        (unless (derived-mode-p 'comint-mode)
-	 (comint-mode)))
+	 (comint-mode)
+	 (setq-local process-environment (append (list "PAGER=cat"
+						       "GIT_PAGER=cat")
+						 process-environment)))
+       (goto-char (point-min))
+       (setq start-marker (point-marker)))
      (display-buffer buffer)
      (comint-exec buffer
 		  "gptel-run-command"
@@ -241,12 +246,13 @@ a old-string and a new-string, new-string will replace the old-string at the spe
      (setq proc (get-buffer-process buffer))
      (set-process-sentinel
       proc
-      (lambda (p m)
+      (lambda (p _m)
 	(unless (process-live-p p)
-	  (funcall callback (with-current-buffer buffer
-			      (buffer-substring-no-properties
-			       (point-min) (point-max))))
-)))))
+	  (funcall callback
+		   (and (buffer-live-p buffer)
+			(with-current-buffer buffer
+			  (buffer-substring-no-properties
+			   start-marker (point-max))))))))))
  :async t
  :description "Executes a shell command and returns the output as a string. IMPORTANT: This tool allows execution of arbitrary code; user confirmation will be required before any command is run.
 This tool is not meant to be used to modify files: use `edit_file` to do that."
