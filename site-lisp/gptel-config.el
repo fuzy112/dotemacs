@@ -132,9 +132,27 @@ This argument can also be 0, which means to read to the end of the file."))
  :category "filesystem")
 
 (defun +gptel-edit-file-async (callback file-path file-edits)
-  "In FILE-PATH, apply FILE-EDITS with pattern matching and replacing."
-  (condition-case nil
-      (let ((edit-buffer (generate-new-buffer "*edit-file*"))
+  "Asynchronously apply FILE-EDITS to FILE-PATH with pattern matching.
+
+CALLBACK is a function that will be called with the result message upon completion.
+FILE-PATH is the path to the file to be edited.
+FILE-EDITS is a list of edit specifications, where each edit is a plist with:
+  - :line_number - the line number where the edit starts
+  - :old_string - the string to be replaced
+  - :new_string - the replacement string
+
+The function will:
+1. Create a temporary buffer with the file contents
+2. Apply all edits sequentially
+3. Write the modified content back to the file
+4. Call CALLBACK with success message or abort on error
+
+If any edit fails (old_string not found), the operation is aborted and
+the original file is left unchanged.  Uses `gptel-abort' for proper
+error handling within gptel sessions."
+  (condition-case err
+      (let ((session-buffer (current-buffer))
+	    (edit-buffer (generate-new-buffer "*edit-file*"))
 	    (window-config (current-window-configuration)))
 	(with-current-buffer edit-buffer
 	  (insert-file-contents (expand-file-name file-path))
@@ -169,11 +187,11 @@ This argument can also be 0, which means to read to the end of the file."))
 					       (with-current-buffer edit-buffer
 						 (write-region nil nil file-name))
 					       (funcall callback "Successfully edited file"))
-					   (funcall callback 'abort)))
+					   (gptel-abort session-buffer)))
 				       (kill-buffer edit-buffer))
 				     nil t)))))
 	      (error "Failed to find the string to replace")))))
-    (error (funcall callback 'abort))))
+    (error (funcall callback (format "An error occurred: %S" err)))))
 
 (gptel-make-tool
  :name "edit_file"
