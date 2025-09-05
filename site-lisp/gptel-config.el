@@ -94,8 +94,7 @@
 		     :type number
 		     :description "The last line of the file to read.
 This argument can also be 0, which means to read to the end of the file."))
- :category "filesystem"
- :confirm t)
+ :category "filesystem")
 
 (gptel-make-tool
  :function (lambda (directory)
@@ -132,8 +131,9 @@ This argument can also be 0, which means to read to the end of the file."))
 
 (defun +gptel-edit-file-async (callback file-path file-edits)
   "In FILE-PATH, apply FILE-EDITS with pattern matching and replacing."
-  (condition-case err
-      (let ((edit-buffer (generate-new-buffer "*edit-file*")))
+  (condition-case nil
+      (let ((edit-buffer (generate-new-buffer "*edit-file*"))
+	    (window-config (current-window-configuration)))
 	(with-current-buffer edit-buffer
 	  (insert-file-contents (expand-file-name file-path))
 	  (let* ((inhibit-read-only t)
@@ -159,26 +159,25 @@ This argument can also be 0, which means to read to the end of the file."))
 		  (ediff-buffers
 		   orig-buffer edit-buffer
 		   (list (lambda ()
-			   (add-hook 'ediff-quit-hook
-				     (lambda ()
-				       (condition-case err1
-					   (if (y-or-n-p (format "Accept the changes? "))
-					       (with-current-buffer edit-buffer
-						 (write-region nil nil file-name)
+			   (setq ediff-quit-hook
+				 (list (lambda ()
+					 (let ((accept-p (y-or-n-p "Accept the changes? ")))
+					   (if accept-p
+					       (progn
+						 (with-current-buffer edit-buffer
+						   (write-region nil nil file-name))
 						 (funcall callback "Successfully edited file"))
-					     (funcall callback "User rejected the changes and wants to do something else."))
-					 (error (funcall callback (list :error "Failed to edit file"
-									:reason err1))))
-				       (kill-buffer edit-buffer))
-				     nil t)))))
+					     (funcall callback "User rejected the changes and wants to do something else.")))
+					 (run-at-time 0 nil 'set-window-configuration window-config )
+					 (kill-buffer edit-buffer))))))))
 	      (error "Failed to find the string to replace")))))
-    (error (funcall callback (list :error "Failed to edit the file"
-				   :internal_error err)))))
+    (error (funcall callback 'abort))))
 
 (gptel-make-tool
  :name "edit_file"
  :function #'+gptel-edit-file-async
  :async t
+ :direct t
  :description "Edit file with a list of edits, each edit contains a line-number,
 a old-string and a new-string, new-string will replace the old-string at the specified line."
  :args (list '(:name "file-path"
@@ -200,8 +199,10 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 (gptel-make-tool
  :name "grep"
  :function
- (lambda (callback regexp)
-   (let ((buffer (grep (format "rg --color=auto --no-heading -nH --null -e %s -r . | head -n 200" (shell-quote-argument regexp)))))
+ (lambda (callback regexp working-dir)
+   (let* ((default-directory (or (and working-dir (expand-file-name working-dir))
+				 default-directory))
+	  (buffer (grep (format "rg --color=auto --no-heading -nH --null -e %s -r . | head -n 200" (shell-quote-argument regexp)))))
      (with-current-buffer buffer
        (add-hook 'compilation-finish-functions
 		 (lambda (buffer how)
@@ -212,7 +213,10 @@ a old-string and a new-string, new-string will replace the old-string at the spe
  :description "Search for a pattern in the workspace."
  :args (list '(:name "regexp"
 		     :type string
-		     :description "The pattern to search.  It should be a regular expression."))
+		     :description "The pattern to search.  It should be a regular expression.")
+	     '(:name "working_dir"
+		     :type string
+		     :description "Optional: The directory in which to run the search. Defaults to the current directory if not specified."))
  :category "filesystem")
 
 ;; command tools
@@ -221,14 +225,20 @@ a old-string and a new-string, new-string will replace the old-string at the spe
  :name "run_command"
  :function
  (lambda (callback command working-dir)
-   (let* ((default-directory  working-dir)
+   (let* ((default-directory (expand-file-name working-dir))
 	  (buffer (generate-new-buffer "*Command Output*"))
-	  (proc (start-file-process "gptel-run-command"
-				    buffer
-				    shell-file-name
-				    "-c"
-				    command)))
+	  proc)
+     (with-current-buffer buffer
+       (unless (derived-mode-p 'comint-mode)
+	 (comint-mode)))
      (display-buffer buffer)
+     (comint-exec buffer
+		  "gptel-run-command"
+		  shell-file-name
+		  nil
+		  (list  "-c"
+			 command))
+     (setq proc (get-buffer-process buffer))
      (set-process-sentinel
       proc
       (lambda (p m)
@@ -257,6 +267,7 @@ This tool is not meant to be used to modify files: use `edit_file` to do that."
 
 (gptel-make-tool
  :name "echo_message"
+ :direct t
  :function (lambda (text)
 	     (message "%s" text)
 	     (format "Message sent: %s" text))
