@@ -1037,6 +1037,8 @@ command is invoked."
           (gptel--apply-preset 'kimi-agent
                                (lambda (sym val)
                                  (set (make-local-variable sym) val)))
+          ;; Set local variable to include tool results in buffer
+          (setq-local gptel-include-tool-results t)
           (when project-root
             (cd project-root))
           (message "gptel-agent session started with kimi-agent preset"))))))
