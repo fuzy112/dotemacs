@@ -131,6 +131,8 @@ This argument can also be 0, which means to read to the end of the file."))
 		     :description "The content to write to the file"))
  :category "filesystem")
 
+(defvar ediff-window-setup-function)
+
 (defun +gptel-edit-file-async (callback file-path file-edits)
   "Asynchronously apply FILE-EDITS to FILE-PATH with pattern matching.
 
