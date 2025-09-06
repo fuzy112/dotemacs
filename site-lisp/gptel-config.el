@@ -206,7 +206,6 @@ You should NOT output anything now.  Now yield the control to the user.")))
  :name "edit_file"
  :function #'+gptel-edit-file-async
  :async t
- :direct t
  :description "Edit file with a list of edits, each edit contains a line-number,
 a old-string and a new-string, new-string will replace the old-string at the specified line.
 
@@ -230,7 +229,7 @@ be removed as the `old_string` and an empty string as the `new_string`.
 To prepend or append content, the `new_string` must contain both the
 new content and the original content from `old_string`.
 
-You should STOP immediately if the User rejects your edits."
+IMPORTANT: You should STOP immediately if the User rejects your edits."
  :args (list '(:name "file-path"
 		     :type string
 		     :description "The full path of the file to edit")
@@ -395,7 +394,6 @@ git commit -m \"$(cat <<'EOF'
 
 (gptel-make-tool
  :name "echo_message"
- :direct t
  :function (lambda (text)
 	     (message "%s" text)
 	     (format "Message sent: %s" text))

@@ -1,5 +1,11 @@
 2025-09-06  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el: Refine gptel-config.el tool definitions.
+	(+gptel-edit-file-async): Remove :direct property.
+	(echo_message): Remove :direct property.
+
+2025-09-06  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el: Multiple improvements to gptel-agent and
 	gptel-edit-file-async.
 	(+gptel-edit-file-async): Add instruction to LLM about stopping if
