@@ -2,6 +2,7 @@
 
 (require 'gptel)
 (require 'url-http)
+(require 'with-editor)
 
 ;;; Reset backends, tools, and presets
 

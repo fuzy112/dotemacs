@@ -1,5 +1,11 @@
 2025-09-06  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el: Add with-editor require statement.
+	Ensure with-editor is properly loaded before using it in the
+	run_command tool implementation.
+
+2025-09-06  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el: Improve run_command tool output
 	formatting.
 	(run_command): Insert separator and display command before
