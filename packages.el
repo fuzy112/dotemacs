@@ -18,6 +18,8 @@
 (straight-use-package '(peg :type built-in))
 (straight-use-package '(project :type built-in))
 (straight-use-package '(xref :type built-in))
+(straight-use-package '(editorconfig :type built-in))
+(straight-use-package '(jsonrpc :type built-in))
 
 ;;; Utility libraries
 (straight-use-package 'dash)

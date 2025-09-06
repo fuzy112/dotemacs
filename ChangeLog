@@ -1,5 +1,9 @@
 2025-09-06  Zhengyi Fu  <i@fuzy.me>
 
+	* packages.el: Add editorconfig and jsonrpc as built-in packages.
+
+2025-09-06  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el: Add with-editor require statement.
 	Ensure with-editor is properly loaded before using it in the
 	run_command tool implementation.
