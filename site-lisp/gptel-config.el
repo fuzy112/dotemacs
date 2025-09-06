@@ -1120,42 +1120,63 @@ by project-current in project.el), otherwise the default-directory where the
 command is invoked."
   (interactive)
   (let* ((project-root (when-let ((proj (project-current)))
-                         (if (fboundp 'project-root)
-                             (project-root proj)
-                           (car (project-roots proj)))))
-         (buffer-name "*gptel-agent*"))
+			 (if (fboundp 'project-root)
+			     (project-root proj)
+			   (car (project-roots proj)))))
+	 (buffer-name "*gptel-agent*")
+	 (existing-buffer-p (get-buffer buffer-name))
+	 (guidelines nil))
     (gptel buffer-name)
     (display-buffer buffer-name '((display-buffer-in-side-window)
 				  (side . right)))
     (with-current-buffer (get-buffer buffer-name)
       ;; Apply kimi-agent preset settings
       (gptel--apply-preset 'kimi-agent
-                           (lambda (sym val)
-                             (set (make-local-variable sym) val)))
+			   (lambda (sym val)
+			     (set (make-local-variable sym) val)))
       ;; Set local variable to include tool results in buffer
       (setq-local gptel-include-tool-results t)
       (when project-root
-        (cd project-root))
-      ;; Find and read project-specific guideline files
-      (let ((guideline-files '("README.md" "CONTRIBUTING.md" "DEVELOPMENT.md"
-                               "CONTRIBUTING" "DEVELOPMENT" "GUIDELINES.md"
-                               "CODE_OF_CONDUCT.md" ".github/CONTRIBUTING.md"
-                               "docs/CONTRIBUTING.md" "docs/DEVELOPMENT.md")))
-        (dolist (file guideline-files)
-          (let ((file-path (expand-file-name file project-root)))
-            (when (file-exists-p file-path)
-              (insert (format "\n--- Project Guidelines from %s ---\n" file))
-              (condition-case nil
-                  (with-temp-buffer
-                    (insert-file-contents file-path)
-                    (let ((content (buffer-string)))
-                      ;; Limit content to first 2000 characters to avoid overwhelming the context
-                      (if (> (length content) 2000)
-                          (insert (substring content 0 2000) "\n... (truncated for brevity)\n")
-                        (insert content "\n"))))
-                (error (insert (format "Could not read %s\n" file))))
-              (insert "\n--- End of Guidelines ---\n\n")))))
-      (message "gptel-agent session started with kimi-agent preset"))))
+	(cd project-root))
+      ;; Collect project-specific guideline files
+      (unless existing-buffer-p
+	(let ((guideline-files '("README.md" "CONTRIBUTING.md" "DEVELOPMENT.md"
+				 "CONTRIBUTING" "DEVELOPMENT" "GUIDELINES.md"
+				 "CODE_OF_CONDUCT.md" ".github/CONTRIBUTING.md"
+				 "docs/CONTRIBUTING.md" "docs/DEVELOPMENT.md")))
+	  (dolist (file guideline-files)
+	    (let ((file-path (expand-file-name file project-root)))
+	      (when (file-exists-p file-path)
+		(condition-case nil
+		    (with-temp-buffer
+		      (insert-file-contents file-path)
+		      (let ((content (buffer-string)))
+			;; Limit content to first 2000 characters to avoid overwhelming the context
+			(if (> (length content) 2000)
+			    (setq guidelines
+				  (concat guidelines
+					  (format "\n--- Project Guidelines from %s ---
+%s
+... (truncated for brevity)
+--- End of Guidelines ---\n\n"
+						  file (substring content 0 2000))))
+			  (setq guidelines
+				(concat guidelines
+					(format "--- Project Guidelines from %s ---
+%s
+--- End of Guidelines ---\n\n"
+						file content))))))
+		  (error (setq guidelines (concat guidelines (format "Could not read %s\n" file))))))))
+	  ;; Update the system message to include project guidelines
+	  (when guidelines
+	    (setq-local gptel--system-message
+			(concat gptel--system-message "\n\n"
+				"=== PROJECT-SPECIFIC GUIDELINES ===\n"
+				guidelines
+				"=== END PROJECT GUIDELINES ===\n\n")))
+	  (when project-root
+	    (insert (format "I'm working in project: %s\n" project-root)))
+	  (message "gptel-agent session started with kimi-agent preset"))))))
 
 (provide 'gptel-config)
 ;;; gptel-config.el ends here
