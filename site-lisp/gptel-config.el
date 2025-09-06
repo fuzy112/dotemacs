@@ -400,6 +400,7 @@ git commit -m \"$(cat <<'EOF'
 Returns project-wide diagnostics when no file path is provided, or file-specific
 diagnostics when a file path is given. Requires the file to be open in the editor."
  :function (lambda (file-path)
+	     (require 'flymake)
 	     (if (or (null file-path) (string-empty-p file-path))
 		 (flymake--format-diagnostic (flymake--project-diagnostics) :eldoc)
 	       (if-let* ((buffer (get-file-buffer file-path)))
