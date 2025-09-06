@@ -1,5 +1,15 @@
 2025-09-06  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el (+gptel-edit-file-async): Detect when
+	running in a side window and switch to a proper window before
+	starting ediff to avoid conflicts with ediff's window management
+	requirements.
+
+	* AGENTS.md: New file with project development guidelines and
+	conventions.
+
+2025-09-06  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el (gptel-agent): Set
 	gptel-include-tool-results to t locally.
 
