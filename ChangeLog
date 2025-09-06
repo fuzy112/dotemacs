@@ -1,5 +1,13 @@
 2025-09-06  Zhengyi Fu  <i@fuzy.me>
 
+	Add editor_diagnostics tool to gptel tools and kimi-agent preset.
+
+	* site-lisp/gptel-config.el (editor_diagnostics): New tool to get
+	diagnostics from editor.
+	(kimi-agent): Add editor_diagnostics to toolset.
+
+2025-09-06  Zhengyi Fu  <i@fuzy.me>
+
 	Update +gptel-edit-file-async and run_command example.
 
 	* site-lisp/gptel-config.el (+gptel-edit-file-async): Remove

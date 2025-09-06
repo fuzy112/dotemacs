@@ -395,6 +395,23 @@ git commit -m \"$(cat <<'EOF'
 ;; Emacs tools
 
 (gptel-make-tool
+ :name "editor_diagnostics"
+ :description "Get editor diagnostics (errors, warnings, info) for workspaces.
+Returns project-wide diagnostics when no file path is provided, or file-specific
+diagnostics when a file path is given. Requires the file to be open in the editor."
+ :function (lambda (file-path)
+	     (if (or (null file-path) (string-empty-p file-path))
+		 (flymake--format-diagnostic (flymake--project-diagnostics) :eldoc)
+	       (if-let* ((buffer (get-file-buffer file-path)))
+		   (with-current-buffer buffer
+		     (flymake--format-diagnostic  (flymake-diagnostics) :eldoc))
+		 (error "File not opened in editor: %s" file-path))))
+ :args (list '(:name "file_path"
+		     :type string
+		     :description "Optional file path to get specific file diagnostics. Leave empty for project-wide diagnostics."))
+ :category "emacs")
+
+(gptel-make-tool
  :name "echo_message"
  :function (lambda (text)
 	     (message "%s" text)
@@ -1066,7 +1083,9 @@ Whenever you cite external information, always include the full source URL.")
   :temperature 0.1
   :max-tokens 8192
   :use-tools t
-  :tools '("edit_file" "create_file" "read_file" "run_command" "grep" "list_directory" "read_todos" "add_todo" "complete_todo" "search_todos" "list_active_todos")
+  :tools '("edit_file" "create_file" "read_file" "run_command" "grep"
+	    "list_directory" "read_todos" "add_todo" "complete_todo"
+	    "search_todos" "list_active_todos" "editor_diagnostics")
   :system "You are ECA (Emacs Coding Agent), an AI coding agent that operates in Emacs.
 
 You are pair programming with a USER to solve their coding task.  Each
