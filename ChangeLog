@@ -1,5 +1,15 @@
 2025-09-06  Zhengyi Fu  <i@fuzy.me>
 
+	Update +gptel-edit-file-async and run_command example.
+
+	* site-lisp/gptel-config.el (+gptel-edit-file-async): Remove
+	kill-buffer and window restoration code to prevent unwanted buffer
+	closing and window changes.
+	(run_command): Update example commit message format to remove
+	generated with eca attribution lines.
+
+2025-09-06  Zhengyi Fu  <i@fuzy.me>
+
 	* AGENTS.md: Tell the agent to start a new record if necessary.
 
 2025-09-06  Zhengyi Fu  <i@fuzy.me>
