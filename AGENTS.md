@@ -6,9 +6,12 @@ This document outlines the development practices and conventions for maintaining
 
 - Each git commit must include a ChangeLog entry
 - The ChangeLog file must be committed alongside the changes
+- Start a new change log entry (with date and author) unless there are an existing record not committed
+- New change log record should be added on the top of the file
 - Commit messages should match the ChangeLog entry content
 - ChangeLog entries should follow the GNU ChangeLog format with proper attribution
 - When adding new files, mention them in both ChangeLog and commit message
+- A record with multiple changes should have a single line summary on the top
 - Use `git commit --amend` to update commits if ChangeLog was missed initially
 
 ## Directory Structure
