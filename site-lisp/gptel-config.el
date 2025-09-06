@@ -140,9 +140,11 @@ This argument can also be 0, which means to read to the end of the file."))
 (defun +gptel-edit-file-async (callback file-path file-edits)
   "Asynchronously apply FILE-EDITS to FILE-PATH with pattern matching.
 
-CALLBACK is a function that will be called with the result message upon completion.
+CALLBACK is a function that will be called with the result message upon
+completion.
 FILE-PATH is the path to the file to be edited.
-FILE-EDITS is a list of edit specifications, where each edit is a plist with:
+FILE-EDITS is a list of edit specifications, where each edit is a plist
+with:
   - :old_string - the string to be replaced
   - :new_string - the replacement string
 
@@ -155,8 +157,9 @@ The function will:
 If any edit fails (old_string not found), the operation is aborted and
 the original file is left unchanged.  Uses `gptel-abort' for proper
 error handling within gptel sessions."
+  (cl-assert gptel-mode)
   (condition-case err
-      (let ((session-buffer (current-buffer))
+      (let ((gptel-buffer (current-buffer))
 	    (edit-buffer (generate-new-buffer "*edit-file*"))
 	    (window-config (current-window-configuration)))
 	(with-current-buffer edit-buffer
@@ -184,7 +187,9 @@ error handling within gptel sessions."
 		      (ediff-window-setup-function 'ediff-setup-windows-plain))
 		  ;; Ensure we have a proper window for ediff
 		  (when (window-parameter orig-window 'window-side)
-		    (select-window (get-largest-window)))
+		    (select-window (get-window-with-predicate
+				    (lambda (win)
+				      (null (window-parameter win 'window-side))))))
 		  (ediff-buffers
 		   orig-buffer edit-buffer
 		   (list (lambda ()
@@ -196,11 +201,14 @@ error handling within gptel sessions."
 					       (write-region nil nil file-name))
 					     (funcall callback "Successfully edited file"))
 					 (funcall callback "Failed to edit the file.  The user explicitly rejected the edition.
-You should NOT output anything now.  Now yield the control to the user."))
+You should NOT output anything NOR call any tools before the User asks so.")
+					 (gptel-abort gptel-buffer))
+				       (when (buffer-live-p edit-buffer)
+					 (kill-buffer edit-buffer))
 				       (run-at-time 0 nil
 						    (lambda ()
 						      (set-window-configuration window-config))))
-				     nil t)))))
+				     90 t)))))
 	      (error "Failed to find the string to replace")))))
     (error (funcall callback (format "An error occurred: %S" err)))))
 
