@@ -284,6 +284,9 @@ Supports full regex syntax (eg.  \"log.*Error\", \"function\\s+\\w+\", etc). "
 						       "GIT_PAGER=cat")
 						 process-environment)))
        (goto-char (point-max))
+       ;; Insert separator and command before running
+       (insert "\n" (make-string 60 ?-) "\n")
+       (insert "$ " command "\n")
        (setq start-marker (point-marker)))
      (display-buffer buffer)
      (with-editor
