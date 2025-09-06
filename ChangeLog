@@ -1,5 +1,12 @@
 2025-09-07  Zhengyi Fu  <i@fuzy.me>
 
+	Add autoload for gptel-agent function.
+
+	* site-lisp/gptel-config.el (gptel-agent): Add autoload cookie.
+	* init.el: Add autoload form for gptel-agent.
+
+2025-09-07  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el (gptel-agent): Use project specific
 	gptel-agent buffer name.
 
