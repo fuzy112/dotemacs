@@ -190,15 +190,18 @@ error handling within gptel sessions."
 		   (list (lambda ()
 			   (add-hook 'ediff-quit-hook
 				     (lambda ()
-				       (let ((accept-p (y-or-n-p "Accept the changes? ")))
-					 (if accept-p
-					     (progn
-					       (with-current-buffer edit-buffer
-						 (write-region nil nil file-name))
-					       (funcall callback "Successfully edited file"))
-					   (funcall callback "Failed to edit the file.  The user explicitly rejected the edition.
-You should NOT output anything now.  Now yield the control to the user.")))
-				       (kill-buffer edit-buffer))
+				       (if (y-or-n-p "Accept the changes? ")
+					   (progn
+					     (with-current-buffer edit-buffer
+					       (write-region nil nil file-name))
+					     (funcall callback "Successfully edited file"))
+					 (funcall callback "Failed to edit the file.  The user explicitly rejected the edition.
+You should NOT output anything now.  Now yield the control to the user."))
+				       (run-at-time 0 nil
+						    (lambda ()
+						      (kill-buffer edit-buffer)
+						      (select-window (window-main-window))
+						      (set-window-configuration window-config))))
 				     nil t)))))
 	      (error "Failed to find the string to replace")))))
     (error (funcall callback (format "An error occurred: %S" err)))))
@@ -287,7 +290,8 @@ Supports full regex syntax (eg.  \"log.*Error\", \"function\\s+\\w+\", etc). "
        (goto-char (point-max))
        ;; Insert separator and command before running
        (insert "\n" (make-string 60 ?-) "\n")
-       (insert "$ " command "\n")
+       (insert-before-markers (propertize "$ " 'face 'comint-highlight-prompt) command "\n")
+       (comint-add-to-input-history command)
        (setq start-marker (point-marker)))
      (display-buffer buffer)
      (with-editor
@@ -1302,46 +1306,17 @@ command is invoked."
       (setq-local gptel-include-tool-results t)
       (when project-root
 	(cd project-root))
-      ;; Collect project-specific guideline files
-      (let ((guideline-files '("README.md" "CONTRIBUTING.md" "DEVELOPMENT.md"
-			       "CONTRIBUTING" "DEVELOPMENT" "GUIDELINES.md"
-			       "CODE_OF_CONDUCT.md" ".github/CONTRIBUTING.md"
-			       "docs/CONTRIBUTING.md" "docs/DEVELOPMENT.md"
-			       "AGENTS.md ")))
-	(dolist (file guideline-files)
-	  (let ((file-path (expand-file-name file project-root)))
-	    (when (file-exists-p file-path)
-	      (condition-case nil
-		  (with-temp-buffer
-		    (insert-file-contents file-path)
-		    (let ((content (buffer-string)))
-		      ;; Limit content to first 2000 characters to avoid overwhelming the context
-		      (if (> (length content) 2000)
-			  (setq guidelines
-				(concat guidelines
-					(format "\n--- Project Guidelines from %s ---
-%s
-... (truncated for brevity)
---- End of Guidelines ---\n\n"
-						file (substring content 0 2000))))
-			(setq guidelines
-			      (concat guidelines
-				      (format "--- Project Guidelines from %s ---
-%s
---- End of Guidelines ---\n\n"
-					      file content))))))
-		(error (setq guidelines (concat guidelines (format "Could not read %s\n" file))))))))
-	;; Update the system message to include project guidelines
-	(when guidelines
-	  (setq-local gptel--system-message
-		      (concat gptel--system-message "\n\n"
-			      "=== PROJECT-SPECIFIC GUIDELINES ===\n"
-			      guidelines
-			      "=== END PROJECT GUIDELINES ===\n\n"))))
+      (gptel-agent--setup-context)
       (unless existing-buffer-p
 	(when project-root
 	  (insert (format "I'm working in project: %s\n" project-root)))
 	(message "gptel-agent session started with kimi-agent preset")))))
+
+(defun gptel-agent--setup-context ()
+  (dolist (filename (list "AGENTS.md"))
+    (let ((filename (expand-file-name filename)))
+      (when (file-exists-p filename)
+	(gptel-add-file filename)))))
 
 (provide 'gptel-config)
 ;;; gptel-config.el ends here
