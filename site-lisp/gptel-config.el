@@ -1314,10 +1314,10 @@ command is invoked."
 			 (if (fboundp 'project-root)
 			     (project-root proj)
 			   (car (project-roots proj)))))
-	 (project-name (and project-root
-			    (file-name-nondirectory (directory-file-name project-root))))
-	 (buffer-name (if project-name
-			  (format "*gptel-agent : %s*" project-name)
+	 (proj-name (and project-root
+			 (project-name (project-current))))
+	 (buffer-name (if proj-name
+			  (format "*gptel-agent : %s*" proj-name)
 			"*gptel-agent*"))
 	 (existing-buffer-p (get-buffer buffer-name))
 	 (guidelines nil))
