@@ -1,5 +1,12 @@
 2025-09-06  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el (gptel-agent): Fix project guidelines
+	not being properly inserted into session buffer. Guidelines are now
+	collected and appended to the system message instead of being
+	inserted directly into the buffer.
+
+2025-09-06  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el (read_file, grep, run_command): Enhance
 	tool descriptions with detailed usage guidelines and examples.
 
