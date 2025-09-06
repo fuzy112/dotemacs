@@ -2659,6 +2659,8 @@ of feed configurations without modifying init files."
 
 ;;;; gptel
 
+(autoload 'gptel-agent "gptel-config" "Create or switch to a gptel session buffer for the current project." t)
+
 (setq gptel-default-mode #'markdown-mode)
 (defun +gptel-mode-h ()
   (when (derived-mode-p 'org-mode)

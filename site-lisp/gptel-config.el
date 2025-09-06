@@ -1300,6 +1300,7 @@ script readability and reliability.")
 	(gptel-send)))))
 
 
+;;;###autoload
 (defun gptel-agent ()
   "Create or switch to a gptel session buffer for the current project.
 The buffer will be displayed in a side window by default, but this behavior
