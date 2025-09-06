@@ -1,5 +1,15 @@
 2025-09-06  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el: Multiple improvements to gptel-agent and
+	gptel-edit-file-async.
+	(+gptel-edit-file-async): Add instruction to LLM about stopping if
+	user rejects edits.
+	(gptel-agent): Use pop-to-buffer instead of display-buffer to select
+	the window of the session buffer. Restructure guideline collection
+	logic and add AGENTS.md to project guideline files.
+
+2025-09-06  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el (gptel-agent): Fix project guidelines
 	not being properly inserted into session buffer. Guidelines are now
 	collected and appended to the system message instead of being

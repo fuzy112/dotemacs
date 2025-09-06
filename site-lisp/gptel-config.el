@@ -228,7 +228,9 @@ unless absolutely necessary.  To delete content, provide the contet to
 be removed as the `old_string` and an empty string as the `new_string`.
 
 To prepend or append content, the `new_string` must contain both the
-new content and the original content from `old_string`."
+new content and the original content from `old_string`.
+
+You should STOP immediately if the User rejects your edits."
  :args (list '(:name "file-path"
 		     :type string
 		     :description "The full path of the file to edit")
@@ -1127,8 +1129,8 @@ command is invoked."
 	 (existing-buffer-p (get-buffer buffer-name))
 	 (guidelines nil))
     (gptel buffer-name)
-    (display-buffer buffer-name '((display-buffer-in-side-window)
-				  (side . right)))
+    (pop-to-buffer buffer-name '((display-buffer-in-side-window)
+				 (side . right)))
     (with-current-buffer (get-buffer buffer-name)
       ;; Apply kimi-agent preset settings
       (gptel--apply-preset 'kimi-agent
@@ -1139,44 +1141,45 @@ command is invoked."
       (when project-root
 	(cd project-root))
       ;; Collect project-specific guideline files
-      (unless existing-buffer-p
-	(let ((guideline-files '("README.md" "CONTRIBUTING.md" "DEVELOPMENT.md"
-				 "CONTRIBUTING" "DEVELOPMENT" "GUIDELINES.md"
-				 "CODE_OF_CONDUCT.md" ".github/CONTRIBUTING.md"
-				 "docs/CONTRIBUTING.md" "docs/DEVELOPMENT.md")))
-	  (dolist (file guideline-files)
-	    (let ((file-path (expand-file-name file project-root)))
-	      (when (file-exists-p file-path)
-		(condition-case nil
-		    (with-temp-buffer
-		      (insert-file-contents file-path)
-		      (let ((content (buffer-string)))
-			;; Limit content to first 2000 characters to avoid overwhelming the context
-			(if (> (length content) 2000)
-			    (setq guidelines
-				  (concat guidelines
-					  (format "\n--- Project Guidelines from %s ---
+      (let ((guideline-files '("README.md" "CONTRIBUTING.md" "DEVELOPMENT.md"
+			       "CONTRIBUTING" "DEVELOPMENT" "GUIDELINES.md"
+			       "CODE_OF_CONDUCT.md" ".github/CONTRIBUTING.md"
+			       "docs/CONTRIBUTING.md" "docs/DEVELOPMENT.md"
+			       "AGENTS.md ")))
+	(dolist (file guideline-files)
+	  (let ((file-path (expand-file-name file project-root)))
+	    (when (file-exists-p file-path)
+	      (condition-case nil
+		  (with-temp-buffer
+		    (insert-file-contents file-path)
+		    (let ((content (buffer-string)))
+		      ;; Limit content to first 2000 characters to avoid overwhelming the context
+		      (if (> (length content) 2000)
+			  (setq guidelines
+				(concat guidelines
+					(format "\n--- Project Guidelines from %s ---
 %s
 ... (truncated for brevity)
 --- End of Guidelines ---\n\n"
-						  file (substring content 0 2000))))
-			  (setq guidelines
-				(concat guidelines
-					(format "--- Project Guidelines from %s ---
+						file (substring content 0 2000))))
+			(setq guidelines
+			      (concat guidelines
+				      (format "--- Project Guidelines from %s ---
 %s
 --- End of Guidelines ---\n\n"
-						file content))))))
-		  (error (setq guidelines (concat guidelines (format "Could not read %s\n" file))))))))
-	  ;; Update the system message to include project guidelines
-	  (when guidelines
-	    (setq-local gptel--system-message
-			(concat gptel--system-message "\n\n"
-				"=== PROJECT-SPECIFIC GUIDELINES ===\n"
-				guidelines
-				"=== END PROJECT GUIDELINES ===\n\n")))
-	  (when project-root
-	    (insert (format "I'm working in project: %s\n" project-root)))
-	  (message "gptel-agent session started with kimi-agent preset"))))))
+					      file content))))))
+		(error (setq guidelines (concat guidelines (format "Could not read %s\n" file))))))))
+	;; Update the system message to include project guidelines
+	(when guidelines
+	  (setq-local gptel--system-message
+		      (concat gptel--system-message "\n\n"
+			      "=== PROJECT-SPECIFIC GUIDELINES ===\n"
+			      guidelines
+			      "=== END PROJECT GUIDELINES ===\n\n"))))
+      (unless existing-buffer-p
+	(when project-root
+	  (insert (format "I'm working in project: %s\n" project-root)))
+	(message "gptel-agent session started with kimi-agent preset")))))
 
 (provide 'gptel-config)
 ;;; gptel-config.el ends here
