@@ -1,5 +1,13 @@
 2025-09-07  Zhengyi Fu  <i@fuzy.me>
 
+	Fix complete_todo function to properly handle todo items with priorities.
+
+	* site-lisp/gptel-config.el (+gptel-mark-todo-done): Update regex to
+	match todo items with optional priorities and fix replace-match to only
+	change TODO to DONE while preserving the rest of the line.
+
+2025-09-07  Zhengyi Fu  <i@fuzy.me>
+
 	Use project.el's project-name API for better project identification.
 
 	* site-lisp/gptel-config.el (gptel-agent): Use project-name function

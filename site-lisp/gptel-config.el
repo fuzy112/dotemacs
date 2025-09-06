@@ -930,8 +930,8 @@ Note that the user will get a chance to edit the comments."))
         (with-temp-buffer
           (insert-file-contents todo-file)
           (goto-char (point-min))
-          (while (re-search-forward (concat "^\\* TODO " (regexp-quote title-or-pattern)) nil t)
-            (replace-match "* DONE \\")
+          (while (re-search-forward (concat "^\\* \\(?1:TODO\\) \\(?:\\[#.\\] \\)?\\(.*\\)" (regexp-quote title-or-pattern) "\\(.*\\)") nil t)
+            (replace-match "DONE" t nil nil 1)
             (setq found t))
           (when found
             (write-region (point-min) (point-max) todo-file)))
