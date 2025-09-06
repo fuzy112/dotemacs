@@ -137,7 +137,6 @@ This argument can also be 0, which means to read to the end of the file."))
 CALLBACK is a function that will be called with the result message upon completion.
 FILE-PATH is the path to the file to be edited.
 FILE-EDITS is a list of edit specifications, where each edit is a plist with:
-  - :line_number - the line number where the edit starts
   - :old_string - the string to be replaced
   - :new_string - the replacement string
 
@@ -163,19 +162,23 @@ error handling within gptel sessions."
 		 (edit-success nil))
 	    ;; apply changes
 	    (dolist (file-edit (seq-into file-edits 'list))
-	      (when-let* ((line-number (plist-get file-edit :line_number))
-			  (old-string (plist-get file-edit :old_string))
+	      (when-let* ((old-string (plist-get file-edit :old_string))
 			  (new-string (plist-get file-edit :new_string))
 			  (is-valid-old-string (not (string= old-string ""))))
 		(goto-char (point-min))
-		(forward-line (1- line-number))
 		(when (search-forward old-string nil t)
+		  (save-match-data
+		    (when (search-forward old-string nil t)
+		      (error "There multiple occurrences of the `old_string`")))
 		  (replace-match new-string t t)
 		  (setq edit-success t))))
 	    ;; return result to gptel
 	    (if edit-success
-		(progn
-		  ;; show diffs
+		(let ((orig-window (selected-window))
+		      (ediff-window-setup-function 'ediff-setup-windows-plain))
+		  ;; Ensure we have a proper window for ediff
+		  (when (window-parameter orig-window 'window-side)
+		    (select-window (get-largest-window)))
 		  (ediff-buffers
 		   orig-buffer edit-buffer
 		   (list (lambda ()
@@ -187,7 +190,8 @@ error handling within gptel sessions."
 					       (with-current-buffer edit-buffer
 						 (write-region nil nil file-name))
 					       (funcall callback "Successfully edited file"))
-					   (gptel-abort session-buffer)))
+					   (funcall callback "Failed to edit the file.  The user explicitly rejected the edition.
+You should NOT output anything now.  Now yield the control to the user.")))
 				       (kill-buffer edit-buffer))
 				     nil t)))))
 	      (error "Failed to find the string to replace")))))
@@ -199,7 +203,27 @@ error handling within gptel sessions."
  :async t
  :direct t
  :description "Edit file with a list of edits, each edit contains a line-number,
-a old-string and a new-string, new-string will replace the old-string at the specified line."
+a old-string and a new-string, new-string will replace the old-string at the specified line.
+
+You must use your `read_file` tool to get the file's exact contents before
+attempting an edit.
+
+This tool will error if you attempt an edit without reading the file.  When crafting
+the `old_string`, you must match the original content from the `read_file` tool
+output exactly, including all indentation (spaces/tabs) and newlines.
+
+Never include any part of the line number prefix in the `old_string` or
+`new_string`.  The edit will FAIL if the `old_string` is not unique in the file.
+To resolve this, you must expand the `new_content` to include more surrounding lines
+of code or context to make it a unique block.
+
+ALWAYS prefer making small, targeted edits to existing files.  Avoid
+replacing entire functions or large blocks of code in a single step
+unless absolutely necessary.  To delete content, provide the contet to
+be removed as the `old_string` and an empty string as the `new_string`.
+
+To prepend or append content, the `new_string` must contain both the
+new content and the original content from `old_string`."
  :args (list '(:name "file-path"
 		     :type string
 		     :description "The full path of the file to edit")
@@ -207,10 +231,8 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 		     :type array
 		     :items (:type object
 				   :properties
-				   (:line_number
-				    (:type integer :description "The line number of the file where edit starts.")
-				    :old_string
-				    (:type string :description "The old-string to be replaced.")
+				   (:old_string
+				    (:type string :description "The old-string to be replaced.  It must NOT be an empty string.")
 				    :new_string
 				    (:type string :description "The new-string to replace old-string.")))
 		     :description "The list of edits to apply on the file"))
@@ -254,15 +276,16 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 	 (setq-local process-environment (append (list "PAGER=cat"
 						       "GIT_PAGER=cat")
 						 process-environment)))
-       (goto-char (point-min))
+       (goto-char (point-max))
        (setq start-marker (point-marker)))
      (display-buffer buffer)
-     (comint-exec buffer
-		  "gptel-run-command"
-		  shell-file-name
-		  nil
-		  (list  "-c"
-			 command))
+     (with-editor
+       (comint-exec buffer
+		    "gptel-run-command"
+		    shell-file-name
+		    nil
+		    (list  "-c"
+			   command)))
      (setq proc (get-buffer-process buffer))
      (set-process-sentinel
       proc
@@ -766,22 +789,21 @@ BEG and END define the region to process."
   :description "General assistant powered by DeepSeek"
   :system "You are an LLM lived in Emacs and a helpful assistant.
 Be concise, accurate, and helpful.
-You may serch the web or read URLs when needed.
+You may search the web or read URLs when needed.
 Whenever you cite external information, always include the full source URL."
   :backend "DeepSeek"
   :model 'deepseek-chat
   :stream t
   :temperature 1.3
-  :model 'deepseek-chat
   :use-tools t
   :max-tokens 4096
   :include-tool-results t
   :tools '("search_web" "read_url" "read_documentation" "search_emacs_mailing_list"))
 
 (gptel-make-preset 'deepseek-mathematician
-  :description "Expert mathematics assistant using Moonshot's kimi-k2"
+  :description "Expert mathematics assistant using DeepSeek"
   :backend "DeepSeek"
-  :model 'deepseek-chat
+  :model 'deepseek-reasoner
   :stream t
   :temperature 0.1
   :max-tokens 4096
@@ -860,7 +882,11 @@ batch your tool calls together for optimal performance.
 
 5. You should prefer the dedicated tools over the generic run_command
 tool.
-")
+
+IMPORTANT: When starting a new session, first check if an AGENTS.md file
+exists in the project root directory. If it does, read it to understand
+the project-specific development guidelines and conventions that should
+be followed during the coding session.")
 
 (gptel-make-preset 'deepseek-reasoner
   :description "DeepSeek Reasoner – step-by-step reasoning assistant"
@@ -1019,29 +1045,39 @@ command is invoked."
                          (if (fboundp 'project-root)
                              (project-root proj)
                            (car (project-roots proj)))))
-         (buffer-name "*gptel-agent*")
-         (buffer (get-buffer buffer-name)))
-    (if buffer
-        (progn
-          (switch-to-buffer buffer)
-          (when project-root
-            (cd project-root)))
-      ;; Create new gptel buffer with kimi-agent preset
-      (let ((gptel-display-buffer-action
-	     '((display-buffer-in-side-window)
-	       (side . right)
-	       (body-function . select-window))))
-        (gptel buffer-name nil nil t)
-        (with-current-buffer (get-buffer buffer-name)
-          ;; Apply kimi-agent preset settings
-          (gptel--apply-preset 'kimi-agent
-                               (lambda (sym val)
-                                 (set (make-local-variable sym) val)))
-          ;; Set local variable to include tool results in buffer
-          (setq-local gptel-include-tool-results t)
-          (when project-root
-            (cd project-root))
-          (message "gptel-agent session started with kimi-agent preset"))))))
+         (buffer-name "*gptel-agent*"))
+    (gptel buffer-name)
+    (display-buffer buffer-name '((display-buffer-in-side-window)
+				  (side . right)))
+    (with-current-buffer (get-buffer buffer-name)
+      ;; Apply kimi-agent preset settings
+      (gptel--apply-preset 'kimi-agent
+                           (lambda (sym val)
+                             (set (make-local-variable sym) val)))
+      ;; Set local variable to include tool results in buffer
+      (setq-local gptel-include-tool-results t)
+      (when project-root
+        (cd project-root))
+      ;; Find and read project-specific guideline files
+      (let ((guideline-files '("README.md" "CONTRIBUTING.md" "DEVELOPMENT.md"
+                               "CONTRIBUTING" "DEVELOPMENT" "GUIDELINES.md"
+                               "CODE_OF_CONDUCT.md" ".github/CONTRIBUTING.md"
+                               "docs/CONTRIBUTING.md" "docs/DEVELOPMENT.md")))
+        (dolist (file guideline-files)
+          (let ((file-path (expand-file-name file project-root)))
+            (when (file-exists-p file-path)
+              (insert (format "\n--- Project Guidelines from %s ---\n" file))
+              (condition-case nil
+                  (with-temp-buffer
+                    (insert-file-contents file-path)
+                    (let ((content (buffer-string)))
+                      ;; Limit content to first 2000 characters to avoid overwhelming the context
+                      (if (> (length content) 2000)
+                          (insert (substring content 0 2000) "\n... (truncated for brevity)\n")
+                        (insert content "\n"))))
+                (error (insert (format "Could not read %s\n" file))))
+              (insert "\n--- End of Guidelines ---\n\n")))))
+      (message "gptel-agent session started with kimi-agent preset"))))
 
 (provide 'gptel-config)
 ;;; gptel-config.el ends here
