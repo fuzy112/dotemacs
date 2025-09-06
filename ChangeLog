@@ -1,5 +1,9 @@
 2025-09-06  Zhengyi Fu  <i@fuzy.me>
 
+	* AGENTS.md: Tell the agent to start a new record if necessary.
+
+2025-09-06  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el: Fix window restoration in
 	+gptel-edit-file-async and improve comint integration.
 	(+gptel-edit-file-async): Use window-main-window instead of
