@@ -820,6 +820,157 @@ Note that the user will get a chance to edit the comments."))
 		     :description "Maximum number of results to return"))
  :category "jira")
 
+;;; Todo List Management
+
+(defvar +gptel-todo-file nil
+  "File to store todo items in Org format.")
+
+(defun +gptel-get-project-todo-file ()
+  "Get the project-specific todo file path."
+  (let ((project-root (or (locate-dominating-file default-directory ".git")
+                          (locate-dominating-file default-directory "AGENTS.md")
+                          default-directory)))
+    (expand-file-name ".cache/todo.org" project-root)))
+
+(defun +gptel-ensure-todo-directory ()
+  "Ensure the .cache directory exists for the todo file."
+  (let ((todo-file (+gptel-get-project-todo-file)))
+    (unless (file-directory-p (file-name-directory todo-file))
+      (make-directory (file-name-directory todo-file) t))
+    todo-file))
+
+(defun +gptel-read-todo-file ()
+  "Read todo items from the project-specific todo file."
+  (let ((todo-file (+gptel-ensure-todo-directory)))
+    (if (file-exists-p todo-file)
+        (with-temp-buffer
+          (insert-file-contents todo-file)
+          (buffer-string))
+      "No todo file found for this project. Create one by adding your first todo item.")))
+
+(gptel-make-tool
+ :name "read_todos"
+ :function #'+gptel-read-todo-file
+ :description "Read all todo items from the project-specific todo list file"
+ :category "todo")
+
+(defun +gptel-add-todo-item (title &optional description priority tags)
+  "Add a new todo item to the project-specific todo file."
+  (let* ((todo-file (+gptel-ensure-todo-directory))
+         (timestamp (format-time-string "[%Y-%m-%d %a %H:%M]"))
+         (priority-str (if priority (format "[#%s] " priority) ""))
+         (tags-str (if tags (format ":%s:" tags) "")))
+    (with-temp-buffer
+      (when (file-exists-p todo-file)
+        (insert-file-contents todo-file))
+      (goto-char (point-max))
+      (unless (bolp) (insert "\n"))
+      (insert "* TODO " priority-str title " " tags-str "\n")
+      (insert "  :PROPERTIES:\n")
+      (insert "  :CREATED: " timestamp "\n")
+      (insert "  :END:\n")
+      (when description
+        (insert "  " description "\n"))
+      (write-region (point-min) (point-max) todo-file))
+    (format "Added todo item: %s" title)))
+
+(gptel-make-tool
+ :name "add_todo"
+ :function #'+gptel-add-todo-item
+ :description "Add a new todo item to the project-specific todo list"
+ :args (list '(:name "title"
+		     :type string
+		     :description "The title of the todo item")
+	     '(:name "description"
+		     :type string
+		     :description "Optional description of the todo item")
+	     '(:name "priority"
+		     :type string
+		     :description "Optional priority (A, B, C)")
+	     '(:name "tags"
+		     :type string
+		     :description "Optional tags separated by colons"))
+ :category "todo")
+
+(defun +gptel-mark-todo-done (title-or-pattern)
+  "Mark a todo item as DONE by title or pattern in the project-specific file."
+  (let ((todo-file (+gptel-ensure-todo-directory)))
+    (if (not (file-exists-p todo-file))
+        "No todo file found for this project."
+      (let ((found nil)
+            (case-fold-search t))
+        (with-temp-buffer
+          (insert-file-contents todo-file)
+          (goto-char (point-min))
+          (while (re-search-forward (concat "^\\* TODO " (regexp-quote title-or-pattern)) nil t)
+            (replace-match "* DONE \\")
+            (setq found t))
+          (when found
+            (write-region (point-min) (point-max) todo-file)))
+        (if found
+            (format "Marked todo item as DONE: %s" title-or-pattern)
+          (format "No todo item found matching: %s" title-or-pattern))))))
+
+(gptel-make-tool
+ :name "complete_todo"
+ :function #'+gptel-mark-todo-done
+ :description "Mark a todo item as completed/DONE in the project-specific list"
+ :args (list '(:name "title_or_pattern"
+		     :type string
+		     :description "The title or pattern to match the todo item to complete"))
+ :category "todo")
+
+(defun +gptel-search-todos (pattern)
+  "Search for todo items matching a pattern in the project-specific file."
+  (let ((todo-file (+gptel-ensure-todo-directory)))
+    (if (not (file-exists-p todo-file))
+        "No todo file found for this project."
+      (let ((matches nil))
+        (with-temp-buffer
+          (insert-file-contents todo-file)
+          (goto-char (point-min))
+          (while (re-search-forward (concat "^\\* " (regexp-quote pattern)) nil t)
+            (beginning-of-line)
+            (let ((line (buffer-substring-no-properties (point) (line-end-position))))
+              (push line matches))
+            (forward-line 1)))
+        (if matches
+            (string-join (reverse matches) "\n")
+          (format "No todo items found matching: %s" pattern))))))
+
+(gptel-make-tool
+ :name "search_todos"
+ :function #'+gptel-search-todos
+ :description "Search for todo items matching a pattern in the project-specific list"
+ :args (list '(:name "pattern"
+		     :type string
+		     :description "The search pattern to match todo items"))
+ :category "todo")
+
+(defun +gptel-list-active-todos ()
+  "List all active (TODO) items in the project-specific file."
+  (let ((todo-file (+gptel-ensure-todo-directory)))
+    (if (not (file-exists-p todo-file))
+        "No todo file found for this project."
+      (let ((todos nil))
+        (with-temp-buffer
+          (insert-file-contents todo-file)
+          (goto-char (point-min))
+          (while (re-search-forward "^\\* TODO " nil t)
+            (beginning-of-line)
+            (let ((line (buffer-substring-no-properties (point) (line-end-position))))
+              (push line todos))
+            (forward-line 1)))
+        (if todos
+            (string-join (reverse todos) "\n")
+          "No active todo items found for this project.")))))
+
+(gptel-make-tool
+ :name "list_active_todos"
+ :function #'+gptel-list-active-todos
+ :description "List all active (TODO) items from the project-specific todo list"
+ :category "todo")
+
 ;;; Tweaks
 
 (defun +gptel-auto-scroll-safe ()
@@ -913,7 +1064,7 @@ Whenever you cite external information, always include the full source URL.")
   :temperature 0.1
   :max-tokens 8192
   :use-tools t
-  :tools '("edit_file" "create_file" "read_file" "run_command" "grep" "list_directory")
+  :tools '("edit_file" "create_file" "read_file" "run_command" "grep" "list_directory" "read_todos" "add_todo" "complete_todo" "search_todos" "list_active_todos")
   :system "You are ECA (Emacs Coding Agent), an AI coding agent that operates in Emacs.
 
 You are pair programming with a USER to solve their coding task.  Each
@@ -964,7 +1115,16 @@ tool.
 IMPORTANT: When starting a new session, first check if an AGENTS.md file
 exists in the project root directory. If it does, read it to understand
 the project-specific development guidelines and conventions that should
-be followed during the coding session.")
+be followed during the coding session.
+
+For multi-step tasks, maintain a project-specific todo list using the
+todo management tools. Before starting work:
+1. Check existing todos with read_todos
+2. Add new todo items for each step with add_todo
+3. Mark completed steps with complete_todo
+4. Search for specific todos when needed with search_todos
+
+This helps track progress and ensures no steps are missed in complex tasks.")
 
 (gptel-make-preset 'deepseek-reasoner
   :description "DeepSeek Reasoner – step-by-step reasoning assistant"
