@@ -1,5 +1,23 @@
 2025-09-06  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el: Add project-specific todo list management
+	tools for gptel agents and update kimi-agent preset.
+	(+gptel-get-project-todo-file): Get project-specific todo file path
+	in .cache directory.
+	(+gptel-ensure-todo-directory): Ensure .cache directory exists.
+	(+gptel-read-todo-file): Read todos from project-specific file.
+	(+gptel-add-todo-item): Add new todo item with metadata.
+	(+gptel-mark-todo-done): Mark todo as DONE.
+	(+gptel-search-todos): Search todos by pattern.
+	(+gptel-list-active-todos): List active TODO items.
+	(read_todos, add_todo, complete_todo, search_todos,
+	list_active_todos): gptel tool definitions.
+	(kimi-agent): Add todo management tools to toolset and update
+	system message with todo list maintenance instructions for
+	multi-step tasks.
+
+2025-09-06  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el: Refine gptel-config.el tool definitions.
 	(+gptel-edit-file-async): Remove :direct property.
 	(echo_message): Remove :direct property.
