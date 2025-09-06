@@ -1,5 +1,11 @@
 2025-09-06  Zhengyi Fu  <i@fuzy.me>
 
+	* AGENTS.md (Git and ChangeLog Conventions): Add guidance about
+	mentioning new files in both ChangeLog and commit messages, and
+	using git commit --amend when ChangeLog was missed initially.
+
+2025-09-06  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el (+gptel-edit-file-async): Detect when
 	running in a side window and switch to a proper window before
 	starting ediff to avoid conflicts with ediff's window management

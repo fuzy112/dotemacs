@@ -8,6 +8,8 @@ This document outlines the development practices and conventions for maintaining
 - The ChangeLog file must be committed alongside the changes
 - Commit messages should match the ChangeLog entry content
 - ChangeLog entries should follow the GNU ChangeLog format with proper attribution
+- When adding new files, mention them in both ChangeLog and commit message
+- Use `git commit --amend` to update commits if ChangeLog was missed initially
 
 ## Directory Structure
 
