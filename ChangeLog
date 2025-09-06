@@ -1,5 +1,12 @@
 2025-09-06  Zhengyi Fu  <i@fuzy.me>
 
+	Add require 'flymake to editor_diagnostics function.
+
+	* site-lisp/gptel-config.el (editor_diagnostics): Add require
+	statement to ensure flymake is loaded before use.
+
+2025-09-06  Zhengyi Fu  <i@fuzy.me>
+
 	Add editor_diagnostics tool to gptel tools and kimi-agent preset.
 
 	* site-lisp/gptel-config.el (editor_diagnostics): New tool to get
