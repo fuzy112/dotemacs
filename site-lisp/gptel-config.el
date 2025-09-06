@@ -199,8 +199,6 @@ error handling within gptel sessions."
 You should NOT output anything now.  Now yield the control to the user."))
 				       (run-at-time 0 nil
 						    (lambda ()
-						      (kill-buffer edit-buffer)
-						      (select-window (window-main-window))
 						      (set-window-configuration window-config))))
 				     nil t)))))
 	      (error "Failed to find the string to replace")))))
@@ -378,10 +376,6 @@ Important notes:
 <example>
 git commit -m \"$(cat <<'EOF'
    Commit message here.
-
-   🤖 Generated with [eca](https://eca.dev)
-
-   Co-Authored-By: eca <noreply@eca.dev>
    EOF
    )\"
 </example>
