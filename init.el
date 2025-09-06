@@ -3012,6 +3012,15 @@ of feed configurations without modifying init files."
   (interactive)
   (find-file user-init-file))
 
+(defun clear-text-properties-in-region (beg end)
+  "Clear all text properties in the selected region.
+BEG and END specify the region boundaries."
+  (interactive "r")
+  (when (use-region-p)
+    (let ((inhibit-read-only t))
+      (set-text-properties beg end nil)
+      (message "Cleared all text properties in region %d-%d" beg end))))
+
 (defun +toggle-side-window (side &optional frame)
   "Toggle a side window on SIDE of FRAME.
 When a side window exists on SIDE, close it and remember its state.

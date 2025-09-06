@@ -1,5 +1,10 @@
 2025-09-06  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (clear-text-properties-in-region): New function to clear
+	all text properties in the selected region using set-text-properties.
+
+2025-09-06  Zhengyi Fu  <i@fuzy.me>
+
 	* AGENTS.md (Git and ChangeLog Conventions): Add guidance about
 	mentioning new files in both ChangeLog and commit messages, and
 	using git commit --amend when ChangeLog was missed initially.
