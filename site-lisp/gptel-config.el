@@ -83,7 +83,10 @@
 		   (forward-line (1- end))
 		   (buffer-substring-no-properties
 		    start-pos (line-end-position))))))
- :description "Read contents of a file"
+ :description "Read the contents of a file from the file system.
+Use this tool when you need to examine the contents of a single file.
+Use the `start` and `end` parameters to specify the region when you know the range.
+You can also set `end` to 0 to read to the end of the file."
  :args (list '(:name "filepath"
 		     :type string
 		     :description "Path to the file to read. Supports relative paths and ~.")
@@ -254,7 +257,8 @@ new content and the original content from `old_string`."
 		     (funcall callback (buffer-string))))
 		 nil t))))
  :async t
- :description "Search for a pattern in the workspace."
+ :description "Search for a pattern in the workspace.
+Supports full regex syntax (eg.  \"log.*Error\", \"function\\s+\\w+\", etc). "
  :args (list '(:name "regexp"
 		     :type string
 		     :description "The pattern to search.  It should be a regular expression.")
@@ -299,8 +303,80 @@ new content and the original content from `old_string`."
 			  (buffer-substring-no-properties
 			   start-marker (point-max))))))))))
  :async t
- :description "Executes a shell command and returns the output as a string. IMPORTANT: This tool allows execution of arbitrary code; user confirmation will be required before any command is run.
-This tool is not meant to be used to modify files: use `edit_file` to do that."
+ :description "Executes a shell command and returns the output as a string.
+
+- IMPORTANT: You MUST avoid using search command `grep`.  Instead use the
+`grep` tool to search.  You MUST avoid read tools like `cat`, `head`,
+`tail`, and `ls`, and use `read_file` and `list_directory` tool.  (But it's
+ok to pipe long outputs to `head` to avoid reading to much).
+
+- It is very helpful if you write a clear, concise description of what
+this command does in 5-10 words, before calling the tool.
+
+- When issuing multiple commands, use the ';' or '&&' operator to separate them.  DO NOT use newlines (newlines are ok in quoted strings)
+
+- Try to maintain your current working directory throughout the session by
+using absolute paths and avoiding usage of `cd`.  You may use `cd` if the User
+explicitly requests it.
+
+  <good-example>
+  pytest /foo/bar/tests
+  </good-example>
+
+  <bad-example>
+  cd /foo/bar && pytest ./test
+  </bad-example>
+
+## Committing changes with git
+
+When the user asks you to create a new git commit, following these steps
+carefully:
+
+1.:
+    - Run a git status command to see all untrack files.
+    - Run a git diff command to see both staged and unstaged changes that will be commited.
+    - Run a git log command to see recent commit messages, so that you can follow this repository's commit message style.  (Don't forget to pipe the result to head to limit the count of commits)
+
+2.: Analyze all staged changes (both previously staged and newly added) and draft a
+commit message.
+Wrap your analysis process in <commit_analysis> tags:
+
+<commit_analysis>
+- List the files that have been changed or added
+- Summarize the nature of the changes (eg. new feature, enhancement to an existing feature, bug fix, refactoring, test, docs, etc.)
+- Brainstorm the purpose or motivation behind these changes
+- Assess the impact of these changes on the overall project
+- Check for any sensitive information that shouldn't be committed
+- Draft a concise (1-2 sentences) commit message that focuses on the \"why\" rather than the \"what\"
+- Ensure your language is clear, concise, and to the point
+- Ensure the message accurately reflects the changes and their purpose (i.e. \"add\" means a wholly new feature, \" update \" means an enhancement to an existing feature, \"fix\" means a bug fix, etc.)
+- Ensure the message is not generic (avoid words like \"Update\" or \"Fix\" without context)
+- Review the draft message to ensure it accurately reflects the changes and their purpose
+</commit_analysis>
+
+4.  If the commit fails due to pre-commit hook changes, retry the commit ONCE to include these automated changes. If it fails again, it usually means a pre-commit hook is preventing the commit. If the commit succeeds but you notice that files were modified by the pre-commit hook, you MUST amend your commit to include them.
+
+Important notes:
+- Use the git context at the start of this conversation to determine which files are relevant to your commit. Be careful not to stage and commit files (e.g. with `git add .`) that aren't relevant to your commit.
+- NEVER update the git config
+- DO NOT run additional commands to read or explore code, beyond what is available in the git context
+- DO NOT push to the remote repository
+- IMPORTANT: Never use git commands with the -i flag (like git rebase -i or git add -i) since they require interactive input which is not supported.
+- If there are no changes to commit (i.e., no untracked files and no modifications), do not create an empty commit
+- Ensure your commit message is meaningful and concise. It should explain the purpose of the changes, not just describe them.
+- Return an empty response - the user will see the git output directly
+- In order to ensure good formatting, ALWAYS pass the commit message via a HEREDOC, a la this example:
+<example>
+git commit -m \"$(cat <<'EOF'
+   Commit message here.
+
+   🤖 Generated with [eca](https://eca.dev)
+
+   Co-Authored-By: eca <noreply@eca.dev>
+   EOF
+   )\"
+</example>
+"
  :args (list
 	'(:name "command"
 		:type string

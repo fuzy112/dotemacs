@@ -1,5 +1,10 @@
 2025-09-06  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el (read_file, grep, run_command): Enhance
+	tool descriptions with detailed usage guidelines and examples.
+
+2025-09-06  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el (+gptel-edit-file-async): Add forward
 	declaration for ediff-window-setup-function to avoid byte-compiler
 	warnings.
