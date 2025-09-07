@@ -1,5 +1,17 @@
 2025-09-07  Zhengyi Fu  <i@fuzy.me>
 
+	Fix compile warnings and improve gptel-agent session handling.
+
+	* site-lisp/gptel-config.el (gptel-agent): Replace obsolete when-let
+	with when-let* and remove unused guidelines variable to eliminate
+	compiler warnings. Only apply preset settings when creating new
+	buffer to avoid reconfiguring existing sessions.
+	(grep): Fix buffer string extraction in callback to use correct
+	function name and avoid properties.
+	(coding-agent): Fix indentation in tools list.
+
+2025-09-07  Zhengyi Fu  <i@fuzy.me>
+
 	Rename kimi-agent preset to coding-agent for better backend compatibility.
 
 	* site-lisp/gptel-config.el (kimi-agent): Rename preset to coding-agent
