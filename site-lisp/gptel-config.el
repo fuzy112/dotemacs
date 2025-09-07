@@ -233,7 +233,7 @@ of code or context to make it a unique block.
 
 ALWAYS prefer making small, targeted edits to existing files.  Avoid
 replacing entire functions or large blocks of code in a single step
-unless absolutely necessary.  To delete content, provide the contet to
+unless absolutely necessary.  To delete content, provide the content to
 be removed as the `old_string` and an empty string as the `new_string`.
 
 To prepend or append content, the `new_string` must contain both the
