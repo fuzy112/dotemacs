@@ -265,7 +265,8 @@ IMPORTANT: You should STOP immediately if the User rejects your edits."
        (add-hook 'compilation-finish-functions
 		 (lambda (buffer how)
 		   (with-current-buffer buffer
-		     (funcall callback (buffer-string))))
+		     (funcall callback (buffer-substring-no-properties
+					(point-min) (point-max)))))
 		 nil t))))
  :async t
  :description "Search for a pattern in the workspace.
@@ -1093,8 +1094,8 @@ Whenever you cite external information, always include the full source URL.")
   :max-tokens 8192
   :use-tools t
   :tools '("edit_file" "create_file" "read_file" "run_command" "grep"
-	    "list_directory" "read_todos" "add_todo" "complete_todo"
-	    "search_todos" "list_active_todos" "editor_diagnostics")
+	   "list_directory" "read_todos" "add_todo" "complete_todo"
+	   "search_todos" "list_active_todos" "editor_diagnostics")
   :system "You are ECA (Emacs Coding Agent), an AI coding agent that operates in Emacs.
 
 You are pair programming with a USER to solve their coding task.  Each
@@ -1310,7 +1311,7 @@ the session buffer will be the project root if there is a project (as found
 by project-current in project.el), otherwise the default-directory where the
 command is invoked."
   (interactive)
-  (let* ((project-root (when-let ((proj (project-current)))
+  (let* ((project-root (when-let* ((proj (project-current)))
 			 (if (fboundp 'project-root)
 			     (project-root proj)
 			   (car (project-roots proj)))))
@@ -1319,18 +1320,18 @@ command is invoked."
 	 (buffer-name (if proj-name
 			  (format "*gptel-agent : %s*" proj-name)
 			"*gptel-agent*"))
-	 (existing-buffer-p (get-buffer buffer-name))
-	 (guidelines nil))
+	 (existing-buffer-p (get-buffer buffer-name)))
     (gptel buffer-name)
     (pop-to-buffer buffer-name '((display-buffer-in-side-window)
 				 (side . right)))
     (with-current-buffer (get-buffer buffer-name)
       ;; Apply coding-agent preset settings
-      (gptel--apply-preset 'coding-agent
-			   (lambda (sym val)
-			     (set (make-local-variable sym) val)))
-      ;; Set local variable to include tool results in buffer
-      (setq-local gptel-include-tool-results t)
+      (unless existing-buffer-p
+	(gptel--apply-preset 'coding-agent
+			     (lambda (sym val)
+			       (set (make-local-variable sym) val)))
+	;; Set local variable to include tool results in buffer
+	(setq-local gptel-include-tool-results t))
       (when project-root
 	(cd project-root))
       (gptel-agent--setup-context)
