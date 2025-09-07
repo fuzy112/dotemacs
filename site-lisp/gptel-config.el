@@ -1,4 +1,37 @@
-;; -*- lexical-binding: t; -*-
+;;; gptel-config.el --- Configuration for gptel AI assistant -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2025 Zhengyi Fu <i@fuzy.me>
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; This file provides comprehensive configuration for gptel, an AI assistant
+;; integration for Emacs.  It defines multiple AI backends (Moonshot, DeepSeek,
+;; Kagi, GitHub Copilot), various tools for file operations, web search, GitHub
+;; integration, JIRA operations, and todo list management.  The configuration
+;; includes specialized presets for different use cases like translation,
+;; coding, mathematics, and general assistance.
+
+;; The configuration emphasizes:
+;; - Multiple AI backend support with proper API key management
+;; - Extensive tool integration for filesystem, web, GitHub, and JIRA operations
+;; - Project-specific todo list management
+;; - Specialized presets for different AI assistant roles
+;; - Proper error handling and user confirmation for sensitive operations
+
+;;; Code:
 
 (require 'gptel)
 (require 'url-http)
