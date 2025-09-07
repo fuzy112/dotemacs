@@ -54,3 +54,4 @@ Each Emacs Lisp file should include:
 - Document complex configurations with comments
 - Prefer built-in Emacs functionality when possible
 - Maintain backward compatibility where feasible
+- Keep two spaces between full sentences
