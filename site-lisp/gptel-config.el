@@ -167,49 +167,43 @@ error handling within gptel sessions."
 	  (let* ((inhibit-read-only t)
 		 (case-fold-search nil)
 		 (file-name (expand-file-name file-path))
-		 (orig-buffer (find-file-noselect file-name))
-		 (edit-success nil))
-	    ;; apply changes
-	    (dolist (file-edit (seq-into file-edits 'list))
+		 (orig-window (selected-window))
+		 (ediff-window-setup-function 'ediff-setup-windows-plain))
+	    (seq-doseq (file-edit file-edits)
 	      (when-let* ((old-string (plist-get file-edit :old_string))
 			  (new-string (plist-get file-edit :new_string))
 			  (is-valid-old-string (not (string= old-string ""))))
 		(goto-char (point-min))
-		(when (search-forward old-string nil t)
-		  (save-match-data
-		    (when (search-forward old-string nil t)
-		      (error "There multiple occurrences of the `old_string`")))
-		  (replace-match new-string t t)
-		  (setq edit-success t))))
-	    ;; return result to gptel
-	    (if edit-success
-		(let ((orig-window (selected-window))
-		      (ediff-window-setup-function 'ediff-setup-windows-plain))
-		  ;; Ensure we have a proper window for ediff
-		  (when (window-parameter orig-window 'window-side)
-		    (select-window (get-window-with-predicate
-				    (lambda (win)
-				      (null (window-parameter win 'window-side))))))
-		  (ediff-buffers
-		   orig-buffer edit-buffer
-		   (list (lambda ()
-			   (add-hook 'ediff-quit-hook
-				     (lambda ()
-				       (if (y-or-n-p "Accept the changes? ")
-					   (progn
-					     (with-current-buffer edit-buffer
-					       (write-region nil nil file-name))
-					     (funcall callback "Successfully edited file"))
-					 (funcall callback "Failed to edit the file.  The user explicitly rejected the edition.
+		(unless (search-forward old-string nil t)
+		  (error "Failed to find the string to replace"))
+		(save-match-data
+		  (when (search-forward old-string nil t)
+		    (error "There multiple occurrences of the `old_string`")))
+		(replace-match new-string t t)))
+	    (when (window-parameter orig-window 'window-side)
+	      (select-window (get-window-with-predicate
+			      (lambda (win)
+				(null (window-parameter win 'window-side))))))
+	    (ediff-buffers
+	     (find-file-noselect file-path)
+	     edit-buffer
+	     (list (lambda ()
+		     (add-hook 'ediff-quit-hook
+			       (lambda ()
+				 (if (y-or-n-p "Accept the changes? ")
+				     (progn
+				       (with-current-buffer edit-buffer
+					 (write-region nil nil file-name))
+				       (funcall callback "Successfully edited file"))
+				   (funcall callback "Failed to edit the file.  The user explicitly rejected the edition.
 You should NOT output anything NOR call any tools before the User asks so.")
-					 (gptel-abort gptel-buffer))
-				       (when (buffer-live-p edit-buffer)
-					 (kill-buffer edit-buffer))
-				       (run-at-time 0 nil
-						    (lambda ()
-						      (set-window-configuration window-config))))
-				     90 t)))))
-	      (error "Failed to find the string to replace")))))
+				   (gptel-abort gptel-buffer))
+				 (when (buffer-live-p edit-buffer)
+				   (kill-buffer edit-buffer))
+				 (run-at-time 0 nil
+					      (lambda ()
+						(set-window-configuration window-config))))
+			       90 t)))))))
     (error (funcall callback (format "An error occurred: %S" err)))))
 
 (gptel-make-tool
