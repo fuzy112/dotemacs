@@ -1084,8 +1084,8 @@ Be concise, accurate, and helpful.
 You may search the web or read URLs when needed.
 Whenever you cite external information, always include the full source URL.")
 
-(gptel-make-preset 'kimi-agent
-  :description "Fast, deterministic coding assistant using Moonshot’s kimi-k2"
+(gptel-make-preset 'coding-agent
+  :description "Fast, deterministic coding assistant using file operations and project management"
   :backend "Moonshot"
   :model 'kimi-k2-turbo-preview
   :stream t
@@ -1305,7 +1305,7 @@ script readability and reliability.")
   "Create or switch to a gptel session buffer for the current project.
 The buffer will be displayed in a side window by default, but this behavior
 can be customized.
-The session buffer will use the kimi-agent preset.  The default-directory in
+The session buffer will use the coding-agent preset.  The default-directory in
 the session buffer will be the project root if there is a project (as found
 by project-current in project.el), otherwise the default-directory where the
 command is invoked."
@@ -1325,8 +1325,8 @@ command is invoked."
     (pop-to-buffer buffer-name '((display-buffer-in-side-window)
 				 (side . right)))
     (with-current-buffer (get-buffer buffer-name)
-      ;; Apply kimi-agent preset settings
-      (gptel--apply-preset 'kimi-agent
+      ;; Apply coding-agent preset settings
+      (gptel--apply-preset 'coding-agent
 			   (lambda (sym val)
 			     (set (make-local-variable sym) val)))
       ;; Set local variable to include tool results in buffer
@@ -1337,7 +1337,7 @@ command is invoked."
       (unless existing-buffer-p
 	(when project-root
 	  (insert (format "I'm working in project: %s\n" project-root)))
-	(message "gptel-agent session started with kimi-agent preset")))))
+	(message "gptel-agent session started with coding-agent preset")))))
 
 (defun gptel-agent--setup-context ()
   (dolist (filename (list "AGENTS.md"))
