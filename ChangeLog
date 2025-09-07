@@ -1,5 +1,14 @@
 2025-09-07  Zhengyi Fu  <i@fuzy.me>
 
+	Rename kimi-agent preset to coding-agent for better backend compatibility.
+
+	* site-lisp/gptel-config.el (kimi-agent): Rename preset to coding-agent
+	and update description to be backend-agnostic since it works with
+	multiple backends beyond just kimi-k2.
+	(gptel-agent): Update references to use the new coding-agent preset name.
+
+2025-09-07  Zhengyi Fu  <i@fuzy.me>
+
 	Fix complete_todo function to properly handle todo items with priorities.
 
 	* site-lisp/gptel-config.el (+gptel-mark-todo-done): Update regex to
