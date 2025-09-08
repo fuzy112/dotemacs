@@ -1,3 +1,12 @@
+2025-09-09  Zhengyi Fu  <i@fuzy.me>
+
+	Replace README.org with comprehensive README.md documentation.
+
+	* README.md: New comprehensive documentation file with detailed
+	configuration overview, installation instructions, feature
+	descriptions, keybindings, and usage guide.
+	* README.org: Remove outdated minimal documentation file.
+
 2025-09-08  Zhengyi Fu  <i@fuzy.me>
 
 	Improve error handling and tool functionality in gptel configuration.
