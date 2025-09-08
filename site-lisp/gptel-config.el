@@ -36,6 +36,7 @@
 (require 'gptel)
 (require 'url-http)
 (require 'with-editor)
+(require 'flymake)
 
 ;;; Reset backends, tools, and presets
 
@@ -168,39 +169,185 @@ This argument can also be 0, which means to read to the end of the file."))
 		     :description "The content to write to the file"))
  :category "filesystem")
 
+(defun +gptel-write-file-async (callback file-path content)
+  "Asynchronously write CONTENT to FILE-PATH with user preview.
+
+CALLBACK is a function that will be called with the result message upon
+completion.  The callback receives a string describing the outcome.
+FILE-PATH is the path to the file to be written.
+CONTENT is the new content to write to the file.
+
+The function will:
+1. Create a preview buffer showing the new content
+2. Allow the user to review and optionally modify the content
+3. Provide options to accept, reject, or request changes
+4. Write the content to the file upon user acceptance
+
+Uses `gptel-abort' for proper error handling within gptel sessions.
+
+This function is designed for use with gptel-mode and provides an
+interactive workflow for file writing operations.
+
+(fn CALLBACK FILE-PATH CONTENT)"
+  (cl-assert gptel-mode)
+  (condition-case err
+      (let* ((preview-buffer (generate-new-buffer "*write-file-preview*")))
+	(with-current-buffer preview-buffer
+	  (insert content))
+	(+gptel-ediff-file-with-buffer file-path preview-buffer callback))
+    (error (funcall callback (format "An error occurred: %S" err))
+	   (signal (car err) (cdr err)))))
+
+(gptel-make-tool
+ :name "write_file"
+ :function #'+gptel-write-file-async
+ :async t
+ :description "Write content to a file with user preview and confirmation.
+
+This tool allows you to write new content to a file, overwriting any existing
+content. It will display a preview buffer showing the content to be written,
+allowing the user to review and optionally modify it before confirming.
+
+Key features:
+- Shows a preview of the content before writing
+- Allows user to accept, reject, or request changes
+- Overwrites existing files (use with caution)
+- Provides clear feedback on the operation result
+
+The user will be presented with three options:
+1. Accept (C-c C-c) - Write the content to the file
+2. Reject (C-c C-k) - Cancel the operation
+3. Request changes (C-c C-r) - Abort and allow modifications
+
+Use this tool when you need to create or completely replace file contents.
+For partial edits, use the `edit_file` tool instead."
+ :args (list '(:name "file-path"
+		     :type string
+		     :description "The full path of the file to write")
+	     '(:name "content"
+		     :type string
+		     :description "The content to write to the file. This will overwrite any existing content."))
+ :category "filesystem")
+
 (defvar ediff-window-setup-function)
+
+(declare-function ediff-setup-windows-plain "ediff-wind.el" (arg1 arg2 arg3 arg4))
+
+(defun +gptel-ediff-buffers (old-buffer new-buffer &optional startup-hooks)
+  "Launch ediff between OLD-BUFFER and NEW-BUFFER with proper cleanup.
+
+OLD-BUFFER is the buffer containing the original content.
+NEW-BUFFER is the buffer containing the proposed changes.
+STARTUP-HOOKS are optional hooks to run after ediff setup.
+
+This function:
+1. Sets up ediff with plain window configuration
+2. Ensures proper window selection (avoids side windows)
+3. Automatically cleans up the NEW-BUFFER after ediff completion
+4. Restores the original window configuration
+
+Returns the ediff session buffer.
+
+(fn OLD-BUFFER NEW-BUFFER &optional STARTUP-HOOKS)"
+  (let ((orig-window (selected-window))
+	(orig-window-config (current-window-configuration))
+	(ediff-window-setup-function #'ediff-setup-windows-plain))
+    ;; make sure the current window is not a not side window
+    (when (window-parameter orig-window 'window-side)
+      (select-window (get-window-with-predicate
+		      (lambda (win)
+			(null (window-parameter win 'window-side))))))
+    (ediff-buffers
+     old-buffer new-buffer
+     (cons (lambda ()
+	     (add-hook 'ediff-quit-hook
+		       (lambda ()
+			 (set-window-configuration orig-window-config))
+		       90 t)
+	     (add-hook 'ediff-quit-hook
+		       (lambda ()
+			 (kill-buffer new-buffer))
+		       95 t))
+	   startup-hooks))))
+
+(defun +gptel-ediff-file-with-buffer (filename buffer callback &optional startup-hooks)
+  "Launch ediff between FILENAME and BUFFER with interactive approval.
+
+FILENAME is the path to the file to compare against.
+BUFFER is the buffer containing proposed changes.
+CALLBACK is a function called with the result message.
+STARTUP-HOOKS are optional hooks to run after ediff setup.
+
+This function:
+1. Opens the file and compares it with the buffer content using ediff
+2. Presents the user with options to accept, reject, or request changes
+3. Writes the changes to the file if accepted
+4. Calls CALLBACK with appropriate result message
+5. Handles gptel session cleanup on rejection
+
+Returns the ediff session buffer.
+
+(fn FILENAME BUFFER CALLBACK &optional STARTUP-HOOKS)"
+  (let ((session-buffer (current-buffer)))
+    (+gptel-ediff-buffers
+     (find-file-noselect filename)
+     buffer
+     (cons (lambda ()
+	     (add-hook 'ediff-quit-hook
+		       (lambda ()
+			 (let ((read-answer-short t))
+			   (pcase (read-answer
+				   "Accept changes? "
+				   '(("yes" ?y "accept")
+				     ("no"  ?n "reject") 
+				     ("change" ?c "request changes")))
+			     ("yes"
+			      (with-current-buffer buffer
+				(write-region nil nil filename))
+			      (funcall callback "Successfully edited file."))
+			     ("no"
+			      (funcall callback "User rejected the changes.")
+			      (gptel-abort session-buffer))
+			     ("change"
+			      (funcall callback
+				       (concat "User requested changes to your edits: "
+					       (read-string "Request changes: ")))))))
+		       nil t))
+	   startup-hooks))))
 
 (defun +gptel-edit-file-async (callback file-path file-edits)
   "Asynchronously apply FILE-EDITS to FILE-PATH with pattern matching.
 
 CALLBACK is a function that will be called with the result message upon
-completion.
+completion.  The callback receives a string describing the outcome.
 FILE-PATH is the path to the file to be edited.
 FILE-EDITS is a list of edit specifications, where each edit is a plist
 with:
-  - :old_string - the string to be replaced
+  - :old_string - the string to be replaced (must match exactly)
   - :new_string - the replacement string
 
 The function will:
 1. Create a temporary buffer with the file contents
-2. Apply all edits sequentially
+2. Apply all edits sequentially using exact string matching
 3. Write the modified content back to the file
 4. Call CALLBACK with success message or abort on error
 
 If any edit fails (old_string not found), the operation is aborted and
 the original file is left unchanged.  Uses `gptel-abort' for proper
-error handling within gptel sessions."
+error handling within gptel sessions.
+
+This function is designed for programmatic file editing within gptel-mode.
+
+(fn CALLBACK FILE-PATH FILE-EDITS)"
   (cl-assert gptel-mode)
-  (condition-case err
-      (let ((gptel-buffer (current-buffer))
-	    (edit-buffer (generate-new-buffer "*edit-file*"))
-	    (window-config (current-window-configuration)))
+  (cl-assert (stringp file-path))
+  (cl-assert (sequencep file-edits))
+  (condition-case-unless-debug err
+      (let ((edit-buffer (generate-new-buffer "*edit-file*")))
 	(with-current-buffer edit-buffer
 	  (insert-file-contents (expand-file-name file-path))
 	  (let* ((inhibit-read-only t)
 		 (case-fold-search nil)
-		 (file-name (expand-file-name file-path))
-		 (orig-window (selected-window))
 		 (ediff-window-setup-function 'ediff-setup-windows-plain))
 	    (seq-doseq (file-edit file-edits)
 	      (when-let* ((old-string (plist-get file-edit :old_string))
@@ -212,30 +359,8 @@ error handling within gptel sessions."
 		(save-match-data
 		  (when (search-forward old-string nil t)
 		    (error "There multiple occurrences of the `old_string`")))
-		(replace-match new-string t t)))
-	    (when (window-parameter orig-window 'window-side)
-	      (select-window (get-window-with-predicate
-			      (lambda (win)
-				(null (window-parameter win 'window-side))))))
-	    (ediff-buffers
-	     (find-file-noselect file-path)
-	     edit-buffer
-	     (list (lambda ()
-		     (add-hook 'ediff-quit-hook
-			       (lambda ()
-				 (if (y-or-n-p "Accept the changes? ")
-				     (progn
-				       (with-current-buffer edit-buffer
-					 (write-region nil nil file-name))
-				       (funcall callback "Successfully edited file"))
-				   (funcall callback "User rejected the change.")
-				   (gptel-abort gptel-buffer))
-				 (when (buffer-live-p edit-buffer)
-				   (kill-buffer edit-buffer))
-				 (run-at-time 0 nil
-					      (lambda ()
-						(set-window-configuration window-config))))
-			       90 t)))))))
+		(replace-match new-string t t)))))
+	(+gptel-ediff-file-with-buffer file-path edit-buffer callback))
     (error (funcall callback (format "An error occurred: %S" err))
 	   (signal (car err) (cdr err)))))
 
@@ -435,8 +560,6 @@ git commit -m \"$(cat <<'EOF'
 
 ;; Emacs tools
 
-
-(eval-when-compile (require 'flymake))
 (defun +gptel--flymake-diag-to-json (diag)
   (pcase-let (((cl-struct flymake--diag locus beg end type origin code message backend
 			  data overlay-properties overlay)
