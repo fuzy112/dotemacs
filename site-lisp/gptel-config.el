@@ -228,8 +228,7 @@ error handling within gptel sessions."
 				       (with-current-buffer edit-buffer
 					 (write-region nil nil file-name))
 				       (funcall callback "Successfully edited file"))
-				   (funcall callback "Failed to edit the file.  The user explicitly rejected the edition.
-You should NOT output anything NOR call any tools before the User asks so.")
+				   (funcall callback "User rejected the change.")
 				   (gptel-abort gptel-buffer))
 				 (when (buffer-live-p edit-buffer)
 				   (kill-buffer edit-buffer))
@@ -237,36 +236,37 @@ You should NOT output anything NOR call any tools before the User asks so.")
 					      (lambda ()
 						(set-window-configuration window-config))))
 			       90 t)))))))
-    (error (funcall callback (format "An error occurred: %S" err)))))
+    (error (funcall callback (format "An error occurred: %S" err))
+	   (signal (car err) (cdr err)))))
 
 (gptel-make-tool
  :name "edit_file"
  :function #'+gptel-edit-file-async
  :async t
  :description "Edit file with a list of edits, each edit contains a line-number,
-a old-string and a new-string, new-string will replace the old-string at the specified line.
+a old-string and a new-string, new-string will replace the old-string at
+the specified line.
 
-You must use your `read_file` tool to get the file's exact contents before
-attempting an edit.
+You must use your `read_file` tool to get the file's exact contents
+before attempting an edit.
 
-This tool will error if you attempt an edit without reading the file.  When crafting
-the `old_string`, you must match the original content from the `read_file` tool
-output exactly, including all indentation (spaces/tabs) and newlines.
+This tool will error if you attempt an edit without reading the file.
+When crafting the `old_string`, you must match the original content from
+the `read_file` tool output exactly, including all
+indentation (spaces/tabs) and newlines.
 
 Never include any part of the line number prefix in the `old_string` or
-`new_string`.  The edit will FAIL if the `old_string` is not unique in the file.
-To resolve this, you must expand the `new_content` to include more surrounding lines
-of code or context to make it a unique block.
+`new_string`.  The edit will FAIL if the `old_string` is not unique in
+the file.  To resolve this, you MUST expand the `new_content` to include
+more surrounding lines of code or context to make it a unique block.
 
 ALWAYS prefer making small, targeted edits to existing files.  Avoid
 replacing entire functions or large blocks of code in a single step
 unless absolutely necessary.  To delete content, provide the content to
 be removed as the `old_string` and an empty string as the `new_string`.
 
-To prepend or append content, the `new_string` must contain both the
-new content and the original content from `old_string`.
-
-IMPORTANT: You should STOP immediately if the User rejects your edits."
+To prepend or append content, the `new_string` must contain both the new
+content and the original content from `old_string`."
  :args (list '(:name "file-path"
 		     :type string
 		     :description "The full path of the file to edit")
@@ -285,16 +285,20 @@ IMPORTANT: You should STOP immediately if the User rejects your edits."
  :name "grep"
  :function
  (lambda (callback regexp working-dir)
-   (let* ((default-directory (or (and working-dir (expand-file-name working-dir))
-				 default-directory))
-	  (buffer (grep (format "rg  --no-heading -n -e %s | head -n 200" (shell-quote-argument regexp)))))
-     (with-current-buffer buffer
-       (add-hook 'compilation-finish-functions
-		 (lambda (buffer how)
-		   (with-current-buffer buffer
-		     (funcall callback (buffer-substring-no-properties
-					(point-min) (point-max)))))
-		 nil t))))
+   (condition-case err
+       (let* ((default-directory (or (and working-dir (expand-file-name working-dir))
+				     default-directory))
+	      (compilation-buffer-name-function #'project-prefixed-buffer-name)
+	      (buffer (grep (format "rg  --no-heading -n -e %s | head -n 200" (shell-quote-argument regexp)))))
+	 (with-current-buffer buffer
+	   (add-hook 'compilation-finish-functions
+		     (lambda (buffer _how)
+		       (with-current-buffer buffer
+			 (funcall callback (buffer-substring-no-properties
+					    (point-min) (point-max)))))
+		     nil t)))
+     (error (funcall callback (list :error "Failed to run grep"
+				    :internal-error err)))))
  :async t
  :description "Search for a pattern in the workspace.
 Supports full regex syntax (eg.  \"log.*Error\", \"function\\s+\\w+\", etc). "
@@ -313,7 +317,8 @@ Supports full regex syntax (eg.  \"log.*Error\", \"function\\s+\\w+\", etc). "
  :function
  (lambda (callback command working-dir)
    (let* ((default-directory (expand-file-name working-dir))
-	  (buffer (get-buffer-create "*Command Output*"))
+	  (command-buffer-name (concat " *" (project-name (project-current)) " : Output*"))
+	  (buffer (get-buffer-create command-buffer-name))
 	  proc start-marker)
      (with-current-buffer buffer
        (unless (derived-mode-p 'comint-mode)
@@ -430,6 +435,28 @@ git commit -m \"$(cat <<'EOF'
 
 ;; Emacs tools
 
+
+(eval-when-compile (require 'flymake))
+(defun +gptel--flymake-diag-to-json (diag)
+  (pcase-let (((cl-struct flymake--diag locus beg end type origin code message backend
+			  data overlay-properties overlay)
+	       diag))
+    (ignore data overlay-properties overlay)
+    (and (bufferp locus)
+	 (with-current-buffer locus
+	   (when (buffer-file-name)
+	     (setq locus (buffer-file-name)
+		   beg (line-number-at-pos beg)
+		   end (line-number-at-pos end)))))
+    (list :locus locus
+	  :beg beg
+	  :end :end
+	  :type type
+	  :origin origin
+	  :code code
+	  :message message
+	  :backend backend)))
+
 (gptel-make-tool
  :name "editor_diagnostics"
  :description "Get editor diagnostics (errors, warnings, info) for workspaces.
@@ -438,10 +465,10 @@ diagnostics when a file path is given. Requires the file to be open in the edito
  :function (lambda (file-path)
 	     (require 'flymake)
 	     (if (or (null file-path) (string-empty-p file-path))
-		 (flymake--format-diagnostic (flymake--project-diagnostics) :eldoc)
+		 (mapcar #'+gptel--flymake-diag-to-json (flymake--project-diagnostics))
 	       (if-let* ((buffer (get-file-buffer file-path)))
 		   (with-current-buffer buffer
-		     (flymake--format-diagnostic  (flymake-diagnostics) :eldoc))
+		     (mapcar #'+gptel--flymake-diag-to-json (flymake-diagnostics)))
 		 (error "File not opened in editor: %s" file-path))))
  :args (list '(:name "file_path"
 		     :type string
@@ -615,7 +642,7 @@ diagnostics when a file path is given. Requires the file to be open in the edito
 (define-advice forge-post-cancel (:before () +gptel-hook)
   (run-hooks '+gptel-forge-post-cancel-hook))
 
-(define-advice forge--post-submit-errorback (:before (&rest args) +gptel-hook)
+(define-advice forge--post-submit-errorback (:before (&rest _args) +gptel-hook)
   (run-hooks '+gptel-forge-post-submit-error-hook))
 
 (defun +gptel-forge-post-cancel ()
@@ -1328,6 +1355,9 @@ script readability and reliability.")
 	(gptel-send)))))
 
 
+(defvar gptel-agent-backend gptel-backend)
+(defvar gptel-agent-model gptel-model)
+
 ;;;###autoload
 (defun gptel-agent ()
   "Create or switch to a gptel session buffer for the current project.
@@ -1352,13 +1382,15 @@ command is invoked."
     (pop-to-buffer buffer-name '((display-buffer-in-side-window)
 				 (side . right)))
     (with-current-buffer (get-buffer buffer-name)
-      ;; Apply coding-agent preset settings
       (unless existing-buffer-p
+	;; Apply coding-agent preset settings
 	(gptel--apply-preset 'coding-agent
 			     (lambda (sym val)
 			       (set (make-local-variable sym) val)))
 	;; Set local variable to include tool results in buffer
-	(setq-local gptel-include-tool-results t))
+	(setq-local gptel-include-tool-results t)
+	(setq-local gptel-backend gptel-agent-backend
+		    gptel-model gptel-agent-model))
       (when project-root
 	(cd project-root))
       (gptel-agent--setup-context)
