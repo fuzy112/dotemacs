@@ -1,3 +1,20 @@
+2025-09-10  Zhengyi Fu  <i@fuzy.me>
+
+	Add write_file tool and refactor file editing functionality in
+	gptel configuration.
+
+	* site-lisp/gptel-config.el: Add require for flymake.
+	(+gptel-write-file-async): New async tool function for writing
+	files with user preview.
+	(+gptel-ediff-buffers): New helper function for ediff sessions
+	with proper cleanup.
+	(+gptel-ediff-file-with-buffer): New helper function for file
+	editing with user confirmation.
+	(write_file): New gptel tool for writing files with preview and
+	confirmation.
+	(+gptel-edit-file-async): Refactor to use new ediff helper
+	functions for better code organization.
+
 2025-09-09  Zhengyi Fu  <i@fuzy.me>
 
 	Replace README.org with comprehensive README.md documentation.
