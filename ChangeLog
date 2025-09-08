@@ -1,3 +1,23 @@
+2025-09-08  Zhengyi Fu  <i@fuzy.me>
+
+	Improve error handling and tool functionality in gptel configuration.
+
+	* site-lisp/gptel-config.el (+gptel-edit-file-async): Add proper error
+	signal propagation after callback to ensure proper error handling.
+	(grep): Fix error handling to return structured error information
+	with internal error details. Use project-prefixed buffer names for
+	better organization.
+	(run_command): Use project-prefixed buffer names for command output
+	buffers to avoid conflicts.
+	(+gptel--flymake-diag-to-json): New function to convert flymake
+	diagnostics to structured JSON format.
+	(editor_diagnostics): Update to return structured JSON data instead
+	of formatted strings.
+	(forge--post-submit-errorback): Fix advice to handle unused arguments
+	properly.
+	(gptel-agent): Add global variables for backend and model
+	configuration to allow customization.
+
 2025-09-07  Zhengyi Fu  <i@fuzy.me>
 
 	* site-lisp/gptel-config.el (+gptel-edit-file-async): Refactor.
