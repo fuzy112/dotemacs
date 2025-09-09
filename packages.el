@@ -204,6 +204,7 @@
 (straight-use-package 'debian-el)
 (straight-use-package 'dpkg-dev-el)
 (straight-use-package 'pdf-tools)
+(straight-use-package '(pcap-mode :fork (:host github :repo "fuzy112/pcap-mode")))
 
 ;;; Applications
 (straight-use-package 'telega)
