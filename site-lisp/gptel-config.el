@@ -37,6 +37,7 @@
 (require 'url-http)
 (require 'with-editor)
 (require 'flymake)
+(require 'dom)
 
 ;;; Reset backends, tools, and presets
 
@@ -205,22 +206,23 @@ interactive workflow for file writing operations.
  :description "Write content to a file with user preview and confirmation.
 
 This tool allows you to write new content to a file, overwriting any existing
-content. It will display a preview buffer showing the content to be written,
+content. It uses an ediff interface to display a side-by-side comparison
+between the current file content (if any) and the proposed new content,
 allowing the user to review and optionally modify it before confirming.
 
 Key features:
-- Shows a preview of the content before writing
+- Shows a side-by-side comparison using ediff
 - Allows user to accept, reject, or request changes
 - Overwrites existing files (use with caution)
 - Provides clear feedback on the operation result
 
-The user will be presented with three options:
-1. Accept (C-c C-c) - Write the content to the file
-2. Reject (C-c C-k) - Cancel the operation
-3. Request changes (C-c C-r) - Abort and allow modifications
-
 Use this tool when you need to create or completely replace file contents.
-For partial edits, use the `edit_file` tool instead."
+For partial edits, use the `edit_file` tool instead.
+
+The user will be presented with interactive options to:
+- Accept the changes and write to file
+- Reject the changes and cancel the operation  
+- Request specific modifications to the proposed content"
  :args (list '(:name "file-path"
 		     :type string
 		     :description "The full path of the file to write")
@@ -288,7 +290,8 @@ This function:
 Returns the ediff session buffer.
 
 (fn FILENAME BUFFER CALLBACK &optional STARTUP-HOOKS)"
-  (let ((session-buffer (current-buffer)))
+  (let ((session-buffer (and (bound-and-true-p gptel-mode)
+			     (current-buffer))))
     (+gptel-ediff-buffers
      (find-file-noselect filename)
      buffer
@@ -299,7 +302,7 @@ Returns the ediff session buffer.
 			   (pcase (read-answer
 				   "Accept changes? "
 				   '(("yes" ?y "accept")
-				     ("no"  ?n "reject") 
+				     ("no"  ?n "reject")
 				     ("change" ?c "request changes")))
 			     ("yes"
 			      (with-current-buffer buffer
@@ -336,7 +339,7 @@ If any edit fails (old_string not found), the operation is aborted and
 the original file is left unchanged.  Uses `gptel-abort' for proper
 error handling within gptel sessions.
 
-This function is designed for programmatic file editing within gptel-mode.
+This function is designed for programmatic file editing within `gptel-mode'.
 
 (fn CALLBACK FILE-PATH FILE-EDITS)"
   (cl-assert gptel-mode)
@@ -1498,7 +1501,9 @@ command is invoked."
   (let* ((project-root (when-let* ((proj (project-current)))
 			 (if (fboundp 'project-root)
 			     (project-root proj)
-			   (car (project-roots proj)))))
+			   ;; Suppress warning about obsolete project-roots function
+			   (with-suppressed-warnings ((obsolete project-roots))
+			     (car (project-roots proj))))))
 	 (proj-name (and project-root
 			 (project-name (project-current))))
 	 (buffer-name (if proj-name
