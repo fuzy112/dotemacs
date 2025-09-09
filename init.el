@@ -2922,7 +2922,7 @@ of feed configurations without modifying init files."
 ;;;; pcap-mode
 
 (alist-setq! auto-mode-alist
-  "\\.pcapng\\'" pcap-mode)
+  "\\.pcapng\\'" #'pcap-mode)
 
 (add-hook 'pcap-mode-hook #'hl-line-mode)
 
