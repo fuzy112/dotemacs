@@ -1,3 +1,17 @@
+2025-09-10  Zhengyi Fu  <i@fuzy.me>
+
+	Improve gptel write_file tool with ediff interface and fix project-root warnings.
+
+	* site-lisp/gptel-config.el: Add require for dom.
+	(write_file): Update description to mention ediff interface and side-by-side
+	comparison instead of simple preview.  Remove redundant user option descriptions.
+	(+gptel-ediff-file-with-buffer): Fix session buffer detection to check for
+	gptel-mode binding before using current-buffer.
+	(+gptel-edit-file-async): Update docstring to use proper backticks for
+	gptel-mode reference.
+	(gptel-agent): Suppress warnings about obsolete project-roots function
+	and use with-suppressed-warnings macro.
+
 2025-09-09  Zhengyi Fu  <i@fuzy.me>
 
 	* packages.el: Add pcap-mode.
