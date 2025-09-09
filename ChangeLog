@@ -1,5 +1,23 @@
 2025-09-10  Zhengyi Fu  <i@fuzy.me>
 
+	Refactor gptel tools with improved user interface and error handling.
+
+	* site-lisp/gptel-config.el: Extract run_command to separate function
+	(+gptel-run-command-async): New function to handle command execution.
+	(+gptel--popup-1): New function for interactive popup menus with key
+	description parsing.
+	(+gptel--popup): New macro for creating popup menus with comprehensive
+	docstring.
+	(+gptel-ediff-file-with-buffer): Replace read-answer with custom popup
+	interface for better user experience.
+	(+gptel-with-url-retrieve): Improve error handling with nested
+	condition-case.
+	(edit_file): Rename parameter from file-path to file_path for consistency.
+	(write_file): Rename parameter from file-path to file_path for consistency.
+	(run_command): Use extracted function for better code organization.
+
+2025-09-10  Zhengyi Fu  <i@fuzy.me>
+
 	Configure TRAMP connection profiles for remote shell access.
 
 	* init.el: Add connection-local profile for remote-explicit-shell-file-name

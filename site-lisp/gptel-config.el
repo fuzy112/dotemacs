@@ -223,7 +223,7 @@ The user will be presented with interactive options to:
 - Accept the changes and write to file
 - Reject the changes and cancel the operation  
 - Request specific modifications to the proposed content"
- :args (list '(:name "file-path"
+ :args (list '(:name "file_path"
 		     :type string
 		     :description "The full path of the file to write")
 	     '(:name "content"
@@ -272,6 +272,58 @@ Returns the ediff session buffer.
 		       95 t))
 	   startup-hooks))))
 
+(eval-when-compile (require 'llama))
+
+(defun +gptel--popup-1 (prompt actions)
+  "Display PROMPT and allow user to choose between one of several ACTIONS.
+ACTIONS is a list of lists (KEY DESC FUNC ARGS...).  KEY is a string
+identifying the key that triggers this action; it is passed to
+`key-parse'.  DESC is a description string to be displayed in the popup.
+If it is nil, the action and its binding is not displayed in the popup,
+although it still takes effect.  If the user selects an action, its FUNC
+is called with ARGS and popup is dismissed.  The return value of
+`+gptel-popup' is the return value of FUNC."
+  (let ((keymap (make-sparse-keymap))
+	(prompt (concat prompt "\n"))
+	(max-key-lenght (seq-reduce
+			 (##max %1 (length (car %2)))
+			 actions 0))
+	func)
+    (pcase-dolist (`(,key ,desc ,func . ,args) actions)
+      (when desc
+	(setq prompt
+	      (concat prompt
+		      (format " %s%s  %s\n"
+			      key
+			      (make-string (- max-key-lenght (length key)) ?\s)
+			      desc))))
+      (keymap-set keymap key (lambda ()
+			       (interactive)
+			       (apply func args))))
+    (setq prompt (concat prompt "\n\n"))
+    (let ((max-mini-window-height 1.0)
+	  (cursor-in-echo-area t))
+      (when minibuffer-auto-raise
+	(raise-frame (window-frame (minibuffer-window))))
+      (while (null func)
+	(setq func (keymap-lookup keymap
+				  (key-description
+				   (vector (read-key prompt)))))))
+    (funcall func)))
+
+(defmacro +gptel--popup (prompt actions)
+  "Create a popup with PROMPT and ACTIONS.
+ACTIONS is a list of (KEY DESC BODY...) forms, where KEY is the keybinding,
+DESC is the description, and BODY is the code to execute when KEY is selected."
+  `(+gptel--popup-1
+    ,prompt
+    (list ,@(mapcar
+	     (lambda (action)
+	       (pcase-let ((`(,key ,desc . ,body) action))
+		 `(list ,key ,desc (lambda () ,@body))))
+	     actions))))
+
+
 (defun +gptel-ediff-file-with-buffer (filename buffer callback &optional startup-hooks)
   "Launch ediff between FILENAME and BUFFER with interactive approval.
 
@@ -290,33 +342,33 @@ This function:
 Returns the ediff session buffer.
 
 (fn FILENAME BUFFER CALLBACK &optional STARTUP-HOOKS)"
-  (let ((session-buffer (and (bound-and-true-p gptel-mode)
-			     (current-buffer))))
-    (+gptel-ediff-buffers
-     (find-file-noselect filename)
-     buffer
-     (cons (lambda ()
-	     (add-hook 'ediff-quit-hook
-		       (lambda ()
-			 (let ((read-answer-short t))
-			   (pcase (read-answer
-				   "Accept changes? "
-				   '(("yes" ?y "accept")
-				     ("no"  ?n "reject")
-				     ("change" ?c "request changes")))
-			     ("yes"
-			      (with-current-buffer buffer
-				(write-region nil nil filename))
-			      (funcall callback "Successfully edited file."))
-			     ("no"
-			      (funcall callback "User rejected the changes.")
-			      (gptel-abort session-buffer))
-			     ("change"
-			      (funcall callback
-				       (concat "User requested changes to your edits: "
-					       (read-string "Request changes: ")))))))
-		       nil t))
-	   startup-hooks))))
+  (let* ((session-buffer (and (bound-and-true-p gptel-mode)
+			      (current-buffer)))
+	 (file-buffer (find-file-noselect filename))
+	 (quit-func (lambda ()
+		      (+gptel--popup
+		       "Accept changes? "
+		       (("a" "Apply all proposed changes"
+			 (with-current-buffer buffer
+			   (write-region nil nil filename))
+			 (funcall callback "Successfully edited file."))
+			("q" "Quit and keep the file as is"
+			 (with-current-buffer file-buffer
+			   (save-buffer))
+			 (funcall callback "Not all edits applied.  You MUST reread the file to see what has changed."))
+			("k" "Reject the changes"
+			 (funcall callback "User rejected the changes.")
+			 (when session-buffer
+			   (gptel-abort session-buffer)))
+			("r" "Iterate the changes"
+			 (funcall callback
+				  (concat "User requested changes to your edits: "
+					  (read-string "Request changes: "))))))))
+	 (startup-func (lambda ()
+			 (add-hook 'ediff-quit-hook quit-func nil t))))
+    (+gptel-ediff-buffers file-buffer
+			  buffer
+			  (cons startup-func startup-hooks))))
 
 (defun +gptel-edit-file-async (callback file-path file-edits)
   "Asynchronously apply FILE-EDITS to FILE-PATH with pattern matching.
@@ -395,17 +447,17 @@ be removed as the `old_string` and an empty string as the `new_string`.
 
 To prepend or append content, the `new_string` must contain both the new
 content and the original content from `old_string`."
- :args (list '(:name "file-path"
+ :args (list '(:name "file_path"
 		     :type string
 		     :description "The full path of the file to edit")
-	     '(:name "file-edits"
+	     '(:name "file_edits"
 		     :type array
 		     :items (:type object
 				   :properties
 				   (:old_string
-				    (:type string :description "The old-string to be replaced.  It must NOT be an empty string.")
+				    (:type string :description "The old string to be replaced.  It must NOT be an empty string.")
 				    :new_string
-				    (:type string :description "The new-string to replace old-string.")))
+				    (:type string :description "The new string to replace old_string.")))
 		     :description "The list of edits to apply on the file"))
  :category "filesystem")
 
@@ -429,7 +481,7 @@ content and the original content from `old_string`."
 				    :internal-error err)))))
  :async t
  :description "Search for a pattern in the workspace.
-Supports full regex syntax (eg.  \"log.*Error\", \"function\\s+\\w+\", etc). "
+Supports full regex syntax (eg. \"log.*Error\", \"function|var\\s+\\w+\", etc). "
  :args (list '(:name "regexp"
 		     :type string
 		     :description "The pattern to search.  It should be a regular expression.")
@@ -440,46 +492,48 @@ Supports full regex syntax (eg.  \"log.*Error\", \"function\\s+\\w+\", etc). "
 
 ;; command tools
 
+
+(defun +gptel-run-command-async (callback command working-dir)
+  (let* ((default-directory (expand-file-name working-dir))
+	 (command-buffer-name (if (project-current)
+				  (concat " *" (project-name (project-current)) " : Command Output*")
+				" *Command Output*"))
+	 (buffer (get-buffer-create command-buffer-name))
+	 proc start-marker)
+    (with-current-buffer buffer
+      (unless (derived-mode-p 'comint-mode)
+	(comint-mode)
+	(setq-local process-environment (append (list "PAGER=cat"
+						      "GIT_PAGER=cat")
+						process-environment)))
+      (goto-char (point-max))
+      ;; Insert separator and command before running
+      (insert "\n" (make-string 60 ?-) "\n")
+      (insert-before-markers (propertize "$ " 'face 'comint-highlight-prompt) command "\n")
+      (comint-add-to-input-history command)
+      (setq start-marker (point-marker)))
+    (display-buffer buffer)
+    (with-editor
+      (comint-exec buffer
+		   "gptel-run-command"
+		   shell-file-name
+		   nil
+		   (list  "-c"
+			  command)))
+    (setq proc (get-buffer-process buffer))
+    (set-process-sentinel
+     proc
+     (lambda (p _m)
+       (unless (process-live-p p)
+	 (funcall callback
+		  (and (buffer-live-p buffer)
+		       (with-current-buffer buffer
+			 (buffer-substring-no-properties
+			  start-marker (point-max))))))))))
+
 (gptel-make-tool
  :name "run_command"
- :function
- (lambda (callback command working-dir)
-   (let* ((default-directory (expand-file-name working-dir))
-	  (command-buffer-name (if (project-current)
-				   (concat " *" (project-name (project-current)) " : Command Output*")
-				 " *Command Output*"))
-	  (buffer (get-buffer-create command-buffer-name))
-	  proc start-marker)
-     (with-current-buffer buffer
-       (unless (derived-mode-p 'comint-mode)
-	 (comint-mode)
-	 (setq-local process-environment (append (list "PAGER=cat"
-						       "GIT_PAGER=cat")
-						 process-environment)))
-       (goto-char (point-max))
-       ;; Insert separator and command before running
-       (insert "\n" (make-string 60 ?-) "\n")
-       (insert-before-markers (propertize "$ " 'face 'comint-highlight-prompt) command "\n")
-       (comint-add-to-input-history command)
-       (setq start-marker (point-marker)))
-     (display-buffer buffer)
-     (with-editor
-       (comint-exec buffer
-		    "gptel-run-command"
-		    shell-file-name
-		    nil
-		    (list  "-c"
-			   command)))
-     (setq proc (get-buffer-process buffer))
-     (set-process-sentinel
-      proc
-      (lambda (p _m)
-	(unless (process-live-p p)
-	  (funcall callback
-		   (and (buffer-live-p buffer)
-			(with-current-buffer buffer
-			  (buffer-substring-no-properties
-			   start-marker (point-max))))))))))
+ :function #'+gptel-run-command-async
  :async t
  :description "Executes a shell command and returns the output as a string.
 
@@ -562,7 +616,6 @@ git commit -m \"$(cat <<'EOF'
 		:description "Optional: The directory in which to run the command. Defaults to the current directory if not specified."))
  :category "command"
  :confirm t
- ;; :confirm t
  :include t)
 
 ;; Emacs tools
@@ -673,23 +726,27 @@ diagnostics when a file path is given. Requires the file to be open in the edito
   (let ((url-var (gensym "url-"))
 	(callback-var (gensym "cb-"))
 	(status-var (gensym "status-"))
-	(err-var (gensym "err-")))
+	(err-var (gensym "err-"))
+	(err-var1 (gensym "err-")))
     `(let ((,url-var ,url)
 	   (,callback-var ,callback))
-       (url-retrieve
-	,url-var
-	(lambda (,status-var)
-	  (condition-case ,err-var
-	      (progn
-		(message "Retrieving %s...%s" ,url-var url-http-response-status)
-		(if (>= url-http-response-status 400)
-		    (error "http error %s: %s"
-			   url-http-response-status
-			   (buffer-string))
-		  (funcall callback
-			   (progn ,@body))))
-	    (error (funcall ,callback-var (list :error "Failed to fetch the URL"
-						:internal-error ,err-var)))))))))
+       (condition-case ,err-var1
+	   (url-retrieve
+	    ,url-var
+	    (lambda (,status-var)
+	      (condition-case ,err-var
+		  (progn
+		    (message "Retrieving %s...%s" ,url-var url-http-response-status)
+		    (if (>= url-http-response-status 400)
+			(error "http error %s: %s"
+			       url-http-response-status
+			       (buffer-string))
+		      (funcall callback
+			       (progn ,@body))))
+		(error (funcall ,callback-var (list :error "Failed to fetch the URL"
+						    :internal-error ,err-var))))))
+	 (error (funcall ,callback-var (list :error "Failed to fetch the URL"
+					     :internal-error ,err-var1)))))))
 
 (gptel-make-tool
  :name "read_url"
