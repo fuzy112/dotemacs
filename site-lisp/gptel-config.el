@@ -104,21 +104,30 @@
 
 ;; filesystem tools
 
+(defun +gptel-read-file (filepath start end)
+  "Read the contents of a file from the file system.
+
+FILEPATH is the path to the file to read. Supports relative paths and ~.
+START is the first line to read (Start from 1).
+END is the last line of the file to read. Can be -1 to read to end of file.
+
+Returns the file contents as a string."
+  (with-temp-buffer
+    (insert-file-contents (expand-file-name filepath))
+    (goto-char (point-min))
+    (forward-line (1- start))
+    (let ((start-pos (point-marker)))
+      (if (zerop end)
+	  (buffer-substring-no-properties
+	   start-pos (point-max))
+	(goto-char (point-min))
+	(forward-line (1- end))
+	(buffer-substring-no-properties
+	 start-pos (line-end-position))))))
+
 (gptel-make-tool
  :name "read_file"
- :function (lambda (filepath start end)
-	     (with-temp-buffer
-	       (insert-file-contents (expand-file-name filepath))
-	       (goto-char (point-min))
-	       (forward-line (1- start))
-	       (let ((start-pos (point-marker)))
-		 (if (zerop end)
-		     (buffer-substring-no-properties
-		      start-pos (point-max))
-		   (goto-char (point-min))
-		   (forward-line (1- end))
-		   (buffer-substring-no-properties
-		    start-pos (line-end-position))))))
+ :function #'+gptel-read-file
  :description "Read the contents of a file from the file system.
 Use this tool when you need to examine the contents of a single file.
 Use the `start` and `end` parameters to specify the region when you know the range.
@@ -135,11 +144,18 @@ You can also set `end` to -1 to read to the end of the file."
 This argument can also be -1, which means to read to the end of the file."))
  :category "filesystem")
 
+(defun +gptel-list-directory (directory)
+  "List the contents of a given directory.
+
+DIRECTORY is the path to the directory to list.
+
+Returns a string containing the directory contents separated by newlines."
+  (mapconcat #'identity
+	     (directory-files directory)
+	     "\n"))
+
 (gptel-make-tool
- :function (lambda (directory)
-	     (mapconcat #'identity
-			(directory-files directory)
-			"\n"))
+ :function #'+gptel-list-directory
  :name "list_directory"
  :description "List the contents of a given directory"
  :args (list '(:name "directory"
@@ -148,16 +164,25 @@ This argument can also be -1, which means to read to the end of the file."))
  :category "filesystem")
 
 
+(defun +gptel-create-file (path filename content)
+  "Create a new file with the specified content.
+
+PATH is the directory where to create the file.
+FILENAME is the name of the file to create.
+CONTENT is the content to write to the file.
+
+Returns a success message or raises an error if file already exists."
+  (let ((full-path (expand-file-name filename path)))
+    (if (file-exists-p full-path)
+	(error "File %s already exists" filename)
+      (with-temp-buffer
+	(insert content)
+	(write-file full-path))
+      (format "Created file %s in %s" filename path))))
+
 (gptel-make-tool
  :name "create_file"
- :function (lambda (path filename content)
-	     (let ((full-path (expand-file-name filename path)))
-	       (if (file-exists-p full-path)
-		   (error "File %s already exists" filename)
-		 (with-temp-buffer
-		   (insert content)
-		   (write-file full-path))
-		 (format "Created file %s in %s" filename path))))
+ :function #'+gptel-create-file
  :description "Create a new file with the specified content"
  :args (list '(:name "path"
 		     :type string
@@ -354,6 +379,24 @@ Returns the ediff session buffer.
 			  (cons startup-func startup-hooks))))
 
 (defun +gptel-string-replace-async (callback file-path old-string new-string)
+  "Asynchronously replace OLD-STRING with NEW-STRING in FILE-PATH.
+This function performs a string replacement operation in the specified file
+and uses ediff to present the changes for user confirmation.
+
+CALLBACK is a function called with the result of the operation.
+FILE-PATH is the path to the file to modify.
+OLD-STRING is the string to search for and replace.
+NEW-STRING is the replacement string.
+
+The function will error if:
+- gptel-mode is not active
+- FILE-PATH is not a valid string
+- OLD-STRING is empty
+- OLD-STRING is not found in the file
+- OLD-STRING appears multiple times in the file (not unique)
+
+After replacement, an ediff session is started for user confirmation.
+The CALLBACK function receives either a success message or an error string."
   (cl-assert gptel-mode)
   (cl-assert (stringp file-path))
   (cl-assert (not (string-empty-p old-string)))
@@ -363,17 +406,21 @@ Returns the ediff session buffer.
 	  (insert-file-contents (expand-file-name file-path))
 	  (let* ((inhibit-read-only t)
 		 (case-fold-search nil)
-		 (ediff-window-setup-function 'ediff-setup-windows-plain))
+		 (ediff-window-setup-function 'ediff-setup-windows-plain)
+		 line-number)
 	    (goto-char (point-min))
 	    (unless (search-forward old-string nil t)
 	      (error "Failed to find the string to replace"))
+	    (setq line-number (line-number-at-pos))
 	    (save-match-data
 	      (when (search-forward old-string nil t)
-		(error "Failed to replace: the `old_string' is not unique.")))
+		(error "Failed to replace: the `old_string' is not unique:
+ - first occurrence: line %d\n
+ - second occurrence: line %d\n"
+		       line-number (line-number-at-pos))))
 	    (replace-match new-string t t)))
 	(+gptel-ediff-file-with-buffer file-path edit-buffer callback))
-    (error (funcall callback (format "An error occurred: %S" err))
-	   (signal (car err) (cdr err)))))
+    (error (funcall callback (format "An error occurred: %S" err)))))
 
 (gptel-make-tool
  :name "str_replace"
@@ -384,7 +431,9 @@ Returns the ediff session buffer.
 You must use `read_file` to get the file's exact contents before editing.
 The `old_string` must match the original content exactly, including all
 indentation and newlines. The edit will fail if `old_string` is not unique.
-Prefer small, targeted edits over large replacements."
+Prefer small, targeted edits over large replacements.
+
+If you are inserting text at a known position, use `insert` tool."
  :args (list '(:name "file_path"
 		     :type string
 		     :description "The path of the file to modify")
@@ -422,7 +471,7 @@ Prefer small, targeted edits over large replacements."
 		   :description "The path of the file to modify")
 	     (list :name "insert_line"
 		   :type 'number
-		   :description "The line number after which to insert the text (0 for beginning of file)")
+		   :description "The line number AFTER which to insert the text (0 for beginning of file)")
 	     (list :name "new_string"
 		   :type 'string
 		   :description "The text to insert"))
@@ -441,8 +490,14 @@ Prefer small, targeted edits over large replacements."
 	   (add-hook 'compilation-finish-functions
 		     (lambda (buffer _how)
 		       (with-current-buffer buffer
-			 (funcall callback (buffer-substring-no-properties
-					    (point-min) (point-max)))))
+			 (goto-char (point-min))
+			 (forward-line 2)
+			 (let ((start (point-marker)))
+			   (goto-char (point-max))
+			   (forward-line -2)
+			   (funcall callback (buffer-substring-no-properties
+					      start (point)))
+			   (goto-char (point-min)))))
 		     nil t)))
      (error (funcall callback (list :error "Failed to run grep"
 				    :internal-error err)))))
@@ -458,7 +513,6 @@ Supports full regex syntax (eg. \"log.*Error\", \"function|var\\s+\\w+\", etc). 
  :category "filesystem")
 
 ;; command tools
-
 
 (defun +gptel-run-command-async (callback command working-dir)
   (let* ((default-directory (expand-file-name working-dir))
@@ -477,7 +531,6 @@ Supports full regex syntax (eg. \"log.*Error\", \"function|var\\s+\\w+\", etc). 
       ;; Insert separator and command before running
       (insert "\n" (make-string 60 ?-) "\n")
       (insert-before-markers (propertize "$ " 'face 'comint-highlight-prompt) command "\n")
-      (comint-add-to-input-history command)
       (setq start-marker (point-marker)))
     (display-buffer buffer)
     (with-editor
@@ -585,6 +638,21 @@ git commit -m \"$(cat <<'EOF'
  :confirm t
  :include t)
 
+(defun +gptel-editor-diagnostics (file-path)
+  "Get editor diagnostics (errors, warnings, info) for workspaces.
+
+FILE-PATH is the optional file path to get specific file diagnostics.
+Leave empty for project-wide diagnostics. Requires the file to be open in the editor.
+
+Returns a list of diagnostic objects in JSON format."
+  (require 'flymake)
+  (if (or (null file-path) (string-empty-p file-path))
+      (mapcar #'+gptel--flymake-diag-to-json (flymake--project-diagnostics))
+    (if-let* ((buffer (get-file-buffer file-path)))
+	(with-current-buffer buffer
+	  (mapcar #'+gptel--flymake-diag-to-json (flymake-diagnostics)))
+      (error "File not opened in editor: %s" file-path))))
+
 ;; Emacs tools
 
 (defun +gptel--flymake-diag-to-json (diag)
@@ -612,24 +680,24 @@ git commit -m \"$(cat <<'EOF'
  :description "Get editor diagnostics (errors, warnings, info) for workspaces.
 Returns project-wide diagnostics when no file path is provided, or file-specific
 diagnostics when a file path is given. Requires the file to be open in the editor."
- :function (lambda (file-path)
-	     (require 'flymake)
-	     (if (or (null file-path) (string-empty-p file-path))
-		 (mapcar #'+gptel--flymake-diag-to-json (flymake--project-diagnostics))
-	       (if-let* ((buffer (get-file-buffer file-path)))
-		   (with-current-buffer buffer
-		     (mapcar #'+gptel--flymake-diag-to-json (flymake-diagnostics)))
-		 (error "File not opened in editor: %s" file-path))))
+ :function #'+gptel-editor-diagnostics
  :args (list '(:name "file_path"
 		     :type string
 		     :description "Optional file path to get specific file diagnostics. Leave empty for project-wide diagnostics."))
  :category "emacs")
 
+(defun +gptel-echo-message (text)
+  "Send a message to the *Messages* buffer.
+
+TEXT is the text to send to the messages buffer.
+
+Returns a confirmation message."
+  (message "%s" text)
+  (format "Message sent: %s" text))
+
 (gptel-make-tool
  :name "echo_message"
- :function (lambda (text)
-	     (message "%s" text)
-	     (format "Message sent: %s" text))
+ :function #'+gptel-echo-message
  :description "Send a message to the *Messages* buffer"
  :args (list '(:name "text"
 		     :type string
@@ -764,25 +832,39 @@ diagnostics when a file path is given. Requires the file to be open in the edito
 		     :description "The search query string.  When searching the web, one should always use English rather than their native language."))
  :category "web")
 
+(defun +gptel-web-search (&optional search_result)
+  "Moonshot builtin web search. Only usable by moonshot model (kimi).
+
+SEARCH_RESULT is the optional search result object.
+
+Returns a JSON-serialized search result."
+  (json-serialize
+   `(:search_result ,search_result)))
+
 (gptel-make-tool
  :name "$web_search"
- :function (lambda (&optional search_result)
-	     (json-serialize
-	      `(:search_result ,search_result)))
+ :function #'+gptel-web-search
  :description "Moonshot builtin web search.  Only usable by moonshot model (kimi), ignore this if you are not."
  :args '((:name "search_result" :type object :optional t))
  :category "internal")
 
 ;; GitHub tools
 
+(defun +gptel-get-pullreq (pullreq)
+  "Get pull request information.
+
+PULLREQ is the pull request identifier.
+
+Returns pull request information as a structured data object."
+  (save-excursion
+    (with-current-buffer
+	(forge-pullreq-setup-buffer
+	 (forge-get-pullreq pullreq))
+      (buffer-substring-no-properties (point-min) (point-max)))))
+
 (gptel-make-tool
  :name "get_pullreq"
- :function (lambda (pullreq)
-	     (save-excursion
-	       (with-current-buffer
-		   (forge-pullreq-setup-buffer
-		    (forge-get-pullreq pullreq))
-		 (buffer-substring-no-properties (point-min) (point-max)))))
+ :function #'+gptel-get-pullreq
  :description "Get the details of a pull request"
  :args (list '(:name "pullreq_id"
 		     :type integer
@@ -1444,13 +1526,21 @@ Remember to be thorough, constructive, and maintain high quality standards!")
 Provide your detailed review with specific recommendations for improvement if needed.")
       (gptel-send))))
 
+(defun +gptel-shellcheck (filename)
+  "Run shellcheck to analyze shell scripts for errors, bugs, and potential pitfalls.
+
+FILENAME is the path to the shell script file to be analyzed.
+Excludes specific checks for source files (SC1091) and unused variables (SC2034).
+
+Returns the shellcheck output as a string."
+  (with-temp-buffer
+    (process-file "shellcheck" nil t nil
+		  (file-local-name (expand-file-name filename)) "--exclude=SC1091,SC2034")
+    (buffer-string)))
+
 (gptel-make-tool
  :name "shellcheck"
- :function (lambda (filename)
-	     (with-temp-buffer
-	       (process-file "shellcheck" nil t nil
-			     (file-local-name (expand-file-name filename)) "--exclude=SC1091,SC2034")
-	       (buffer-string)))
+ :function #'+gptel-shellcheck
  :description "Run shellcheck to analyze shell scripts for errors, bugs, and potential pitfalls. Excludes specific checks for source files (SC1091) and unused variables (SC2034)."
  :args (list '(:name "filename"
 		     :type string
