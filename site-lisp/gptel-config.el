@@ -122,17 +122,17 @@
  :description "Read the contents of a file from the file system.
 Use this tool when you need to examine the contents of a single file.
 Use the `start` and `end` parameters to specify the region when you know the range.
-You can also set `end` to 0 to read to the end of the file."
+You can also set `end` to -1 to read to the end of the file."
  :args (list '(:name "filepath"
 		     :type string
 		     :description "Path to the file to read. Supports relative paths and ~.")
 	     '(:name "start"
 		     :type number
-		     :description "The first line to read")
+		     :description "The first line to read (Start from 1)")
 	     '(:name "end"
 		     :type number
 		     :description "The last line of the file to read.
-This argument can also be 0, which means to read to the end of the file."))
+This argument can also be -1, which means to read to the end of the file."))
  :category "filesystem")
 
 (gptel-make-tool
@@ -204,25 +204,8 @@ interactive workflow for file writing operations.
  :function #'+gptel-write-file-async
  :async t
  :description "Write content to a file with user preview and confirmation.
-
 This tool allows you to write new content to a file, overwriting any existing
-content. It uses an ediff interface to display a side-by-side comparison
-between the current file content (if any) and the proposed new content,
-allowing the user to review and optionally modify it before confirming.
-
-Key features:
-- Shows a side-by-side comparison using ediff
-- Allows user to accept, reject, or request changes
-- Overwrites existing files (use with caution)
-- Provides clear feedback on the operation result
-
-Use this tool when you need to create or completely replace file contents.
-For partial edits, use the `edit_file` tool instead.
-
-The user will be presented with interactive options to:
-- Accept the changes and write to file
-- Reject the changes and cancel the operation  
-- Request specific modifications to the proposed content"
+content."
  :args (list '(:name "file_path"
 		     :type string
 		     :description "The full path of the file to write")
@@ -370,33 +353,10 @@ Returns the ediff session buffer.
 			  buffer
 			  (cons startup-func startup-hooks))))
 
-(defun +gptel-edit-file-async (callback file-path file-edits)
-  "Asynchronously apply FILE-EDITS to FILE-PATH with pattern matching.
-
-CALLBACK is a function that will be called with the result message upon
-completion.  The callback receives a string describing the outcome.
-FILE-PATH is the path to the file to be edited.
-FILE-EDITS is a list of edit specifications, where each edit is a plist
-with:
-  - :old_string - the string to be replaced (must match exactly)
-  - :new_string - the replacement string
-
-The function will:
-1. Create a temporary buffer with the file contents
-2. Apply all edits sequentially using exact string matching
-3. Write the modified content back to the file
-4. Call CALLBACK with success message or abort on error
-
-If any edit fails (old_string not found), the operation is aborted and
-the original file is left unchanged.  Uses `gptel-abort' for proper
-error handling within gptel sessions.
-
-This function is designed for programmatic file editing within `gptel-mode'.
-
-(fn CALLBACK FILE-PATH FILE-EDITS)"
+(defun +gptel-string-replace-async (callback file-path old-string new-string)
   (cl-assert gptel-mode)
   (cl-assert (stringp file-path))
-  (cl-assert (sequencep file-edits))
+  (cl-assert (not (string-empty-p old-string)))
   (condition-case-unless-debug err
       (let ((edit-buffer (generate-new-buffer "*edit-file*")))
 	(with-current-buffer edit-buffer
@@ -404,61 +364,68 @@ This function is designed for programmatic file editing within `gptel-mode'.
 	  (let* ((inhibit-read-only t)
 		 (case-fold-search nil)
 		 (ediff-window-setup-function 'ediff-setup-windows-plain))
-	    (seq-doseq (file-edit file-edits)
-	      (when-let* ((old-string (plist-get file-edit :old_string))
-			  (new-string (plist-get file-edit :new_string))
-			  (is-valid-old-string (not (string= old-string ""))))
-		(goto-char (point-min))
-		(unless (search-forward old-string nil t)
-		  (error "Failed to find the string to replace"))
-		(save-match-data
-		  (when (search-forward old-string nil t)
-		    (error "There multiple occurrences of the `old_string`")))
-		(replace-match new-string t t)))))
+	    (goto-char (point-min))
+	    (unless (search-forward old-string nil t)
+	      (error "Failed to find the string to replace"))
+	    (save-match-data
+	      (when (search-forward old-string nil t)
+		(error "Failed to replace: the `old_string' is not unique.")))
+	    (replace-match new-string t t)))
 	(+gptel-ediff-file-with-buffer file-path edit-buffer callback))
     (error (funcall callback (format "An error occurred: %S" err))
 	   (signal (car err) (cdr err)))))
 
 (gptel-make-tool
- :name "edit_file"
- :function #'+gptel-edit-file-async
+ :name "str_replace"
+ :function #'+gptel-string-replace-async
  :async t
- :description "Edit file with a list of edits, each edit contains a line-number,
-a old-string and a new-string, new-string will replace the old-string at
-the specified line.
+ :description "Replace a specific string in a file with a new string.
 
-You must use your `read_file` tool to get the file's exact contents
-before attempting an edit.
-
-This tool will error if you attempt an edit without reading the file.
-When crafting the `old_string`, you must match the original content from
-the `read_file` tool output exactly, including all
-indentation (spaces/tabs) and newlines.
-
-Never include any part of the line number prefix in the `old_string` or
-`new_string`.  The edit will FAIL if the `old_string` is not unique in
-the file.  To resolve this, you MUST expand the `new_content` to include
-more surrounding lines of code or context to make it a unique block.
-
-ALWAYS prefer making small, targeted edits to existing files.  Avoid
-replacing entire functions or large blocks of code in a single step
-unless absolutely necessary.  To delete content, provide the content to
-be removed as the `old_string` and an empty string as the `new_string`.
-
-To prepend or append content, the `new_string` must contain both the new
-content and the original content from `old_string`."
+You must use `read_file` to get the file's exact contents before editing.
+The `old_string` must match the original content exactly, including all
+indentation and newlines. The edit will fail if `old_string` is not unique.
+Prefer small, targeted edits over large replacements."
  :args (list '(:name "file_path"
 		     :type string
-		     :description "The full path of the file to edit")
-	     '(:name "file_edits"
-		     :type array
-		     :items (:type object
-				   :properties
-				   (:old_string
-				    (:type string :description "The old string to be replaced.  It must NOT be an empty string.")
-				    :new_string
-				    (:type string :description "The new string to replace old_string.")))
-		     :description "The list of edits to apply on the file"))
+		     :description "The full path of the file to modify")
+	     '(:name "old_string"
+		     :type string
+		     :description "The text to replace (MUST match exactly, including whitespaces and indentation)"
+		     )
+	     '(:name "new_string"
+		     :type string
+		     :description "The new text to insert in place of the old text"))
+ :category "filesystem")
+
+(defun +gptel-insert-async (callback file-path insert-line new-string)
+  (cl-assert (stringp file-path))
+  (cl-assert (natnump insert-line))
+  (cl-assert (stringp new-string))
+  (condition-case-unless-debug err
+      (let ((edit-buffer (generate-new-buffer "*edit-file*")))
+	(with-current-buffer edit-buffer
+	  (insert-file-contents file-path)
+	  (goto-char (point-min))
+	  (forward-line insert-line)
+	  (insert new-string ?\n))
+	(+gptel-ediff-file-with-buffer file-path edit-buffer callback))
+    (error (funcall callback (format "An error occurred: %S" err))
+	   (message "Error: %S" err))))
+
+(gptel-make-tool
+ :name "insert"
+ :function #'+gptel-insert-async
+ :async t
+ :description "Insert text at a specific location in a file."
+ :args (list (list :name "file_path"
+		   :type 'string
+		   :description "The full path of the file to modify")
+	     (list :name "insert_line"
+		   :type 'number
+		   :description "The line number after which to insert the text (0 for beginning of file)")
+	     (list :name "new_string"
+		   :type 'string
+		   :description "The text to insert"))
  :category "filesystem")
 
 (gptel-make-tool
@@ -1334,9 +1301,10 @@ Whenever you cite external information, always include the full source URL.")
   :temperature 0.1
   :max-tokens 8192
   :use-tools t
-  :tools '("edit_file" "create_file" "read_file" "run_command" "grep"
-	   "list_directory" "read_todos" "add_todo" "complete_todo"
-	   "search_todos" "list_active_todos" "editor_diagnostics")
+  :tools '("str_replace" "insert" "create_file" "write_file" "read_file"
+	   "run_command" "grep" "list_directory" "read_todos" "add_todo"
+	   "complete_todo" "search_todos" "list_active_todos"
+	   "editor_diagnostics")
   :system "You are ECA (Emacs Coding Agent), an AI coding agent that operates in Emacs.
 
 You are pair programming with a USER to solve their coding task.  Each
@@ -1535,7 +1503,7 @@ script readability and reliability.")
 2. Provide fixes for legitimate issues
 3. Where shellcheck rules need to be disabled, explain the rationale
 4. Ensure all changes preserve the script's original functionality
-5. Use the `edit_file' tool to edit the script
+5. Use the `str_replace' tool to edit the script
 "
 		      file))
       (let ((gptel-use-tools 'force))
