@@ -216,13 +216,12 @@ interactive workflow for file writing operations.
 
 (fn CALLBACK FILE-PATH CONTENT)"
   (cl-assert gptel-mode)
-  (condition-case err
-      (let* ((preview-buffer (generate-new-buffer "*write-file-preview*")))
+  (let* ((preview-buffer (generate-new-buffer "*write-file-preview*")))
+    (condition-case err
 	(with-current-buffer preview-buffer
 	  (insert content))
-	(+gptel-ediff-file-with-buffer file-path preview-buffer callback))
-    (error (funcall callback (format "An error occurred: %S" err))
-	   (signal (car err) (cdr err)))))
+      (:success (+gptel-ediff-file-with-buffer file-path preview-buffer callback))
+      (error (funcall callback (format "An error occurred: %S" err))))))
 
 (gptel-make-tool
  :name "write_file"
@@ -400,8 +399,8 @@ The CALLBACK function receives either a success message or an error string."
   (cl-assert gptel-mode)
   (cl-assert (stringp file-path))
   (cl-assert (not (string-empty-p old-string)))
-  (condition-case-unless-debug err
-      (let ((edit-buffer (generate-new-buffer "*edit-file*")))
+  (let ((edit-buffer (generate-new-buffer "*edit-file*")))
+    (condition-case-unless-debug err
 	(with-current-buffer edit-buffer
 	  (insert-file-contents (expand-file-name file-path))
 	  (let* ((inhibit-read-only t)
@@ -419,8 +418,9 @@ The CALLBACK function receives either a success message or an error string."
  - second occurrence: line %d\n"
 		       line-number (line-number-at-pos))))
 	    (replace-match new-string t t)))
-	(+gptel-ediff-file-with-buffer file-path edit-buffer callback))
-    (error (funcall callback (format "An error occurred: %S" err)))))
+      (:success (+gptel-ediff-file-with-buffer file-path edit-buffer callback))
+      (error (funcall callback (format "An error occurred: %S" err))
+	     (kill-buffer edit-buffer)))))
 
 (gptel-make-tool
  :name "str_replace"
@@ -450,16 +450,16 @@ If you are inserting text at a known position, use `insert` tool."
   (cl-assert (stringp file-path))
   (cl-assert (natnump insert-line))
   (cl-assert (stringp new-string))
-  (condition-case-unless-debug err
-      (let ((edit-buffer (generate-new-buffer "*edit-file*")))
+  (let ((edit-buffer (generate-new-buffer "*edit-file*")))
+    (condition-case-unless-debug err
 	(with-current-buffer edit-buffer
 	  (insert-file-contents file-path)
 	  (goto-char (point-min))
-	  (forward-line insert-line)
+	  (unless (zerop (forward-line insert-line))
+	    (error "line number out of range"))
 	  (insert new-string ?\n))
-	(+gptel-ediff-file-with-buffer file-path edit-buffer callback))
-    (error (funcall callback (format "An error occurred: %S" err))
-	   (message "Error: %S" err))))
+      (:success (+gptel-ediff-file-with-buffer file-path edit-buffer callback))
+      (error (funcall callback (format "An error occurred: %S" err))))))
 
 (gptel-make-tool
  :name "insert"

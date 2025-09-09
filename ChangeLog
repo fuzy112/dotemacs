@@ -1,5 +1,14 @@
 2025-09-09  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el (+gptel-write-file-async)
+	(+gptel-string-replace-async, +gptel-insert-async): Fix error
+	handling in async file operations. Move condition-case outside of
+	buffer creation to ensure proper cleanup. Add missing error
+	handling for line number validation in insert tool. Ensure edit
+	buffers are properly killed on errors.
+
+2025-09-09  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (completion-pcm-leading-wildcard): Set to t.
 
 	This is a new option in Emacs 31.
