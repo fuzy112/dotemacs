@@ -1,3 +1,19 @@
+2025-09-11  Zhengyi Fu  <i@fuzy.me>
+
+	Refactor gptel file editing tools for better reliability and user experience.
+
+	* site-lisp/gptel-config.el: Replace complex edit_file tool with simpler
+	str_replace and insert tools.
+	(+gptel-edit-file-async): Remove complex edit function.
+	(+gptel-string-replace-async): New function for simple string replacement.
+	(+gptel-insert-async): New function for inserting text at specific line.
+	(str_replace): New tool for exact string replacement with simplified description.
+	(insert): New tool for line-based insertion.
+	Update coding-agent preset to use new tools.
+	Fix read_file documentation to clarify that end parameter uses -1 for end of file.
+	Simplify write_file description by removing redundant ediff interface details.
+
+
 2025-09-10  Zhengyi Fu  <i@fuzy.me>
 
 	Refactor gptel tools with improved user interface and error handling.
