@@ -1,3 +1,7 @@
+2025-09-09  Zhengyi Fu  <i@fuzy.me>
+
+	* packages.el: Add pcap-mode.
+
 2025-09-10  Zhengyi Fu  <i@fuzy.me>
 
 	Fix command buffer naming in gptel configuration.
