@@ -2919,6 +2919,13 @@ of feed configurations without modifying init files."
   (keymap-set gfm-view-mode-map      "C-x C-q" #'gfm-mode)
   (add-hook 'markdown-mode-hook #'visual-line-mode))
 
+;;;; pcap-mode
+
+(alist-setq! auto-mode-alist
+  "\\.pcapng\\'" pcap-mode)
+
+(add-hook 'pcap-mode-hook #'hl-line-mode)
+
 ;;;; p-search
 
 (after-load! p-search
