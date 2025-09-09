@@ -1,5 +1,16 @@
 2025-09-11  Zhengyi Fu  <i@fuzy.me>
 
+	Improve gptel agent documentation and formatting consistency.
+
+	* site-lisp/gptel-config.el: Simplify tool descriptions by removing
+	redundant "full" from path parameter descriptions. Fix numbering
+	inconsistency in commit analysis section. Improve code formatting
+	consistency in preset definition. Remove redundant project root
+	message insertion in agent startup.
+
+
+2025-09-11  Zhengyi Fu  <i@fuzy.me>
+
 	Configure pcap-mode for .pcapng files with line highlighting.
 
 	* init.el: Add auto-mode association for .pcapng files to use pcap-mode
