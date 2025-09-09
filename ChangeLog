@@ -1,4 +1,4 @@
-2025-09-11  Zhengyi Fu  <i@fuzy.me>
+2025-09-09  Zhengyi Fu  <i@fuzy.me>
 
 	Improve gptel agent documentation and formatting consistency.
 
@@ -9,14 +9,14 @@
 	message insertion in agent startup.
 
 
-2025-09-11  Zhengyi Fu  <i@fuzy.me>
+2025-09-09  Zhengyi Fu  <i@fuzy.me>
 
 	Configure pcap-mode for .pcapng files with line highlighting.
 
 	* init.el: Add auto-mode association for .pcapng files to use pcap-mode
 	and enable hl-line-mode in pcap-mode for better visibility.
 
-2025-09-11  Zhengyi Fu  <i@fuzy.me>
+2025-09-09  Zhengyi Fu  <i@fuzy.me>
 
 	Refactor gptel file editing tools for better reliability and user experience.
 
@@ -32,7 +32,7 @@
 	Simplify write_file description by removing redundant ediff interface details.
 
 
-2025-09-10  Zhengyi Fu  <i@fuzy.me>
+2025-09-09  Zhengyi Fu  <i@fuzy.me>
 
 	Refactor gptel tools with improved user interface and error handling.
 
@@ -50,14 +50,14 @@
 	(write_file): Rename parameter from file-path to file_path for consistency.
 	(run_command): Use extracted function for better code organization.
 
-2025-09-10  Zhengyi Fu  <i@fuzy.me>
+2025-09-09  Zhengyi Fu  <i@fuzy.me>
 
 	Configure TRAMP connection profiles for remote shell access.
 
 	* init.el: Add connection-local profile for remote-explicit-shell-file-name
 	to ensure /bin/bash is used for SSH and SCP connections via TRAMP.
 
-2025-09-10  Zhengyi Fu  <i@fuzy.me>
+2025-09-09  Zhengyi Fu  <i@fuzy.me>
 
 	Improve gptel write_file tool with ediff interface and fix project-root warnings.
 
@@ -75,7 +75,7 @@
 
 	* packages.el: Add pcap-mode.
 
-2025-09-10  Zhengyi Fu  <i@fuzy.me>
+2025-09-09  Zhengyi Fu  <i@fuzy.me>
 
 	Fix command buffer naming in gptel configuration.
 
@@ -83,7 +83,7 @@
 	command buffer name generation to handle cases where
 	project-current returns nil.
 
-2025-09-10  Zhengyi Fu  <i@fuzy.me>
+2025-09-09  Zhengyi Fu  <i@fuzy.me>
 
 	Add write_file tool and refactor file editing functionality in
 	gptel configuration.
