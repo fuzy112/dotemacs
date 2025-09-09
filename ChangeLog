@@ -1,5 +1,22 @@
 2025-09-09  Zhengyi Fu  <i@fuzy.me>
 
+	Refactor gptel-config tool functions for better maintainability.
+
+	* site-lisp/gptel-config.el (+gptel-read-file)
+	(+gptel-list-directory, +gptel-create-file)
+	(+gptel-editor-diagnostics, +gptel-echo-message)
+	(+gptel-web-search, +gptel-get-pullreq, +gptel-shellcheck): New
+	functions extracted from lambda expressions.
+	(+gptel-string-replace-async): Add detailed documentation
+	including error conditions. Improve error handling to show line
+	numbers of duplicate occurrences.
+	(+gptel-run-command-async): Enhance output formatting to exclude
+	header and footer lines.  Extract all lambda functions into named
+	functions with proper docstrings for better code organization and
+	maintainability.
+
+2025-09-11  Zhengyi Fu  <i@fuzy.me>
+
 	Improve gptel agent documentation and formatting consistency.
 
 	* site-lisp/gptel-config.el: Simplify tool descriptions by removing
