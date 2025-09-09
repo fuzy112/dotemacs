@@ -208,7 +208,7 @@ This tool allows you to write new content to a file, overwriting any existing
 content."
  :args (list '(:name "file_path"
 		     :type string
-		     :description "The full path of the file to write")
+		     :description "The path of the file to write")
 	     '(:name "content"
 		     :type string
 		     :description "The content to write to the file. This will overwrite any existing content."))
@@ -387,7 +387,7 @@ indentation and newlines. The edit will fail if `old_string` is not unique.
 Prefer small, targeted edits over large replacements."
  :args (list '(:name "file_path"
 		     :type string
-		     :description "The full path of the file to modify")
+		     :description "The path of the file to modify")
 	     '(:name "old_string"
 		     :type string
 		     :description "The text to replace (MUST match exactly, including whitespaces and indentation)"
@@ -419,7 +419,7 @@ Prefer small, targeted edits over large replacements."
  :description "Insert text at a specific location in a file."
  :args (list (list :name "file_path"
 		   :type 'string
-		   :description "The full path of the file to modify")
+		   :description "The path of the file to modify")
 	     (list :name "insert_line"
 		   :type 'number
 		   :description "The line number after which to insert the text (0 for beginning of file)")
@@ -555,7 +555,7 @@ Wrap your analysis process in <commit_analysis> tags:
 - Review the draft message to ensure it accurately reflects the changes and their purpose
 </commit_analysis>
 
-4.  If the commit fails due to pre-commit hook changes, retry the commit ONCE to include these automated changes. If it fails again, it usually means a pre-commit hook is preventing the commit. If the commit succeeds but you notice that files were modified by the pre-commit hook, you MUST amend your commit to include them.
+3.: If the commit fails due to pre-commit hook changes, retry the commit ONCE to include these automated changes. If it fails again, it usually means a pre-commit hook is preventing the commit. If the commit succeeds but you notice that files were modified by the pre-commit hook, you MUST amend your commit to include them.
 
 Important notes:
 - Use the git context at the start of this conversation to determine which files are relevant to your commit. Be careful not to stage and commit files (e.g. with `git add .`) that aren't relevant to your commit.
@@ -1294,18 +1294,18 @@ You may search the web or read URLs when needed.
 Whenever you cite external information, always include the full source URL.")
 
 (gptel-make-preset 'coding-agent
-  :description "Fast, deterministic coding assistant using file operations and project management"
-  :backend "Moonshot"
-  :model 'kimi-k2-turbo-preview
-  :stream t
-  :temperature 0.1
-  :max-tokens 8192
-  :use-tools t
-  :tools '("str_replace" "insert" "create_file" "write_file" "read_file"
-	   "run_command" "grep" "list_directory" "read_todos" "add_todo"
-	   "complete_todo" "search_todos" "list_active_todos"
-	   "editor_diagnostics")
-  :system "You are ECA (Emacs Coding Agent), an AI coding agent that operates in Emacs.
+		   :description "Fast, deterministic coding assistant using file operations and project management"
+		   :backend "Moonshot"
+		   :model 'kimi-k2-turbo-preview
+		   :stream t
+		   :temperature 0.1
+		   :max-tokens 8192
+		   :use-tools t
+		   :tools '("str_replace" "insert" "create_file" "write_file" "read_file"
+			    "run_command" "grep" "list_directory" "read_todos" "add_todo"
+			    "complete_todo" "search_todos" "list_active_todos"
+			    "editor_diagnostics")
+		   :system "You are ECA (Emacs Coding Agent), an AI coding agent that operates in Emacs.
 
 You are pair programming with a USER to solve their coding task.  Each
 time the USER sends a message, we may automatically attach some context
@@ -1552,8 +1552,6 @@ command is invoked."
 	(cd project-root))
       (gptel-agent--setup-context)
       (unless existing-buffer-p
-	(when project-root
-	  (insert (format "I'm working in project: %s\n" project-root)))
 	(message "gptel-agent session started with coding-agent preset")))))
 
 (defun gptel-agent--setup-context ()
