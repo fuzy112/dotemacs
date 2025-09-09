@@ -442,7 +442,9 @@ Supports full regex syntax (eg.  \"log.*Error\", \"function\\s+\\w+\", etc). "
  :function
  (lambda (callback command working-dir)
    (let* ((default-directory (expand-file-name working-dir))
-	  (command-buffer-name (concat " *" (project-name (project-current)) " : Output*"))
+	  (command-buffer-name (if (project-current)
+				   (concat " *" (project-name (project-current)) " : Command Output*")
+				 " *Command Output*"))
 	  (buffer (get-buffer-create command-buffer-name))
 	  proc start-marker)
      (with-current-buffer buffer
@@ -499,6 +501,8 @@ explicitly requests it.
   <bad-example>
   cd /foo/bar && pytest ./test
   </bad-example>
+
+- When running commands that support auto-paging, add --no-pager if applicable.
 
 ## Committing changes with git
 
