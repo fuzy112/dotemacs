@@ -1,5 +1,12 @@
 2025-09-11  Zhengyi Fu  <i@fuzy.me>
 
+	Configure pcap-mode for .pcapng files with line highlighting.
+
+	* init.el: Add auto-mode association for .pcapng files to use pcap-mode
+	and enable hl-line-mode in pcap-mode for better visibility.
+
+2025-09-11  Zhengyi Fu  <i@fuzy.me>
+
 	Refactor gptel file editing tools for better reliability and user experience.
 
 	* site-lisp/gptel-config.el: Replace complex edit_file tool with simpler
