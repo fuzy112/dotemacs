@@ -1,5 +1,11 @@
 2025-09-09  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (completion-pcm-leading-wildcard): Set to t.
+
+	This is a new option in Emacs 31.
+
+2025-09-09  Zhengyi Fu  <i@fuzy.me>
+
 	Refactor gptel-config tool functions for better maintainability.
 
 	* site-lisp/gptel-config.el (+gptel-read-file)

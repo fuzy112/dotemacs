@@ -709,6 +709,7 @@ font-locking and indentation."
         ;; (“mwr” → “merge-request-work”), so fall back to flex.
         (magit-rev   . ((styles . (orderless+flex))))))
 
+(setq completion-pcm-leading-wildcard t)
 
 ;; Registers an orderless dispatcher that makes
 ;; 1) the “$” suffix work together with Consult’s tofu suffixes, and
