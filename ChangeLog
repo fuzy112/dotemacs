@@ -1,5 +1,12 @@
 2025-09-10  Zhengyi Fu  <i@fuzy.me>
 
+	Configure TRAMP connection profiles for remote shell access.
+
+	* init.el: Add connection-local profile for remote-explicit-shell-file-name
+	to ensure /bin/bash is used for SSH and SCP connections via TRAMP.
+
+2025-09-10  Zhengyi Fu  <i@fuzy.me>
+
 	Improve gptel write_file tool with ediff interface and fix project-root warnings.
 
 	* site-lisp/gptel-config.el: Add require for dom.

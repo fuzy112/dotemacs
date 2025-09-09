@@ -2026,6 +2026,19 @@ confirmed."
 
 (setq magit-tramp-pipe-stty-settings 'pty)
 
+(connection-local-set-profile-variables
+ 'remote-explicit-shell-file-name
+ '((explicit-shell-file-name . "/bin/bash")))
+
+(connection-local-set-profiles
+ '(:application tramp :protocol "ssh")
+ 'remote-explicit-shell-file-name)
+
+(connection-local-set-profiles
+ '(:application tramp :protocol "scpx")
+ 'remote-explicit-shell-file-name)
+
+
 ;;;; vc
 
 (setq vc-follow-symlinks t)
