@@ -699,8 +699,7 @@ Supports full regex syntax (eg. \"log.*Error\", \"function|var\\s+\\w+\", etc). 
 		:type string
 		:description "Optional: The directory in which to run the command. Defaults to the current directory if not specified."))
  :category "coding-agent"
- :confirm t
- :include t)
+ :confirm t)
 
 (gptel-make-tool
  :name "editor_diagnostics"
