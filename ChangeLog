@@ -1,5 +1,12 @@
 2025-09-10  Zhengyi Fu  <i@fuzy.me>
 
+	Extract gptel tool definitions
+
+	* site-lisp/gptel-config.el: Move somes tools to gptel-tools.el
+	* site-lisp/gptel-tools.el: New file.
+
+2025-09-10  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+straight-update-and-review): New command.
 
 2025-09-10  Zhengyi Fu  <i@fuzy.me>
