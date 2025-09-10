@@ -1,5 +1,10 @@
 2025-09-10  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (straight-prefix-map): Bind "X" to
+	`+straight-update-and-review'.
+
+2025-09-10  Zhengyi Fu  <i@fuzy.me>
+
 	Extract gptel tool definitions
 
 	* site-lisp/gptel-config.el: Move somes tools to gptel-tools.el

@@ -316,7 +316,8 @@ changed packages."
   "S"     #'straight-push-all
   "l"     #'straight-get-recipe
   "L"     #'straight-pull-recipe-repositories
-  "x f"   #'straight-x-fetch-all)
+  "x f"   #'straight-x-fetch-all
+  "X"     #'+straight-update-and-review)
 
 
 ;;;; fonts
