@@ -1,3 +1,13 @@
+2025-09-10  Zhengyi Fu  <i@fuzy.me>
+
+	Improve consult integration with history and default support
+
+	* init.el (+consult--read-file-name-function): Add history and
+	default parameter support for better file selection experience.
+	(+consult--read-buffer-function): Add history support for buffer
+	selection.
+
+
 2025-09-09  Zhengyi Fu  <i@fuzy.me>
 
 	* site-lisp/gptel-config.el (+gptel-write-file-async)

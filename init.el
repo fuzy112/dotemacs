@@ -1060,7 +1060,7 @@ value for USE-OVERLAYS."
 (declare-function consult--buffer-preview "consult.el")
 
 ;; Add preview for `read-file-name'.
-(defun +consult--read-file-name-function (prompt &optional dir _default mustmatch initial pred)
+(defun +consult--read-file-name-function (prompt &optional dir default mustmatch initial pred)
   (let* ((default-directory (abbreviate-file-name (or dir default-directory)))
          (minibuffer-completing-file-name t)
          (pred (or pred 'file-exists-p)))
@@ -1073,6 +1073,8 @@ value for USE-OVERLAYS."
                   (expand-file-name initial)
                 default-directory)
      :require-match mustmatch
+     :history 'file-name-history
+     :default default
      :predicate pred
      :preview-key "M-."
      :sort t
@@ -1091,6 +1093,7 @@ value for USE-OVERLAYS."
    :default       def
    :prompt        (format-prompt (replace-regexp-in-string ":[[:space:]]*\\'" "" prompt) def)
    :require-match mustmatch
+   :history       'buffer-name-history
    :predicate     pred
    :preview-key   consult-preview-key
    :sort          t
