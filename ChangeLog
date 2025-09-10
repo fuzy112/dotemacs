@@ -1,5 +1,12 @@
 2025-09-10  Zhengyi Fu  <i@fuzy.me>
 
+	Improve gptel-tools grep functionality
+
+	* site-lisp/gptel-tools.el (gptel-tools--grep-async): Add --sort=modified
+	to ripgrep command for better search results ordering.
+
+2025-09-10  Zhengyi Fu  <i@fuzy.me>
+
 	Update gptel configuration and tools
 
 	* site-lisp/gptel-config.el: Add require for gptel-transient, remove
