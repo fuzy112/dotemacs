@@ -685,7 +685,7 @@ Returns a list of diagnostic objects in JSON format."
 		   end (line-number-at-pos end)))))
     (list :locus locus
 	  :beg beg
-	  :end :end
+	  :end end
 	  :type type
 	  :origin origin
 	  :code code
