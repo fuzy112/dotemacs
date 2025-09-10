@@ -1,5 +1,9 @@
 2025-09-10  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el ("Moonshot"): Update model pricing.
+
+2025-09-10  Zhengyi Fu  <i@fuzy.me>
+
 	Improve consult integration with history and default support
 
 	* init.el (+consult--read-file-name-function): Add history and
