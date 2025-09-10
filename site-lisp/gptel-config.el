@@ -1333,7 +1333,20 @@ BEG and END define the region to process."
 
 (add-hook 'gptel-post-rewrite-functions #'+gptel-remove-markdown-code-fences)
 
-(keymap-set gptel-mode-map "C-c k" #'gptel-abort)
+;;; Keybindings
+
+(transient-append-suffix 'gptel-menu
+  'gptel--suffix-send
+  `("a" "Abort active gptel process" gptel-abort
+    :if ,(lambda ()
+	   (let ((buf (current-buffer)))
+	     (cl-find-if
+	      (lambda (entry)
+		(eq (thread-first (cadr entry)
+				  (gptel-fsm-info)
+				  (plist-get :buffer))
+		    buf))
+	      gptel--request-alist)))))
 
 ;;; Presets
 
