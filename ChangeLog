@@ -1,5 +1,14 @@
 2025-09-10  Zhengyi Fu  <i@fuzy.me>
 
+	Update gptel configuration and tools
+
+	* site-lisp/gptel-config.el: Add require for gptel-transient, remove
+	gptel--known-tools reset, fix spacing in cost comments.
+	* site-lisp/gptel-tools.el: Remove :include t from shell_command tool.
+
+
+2025-09-10  Zhengyi Fu  <i@fuzy.me>
+
 	Fix Symbol’s value as variable is void: straight-x-buffer
 
 	* init.el (+straight-update-and-review): Require straight-x.

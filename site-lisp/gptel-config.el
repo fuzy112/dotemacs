@@ -34,6 +34,7 @@
 ;;; Code:
 
 (require 'gptel)
+(require 'gptel-transient)
 (require 'url-http)
 (require 'with-editor)
 (require 'flymake)
@@ -42,7 +43,6 @@
 ;;; Reset backends, tools, and presets
 
 (setq gptel--known-backends nil
-      gptel--known-tools nil
       gptel--known-presets nil)
 
 ;;; Models
@@ -56,7 +56,7 @@
 	     :capabilities (media tool-use json)
 	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
 	     :context-window 128
-	     :input-cost 1.50	   ; when cache hit
+	     :input-cost 1.50	  ; when cache hit
 					; when cache misses:
 					;  0.20 when (context < 8k)
 					;  1.00 when (8k  <= context < 32k)
@@ -96,7 +96,7 @@
 	     :description "The standard Moonshot V1 model"
 	     :capabilities (tool-use json)
 	     :context-window 128
-	     :input-cost 0.20		; when (context < 8k)
+	     :input-cost 0.20	  ; when (context < 8k)
 					; 1.00 when (8k <= context < 32k)
 					; 2.00 when (32k  <= context < 128k)
 	     :output-cost 2.00))	; when (context < 8k)
