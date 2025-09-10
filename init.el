@@ -273,6 +273,7 @@ changed packages."
 (defun +straight-update-and-review ()
   "Update all straight.el packages and review changes."
   (interactive)
+  (require 'straight-x)
   (with-current-buffer (get-buffer-create straight-x-buffer)
     (letrec ((review-fn (lambda ()
                           (and (null straight-x-waiting)
