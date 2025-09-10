@@ -1,5 +1,12 @@
 2025-09-10  Zhengyi Fu  <i@fuzy.me>
 
+	Add gptel-tools require to gptel-config
+
+	* site-lisp/gptel-config.el: Add require for gptel-tools to ensure
+	proper loading of gptel tool functionality.
+
+2025-09-10  Zhengyi Fu  <i@fuzy.me>
+
 	Improve gptel-tools grep functionality
 
 	* site-lisp/gptel-tools.el (gptel-tools--grep-async): Add --sort=modified

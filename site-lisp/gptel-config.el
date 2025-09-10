@@ -35,6 +35,7 @@
 
 (require 'gptel)
 (require 'gptel-transient)
+(require 'gptel-tools)
 (require 'url-http)
 (require 'with-editor)
 (require 'flymake)
