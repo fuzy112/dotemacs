@@ -1,5 +1,10 @@
 2025-09-10  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el (gptel-menu): Add suffix "a"
+	gptel-abort.
+
+2025-09-10  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/gptel-config.el (+gptel--flymake-diag-to-json): Fix
 	:end -> end.
 
