@@ -56,8 +56,14 @@
 	     :capabilities (media tool-use json)
 	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
 	     :context-window 128
-	     :input-cost 1.50
-	     :output-cost 4.50)
+	     :input-cost 1.50	   ; when cache hit
+					; when cache misses:
+					;  0.20 when (context < 8k)
+					;  1.00 when (8k  <= context < 32k)
+					;  2.00 when (32k <= context < 128k)
+	     :output-cost 2.00)	      	; (context < 8k)
+					; 3.00  hen (8k <= context < 32k)
+					; 5.00 when (32k <= context < 127k)
 	    (kimi-thinking-preview
 	     :description "The Kimi reasoning model"
 	     :capabilities (reasoning media)
@@ -70,21 +76,32 @@
 	     :capabilities (media tool-use json)
 	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
 	     :context-window 128
-	     :input-cost 0.15
-	     :output-cost 0.58)
+	     :input-cost 0.15		; 0.60 if cache miss
+	     :output-cost 2.50)
+	    (kimi-k2-0905-preview
+	     :description "A model suitable for coding"
+	     :capabilities (media tool-use json)
+	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
+	     :context-window 256
+	     :input-cost 0.15		; 0.60 if cache miss
+	     :output-cost 2.50)
 	    (kimi-k2-turbo-preview
 	     :description "A model suitable for coding"
 	     :capabilities (media tool-use json)
 	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
-	     :context-window 128
-	     :input-cost 0.15
-	     :output-cost 0.58)
+	     :context-window 256
+	     :input-cost 0.60		; 2.50 if cache miss
+	     :output-cost 10.00)
 	    (moonshot-v1-auto
 	     :description "The standard Moonshot V1 model"
 	     :capabilities (tool-use json)
 	     :context-window 128
-	     :input-cost 1.50
-	     :output-cost 4.50))
+	     :input-cost 0.20		; when (context < 8k)
+					; 1.00 when (8k <= context < 32k)
+					; 2.00 when (32k  <= context < 128k)
+	     :output-cost 2.00))	; when (context < 8k)
+					; 3.00 when (8k  <= context < 32k)
+					; 500  when (32k <= context < 128k)
   ;; :request-params '(:tools [(:type "builtin_function" :function (:name "$web_search"))])
   )
 
