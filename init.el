@@ -270,6 +270,20 @@ changed packages."
       (straight-check-all)
       (message "Finished processing all updated repos"))))
 
+(defun +straight-update-and-review ()
+  "Update all straight.el packages and review changes."
+  (interactive)
+  (with-current-buffer (get-buffer-create straight-x-buffer)
+    (letrec ((review-fn (lambda ()
+                          (and (null straight-x-waiting)
+                               (null straight-x-running)
+                               (unwind-protect
+                                   (+straight-review-updated-repos)
+                                 (advice-remove 'straight-x-start-process review-fn)
+                                 (kill-buffer straight-x-buffer))))))
+      (advice-add 'straight-x-start-process :after review-fn)
+      (straight-x-fetch-all))))
+
 ;; Command for fetching all repos asynchronously.
 (autoload 'straight-x-fetch-all "straight-x" nil t)
 
