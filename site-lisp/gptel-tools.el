@@ -56,7 +56,7 @@ identifying the key that triggers this action; it is passed to
 If it is nil, the action and its binding is not displayed in the popup,
 although it still takes effect.  If the user selects an action, its FUNC
 is called with ARGS and popup is dismissed.  The return value of
-`gptel-tools--popup' is the return value of FUNC."
+`gptel-tools--popup-1' is the return value of FUNC."
   (let ((keymap (make-sparse-keymap))
 	(prompt (concat prompt "\n"))
 	(max-key-lenght (seq-reduce
@@ -90,7 +90,9 @@ is called with ARGS and popup is dismissed.  The return value of
   "Create a popup with PROMPT and ACTIONS.
 ACTIONS is a sequence of (KEY DESC BODY...) forms, where KEY is the
 keybinding, DESC is the description, and BODY is the code to execute
-when KEY is selected."
+when KEY is selected.
+
+See also `gptel-tools--popup-1'."
   `(gptel-tools---popup-1
     ,prompt
     (list ,@(mapcar
@@ -144,30 +146,18 @@ Returns the ediff session buffer.
 (declare-function ediff-quit "ediff-util.el" (arg1))
 
 (defun gptel-tools--ediff-file-with-buffer (filename buffer callback &optional startup-hooks)
-  "Launch ediff between FILENAME and BUFFER with interactive approval.
+  "Launch ediff between FILENAME and BUFFER for reviewing changes.
 
-FILENAME is the path to the file to compare against.
-BUFFER is the buffer containing proposed changes.
-CALLBACK is a function called with the result message.
-STARTUP-HOOKS are optional hooks to run after ediff setup.
+CALLBACK is called with result message after user decision.
+Optional STARTUP-HOOKS run after ediff setup.
 
-This function:
-1. Opens the file and compares it with the buffer content using ediff
-2. Presents the user with options to accept, reject, or request changes
-3. Writes the changes to the file if accepted
-4. Calls CALLBACK with appropriate result message
-5. Handles gptel session cleanup on rejection
-
-Returns the ediff session buffer.
-
-(fn FILENAME BUFFER CALLBACK &optional STARTUP-HOOKS)"
+Presents UI for accepting, rejecting, or requesting changes to the edit."
   (let* ((session-buffer (current-buffer))
 	 (file-buffer (find-file-noselect filename))
 	 (complete-fn (lambda (result)
 			(when callback
 			  (funcall callback result)
-			  (setq callback nil))
-			()))
+			  (setq callback nil))))
 	 (accept-fn (lambda (&optional quit)
 		      (interactive (list t))
 		      (with-current-buffer buffer
@@ -235,16 +225,18 @@ Returns the file contents as a string."
     (error "File not found: %s" filepath))
   (let ((file-buffer (find-file-noselect filepath)))
     (with-current-buffer file-buffer
-      (goto-char (point-min))
-      (when (natnump start)
-	(forward-line (1- start)))
-      (setq start (point))
-      (if (or (null end) (< end 1))
-	  (setq end (point-max))
+      (save-excursion
 	(goto-char (point-min))
-	(forward-line (1- end))
-	(setq end (point)))
-      (pulse-momentary-highlight-region start end)
+	(when (natnump start)
+	  (forward-line (1- start)))
+	(setq start (point))
+	(if (or (null end) (< end 1))
+	    (setq end (point-max))
+	  (goto-char (point-min))
+	  (forward-line (1- end))
+	  (setq end (point))))
+      (when (get-buffer-window file-buffer)
+	(pulse-momentary-highlight-region start end))
       (buffer-substring-no-properties start end))))
 
 (defun gptel-tools--list-directory (directory)
