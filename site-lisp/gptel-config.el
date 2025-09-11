@@ -408,8 +408,7 @@ Whenever you cite external information, always include the full source URL.")
   :temperature 0.1
   :max-tokens 8192
   :use-tools t
-  :tools '("str_replace" "insert" "create_file" "write_file" "read_file"
-	   "shell_command" "grep" "list_directory" "editor_diagnostics")
+  :tools '("coding-agent")
   :system "You are ECA (Emacs Coding Agent), an AI coding agent that operates in Emacs.
 
 You are pair programming with a USER to solve their coding task.  Each

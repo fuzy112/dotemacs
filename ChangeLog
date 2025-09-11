@@ -1,3 +1,36 @@
+2025-09-11  Zhengyi Fu  <i@fuzy.me>
+
+	Add shell command security features to gptel-tools
+
+	* site-lisp/gptel-tools.el (gptel-tools--shell-command-allowed-p):
+	New function to validate allowed shell commands and subcommands.
+	(gptel-tools--shell-command-confirm-p): New function to determine
+	when shell command execution requires confirmation.
+	(gptel-tools--read-file-confirm-p): New function to determine when
+	file reading requires confirmation.
+	(read_file): Add confirmation requirement for files outside
+	project directory.
+	(run_command): Replace simple boolean confirmation with smart
+	confirmation function based on command and working directory.
+
+2025-09-11  Zhengyi Fu  <i@fuzy.me>
+
+	* site-lisp/gptel-tools.el: Fix documentation and improve file
+	reading functions
+
+	Fix function name reference in docstring from `gptel-tools--popup'
+	to `gptel-tools--popup-1'
+
+	Add documentation reference to `gptel-tools--popup-1' in
+	`gptel-tools--popup' macro docstring
+
+	Simplify and clarify docstring for
+	`gptel-tools--ediff-file-with-buffer'
+
+	Improve `gptel-tools--read-file' to use `save-excursion' and add
+	window check before highlighting region
+
+
 2025-09-10  Zhengyi Fu  <i@fuzy.me>
 
 	Update gptel configuration and tools
