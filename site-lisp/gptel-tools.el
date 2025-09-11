@@ -239,6 +239,12 @@ Returns the file contents as a string."
 	(pulse-momentary-highlight-region start end))
       (buffer-substring-no-properties start end))))
 
+(defun gptel-tools--read-file-confirm-p (filepath &optional _start _end)
+  (not
+   (string-prefix-p
+    (expand-file-name default-directory)
+    (expand-file-name filepath))))
+
 (defun gptel-tools--list-directory (directory)
   "List the contents of a given directory.
 
@@ -436,6 +442,34 @@ the command output as a string, or nil if the buffer is no longer alive."
 		       (with-current-buffer buffer
 			 (buffer-substring-no-properties
 			  start-marker (point-max))))))))))
+
+(defvar gptel-tools-allowed-commands
+  '("ls" "find" "date"))
+
+(defvar gptel-tools-allowed-subcommands
+  '(("git" "log" "diff" "show" "grep" "status")
+    ("apt" "search" "list")))
+
+(defun gptel-tools--shell-command-allowed-p (command)
+  (let ((splitted (split-string-shell-command command))
+	subcommand-entry)
+    (cond ((member (car splitted) gptel-tools-allowed-commands)
+	   t)
+	  ((setq subcommand-entry (assoc (car splitted) gptel-tools-allowed-subcommands))
+	   (let ((subcommand (progn (pop splitted)
+				    (pop splitted))))
+	     (while (and subcommand (string-prefix-p "-" subcommand))
+	       (setq subcommand (pop splitted)))
+	     (member subcommand (cdr subcommand-entry)))))))
+
+(defun gptel-tools--shell-command-confirm-p (command working-dir)
+  (not
+   (and-let* ((allowed (gptel-tools--shell-command-allowed-p command))
+	      (dir (expand-file-name (file-name-as-directory working-dir))))
+     (string-prefix-p
+      (expand-file-name default-directory)
+      dir))))
+
 
 (defun gptel-tools--flymake-diag-to-json (diag)
   "Convert a Flymake diagnostic DIAG to a JSON-compatible plist."
@@ -590,6 +624,7 @@ You can also set `end` to -1 to read to the end of the file."
 		     :type number
 		     :description "The last line of the file to read.
 This argument can also be -1, which means to read to the end of the file."))
+ :confirm #'gptel-tools--read-file-confirm-p
  :category "coding-agent")
 
 (gptel-make-tool
@@ -698,7 +733,7 @@ Supports full regex syntax (eg. \"log.*Error\", \"function|var\\s+\\w+\", etc). 
 		:type string
 		:description "Optional: The directory in which to run the command. Defaults to the current directory if not specified."))
  :category "coding-agent"
- :confirm t)
+ :confirm #'gptel-tools--shell-command-confirm-p)
 
 (gptel-make-tool
  :name "editor_diagnostics"
