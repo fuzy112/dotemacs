@@ -371,7 +371,7 @@ Whenever you cite external information, always include the full source URL."
   :use-tools t
   :max-tokens 4096
   :include-tool-results t
-  :tools '("search_web" "read_url" "read_documentation" "search_emacs_mailing_list"))
+  :tools '("search_web" "read_url" "read_documentation"))
 
 (gptel-make-preset 'deepseek-mathematician
   :description "Expert mathematics assistant using DeepSeek"
@@ -394,7 +394,7 @@ Output math formulas in Latex format.
   :stream t
   :temperature 0.6
   :use-tools 'force
-  :tools '("search_web" "read_url" "read_documentation" "search_emacs_mailing_list")
+  :tools '("search_web" "read_url" "read_documentation")
   :system "You are Kimi, an Emacs-embedded LLM assistant.
 Be concise, accurate, and helpful.
 You may search the web or read URLs when needed.

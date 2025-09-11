@@ -40,16 +40,17 @@
 ;;; Code:
 
 (require 'gptel)
+(require 'with-editor)
+(require 'flymake)
 (eval-when-compile
-  (require 'llama)
-  (require 'flymake)
-  (require 'with-editor))
+  (require 'seq)
+  (require 'llama))
 
 ;;;; tools
 
 (defun gptel-tools---popup-1 (prompt actions)
   "Display PROMPT and allow user to choose between one of several ACTIONS.
-ACTIONS is a list of lists (KEY DESC FUNC ARGS...).  KEY is a string
+ACTIONS is a sequence of lists (KEY DESC FUNC ARGS...).  KEY is a string
 identifying the key that triggers this action; it is passed to
 `key-parse'.  DESC is a description string to be displayed in the popup.
 If it is nil, the action and its binding is not displayed in the popup,
@@ -62,17 +63,18 @@ is called with ARGS and popup is dismissed.  The return value of
 			 (##max %1 (length (car %2)))
 			 actions 0))
 	func)
-    (pcase-dolist (`(,key ,desc ,func . ,args) actions)
-      (when desc
-	(setq prompt
-	      (concat prompt
-		      (format "\n %s%s  %s"
-			      (propertize key 'face 'help-key-binding)
-			      (make-string (- max-key-lenght (length key)) ?\s)
-			      desc))))
-      (keymap-set keymap key (lambda ()
-			       (interactive)
-			       (apply func args))))
+    (seq-doseq (action actions)
+      (pcase-let ((`(,key ,desc ,func . ,args) action))
+	(when desc
+	  (setq prompt
+		(concat prompt
+			(format "\n %s%s  %s"
+				(propertize key 'face 'help-key-binding)
+				(make-string (- max-key-lenght (length key)) ?\s)
+				desc))))
+	(keymap-set keymap key (lambda ()
+				 (interactive)
+				 (apply func args)))))
     (setq prompt (concat prompt "\n\n"))
     (let ((max-mini-window-height 1.0)
 	  (cursor-in-echo-area t))
@@ -86,8 +88,9 @@ is called with ARGS and popup is dismissed.  The return value of
 
 (defmacro gptel-tools---popup (prompt actions)
   "Create a popup with PROMPT and ACTIONS.
-ACTIONS is a list of (KEY DESC BODY...) forms, where KEY is the keybinding,
-DESC is the description, and BODY is the code to execute when KEY is selected."
+ACTIONS is a sequence of (KEY DESC BODY...) forms, where KEY is the
+keybinding, DESC is the description, and BODY is the code to execute
+when KEY is selected."
   `(gptel-tools---popup-1
     ,prompt
     (list ,@(mapcar
@@ -137,6 +140,8 @@ Returns the ediff session buffer.
 		       95 t))
 	   startup-hooks))))
 
+
+(declare-function ediff-quit "ediff-util.el" (arg1))
 
 (defun gptel-tools--ediff-file-with-buffer (filename buffer callback &optional startup-hooks)
   "Launch ediff between FILENAME and BUFFER with interactive approval.
@@ -465,10 +470,10 @@ the command output as a string, or nil if the buffer is no longer alive."
   "Get editor diagnostics (errors, warnings, info) for workspaces.
 
 FILE-PATH is the optional file path to get specific file diagnostics.
-Leave empty for project-wide diagnostics. Requires the file to be open in the editor.
+Leave empty for project-wide diagnostics.  Requires the file to be open
+in the editor.
 
 Returns a list of diagnostic objects in JSON format."
-  (require 'flymake)
   (if (or (null file-path) (string-empty-p file-path))
       (mapcar #'gptel-tools--flymake-diag-to-json
 	      (and (project-current) (flymake--project-diagnostics)))
@@ -516,11 +521,12 @@ text using `shr-insert-document'."
   "Insert a link from DOM element.
 If the link's href attribute is not from duckduckgo.com and is not
 a relative or protocol-based URL, append the URL in parentheses."
-  (shr-generic dom)
-  (when-let* ((href (dom-attr dom 'href)))
-    (or (string-match-p ".*duckduckgo\\.com.*" href)
-	(string-match-p "\\`\\(/\\|:\\)" href)
-	(shr-insert (format " (%s)" href)))))
+  (with-no-warnings
+    (shr-generic dom)
+    (when-let* ((href (dom-attr dom 'href)))
+      (or (string-match-p ".*duckduckgo\\.com.*" href)
+	  (string-match-p "\\`\\(/\\|:\\)" href)
+	  (shr-insert (format " (%s)" href))))))
 
 (defvar shr-external-rendering-functions)
 (defun gptel-tools--search-web-async (callback query)
