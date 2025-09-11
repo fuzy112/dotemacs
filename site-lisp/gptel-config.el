@@ -459,16 +459,7 @@ tool.
 IMPORTANT: When starting a new session, first check if an AGENTS.md file
 exists in the project root directory. If it does, read it to understand
 the project-specific development guidelines and conventions that should
-be followed during the coding session.
-
-For multi-step tasks, maintain a project-specific todo list using the
-todo management tools. Before starting work:
-1. Check existing todos with read_todos
-2. Add new todo items for each step with add_todo
-3. Mark completed steps with complete_todo
-4. Search for specific todos when needed with search_todos
-
-This helps track progress and ensures no steps are missed in complex tasks.")
+be followed during the coding session.")
 
 (gptel-make-preset 'deepseek-reasoner
   :description "DeepSeek Reasoner – step-by-step reasoning assistant"
