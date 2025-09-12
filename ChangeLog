@@ -1,5 +1,19 @@
 2025-09-12  Zhengyi Fu  <i@fuzy.me>
 
+	Update gptel-tools
+
+	* site-lisp/gptel-config.el: Remove JIRA tools.
+
+	* site-lisp/gptel-tools.el (gptel-tools--ediff-buffers): Update docstring.
+	(gptel-tools--url-retrieve): New helper function.
+	(gptel-tools--read-url-async, gptel-tools--search-web-async): Use it.
+	(gptel-tools-jira-host): New variable.
+	(gptel-tools--get-jira-token, gptel-tools--search-jira-issues-async)
+	(gptel-tools--get-jira-issue-async): New functions.
+	("search_jira_issues", "get_jira_issue"): New gptel tools.
+
+2025-09-12  Zhengyi Fu  <i@fuzy.me>
+
 	Fix error when launching telega while in a tramp dir
 
 	* site-lisp/telega-config.el (telega): Add advice to let-bind

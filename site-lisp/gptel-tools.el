@@ -94,19 +94,11 @@ See also `gptel-tools--popup-1'."
 (defun gptel-tools--ediff-buffers (old-buffer new-buffer &optional startup-hooks)
   "Launch ediff between OLD-BUFFER and NEW-BUFFER with proper cleanup.
 
-OLD-BUFFER is the buffer containing the original content.
-NEW-BUFFER is the buffer containing the proposed changes.
-STARTUP-HOOKS are optional hooks to run after ediff setup.
+Ediff will be configured with plain window setup and will clean up the
+NEW-BUFFER when finished.  The original window configuration will be
+restored after ediff completes.
 
-This function:
-1. Sets up ediff with plain window configuration
-2. Ensures proper window selection (avoids side windows)
-3. Automatically cleans up the NEW-BUFFER after ediff completion
-4. Restores the original window configuration
-
-Returns the ediff session buffer.
-
-\(fn OLD-BUFFER NEW-BUFFER &optional STARTUP-HOOKS)"
+STARTUP-HOOKS are additional hooks to run after ediff setup."
   (let ((orig-window (selected-window))
 	(orig-window-config (current-window-configuration))
 	(ediff-window-setup-function #'ediff-setup-windows-plain))
@@ -447,27 +439,32 @@ Returns a list of diagnostic objects in JSON format."
 
 (defvar url-http-response-status)
 
+(defun gptel-tools--url-retrieve (callback url)
+  (condition-case err
+      (url-retrieve url callback)
+    (error (funcall callback (list :error "Failed to retrieve URL"
+				   :internal-error err)))))
+
 (defun gptel-tools--read-url-async (callback url)
   "Call CALLBACK with parsed contents of URL, or (:error MESSAGE ...)."
-  (condition-case err1
-      (url-retrieve
-       url
-       (lambda (_status)
-	 (condition-case err
-	     (funcall callback
-		      (progn
-			(goto-char (point-min))
-			(forward-paragraph)
-			(let ((dom (unwind-protect
-				       (libxml-parse-html-region (point) (point-max))
-				     (kill-buffer (current-buffer)))))
-			  (with-temp-buffer
-			    (shr-insert-document dom)
-			    (buffer-substring-no-properties (point-min) (point-max))))))
-	   (error (funcall callback (list :error "Failed to read url"
-					  :internal-error err))))))
-    (error (funcall callback (list :error "Failed to read url"
-				   :internal-error err1)))))
+  (gptel-tools--url-retrieve
+   (lambda (status)
+     (condition-case err
+	 (if (eq (car-safe status) :error)
+	     (funcall callback status)
+	   (funcall callback
+		    (progn
+		      (goto-char (point-min))
+		      (forward-paragraph)
+		      (let ((dom (unwind-protect
+				     (libxml-parse-html-region (point) (point-max))
+				   (kill-buffer (current-buffer)))))
+			(with-temp-buffer
+			  (shr-insert-document dom)
+			  (buffer-substring-no-properties (point-min) (point-max)))))))
+       (error (funcall callback (list :error "Failed to read url"
+				      :internal-error err)))))
+   url))
 
 (defun gptel-tools--insert-link-strip-href (dom)
   "Insert a link from DOM element.
@@ -483,43 +480,107 @@ a relative or protocol-based URL, append the URL in parentheses."
 (defvar shr-external-rendering-functions)
 (defun gptel-tools--search-web-async (callback query)
   "Search DuckDuckGo for QUERY and call CALLBACK with formatted results."
-  (condition-case err1
-      (url-retrieve
-       (format "https://html.duckduckgo.com/html/?q=%s" query)
-       (lambda (_status)
-	 (condition-case err
-	     (if (>= url-http-response-status 400)
-		 (error "HTTP error %s: %s"
-			url-http-response-status
-			(buffer-string))
-	       (funcall callback
-			(progn
-			  (goto-char (point-min))
-			  (forward-paragraph)
+  (gptel-tools--url-retrieve
+   (lambda (status)
+     (condition-case err
+	 (cond
+	  ((eq (car status) :error)
+	   (funcall callback status))
+	  ((>= url-http-response-status 400)
+	   (error "HTTP error %s: %s"
+		  url-http-response-status
+		  (buffer-string)))
+	  (t
+	   (funcall callback
+		    (progn
+		      (goto-char (point-min))
+		      (forward-paragraph)
+		      (let
+			  ((dom
+			    (unwind-protect
+				(libxml-parse-html-region
+				 (point) (point-max))
+			      (kill-buffer (current-buffer)))))
+			(with-temp-buffer
 			  (let
-			      ((dom
-				(unwind-protect
-				    (libxml-parse-html-region
-				     (point) (point-max))
-				  (kill-buffer (current-buffer)))))
-			    (with-temp-buffer
-			      (let
-				  ((shr-external-rendering-functions
-				    '((a
-				       . gptel-tools--insert-link-strip-href))))
-				(shr-insert-document
-				 dom))
-			      (buffer-substring-no-properties
-			       (point-min) (point-max)))))))
-	   (error
-	    (funcall callback
-		     (list :error
-			   "Failed to fetch the URL"
-			   :internal-error err))))))
-    (error
-     (funcall callback
-	      (list :error "Failed to fetch the URL" :internal-error
-		    err1)))))
+			      ((shr-external-rendering-functions
+				'((a
+				   . gptel-tools--insert-link-strip-href))))
+			    (shr-insert-document
+			     dom))
+			  (buffer-substring-no-properties
+			   (point-min) (point-max))))))))
+       (error
+	(funcall callback
+		 (list :error
+		       "Failed to fetch the URL"
+		       :internal-error err)))))
+   (format "https://html.duckduckgo.com/html/?q=%s" query)))
+
+
+(defvar gptel-tools-jira-host nil)
+
+(defun gptel-tools--get-jira-token ()
+  (cl-assert gptel-tools-jira-host)
+  (auth-info-password
+   (car
+    (or  (auth-source-search
+	  :max 1
+	  :host gptel-tools-jira-host)
+	 (error "No authinfo for %s" gptel-tools-jira-host)))) )
+
+(defun gptel-tools--search-jira-issues-async (callback jql max-results)
+  (condition-case err
+      (let* ((token (gptel-tools--get-jira-token))
+	     (url (format "https://%s/rest/api/2/search?jql=%s&maxResults=%s"
+			  gptel-tools-jira-host
+			  (url-hexify-string jql)
+			  max-results))
+	     (url-request-extra-headers
+	      `(("authorization" . ,(format "Bearer %s" token))
+		("accept" . "application/json"))))
+	(gptel-tools--url-retrieve
+	 (lambda (status)
+	   (if (eq (car-safe status) :error)
+	       (funcall callback status)
+	     (condition-case err1
+		 (progn
+		   (goto-char (point-min))
+		   (forward-paragraph)
+		   (let ((json-object-type 'plist))
+		     (funcall callback (json-parse-buffer))))
+	       (t (kill-buffer (current-buffer)))
+	       (error (funcall callback (list :error "Failed to search issues"
+					      :internal-error err1))))))
+	 url))
+    (error (funcall callback (list :error "Failed to search jira"
+				   :internal-error err)))))
+
+(defun gptel-tools--get-jira-issue-async (callback issue-id)
+  (condition-case err
+      (let* ((token (gptel-tools--get-jira-token))
+	     (url (format "https://%s/rest/api/2/issue/%s"
+			  gptel-tools-jira-host
+			  issue-id))
+	     (url-request-extra-headers
+	      `(("authorization" . ,(format "Bearer %s" token))
+		("accept" . "application/json"))))
+	(gptel-tools--url-retrieve
+	 (lambda (status)
+	   (if (eq (car-safe status) :error)
+	       (funcall callback status)
+	     (condition-case err1
+		 (progn
+		   (goto-char (point-min))
+		   (forward-paragraph)
+		   (let ((json-object-type 'plist))
+		     (funcall callback (json-parse-buffer))))
+	       (t (kill-buffer (current-buffer)))
+	       (error (funcall callback (list :error "Failed to get issue"
+					      :internal-error err1))))))
+	 url))
+    (error (funcall callback (list :error "Failed to get issue"
+				   :internal-error err)))))
 
 
 (gptel-make-tool
@@ -686,6 +747,31 @@ diagnostics when a file path is given. Requires the file to be open in the edito
  :function (lambda () (shell-command-to-string "date"))
  :description "Get the current date and time."
  :category "coding-agent")
+
+
+(gptel-make-tool
+ :name "search_jira_issues"
+ :function #'gptel-tools--search-jira-issues-async
+ :async t
+ :description "Search jira for issues"
+ :args (list '(:name "jql"
+		     :type string
+		     :description "JQL query string to search issues")
+	     '(:name "max_results"
+		     :type integer
+		     :description "Maximum number of results to return"))
+ :category "jira")
+
+(gptel-make-tool
+ :name "get_jira_issue"
+ :function #'gptel-tools--get-jira-issue-async
+ :async t
+ :description "Retrieve comprehensive information about a JIRA issue, \
+including its summary, description, status, assignee and related details."
+ :args (list '(:name "issue_id"
+		     :type string
+		     :description "The JIRA issue identifier (e.g., 'TPBUG-1007')"))
+ :category "jira")
 
 (provide 'gptel-tools)
 ;;; gptel-tools.el ends here
