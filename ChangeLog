@@ -1,5 +1,9 @@
 2025-09-12  Zhengyi Fu  <i@fuzy.me>
 
+	* early-init.el: Call `igc-start-idle-timer' on startup.
+
+2025-09-12  Zhengyi Fu  <i@fuzy.me>
+
 	Update gptel-tools documentation and fix function naming
 
 	* site-lisp/gptel-tools.el: Simplify commentary section to be more
