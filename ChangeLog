@@ -1,5 +1,23 @@
 2025-09-12  Zhengyi Fu  <i@fuzy.me>
 
+	Fix file path handling in gptel-tools
+
+	* site-lisp/gptel-tools.el: Ensure all file operations use
+	expanded file names for consistent path handling.
+	(gptel-tools--read-file): Use expand-file-name on filepath.
+	(gptel-tools--list-directory): Use expand-file-name on directory.
+	(gptel-tools--create-file): Use expand-file-name on path.
+	(gptel-tools--write-file-async): Use expand-file-name on file-path.
+	(gptel-tools--insert-async): Use expand-file-name on file-path.
+	(gptel-tools--string-replace-async): Use expand-file-name on file-path.
+	(gptel-tools--grep-async): Use expand-file-name on working-dir and default-directory.
+	(gptel-tools--shell-command-async): Use expand-file-name on working-dir and default-directory.
+	(gptel-tools--editor-diagnostics): Use expand-file-name on file-path.
+	Also fix parameter names to match tool definitions.
+
+
+2025-09-12  Zhengyi Fu  <i@fuzy.me>
+
 	Simplify eshell configuration
 
 	* init.el: Disable eshell visual commands and remove
