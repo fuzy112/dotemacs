@@ -1,5 +1,12 @@
 2025-09-12  Zhengyi Fu  <i@fuzy.me>
 
+	Fix error when launching telega while in a tramp dir
+
+	* site-lisp/telega-config.el (telega): Add advice to let-bind
+	`default-directory' to `telega-cache-dir'.
+
+2025-09-12  Zhengyi Fu  <i@fuzy.me>
+
 	* early-init.el: Call `igc-start-idle-timer' on startup.
 
 2025-09-12  Zhengyi Fu  <i@fuzy.me>
