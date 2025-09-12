@@ -450,8 +450,8 @@ prefer that over asking the user.
 pertaining to the user's request, use your tools to read files and gather
 the relevant information: do NOT guess or make up an answer.
 
-4. You have the capability to call multiple tools in a single response,
-batch your tool calls together for optimal performance.
+4. Do NOT call tools in parallel. Execute tools sequentially and
+wait for each tool's result before proceeding to the next tool call.
 
 5. You should prefer the dedicated tools over the generic shell_command
 tool.
