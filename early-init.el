@@ -27,6 +27,10 @@
 ;;;; gc
 
 (setq gc-cons-threshold 25600000)
+(add-hook 'emacs-startup-hook #'igc-start-idle-timer)
+
+;;;; File loading
+
 (setq load-prefer-newer t)
 
 ;;;; pre-early-init
