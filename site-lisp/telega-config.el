@@ -41,5 +41,10 @@
   (add-to-list 'consult-buffer-filter (concat "\\`" (regexp-quote (telega-symbol 'telegram))))
   (add-to-list 'consult-buffer-filter "\\`\\*Telega"))
 
+(defvar telega-cache-dir)
+(define-advice telega (:around (&rest args) default-directory)
+  (let ((default-directory telega-cache-dir))
+    (apply args)))
+
 (provide 'telega-config)
 ;;; telega-config.el ends here
