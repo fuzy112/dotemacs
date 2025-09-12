@@ -2248,8 +2248,8 @@ Then refresh all windows displaying the current buffer."
                      eat-semi-char-non-bound-keys)))
 
 (unless (memq system-type '(ms-dos windows-nt))
-  (add-hook 'eshell-load-hook #'eat-eshell-mode)
-  (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
+  (setq eshell-visual-commands nil)
+  (add-hook 'eshell-load-hook #'eat-eshell-mode))
 
 (after-load! project
   (keymap-set project-prefix-map "t" #'eat-project)
