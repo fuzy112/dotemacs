@@ -201,7 +201,7 @@ END is the last line of the file to read.  Can be -1 to read to end of file.
 Returns the file contents as a string."
   (unless (file-exists-p filepath)
     (error "File not found: %s" filepath))
-  (let ((file-buffer (find-file-noselect filepath)))
+  (let ((file-buffer (find-file-noselect (expand-file-name filepath))))
     (with-current-buffer file-buffer
       (save-excursion
 	(goto-char (point-min))
@@ -228,12 +228,13 @@ START and END are ignored."
 (defun gptel-tools--list-directory (directory)
   "List DIRECTORY's contents."
   (mapconcat #'identity
-	     (directory-files directory)
+	     (directory-files (expand-file-name directory))
 	     "\n"))
 
 (defun gptel-tools--create-file (path filename content)
   "Create file FILENAME under PATH with CONTENT."
-  (let ((full-path (expand-file-name filename path)))
+  (let ((full-path (expand-file-name
+		    filename (expand-file-name path))))
     (if (file-exists-p full-path)
 	(error "File %s already exists" filename)
       (with-temp-buffer
@@ -248,7 +249,8 @@ CALLBACK is called with a result string."
     (condition-case err
 	(with-current-buffer preview-buffer
 	  (insert content))
-      (:success (gptel-tools--ediff-file-with-buffer file-path preview-buffer callback))
+      (:success (gptel-tools--ediff-file-with-buffer
+		 (expand-file-name file-path) preview-buffer callback))
       (error (funcall callback (format "An error occurred: %S" err))))))
 
 (defun gptel-tools--insert-async (callback file-path insert-line new-string)
@@ -260,12 +262,13 @@ CALLBACK is called with no arguments on success."
   (let ((edit-buffer (generate-new-buffer "*edit-file*")))
     (condition-case-unless-debug err
 	(with-current-buffer edit-buffer
-	  (insert-file-contents file-path)
+	  (insert-file-contents (expand-file-name file-path))
 	  (goto-char (point-min))
 	  (unless (zerop (forward-line insert-line))
 	    (error "Line number out of range"))
 	  (insert new-string ?\n))
-      (:success (gptel-tools--ediff-file-with-buffer file-path edit-buffer callback))
+      (:success (gptel-tools--ediff-file-with-buffer
+		 (expand-file-name file-path) edit-buffer callback))
       (error (funcall callback (format "An error occurred: %S" err))))))
 
 (defun gptel-tools--string-replace-async (callback file-path old-string new-string)
@@ -293,7 +296,8 @@ Errors if OLD-STRING is empty, missing, or not unique."
  - second occurrence: line %d\n"
 		       line-number (line-number-at-pos))))
 	    (replace-match new-string t t)))
-      (:success (gptel-tools--ediff-file-with-buffer file-path edit-buffer callback))
+      (:success (gptel-tools--ediff-file-with-buffer
+		 (expand-file-name file-path) edit-buffer callback))
       (error (funcall callback (format "An error occurred: %S" err))
 	     (kill-buffer edit-buffer)))))
 
@@ -301,7 +305,7 @@ Errors if OLD-STRING is empty, missing, or not unique."
   "Call CALLBACK with ripgrep output for REGEXP in WORKING-DIR."
   (condition-case err
       (let* ((default-directory (or (and working-dir (expand-file-name working-dir))
-				    default-directory))
+				    (expand-file-name default-directory)))
 	     (compilation-buffer-name-function #'project-prefixed-buffer-name)
 	     (buffer (grep (format "rg --sort=modified --no-heading -n -e %s | head -n 200"
 				   (shell-quote-argument regexp)))))
@@ -325,7 +329,7 @@ Errors if OLD-STRING is empty, missing, or not unique."
   "Run COMMAND in WORKING-DIR and call CALLBACK with its output string."
   (let* ((dir (if working-dir
 		  (expand-file-name working-dir)
-		default-directory))
+		(expand-file-name default-directory)))
 	 (command-buffer-name (if (project-current)
 				  (concat " *" (project-name (project-current)) " : Command Output*")
 				" *Command Output*"))
@@ -342,7 +346,8 @@ Errors if OLD-STRING is empty, missing, or not unique."
       ;; Insert separator and command before running
       (insert "\n" (make-string 60 ?-) "\n")
       (insert-before-markers (propertize (format "%s $ " (abbreviate-file-name dir))
-					 'face 'comint-highlight-prompt) command "\n")
+					 'face 'comint-highlight-prompt)
+			     command "\n")
       (setq start-marker (point-marker)))
     (display-buffer buffer)
     (with-editor
@@ -431,7 +436,7 @@ Returns a list of diagnostic objects in JSON format."
   (if (or (null file-path) (string-empty-p file-path))
       (mapcar #'gptel-tools--flymake-diag-to-json
 	      (and (project-current) (flymake--project-diagnostics)))
-    (if-let* ((buffer (get-file-buffer file-path)))
+    (if-let* ((buffer (get-file-buffer (expand-file-name file-path))))
 	(with-current-buffer buffer
 	  (mapcar #'gptel-tools--flymake-diag-to-json (flymake-diagnostics)))
       (error "File not opened in editor: %s" file-path))))
@@ -634,7 +639,7 @@ This argument can also be -1, which means to read to the end of the file."))
  :description "Write content to a file with user preview and confirmation.
 This tool allows you to write new content to a file, overwriting any existing
 content."
- :args (list '(:name "file_path"
+ :args (list '(:name "filepath"
 		     :type string
 		     :description "The path of the file to write")
 	     '(:name "content"
@@ -647,7 +652,7 @@ content."
  :function #'gptel-tools--insert-async
  :async t
  :description "Insert text at a specific location in a file."
- :args (list (list :name "file_path"
+ :args (list (list :name "filepath"
 		   :type 'string
 		   :description "The path of the file to modify")
 	     (list :name "insert_line"
@@ -670,7 +675,7 @@ indentation and newlines. The edit will fail if `old_string` is not unique.
 Prefer small, targeted edits over large replacements.
 
 If you are inserting text at a known position, use `insert` tool."
- :args (list '(:name "file_path"
+ :args (list '(:name "filepath"
 		     :type string
 		     :description "The path of the file to modify")
 	     '(:name "old_string"
@@ -717,7 +722,7 @@ Supports full regex syntax (eg. \"log.*Error\", \"function|var\\s+\\w+\", etc). 
 Returns project-wide diagnostics when no file path is provided, or file-specific
 diagnostics when a file path is given. Requires the file to be open in the editor."
  :function #'gptel-tools--editor-diagnostics
- :args (list '(:name "file_path"
+ :args (list '(:name "filepath"
 		     :type string
 		     :description "Optional file path to get specific file diagnostics. Leave empty for project-wide diagnostics."))
  :category "coding-agent")
