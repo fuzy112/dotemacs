@@ -1,5 +1,9 @@
 2025-09-12  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+gnus-read-ephemeral-emacs-search-group): New command.
+
+2025-09-12  Zhengyi Fu  <i@fuzy.me>
+
 	Fix file path handling in gptel-tools
 
 	* site-lisp/gptel-tools.el: Ensure all file operations use

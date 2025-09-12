@@ -650,7 +650,36 @@ font-locking and indentation."
    (read-string "Title: ")))
 
 (after-load! help
-  (keymap-set help-map "H" #'+mail-to-help-gnu-emacs))
+  (keymap-set help-map "H" #'+mail-to-help-gnu-emacs)
+  (keymap-set help-map "M" #'+gnus-read-ephemeral-emacs-search-group))
+
+(defun +gnus-read-ephemeral-emacs-search-group (query include-all)
+  (interactive "sQuery: \nP")
+  (let* ((url (format "https://yhetil.org/emacs/?q=%s&x=m" (url-hexify-string query)))
+         (mbox (make-temp-file "mbox-"))
+         (boundary (mml-compute-boundary '()))
+         (values (list (if include-all
+                           (cons "z" "full threads")
+                         (cons "x" "results only"))))
+         (url-request-method "POST")
+         (url-request-extra-headers
+          (list (cons "Content-Type"
+                      (concat "multipart/form-data; boundary=" boundary))))
+         (url-request-data
+          (mm-url-encode-multipart-form-data values boundary)))
+    (with-current-buffer (url-retrieve-synchronously url)
+      (set-buffer-multibyte nil)
+      (goto-char (point-min))
+      (forward-paragraph)
+      (forward-line)
+      (delete-region (point-min) (point))
+      (if (>= url-http-response-status 400)
+          (error "HTTP error: %s" (buffer-string)))
+      (call-process-region nil nil "gzip" t t nil "-d")
+      (write-region nil nil mbox))
+    (gnus-group-read-ephemeral-group "emacs"
+                                     `(nndoc ,query
+                                             (nndoc-address ,mbox)))))
 
 ;;;; backup
 
