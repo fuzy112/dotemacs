@@ -1,5 +1,9 @@
 2025-09-15  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Fix nerd-icons support in debview-mode.
+
+2025-09-15  Zhengyi Fu  <i@fuzy.me>
+
 	Add timeout to web-based tools
 
 	* site-lisp/gptel-tools.el (gptel-tools--url-retrieve): Add new
