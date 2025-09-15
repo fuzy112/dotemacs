@@ -2525,6 +2525,7 @@ not used, but is required by the hook."
 
 ;;;; email and gnus
 
+(setq message-mail-alias-type 'ecomplete)
 (setq mm-discouraged-alternatives '("text/html" "text/richtext"))
 
 (after-load! gnus-art

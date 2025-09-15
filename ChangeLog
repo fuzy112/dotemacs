@@ -1,5 +1,9 @@
 2025-09-15  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (message-mail-alias-type): Set to `ecomplete'.
+
+2025-09-15  Zhengyi Fu  <i@fuzy.me>
+
 	Update transient levels
 
 	* transient/levels.el (magit-merge): Add set level of
