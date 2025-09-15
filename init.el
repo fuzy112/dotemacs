@@ -552,6 +552,11 @@ attributes."
 (add-hook 'tar-mode-hook           #'nerd-icons-multimodal-mode)
 (add-hook 'grep-mode-hook          #'nerd-icons-grep-mode)
 
+(after-load! (:and nerd-icons-multimodal deb-view)
+  (add-hook 'debview-mode-hook #'nerd-icons-multimodal-refresh)
+  (pcase-dolist (`(,_func . ,alist) nerd-icons-multimodal-functions-alist)
+    (setf (alist-get 'debview-mode alist) (alist-get 'tar-mode alist))))
+
 ;; show nerd-icons on mode-line
 (setq-default mode-line-buffer-identification
               (seq-union '((:eval (nerd-icons-icon-for-buffer)) " ")
