@@ -1,3 +1,10 @@
+2025-09-15  Zhengyi Fu  <i@fuzy.me>
+
+	Update transient levels
+
+	* transient/levels.el (magit-merge): Add set level of
+	--strategy-option to 1.
+
 2025-09-12  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (+gnus-read-ephemeral-emacs-search-group): New command.
