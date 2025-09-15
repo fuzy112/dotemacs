@@ -1,5 +1,15 @@
 2025-09-15  Zhengyi Fu  <i@fuzy.me>
 
+	Add timeout to web-based tools
+
+	* site-lisp/gptel-tools.el (gptel-tools--url-retrieve): Add new
+	optional arg `timeout'.
+	(gptel-tools--read-url-async, gptel-tools--search-web-async)
+	(gptel-tools--search-jira-issues-async)
+	(gptel-tools--get-jira-issue-async): Use it.
+
+2025-09-15  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (message-mail-alias-type): Set to `ecomplete'.
 
 2025-09-15  Zhengyi Fu  <i@fuzy.me>
