@@ -1,5 +1,14 @@
 2025-09-15  Zhengyi Fu  <i@fuzy.me>
 
+	Pre-build binaries for rime, pdf-tools and telega
+
+	* init.el: Remove auto-build logic for pdf-tools.
+	* packages.el: Update recipe for rime, pdf-tools and telega.
+	* site-lisp/telega-config.el (telega-server-command): Set to the
+	prebuilt telega server to binary.
+
+2025-09-15  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Fix nerd-icons support in debview-mode.
 
 2025-09-15  Zhengyi Fu  <i@fuzy.me>
