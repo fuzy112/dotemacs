@@ -251,7 +251,8 @@ CALLBACK is called with a result string."
 	  (insert content))
       (:success (gptel-tools--ediff-file-with-buffer
 		 (expand-file-name file-path) preview-buffer callback))
-      (error (funcall callback (format "An error occurred: %S" err))))))
+      (error (funcall callback (list :error "An error occurred: %S"
+				     :internal-error (gptel--to-string err)))))))
 
 (defun gptel-tools--insert-async (callback file-path insert-line new-string)
   "Insert NEW-STRING at line INSERT-LINE in FILE-PATH, then run CALLBACK.
@@ -269,7 +270,8 @@ CALLBACK is called with no arguments on success."
 	  (insert new-string ?\n))
       (:success (gptel-tools--ediff-file-with-buffer
 		 (expand-file-name file-path) edit-buffer callback))
-      (error (funcall callback (format "An error occurred: %S" err))))))
+      (error (funcall callback (list :error "An error occurred: %S"
+				     :internal-error (gptel--to-string err)))))))
 
 (defun gptel-tools--string-replace-async (callback file-path old-string new-string)
   "Replace OLD-STRING with NEW-STRING in FILE-PATH, confirming via ediff.
@@ -323,7 +325,7 @@ Errors if OLD-STRING is empty, missing, or not unique."
 			  (goto-char (point-min)))))
 		    nil t)))
     (error (funcall callback (list :error "Failed to run grep"
-				   :internal-error err)))))
+				   :internal-error (gptel--to-string err))))))
 
 (defun gptel-tools--shell-command-async (callback command working-dir)
   "Run COMMAND in WORKING-DIR and call CALLBACK with its output string."
@@ -458,7 +460,7 @@ Returns a list of diagnostic objects in JSON format."
     (condition-case err
 	(url-retrieve url cb)
       (error (funcall cb (list :error "Failed to retrieve URL"
-			       :internal-error err))))))
+			       :internal-error (gptel--to-string err)))))))
 
 (defun gptel-tools--read-url-async (callback url)
   "Call CALLBACK with parsed contents of URL, or (:error MESSAGE ...)."
@@ -478,7 +480,7 @@ Returns a list of diagnostic objects in JSON format."
 			  (shr-insert-document dom)
 			  (buffer-substring-no-properties (point-min) (point-max)))))))
        (error (funcall callback (list :error "Failed to read url"
-				      :internal-error err)))))
+				      :internal-error (gptel--to-string err))))))
    url 30))
 
 (defun gptel-tools--insert-link-strip-href (dom)
@@ -529,7 +531,7 @@ a relative or protocol-based URL, append the URL in parentheses."
 	(funcall callback
 		 (list :error
 		       "Failed to fetch the URL"
-		       :internal-error err)))))
+		       :internal-error (gptel--to-string err))))))
    (format "https://html.duckduckgo.com/html/?q=%s" query)
    30))
 
@@ -567,10 +569,10 @@ a relative or protocol-based URL, append the URL in parentheses."
 		     (funcall callback (json-parse-buffer))))
 	       (t (kill-buffer (current-buffer)))
 	       (error (funcall callback (list :error "Failed to search issues"
-					      :internal-error err1))))))
+					      :internal-error (gptel--to-string err1)))))))
 	 url 30))
     (error (funcall callback (list :error "Failed to search jira"
-				   :internal-error err)))))
+				   :internal-error (gptel--to-string err))))))
 
 (defun gptel-tools--get-jira-issue-async (callback issue-id)
   (condition-case err
@@ -593,10 +595,10 @@ a relative or protocol-based URL, append the URL in parentheses."
 		     (funcall callback (json-parse-buffer))))
 	       (t (kill-buffer (current-buffer)))
 	       (error (funcall callback (list :error "Failed to get issue"
-					      :internal-error err1))))))
+					      :internal-error (gptel--to-string err1)))))))
 	 url 30))
     (error (funcall callback (list :error "Failed to get issue"
-				   :internal-error err)))))
+				   :internal-error (gptel--to-string err))))))
 
 
 (gptel-make-tool
