@@ -1886,6 +1886,11 @@ current buffer state and calls REPORT-FN when done."
 
 (advice-add 'elisp-flymake-byte-compile :override #'straight-flymake-byte-compile)
 
+;;;; Semantic highlighting
+
+(add-hook 'emacs-lisp-mode-hook #'semel-mode)
+(add-hook 'emacs-lisp-mode-hook #'cursor-sensor-mode)
+
 ;;;; ielm
 
 (setq ielm-history-file-name (locate-user-emacs-file "ielm-history.eld.zst"))
