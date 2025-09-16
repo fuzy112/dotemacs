@@ -1058,6 +1058,7 @@ value for USE-OVERLAYS."
   "M-y"                   #'consult-yank-pop            ; orig. yank-pop
   ;; M-g bindings in `goto-map'
   "M-g e"                 #'consult-compile-error
+  "M-g r"                 #'consult-grep-match
   "M-g f"                 #'consult-flymake             ; Alternative: consult-flycheck
   "M-g g"                 #'consult-goto-line           ; orig. goto-line
   "M-g M-g"               #'consult-goto-line           ; orig. goto-line
