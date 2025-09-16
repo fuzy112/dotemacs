@@ -115,6 +115,7 @@ See `after-load-1!' for SPEC."
 This can be useful for code that should not be byte-compiled.
 For example, code that uses macros which might not be
 available at compile time."
+  (declare (indent 0))
   `(eval ',(macroexp-progn body) lexical-binding))
 
 (defvar dotemacs--project-hooks nil)
