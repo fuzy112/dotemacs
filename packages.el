@@ -87,11 +87,14 @@
 
 (straight-use-package 'apheleia)
 
+;;;; Code highlighing
+
+(straight-use-package '(semel :host github :repo "eshelyaron/semel"))
+
 ;;; Search
 
 (straight-use-package 'rg)
 (straight-use-package '(p-search :host github :repo "zkry/p-search" :files (:defaults "extensions")))
-
 
 ;;; UI
 
