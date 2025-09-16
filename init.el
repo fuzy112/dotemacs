@@ -658,8 +658,11 @@ font-locking and indentation."
   (keymap-set help-map "H" #'+mail-to-help-gnu-emacs)
   (keymap-set help-map "M" #'+gnus-read-ephemeral-emacs-search-group))
 
+(defvar url-http-response-status)
 (defun +gnus-read-ephemeral-emacs-search-group (query include-all)
   (interactive "sQuery: \nP")
+  (require 'mml)
+  (require 'mm-url)
   (let* ((url (format "https://yhetil.org/emacs/?q=%s&x=m" (url-hexify-string query)))
          (mbox (make-temp-file "mbox-"))
          (boundary (mml-compute-boundary '()))
