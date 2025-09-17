@@ -159,8 +159,10 @@ Presents UI for accepting, rejecting, or requesting changes to the edit."
 	 (iterate-fn (lambda (&optional quit)
 		       (interactive (list t))
 		       (funcall complete-fn
-				(concat  "User rejected the changes: "
-					 (read-string "Requested changes: ")))
+				(concat "User rejected the changes.  \
+The changes have not been applied.  The user request you to do the \
+following:\n"
+					(read-string "Requested changes: ")))
 		       (when quit
 			 (ediff-quit nil))))
 	 (quit-func (lambda ()

@@ -1,5 +1,15 @@
 2025-09-17  Zhengyi Fu  <i@fuzy.me>
 
+	Improve gptel-tools user rejection message clarity
+
+	* site-lisp/gptel-tools.el (gptel-tools--ediff-file-with-buffer):
+	Update the tool results for rejected changes to provide clearer
+	feedback when users reject proposed changes.  The message now
+	clearly states that changes were not applied and provides better
+	formatting for user-requested modifications.
+
+2025-09-17  Zhengyi Fu  <i@fuzy.me>
+
 	Improve help-fns-function-source-code robustness
 
 	* init.el (help-fns-function-source-code): Rewrite function to use
