@@ -45,7 +45,7 @@
 
 (defvar telega-cache-dir)
 (define-advice telega (:around (&rest args) default-directory)
-  (let ((default-directory telega-cache-dir))
+  (let ((default-directory "~/"))
     (apply args)))
 
 (provide 'telega-config)
