@@ -1,5 +1,12 @@
 2025-09-17  Zhengyi Fu  <i@fuzy.me>
 
+	Really fix `+gnus-read-ephemeral-emacs-search-group'
+
+	* init.el (+gnus-read-ephemeral-emacs-search-group): Require
+	`gnus-group'.
+
+2025-09-17  Zhengyi Fu  <i@fuzy.me>
+
 	* site-lisp/telega-config.el (telega): set default-directory to ~/.
 
 2025-09-17  Zhengyi Fu  <i@fuzy.me>
