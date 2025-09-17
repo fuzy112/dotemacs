@@ -1,3 +1,11 @@
+2025-09-17  Zhengyi Fu  <i@fuzy.me>
+
+	Improve help-fns-function-source-code robustness
+
+	* init.el (help-fns-function-source-code): Rewrite function to use
+	condition-case to ignore errors.  Preserve buffer and point
+	positions during source code extraction.
+
 2025-09-16  Zhengyi Fu  <i@fuzy.me>
 
 	Fix +gnus-read-ephemeral-emacs-search-group

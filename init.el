@@ -622,31 +622,35 @@ attributes."
   (add-to-list 'help-fns-describe-function-functions #'help-fns-function-source-code 'append))
 
 (defun help-fns-function-source-code (function)
-  "Insert the Emacs Lisp source code for FUNCTION into current buffer.
+  "Insert the Emacs Lisp source code for FUNCTION into the current buffer.
 FUNCTION should be a symbol naming a function.  The source code is
 extracted from the function's definition and inserted with proper
 font-locking and indentation."
-  (when-let* ((position (ignore-errors
-                          (let ((inhibit-interaction t))
-                            (find-function-noselect function))))
-              (buffer (car position))
-              (point (cdr position))
-              (text (with-current-buffer buffer
-                      (save-excursion
-                        (goto-char point)
-                        (end-of-defun)
-                        (let ((end (point)))
-                          (beginning-of-defun)
-                          (font-lock-ensure (point) end)
-                          (buffer-substring (point) end))))))
-    ;; Add indentation properties to make the source code align properly
-    (add-text-properties 0 (length text)
-                         '(line-prefix (space :align-to 2))
-                         text)
-    ;; Insert the source code with section header
-    (insert "\n  Source code:\n\n")
-    (insert text)
-    (insert "\n\n")))
+  (condition-case nil
+      (pcase-let* ((saved-points nil)
+                   (`(,buffer . ,point)
+                    (let ((inhibit-interaction t)
+                          (find-file-hook
+                           (cons (lambda ()
+                                   (push (cons (current-buffer) (point)) saved-points))
+                                 find-file-hook)))
+                      (save-window-excursion
+                        (find-function-noselect function))))
+                   (text (with-current-buffer buffer
+                           (save-excursion
+                             (goto-char point)
+                             (end-of-defun)
+                             (let ((end (point)))
+                               (beginning-of-defun)
+                               (font-lock-ensure (point) end)
+                               (setq text (buffer-substring (point) end)))))))
+        (add-text-properties 0 (length text)
+                             '(line-prefix (space :align-to 2))
+                             text)
+        (insert "\n  Source code:\n\n")
+        (insert text)
+        (insert "\n\n"))
+    (error nil)))
 
 (defun +mail-to-help-gnu-emacs ()
   (interactive)
