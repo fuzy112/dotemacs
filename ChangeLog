@@ -1,3 +1,12 @@
+2025-09-18  Zhengyi Fu  <i@fuzy.me>
+
+	Improve buffer cleanup in straight repository review
+
+	* init.el (+straight-review-updated-repos): Add cleanup of magit
+	process buffers for better resource management.  Capture magit
+	process buffer in proc-buf variable and ensure it's killed when no
+	longer active.
+
 2025-09-17  Zhengyi Fu  <i@fuzy.me>
 
 	Really fix `+gnus-read-ephemeral-emacs-search-group'
