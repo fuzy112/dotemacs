@@ -242,7 +242,8 @@ changed packages."
         (seq-do-indexed
          (lambda (repo-dir index)
            (let* ((default-directory repo-dir)
-                  (buf (magit-status-setup-buffer)))
+                  (buf (magit-status-setup-buffer))
+                  (proc-buf (magit-process-buffer 'no-display)))
              (unwind-protect
                  (save-window-excursion
                    (add-hook 'kill-buffer-hook #'exit-recursive-edit nil t)
@@ -264,7 +265,10 @@ changed packages."
                (when (buffer-live-p buf)
                  (with-current-buffer buf
                    (kill-local-variable 'kill-buffer-hook))
-                 (kill-buffer buf)))))
+                 (kill-buffer buf))
+               (and (buffer-live-p proc-buf)
+                    (null (get-buffer-process proc-buf))
+                    (kill-buffer proc-buf)))))
          updated-repos)
       (redisplay)
       (straight-check-all)
@@ -1295,7 +1299,8 @@ value for USE-OVERLAYS."
                    (mode . magit-cherry-mode)
                    (mode . magit-diff-mode)
                    (mode . magit-process-mode)
-                   (mode . magit-status-mode)))
+                   (mode . magit-status-mode)
+                   (mode . magit-stash-mode)))
          ("Apps" (or
                   (mode . elfeed-search-mode)
                   (mode . elfeed-show-mode)
