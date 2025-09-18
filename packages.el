@@ -224,6 +224,14 @@
 (straight-use-package '(video-trimmer :host github :repo "xenodium/video-trimmer"
 				      :fork (:host github :repo "fuzy112/video-trimmer")))
 (straight-use-package '(whisper :host github :repo "natrys/whisper.el"))
+(straight-use-package
+ `(reader :type git :host codeberg :repo "divyaranjan/emacs-reader"
+	  :files ("*.el" "render-core.so")
+	  :pre-build ("cc" "-fPIC" "-shared" "-o" "render-core.so"
+		      "-DLINUX" "render/elisp-helpers.c"
+		      "render/mupdf-helpers.c" "render/render-core.c"
+		      "render/render-theme.c" "render/render-threads.c"
+		      "-lmupdf")))
 
 ;;; Email
 (straight-use-package 'autocrypt)
