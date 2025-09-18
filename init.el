@@ -670,6 +670,7 @@ font-locking and indentation."
 (defun +gnus-read-ephemeral-emacs-search-group (query include-all)
   (interactive "sQuery: \nP")
   (require 'gnus-group)
+  (require 'mm-url)
   (let* ((url (format "https://yhetil.org/emacs/?q=%s&x=m" (url-hexify-string query)))
          (mbox (make-temp-file "mbox-"))
          (boundary (mml-compute-boundary '()))
