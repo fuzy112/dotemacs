@@ -218,7 +218,7 @@
 			       :files (:defaults "etc" "contrib" "server/telega-server")))
 (straight-use-package 'ement)
 (straight-use-package 'show-font)
-(straight-use-package 'elfeed)
+(straight-use-package '(elfeed :fork (:host github :repo "fuzy112/elfeed")))
 (straight-use-package '(eat :files (:defaults "integration" "term" "terminfo")
 			    :fork (:host codeberg :repo "fuzy/emacs-eat")))
 (straight-use-package '(video-trimmer :host github :repo "xenodium/video-trimmer"
