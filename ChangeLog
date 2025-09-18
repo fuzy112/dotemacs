@@ -1,5 +1,12 @@
 2025-09-18  Zhengyi Fu  <i@fuzy.me>
 
+	Mark ctags-optlib-mode as obsolete
+
+	* site-lisp/ctags-optlib-mode.el:
+	* site-lisp/obsoletes/ctags-optlib-mode.el:
+
+2025-09-18  Zhengyi Fu  <i@fuzy.me>
+
 	Improve buffer cleanup in straight repository review
 
 	* init.el (+straight-review-updated-repos): Add cleanup of magit
