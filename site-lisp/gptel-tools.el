@@ -101,12 +101,16 @@ restored after ediff completes.
 STARTUP-HOOKS are additional hooks to run after ediff setup."
   (let ((orig-window (selected-window))
 	(orig-window-config (current-window-configuration))
-	(ediff-window-setup-function #'ediff-setup-windows-plain))
+	(ediff-window-setup-function #'ediff-setup-windows-plain)
+	(mode (with-current-buffer old-buffer major-mode)))
     ;; make sure the current window is not a not side window
     (when (window-parameter orig-window 'window-side)
       (select-window (get-window-with-predicate
 		      (lambda (win)
 			(null (window-parameter win 'window-side))))))
+    (with-current-buffer new-buffer
+      (unless (derived-mode-p mode)
+	(funcall mode)))
     (ediff-buffers
      old-buffer new-buffer
      (cons (lambda ()
