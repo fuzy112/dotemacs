@@ -1,5 +1,12 @@
 2025-09-19  Zhengyi Fu  <i@fuzy.me>
 
+	Update transient level of magit-log
+
+	* transient/levels.el (magit-log): Set level of
+	transient:magit-log-infix-arguments:--no-merges to 1.
+
+2025-09-19  Zhengyi Fu  <i@fuzy.me>
+
 	Add package `unfo-fu-session'
 
 	* init.el: Enable `undo-fu-session-global-mode'.
