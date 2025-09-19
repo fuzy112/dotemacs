@@ -161,7 +161,6 @@
 			      :build (:not compile)))
 (straight-use-package 'gptel-aibo)
 (straight-use-package '(claude-code-ide :host github :repo "manzaltu/claude-code-ide.el"))
-(straight-use-package '(eca :host github :repo "editor-code-assistant/eca-emacs" :files ("*.el")))
 (straight-use-package '(whisper :host github :repo "natrys/whisper.el"))
 
 ;;; Modal editing

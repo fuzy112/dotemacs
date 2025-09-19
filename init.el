@@ -2752,12 +2752,6 @@ of feed configurations without modifying init files."
 (setq claude-code-ide-cli-path
       (expand-file-name "scripts/claude" user-emacs-directory))
 
-;;;; ECA
-
-(after-load! consult
-  (alist-setq! consult-mode-histories
-    eca-chat-mode '(eca-chat--history eca-chat--history-index markdown-beginning-of-line)))
-
 ;;;; logos
 
 (keymap-global-set "<f8>" #'logos-focus-mode)
