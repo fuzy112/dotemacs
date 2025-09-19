@@ -1,5 +1,10 @@
 2025-09-19  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/dotemacs-core.el (alist-setq!): Use `named-let'.
+	(project-remove-hook!): Use defun instead of cl-defun.
+
+2025-09-19  Zhengyi Fu  <i@fuzy.me>
+
 	Refactor quick-window to use named-let and add hooks
 
 	* site-lisp/quick-window.el (quick-window-jump): Replace cl-loop with

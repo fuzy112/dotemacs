@@ -22,8 +22,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(eval-when-compile (require 'cl-lib))
-
 (defmacro alist-set! (alist key value &optional testfn)
   "Associate KEY with VALUE in ALIST.
 Equality with KEY is tested by TESTFN, defaulting to `eq'."
@@ -42,16 +40,22 @@ Otherwise, equality is tested by `equal'.
 
 \(fn ALIST &rest [KEY VALUE]...)"
   (declare (indent 1))
-  (cl-loop for (key value) on args by #'cddr
-           when (eq (car-safe key) 'quote)
-           do (byte-compile-warn-x key "The key should not be quoted")
-           collect `(alist-set! ,alist ,(macroexp-quote key) ,value
-                                ,(macroexp-quote
-                                  (cond ((symbolp key) #'eq)
-                                        ((integerp key) #'eql)
-                                        (t #'equal))))
-           into body
-           finally return (macroexp-progn body)))
+  (named-let loop
+      ((args args)
+       (body nil))
+    (if (null args)
+        (macroexp-progn body)
+      (let ((key (car args))
+            (value (cadr args)))
+        (when (eq (car-safe key) 'quote)
+          (byte-compile-warn-x key "The key should not be quoted"))
+        (loop (cddr args)
+              (cons `(alist-set! ,alist ,(macroexp-quote key) ,value
+                                 ,(macroexp-quote
+                                   (cond ((symbolp key) #'eq)
+                                         ((integerp key) #'eql)
+                                         (t #'equal))))
+                    body))))))
 
 (defmacro alist-delq! (alist &rest keys)
   "Remove elements of ALIST whose `car' equals to any of KEYS.
@@ -146,8 +150,9 @@ See `dotemacs--project-hook-function' for details." hook))
     (cl-pushnew function (alist-get hook (alist-get project dotemacs--project-hooks nil t #'equal)))
     (add-hook hook project-hook-function depth)))
 
-(cl-defun project-remove-hook! (hook function &optional (project (project-current)))
-  "Remove FUNCTION from HOOK in PROJECT."
+(defun project-remove-hook! (hook function &optional project)
+  "Remove FUNCTION from HOOK in PROJECT.
+PROJECT defaults to the current project."
   (interactive
    (let* ((project (project-current t))
           (hooks (alist-get project dotemacs--project-hooks nil t #'equal))
@@ -155,6 +160,8 @@ See `dotemacs--project-hook-function' for details." hook))
           (functions (alist-get hook hooks nil t #'equal))
           (function (intern (completing-read "Function: " functions nil t))))
      (list hook function project)))
+  (when (null project)
+    (setq project (project-current)))
   (let ((functions (alist-get hook (alist-get project dotemacs--project-hooks nil t #'equal))))
     (setf (alist-get hook (alist-get project dotemacs--project-hooks nil t #'equal) nil t)
           (delq function functions))))
