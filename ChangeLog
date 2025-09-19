@@ -1,6 +1,6 @@
 2025-09-19  Zhengyi Fu  <i@fuzy.me>
 
-	Remvoe eca
+	Remove eca
 
 	* packages.el (eca): Remove package.
 	* init.el: Remove configuration for eca.
