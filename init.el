@@ -2964,6 +2964,11 @@ of feed configurations without modifying init files."
                                    "www.kagi.com/assistant?q=" ""]
     "yhetil.org" "https://yhetil.org"))
 
+
+;;;; undo-fu-session
+
+(undo-fu-session-global-mode)
+
 ;;;; vundo
 
 (after-load! vundo

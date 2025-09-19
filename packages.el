@@ -173,9 +173,9 @@
 
 (straight-use-package 'devdocs)
 
-
 ;;; Undo
 (straight-use-package 'vundo)
+(straight-use-package 'undo-fu-session)
 
 ;;; Org
 (straight-use-package 'org-modern)
