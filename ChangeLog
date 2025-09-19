@@ -1,5 +1,12 @@
 2025-09-19  Zhengyi Fu  <i@fuzy.me>
 
+	Remvoe eca
+
+	* packages.el (eca): Remove package.
+	* init.el: Remove configuration for eca.
+
+2025-09-19  Zhengyi Fu  <i@fuzy.me>
+
 	Update transient level of magit-log
 
 	* transient/levels.el (magit-log): Set level of
