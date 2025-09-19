@@ -23,7 +23,6 @@
 ;;; Code:
 
 (require 'posframe)
-(eval-when-compile (require 'cl-lib))
 
 (defgroup quick-window nil
   "Quickly jump to a window."
@@ -33,6 +32,15 @@
 (defcustom quick-window-keys "htnsueoaid"
   "Letters used jump to windows."
   :type 'string)
+
+
+(defcustom quick-window-pre-jump-hook nil
+  "Hook run before `quick-window-jump' changes the selected window."
+  :type 'hook)
+
+(defcustom quick-window-post-jump-hook (list 'pulse-momentary-highlight-one-line)
+  "Hook run after jumping to a window with quick-window."
+  :type 'hook)
 
 (defface quick-window-label
   '((((class color) (min-colors 256)) :foreground "white" :background "red" :weight bold)
@@ -73,35 +81,43 @@ all existing frames."
 			 (t nil)))
        (windows (window-list-1 nil nil all-frames)))
     (if (length< windows 3)
-	(cl-loop for win in windows
-		 with current-win = (selected-window)
-		 when (not (eq win current-win))
-		 return (progn
-			  (select-frame-set-input-focus (window-frame win))
-			  (select-window win)))
-      (let (posframes)
-	(unwind-protect
-	    (let (window-map)
-	      (cl-loop with sorted-windows = (sort windows #'quick-window--before-p)
-		       for win in sorted-windows
-		       for letter being the elements of quick-window-keys
-		       do (setq window-map (plist-put window-map letter win #'eql))
-		       do (with-selected-window win
-			    (posframe-show (quick-window--get-posframe-buffer letter)
-					   :poshandler #'posframe-poshandler-window-top-left-corner))
-		       do (push (quick-window--get-posframe-buffer letter) posframes))
-	      (redisplay)
-	      (let* ((key (read-key "Jump to window: "))
-		     (win (plist-get window-map key #'eql)))
-		(when (eql key ?\C-g)
-		  (keyboard-quit))
-		(unless win
-		  (user-error "No such window: `%s'" (key-description (list key))))
-		(unless (eq (window-frame win) (selected-frame))
-		  (select-frame-set-input-focus (window-frame win)))
-		(select-window win)))
-	  (mapc #'posframe-hide posframes)))))
-  (pulse-momentary-highlight-one-line))
+	(named-let loop
+	    ((windows windows))
+	  (cond ((null windows)
+		 nil)
+		((eq (selected-window) (car windows))
+		 (loop (cdr windows)))
+		(t
+		 (run-hooks 'quick-window-pre-jump-hook)
+		 (select-frame-set-input-focus (window-frame (car windows)))
+		 (select-window (car windows))
+		 (run-hooks 'quick-window-post-jump-hook))))
+      (named-let loop
+	  ((windows (seq-sort #'quick-window--before-p windows))
+	   (letters quick-window-keys)
+	   (window-map nil))
+	(if windows
+	    (let* ((win (car windows))
+		   (letter (seq-first letters))
+		   (buf (quick-window--get-posframe-buffer letter)))
+	      (with-selected-window win
+		(posframe-show buf
+			       :poshandler #'posframe-poshandler-window-top-left-corner))
+	      (unwind-protect
+		  (loop (cdr windows)
+			(seq-drop letters 1)
+			(nconc (list letter win) window-map))
+		(posframe-hide buf)))
+	  (let* ((key (read-key "Jump to window: "))
+		 (win (plist-get window-map key #'eql)))
+	    (when (eql key ?\C-g)
+	      (keyboard-quit))
+	    (unless win
+	      (user-error "No such window: `%s'" (key-description (list key))))
+	    (run-hooks 'quick-window-pre-jump-hook)
+	    (select-frame-set-input-focus (window-frame win))
+	    (select-window win))))
+      (run-hooks 'quick-window-post-jump-hook))))
 
 (provide 'quick-window)
 ;;; quick-window.el ends here
