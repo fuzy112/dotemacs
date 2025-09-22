@@ -906,7 +906,7 @@ falls back to its default handling."
 ;;;; crm
 
 (defvar crm-separator)
-(when (version< emacs-version "31.1")
+(when (version< emacs-version "31.0")
   (define-advice completing-read-multiple
       (:filter-args (args) show-crm-separator)
     "Add prompt indicator to `completing-read-multiple'.
