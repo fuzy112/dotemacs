@@ -527,7 +527,48 @@ attributes."
        ((t :family "IosevkaTerm SS04" :fontset "fontset-term")))
      ;; eat
      '(eat-term-font-0
-       ((t :family "IosevkaTerm SS04" :fontset "fontset-term"))))))
+       ((t :family "IosevkaTerm SS04" :fontset "fontset-term")))
+     ;; semel
+     `(semel-symbol-at-mouse
+       ((t :background ,(modus-themes-get-color-value 'bg-active))))
+     `(semel-free-variable
+       ((t :inherit underline)))
+     `(semel-condition
+       ((t :foreground ,(modus-themes-get-color-value 'red-intense))))
+     `(semel-major-mode-name
+       ((t :foreground ,(modus-themes-get-color-value 'green-faint))))
+     `(semel-face
+       ((t :inherit font-lock-type-face)))
+     `(semel-symbol-type
+       ((t :foreground ,(modus-themes-get-color-value 'blue)
+           :inherit font-lock-function-call-face)))
+     `(semel-symbol-type-definition
+       ((t :foreground ,(modus-themes-get-color-value 'blue-warmer)
+           :inherit font-lock-function-name-face)))
+     `(semel-function-call
+       ((t :inherit font-lock-function-call-face)))
+     `(semel-non-local-exit
+       ((t :inherit elisp-function-call
+           :underline ,(modus-themes-get-color-value 'red-intense))))
+     `(semel-macro-call
+       ((t :inherit font-lock-keyword-face)))
+     `(semel-special-form
+       ((t :inherit elisp-macro-call)))
+     `(semel-throw-tag
+       ((t :inherit font-lock-constant-face)))
+     `(semel-feature
+       ((t :inherit font-lock-constant-face)))
+     `(semel-rx
+       ((t :foreground ,(modus-themes-get-color-value 'magenta-intense))))
+     `(semel-theme
+       ((t :inherit font-lock-constant-face)))
+     `(semel-binding-variable
+       ((t :slant italic
+           :inherit font-lock-variable-name-face)))
+     `(semel-bound-variable
+       ((t :slant italic)))
+     `(semel-variable-at-point
+       ((t :inherit bold))))))
 
 (if (daemonp)
     ;; Refresh theme for new frames in server mode
