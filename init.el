@@ -549,12 +549,12 @@ attributes."
      `(semel-function-call
        ((t :inherit font-lock-function-call-face)))
      `(semel-non-local-exit
-       ((t :inherit elisp-function-call
+       ((t :inherit semel-function-call
            :underline ,(modus-themes-get-color-value 'red-intense))))
      `(semel-macro-call
        ((t :inherit font-lock-keyword-face)))
      `(semel-special-form
-       ((t :inherit elisp-macro-call)))
+       ((t :inherit semel-macro-call)))
      `(semel-throw-tag
        ((t :inherit font-lock-constant-face)))
      `(semel-feature
