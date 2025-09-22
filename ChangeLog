@@ -1,5 +1,9 @@
 2025-09-22  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (dotemacs-theme-refresh): Improve semel face customization.
+
+2025-09-22  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (dotemacs-theme-refresh): Customize faces for semel.
 
 2025-09-19  Zhengyi Fu  <i@fuzy.me>
