@@ -3043,23 +3043,9 @@ of feed configurations without modifying init files."
 
 ;;;; mode-line
 
-(blackout 'meow-insert-mode)
-(blackout 'meow-normal-mode)
-(blackout 'meow-motion-mode)
-(blackout 'meow-beacon-mode)
-(blackout 'meow-keypad-mode)
-(after-load! ws-butler (blackout 'ws-butler-mode))
-(after-load! paredit (blackout 'paredit-mode))
-(after-load! whitespace (blackout 'whitespace-mode))
-(after-load! goggles (blackout 'goggles-mode))
-(after-load! jinx (blackout 'jinx-mode))
-(after-load! gcmh (blackout 'gcmh-mode))
-(after-load! eldoc (blackout 'eldoc-mode))
-(after-load! valign (blackout 'valign-mode))
-(after-load! abbrev (blackout 'abbrev-mode))
-(after-load! olivetti (blackout 'olivetti-mode))
-(after-load! nerd-icons-multimodal (blackout 'nerd-icons-multimodal-mode))
-(after-load! clipetty (blackout 'clipetty-mode))
+(setopt doom-modeline-gnus t
+        doom-modeline-irc t)
+(doom-modeline-mode)
 
 ;;;; uptime
 

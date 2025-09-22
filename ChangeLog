@@ -1,5 +1,15 @@
 2025-09-22  Zhengyi Fu  <i@fuzy.me>
 
+	Introduce doom-modeline
+
+	* init.el (doom-modeline-gnus, doom-modeline-irc): Set to t.
+	Enable `doom-modeline-mode'.
+	Removed blackout configuration.
+	* packages.el: Add doom-modeline.  Remove blackout.
+
+
+2025-09-22  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (dotemacs-theme-refresh): Improve semel face customization.
 
 2025-09-22  Zhengyi Fu  <i@fuzy.me>
