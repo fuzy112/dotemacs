@@ -532,11 +532,12 @@ attributes."
      `(semel-symbol-at-mouse
        ((t :background ,(modus-themes-get-color-value 'bg-active))))
      `(semel-free-variable
-       ((t :inherit underline)))
+       ((t :inherit (font-lock-variable-name-face underline))))
      `(semel-condition
        ((t :foreground ,(modus-themes-get-color-value 'red-intense))))
      `(semel-major-mode-name
-       ((t :foreground ,(modus-themes-get-color-value 'green-faint))))
+       ((t :foreground ,(modus-themes-get-color-value 'green-faint)
+           :inherit font-lock-type-face)))
      `(semel-face
        ((t :inherit font-lock-type-face)))
      `(semel-symbol-type
@@ -566,7 +567,8 @@ attributes."
        ((t :slant italic
            :inherit font-lock-variable-name-face)))
      `(semel-bound-variable
-       ((t :slant italic)))
+       ((t :slant italic
+           :inherit font-lock-variable-use-face)))
      `(semel-variable-at-point
        ((t :inherit bold))))))
 
