@@ -112,7 +112,7 @@
 
 
 ;;;; Mode line
-(straight-use-package 'blackout)
+(straight-use-package 'doom-modeline)
 
 ;;;; Font-lock
 (straight-use-package 'outline-minor-faces)
