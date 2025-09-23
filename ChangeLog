@@ -1,5 +1,12 @@
 2025-09-23  Zhengyi Fu  <i@fuzy.me>
 
+	Remove helper function after loading
+
+	* init.el (completion-in-region@corfu): Unbound the function after
+	loading corfu.
+
+2025-09-23  Zhengyi Fu  <i@fuzy.me>
+
 	Fix font setting error on tty
 
 	* init.el (nerd-icons-set-font): Add advice to make it only take
