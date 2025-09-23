@@ -372,8 +372,8 @@ changed packages."
   ;; Assign fontsets to faces
   (set-frame-font "-*-Iosevka SS04-medium-*" t t) ; NOTE (set-face-attribute 'default nil :fontset "XXX") doesn't work
   (set-face-attribute 'variable-pitch nil :family "Iosevka Aile" :weight 'medium :fontset "fontset-variable")
-  (set-face-attribute 'fixed-pitch nil :family "Iosevka Fixed Slab" :weight 'medium :fontset "fontset-fixed")
-  (set-face-attribute 'fixed-pitch-serif nil :family "Iosevka Fixed Slab" :weight 'medium :fontset "fontset-fixed")
+  (set-face-attribute 'fixed-pitch nil :family "Iosevka Term Slab" :weight 'medium :fontset "fontset-term")
+  (set-face-attribute 'fixed-pitch-serif nil :family "Iosevka Term Slab" :weight 'medium :fontset "fontset-term")
 
   (run-hooks '+fontsets-initialize-hook))
 
