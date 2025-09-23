@@ -615,9 +615,12 @@ attributes."
               (seq-union '((:eval (nerd-icons-icon-for-buffer)) " ")
                          mode-line-buffer-identification))
 
-(after-load! nerd-icons
+(define-advice nerd-icons-set-font (:around (&rest args) if-display-graphic-p)
   (when (display-graphic-p)
-    (nerd-icons-set-font))
+    (apply args)))
+
+(after-load! nerd-icons
+  (nerd-icons-set-font)
   (add-hook '+fontsets-initialize-hook #'nerd-icons-set-font)
   (add-hook 'server-after-make-frame-hook #'nerd-icons-set-font))
 
