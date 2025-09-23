@@ -237,7 +237,7 @@ PROMPT is passed to `completing-read'."
 
 (defun good-doc-goto-target ()
   "Go to the original position in a Good-Doc buffer."
-  (interactive)
+  (interactive nil good-doc-mode)
   (goto-char (point-min))
   (when-let* ((entry (car good-doc--stack))
               (id (car (last (string-split (get-text-property 0 'link entry) "#"))))
@@ -248,7 +248,7 @@ PROMPT is passed to `completing-read'."
 
 (defun good-doc-go-back ()
   "Go to the previously displayed entry in this DevDocs buffer."
-  (interactive)
+  (interactive nil good-doc-mode)
   (unless (cadr good-doc--stack)
     (user-error "No previous entry"))
   (push (pop good-doc--stack) good-doc--forward-stack)
@@ -256,14 +256,14 @@ PROMPT is passed to `completing-read'."
 
 (defun good-doc-go-forward ()
   "Go to the next entry in this DevDocs buffer."
-  (interactive)
+  (interactive nil good-doc-mode)
   (unless (car good-doc--forward-stack)
     (user-error "No next entry"))
   (good-doc--render (pop good-doc--forward-stack)))
 
 (defun good-doc-next-entry (count)
   "Go forward COUNT entries in this document."
-  (interactive "p")
+  (interactive "p" good-doc-mode)
   (let* ((current-entry (car good-doc--stack))
          (doc (get-text-property 0 'doc current-entry))
          (index (get-text-property 0 'index current-entry)) ;FIXME
@@ -272,7 +272,7 @@ PROMPT is passed to `completing-read'."
 
 (defun good-doc-previous-entry (count)
   "Go backward COUNT entries in this document."
-  (interactive "p")
+  (interactive "p" good-doc-mode)
   (good-doc-next-entry (- count)))
 
 (defun good-doc-goto-page (doc page)
@@ -283,7 +283,8 @@ PROMPT is passed to `completing-read'."
      (list doc
            (completing-read "Go to page: "
                             (append (good-doc--pages doc) nil)
-                            nil t nil 'good-doc-history))))
+                            nil t nil 'good-doc-history)))
+   good-doc-mode)
   (let* ((page (cond ((stringp page) page)
                      ((numberp page) (elt (good-doc--pages doc) page))))
          (entry (seq-find (lambda (it) (string= it page))
@@ -292,16 +293,18 @@ PROMPT is passed to `completing-read'."
 
 (defun good-doc-first-page (doc)
   "Go to the first page of DOC."
-  (interactive (list (get-text-property 0 'doc (car good-doc--stack))))
+  (interactive (list (get-text-property 0 'doc (car good-doc--stack)))
+               good-doc-mode)
   (good-doc-goto-page doc 0))
 
 (defun good-doc-last-page (doc)
-  (interactive (list (get-text-property 0 'doc (car good-doc--stack))))
+  (interactive (list (get-text-property 0 'doc (car good-doc--stack)))
+               good-doc-mode)
   (good-doc-goto-page doc (1- (length (good-doc--pages doc)))))
 
 (defun good-doc-next-page (count)
   "Go forward COUNT pages in this document."
-  (interactive "p")
+  (interactive "p" good-doc-mode)
   (let* ((current (car good-doc--stack))
          (doc  (get-text-property 0 'doc current))
          (pages (good-doc--pages doc))
@@ -314,7 +317,7 @@ PROMPT is passed to `completing-read'."
 
 (defun good-doc-previous-page (count)
   "Go backward COUNT pages in this document."
-  (interactive "p")
+  (interactive "p" good-doc-mode)
   (good-doc-next-page (- count)))
 
 (let ((map good-doc-mode-map))
