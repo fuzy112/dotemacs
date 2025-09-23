@@ -1,5 +1,9 @@
 2025-09-23  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Delay loading of doom-modeline to `emacs-startup-hook'.
+
+2025-09-23  Zhengyi Fu  <i@fuzy.me>
+
 	Remove helper function after loading
 
 	* init.el (completion-in-region@corfu): Unbound the function after
