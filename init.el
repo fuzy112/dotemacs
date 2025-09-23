@@ -572,6 +572,12 @@ attributes."
      `(semel-variable-at-point
        ((t :inherit bold))))))
 
+(defun dotemacs-theme-disable ()
+  "Disable the dotemacs theme."
+  (interactive)
+  (push 'dotemacs custom-enabled-themes)
+  (disable-theme 'dotemacs))
+
 (if (daemonp)
     ;; Refresh theme for new frames in server mode
     (add-hook 'server-after-make-frame-hook #'dotemacs-theme-refresh t)
