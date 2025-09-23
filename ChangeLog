@@ -1,5 +1,15 @@
 2025-09-23  Zhengyi Fu  <i@fuzy.me>
 
+	Do mode tagging for good-doc.el
+
+	* site-lisp/good-doc.el (good-doc-goto-target, good-doc-go-back)
+	(good-doc-go-forward, good-doc-next-entry)
+	(good-doc-previous-entry, good-doc-goto-page)
+	(good-doc-first-page, good-doc-last-page, good-doc-next-page)
+	(good-doc-previous-page):
+
+2025-09-23  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (dotemacs-theme-disable): New command.
 
 2025-09-22  Zhengyi Fu  <i@fuzy.me>
