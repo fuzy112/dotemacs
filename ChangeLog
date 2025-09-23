@@ -1,5 +1,12 @@
 2025-09-23  Zhengyi Fu  <i@fuzy.me>
 
+	Fix incorrect fixed pitch face when xft is used
+
+	* init.el (+init-fontsets): Use fontset-term instead of fontset-fixed in
+	fixed-pitch faces.
+
+2025-09-23  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Delay loading of doom-modeline to `emacs-startup-hook'.
 
 2025-09-23  Zhengyi Fu  <i@fuzy.me>
