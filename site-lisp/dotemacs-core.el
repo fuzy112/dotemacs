@@ -22,6 +22,16 @@
 ;;; Commentary:
 ;;; Code:
 
+(defmacro delq! (elt place)
+  (macroexp-let2 macroexp-copyable-p x elt
+    (gv-letplace (getter setter) place
+      (funcall setter `(delq ,elt ,getter)))))
+
+(defmacro remq! (elt place)
+  (macroexp-let2 macroexp-copyable-p x elt
+    (gv-letplace (getter setter) place
+      (funcall setter `(remq ,elt ,getter)))))
+
 (defmacro alist-set! (alist key value &optional testfn)
   "Associate KEY with VALUE in ALIST.
 Equality with KEY is tested by TESTFN, defaulting to `eq'."
@@ -30,7 +40,7 @@ Equality with KEY is tested by TESTFN, defaulting to `eq'."
 (defmacro alist-del! (alist key &optional testfn)
   "Remove the first element of ALIST whose `car' equals KEY.
 Equality with KEY is tested by TESTFN, defaulting to `eq'."
-  `(setf (alist-get ,key ,alist nil t ,testfn) nil))
+  `(setf (alist-get ,key ,alist :dotemacs-delete t ,testfn) :dotemacs-delete))
 
 (defmacro alist-setq! (alist &rest args)
   "Associate each of KEY with VALUE in ALIST.
