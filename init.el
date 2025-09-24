@@ -376,7 +376,7 @@ changed packages."
   (set-face-attribute 'fixed-pitch-serif nil :family "Iosevka Term Slab" :weight 'medium :fontset "fontset-term")
 
   (after-init!
-   (run-hooks '+fontsets-initialize-hook)))
+    (run-hooks '+fontsets-initialize-hook)))
 
 (defvar +fontsets-initialized nil)
 
