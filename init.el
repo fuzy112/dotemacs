@@ -2131,24 +2131,15 @@ confirmed."
  'remote-direct-async-process
  '((tramp-direct-async-process . t)))
 
-(connection-local-set-profiles
- '(:application tramp :protocol "ssh")
- 'remote-direct-async-process)
-
-(setq magit-tramp-pipe-stty-settings 'pty)
-
 (connection-local-set-profile-variables
  'remote-explicit-shell-file-name
  '((explicit-shell-file-name . "/bin/bash")))
 
-(connection-local-set-profiles
- '(:application tramp :protocol "ssh")
- 'remote-explicit-shell-file-name)
-
-(connection-local-set-profiles
- '(:application tramp :protocol "scpx")
- 'remote-explicit-shell-file-name)
-
+(dolist (protocol '("ssh" "sshx" "scp" "scpx"))
+  (connection-local-set-profiles
+   `(:application tramp :protocol ,protocol)
+   'remote-explicit-shell-file-name
+   'remote-direct-async-process))
 
 ;;;; vc
 
@@ -2192,6 +2183,7 @@ confirmed."
 (after-load! magit
   (transient-set-default-level 'magit:--gpg-sign 1)
   (transient-set-default-level 'magit:--signoff 1)
+  (setopt magit-tramp-pipe-stty-settings 'pty)
   (setopt magit-openpgp-default-signing-key "ABE50B31E2F0C94AC4585BC78D97BF3F6BFA0BDA")
   (setopt magit-format-file-function #'magit-format-file-nerd-icons)
   (advice-add #'magit-maybe-start-credential-cache-daemon :after '+magit--ccdp-no-query)

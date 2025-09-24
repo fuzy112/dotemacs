@@ -1,5 +1,13 @@
 2025-09-24  Zhengyi Fu  <i@fuzy.me>
 
+	Update tramp settings
+
+	* init.el: Enable connection-local profile
+	`remote-explicit-shell-file-name' and
+	`remote-direct-async-process' for all ssh-based tramp protocols.
+
+2025-09-24  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (straight-flymake-byte-compile): Use
 	`elisp-flymake-byte-compile--executable'
 
