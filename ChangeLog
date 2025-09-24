@@ -1,5 +1,14 @@
 2025-09-24  Zhengyi Fu  <i@fuzy.me>
 
+	Update dotemacs-core macros
+
+	* site-lisp/dotemacs-core.el (delq!, remq!): New macros.
+	(alist-del!): Use a special keyword as the default value to avoid
+	conflicts.
+	* init.el: Use `delq!'.
+
+2025-09-24  Zhengyi Fu  <i@fuzy.me>
+
 	Update tramp settings
 
 	* init.el: Enable connection-local profile

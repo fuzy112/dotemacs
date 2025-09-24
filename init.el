@@ -429,7 +429,7 @@ changed packages."
 
 ;; Remove `dotemacs' from the list of enabled custom themes to prevent
 ;; it from being disable when using commands like `consult-theme'.
-(setq custom-enabled-themes (remq 'dotemacs custom-enabled-themes))
+(delq! 'dotemacs custom-enabled-themes)
 
 (defun dotemacs-theme-refresh (&optional _theme)
   "Customize and set faces for the dotemacs theme.
