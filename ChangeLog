@@ -1,3 +1,14 @@
+2025-09-24  Zhengyi Fu  <i@fuzy.me>
+
+	Optimize theme and font configuration
+
+	* init.el (+init-fontsets): Run `+fontsets-initilize-hook' after
+	init.
+	Require modus-themes unconditionally.
+
+	* site-lisp/dotemacs-core.el (after-init-1!): New function.
+	(after-init!): New macro.
+
 2025-09-23  Zhengyi Fu  <i@fuzy.me>
 
 	Fix incorrect fixed pitch face when xft is used

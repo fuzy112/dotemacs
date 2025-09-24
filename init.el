@@ -375,7 +375,8 @@ changed packages."
   (set-face-attribute 'fixed-pitch nil :family "Iosevka Term Slab" :weight 'medium :fontset "fontset-term")
   (set-face-attribute 'fixed-pitch-serif nil :family "Iosevka Term Slab" :weight 'medium :fontset "fontset-term")
 
-  (run-hooks '+fontsets-initialize-hook))
+  (after-init!
+   (run-hooks '+fontsets-initialize-hook)))
 
 (defvar +fontsets-initialized nil)
 
@@ -410,13 +411,12 @@ changed packages."
       modus-themes-slanted-constructs t
       modus-themes-variable-pitch-ui  nil
       modus-themes-to-toggle          '(modus-vivendi modus-operandi))
+(require-theme 'modus-themes)
+(setopt modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
 
-(after-load! modus-themes
-  (setopt modus-themes-common-palette-overrides modus-themes-preset-overrides-faint))
-
-(when (not custom-enabled-themes)
-  (require-theme 'modus-themes)
-  (modus-themes-load-theme 'modus-operandi))
+(after-init!
+  (when (not custom-enabled-themes)
+    (modus-themes-load-theme 'modus-operandi)))
 
 ;; Define a dedicated theme `dotemacs' instead of using the default
 ;; `user' theme to prevent the Emacs customization system from

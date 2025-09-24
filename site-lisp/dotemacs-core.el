@@ -114,6 +114,22 @@ See `after-load-1!' for SPEC."
   (declare (indent 1))
   `(after-load-1! ,spec (with-no-warnings ,@body)))
 
+(defun after-init-1! (func)
+  "Execute FUNC after Emacs has finished initialization.
+If Emacs has already finished initializing, execute FUNC immediately.
+Otherwise, add FUNC to `after-init-hook'."
+  (if after-init-time
+      (funcall func)
+    (add-hook 'after-init-hook func 50)))
+
+(defmacro after-init! (&rest body)
+  "Execute BODY after Emacs has finished initialization.
+See `after-init-1!'."
+  (declare (indent 0))
+  (let ((body-var (gensym "body-")))
+    `(let ((,body-var (lambda () ,@body)))
+       (after-init-1! ,body-var))))
+
 (defmacro with-no-compile! (&rest body)
   "Evaluate BODY without byte-compiling it.
 This can be useful for code that should not be byte-compiled.
