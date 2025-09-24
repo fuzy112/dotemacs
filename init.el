@@ -2469,8 +2469,7 @@ Then refresh all windows displaying the current buffer."
 ;;;; savehist
 
 (setq savehist-file (locate-user-emacs-file '("savehist.eld.zst")))
-(setq savehist-additional-variables '(kill-ring
-                                      register-alist
+(setq savehist-additional-variables '((kill-ring . 5)
                                       compile-command
                                       corfu-history))
 (add-hook 'after-init-hook #'savehist-mode)

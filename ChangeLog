@@ -1,5 +1,12 @@
 2025-09-24  Zhengyi Fu  <i@fuzy.me>
 
+	Limit savehist saved kill-ring entries
+
+	* init.el (savehist-additional-variables): Limit maximum saved
+	kill-ring entries to 5.
+
+2025-09-24  Zhengyi Fu  <i@fuzy.me>
+
 	Optimize theme and font configuration
 
 	* init.el (+init-fontsets): Run `+fontsets-initilize-hook' after
