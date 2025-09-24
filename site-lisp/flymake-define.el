@@ -259,8 +259,8 @@ function or a form."
                                (buffer-file-name) t))))
                   (file (or (buffer-file-name) tmpfile))
                   (cleanup (lambda () (when tmpfile
-                                        (delete-file tmpfile)
-                                        (setf tmpfile nil))))
+                                   (delete-file tmpfile)
+                                   (setf tmpfile nil))))
                   (cmd ,(cond ((symbolp command)
                                `(append (,command) nil))
                               ((memq (car-safe command) '(function symbol-function lambda))
@@ -272,39 +272,35 @@ function or a form."
              (when-let* ((cell (memq :input cmd)))
                (setcar cell file))
 
-             (condition-case err
-                 (save-restriction
-                   (widen)
-                   (setq
-                    ,proc-var
-                    (flymake-define--make-process-in-mntns
-                     :mount-points (and file tmpfile (not ,no-namespace)
-                                        `((,file ,tmpfile "ro,bind")))
-                     :name ,name-string
-                     :buffer (generate-new-buffer ,(format " *%s*" name))
-                     :command cmd
-                     :noquery t
-                     :connection-type 'pipe
-                     :sentinel
-                     (funcall
-                      ,(flymake-define--sentinel-factor
-                        :filter-color filter-color
-                        :debug debug
-                        :patterns patterns
-                        :proc-var proc-var)
-                      :report-fn report-fn
-                      :source source
-                      ,@(and (eq input :file)
-                             '(:file file))
-                      :cleanup cleanup)))
-                   ,@(if (eq input :stdin)
-                         `((process-send-region
-                            ,proc-var
-                            (point-min) (point-max))
-                           (process-send-eof ,proc-var))))
-               ((debug t)
-                (funcall cleanup)
-                (signal (car err) (cdr err)))))))
+             (save-restriction
+               (widen)
+               (setq
+                ,proc-var
+                (flymake-define--make-process-in-mntns
+                 :mount-points (and file tmpfile (not ,no-namespace)
+                                    `((,file ,tmpfile "ro,bind")))
+                 :name ,name-string
+                 :buffer (generate-new-buffer ,(format " *%s*" name))
+                 :command cmd
+                 :noquery t
+                 :connection-type 'pipe
+                 :sentinel
+                 (funcall
+                  ,(flymake-define--sentinel-factor
+                    :filter-color filter-color
+                    :debug debug
+                    :patterns patterns
+                    :proc-var proc-var)
+                  :report-fn report-fn
+                  :source source
+                  ,@(and (eq input :file)
+                         '(:file file))
+                  :cleanup cleanup)))
+               ,@(if (eq input :stdin)
+                     `((process-send-region
+                        ,proc-var
+                        (point-min) (point-max))
+                       (process-send-eof ,proc-var)))))))
        (setq-default ,name (symbol-function',name)))))
 
 (provide 'flymake-define)
