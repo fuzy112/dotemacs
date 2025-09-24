@@ -1898,7 +1898,7 @@ current buffer state and calls REPORT-FN when done."
        (make-process
         :name "straight-flymake-byte-compile"
         :buffer output-buffer
-        :command `(,(expand-file-name invocation-name invocation-directory)
+        :command `(,(elisp-flymake-byte-compile--executable)
                    "-Q"
                    "--batch"
                    "--eval"
