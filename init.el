@@ -3357,6 +3357,11 @@ Otherwise disable it."
   "M-l"    #'downcase-dwim
   "M-u"    #'upcase-dwim
   "<f5>"   #'project-recompile)
+
+;;;; Enabling some disabled commands
+
+(put 'help-fns-edit-variable 'disabled nil)
+(put 'list-timers 'disabled nil)
 
 
 ;;;; post-init
