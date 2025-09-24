@@ -527,50 +527,54 @@ attributes."
        ((t :family "IosevkaTerm SS04" :fontset "fontset-term")))
      ;; eat
      '(eat-term-font-0
-       ((t :family "IosevkaTerm SS04" :fontset "fontset-term")))
-     ;; semel
-     `(semel-symbol-at-mouse
-       ((t :background ,(modus-themes-get-color-value 'bg-active))))
-     `(semel-free-variable
-       ((t :inherit (font-lock-variable-name-face underline))))
-     `(semel-condition
-       ((t :foreground ,(modus-themes-get-color-value 'red-intense))))
-     `(semel-major-mode-name
-       ((t :foreground ,(modus-themes-get-color-value 'green-faint)
-           :inherit font-lock-type-face)))
-     `(semel-face
-       ((t :inherit font-lock-type-face)))
-     `(semel-symbol-type
-       ((t :foreground ,(modus-themes-get-color-value 'blue)
-           :inherit font-lock-function-call-face)))
-     `(semel-symbol-type-definition
-       ((t :foreground ,(modus-themes-get-color-value 'blue-warmer)
-           :inherit font-lock-function-name-face)))
-     `(semel-function-call
-       ((t :inherit font-lock-function-call-face)))
-     `(semel-non-local-exit
-       ((t :inherit semel-function-call
-           :underline ,(modus-themes-get-color-value 'red-intense))))
-     `(semel-macro-call
-       ((t :inherit font-lock-keyword-face)))
-     `(semel-special-form
-       ((t :inherit semel-macro-call)))
-     `(semel-throw-tag
-       ((t :inherit font-lock-constant-face)))
-     `(semel-feature
-       ((t :inherit font-lock-constant-face)))
-     `(semel-rx
-       ((t :foreground ,(modus-themes-get-color-value 'magenta-intense))))
-     `(semel-theme
-       ((t :inherit font-lock-constant-face)))
-     `(semel-binding-variable
-       ((t :slant italic
-           :inherit font-lock-variable-name-face)))
-     `(semel-bound-variable
-       ((t :slant italic
-           :inherit font-lock-variable-use-face)))
-     `(semel-variable-at-point
-       ((t :inherit bold))))))
+       ((t :family "IosevkaTerm SS04" :fontset "fontset-term"))))
+    (when (modus-themes--current-theme)
+      (modus-themes-with-colors
+        (custom-theme-set-faces
+         'dotemacs
+         ;; semel
+         `(semel-symbol-at-mouse
+           ((,c :background ,bg-active)))
+         `(semel-free-variable
+           ((,c :inherit (font-lock-variable-name-face underline))))
+         `(semel-condition
+           ((,c :foreground ,red-intense)))
+         `(semel-major-mode-name
+           ((,c :foreground ,green-faint
+                :inherit font-lock-type-face)))
+         `(semel-face
+           ((,c :inherit font-lock-type-face)))
+         `(semel-symbol-type
+           ((,c :foreground ,blue
+                :inherit font-lock-function-call-face)))
+         `(semel-symbol-type-definition
+           ((,c :foreground ,blue-warmer
+                :inherit font-lock-function-name-face)))
+         `(semel-function-call
+           ((,c :inherit font-lock-function-call-face)))
+         `(semel-non-local-exit
+           ((,c :inherit semel-function-call
+                :underline ,red-intense)))
+         `(semel-macro-call
+           ((,c :inherit font-lock-keyword-face)))
+         `(semel-special-form
+           ((,c :inherit semel-macro-call)))
+         `(semel-throw-tag
+           ((,c :inherit font-lock-constant-face)))
+         `(semel-feature
+           ((,c :inherit font-lock-constant-face)))
+         `(semel-rx
+           ((,c :foreground ,magenta-intense)))
+         `(semel-theme
+           ((,c :inherit font-lock-constant-face)))
+         `(semel-binding-variable
+           ((,c :slant italic
+                :inherit font-lock-variable-name-face)))
+         `(semel-bound-variable
+           ((,c :slant italic
+                :inherit font-lock-variable-use-face)))
+         `(semel-variable-at-point
+           ((,c :inherit bold))))))))
 
 (defun dotemacs-theme-disable ()
   "Disable the dotemacs theme."
