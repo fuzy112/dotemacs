@@ -2593,10 +2593,11 @@ Then refresh all windows displaying the current buffer."
   (add-hook hook #'lin-mode))
 
 (after-load! lin
-  (setopt lin-face 'lin-magenta)
-  (setopt lin-mode-hooks
-          (seq-union lin-mode-hooks (custom--standard-value 'lin-mode-hooks)))
-  (lin-global-mode))
+  (setq lin-face 'lin-magenta)
+  (setq lin-mode-hooks
+        (seq-union lin-mode-hooks (custom--standard-value 'lin-mode-hooks)))
+  (unless lin-global-mode
+    (lin-global-mode)))
 
 ;; Highlight current line in the error buffer after running `next-error'.
 (declare-function hl-line-highlight "hl-line.el")

@@ -1,5 +1,12 @@
 2025-09-25  Zhengyi Fu  <i@fuzy.me>
 
+	Workaround an Emacs bug
+
+	* init.el: Do not reenable `lin-global-mode' when reloading
+	init.el.
+
+2025-09-25  Zhengyi Fu  <i@fuzy.me>
+
 	* early-init.el: Only enable igc idle timer when supported.
 
 2025-09-25  Zhengyi Fu  <i@fuzy.me>
