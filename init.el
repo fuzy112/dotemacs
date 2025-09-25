@@ -973,8 +973,8 @@ stores the message in the ring buffer."
 (defun message-insert-ring (message)
   "Insert MESSAGE into the message ring buffer when enabled.
 Process MESSAGE through `message-ring-insert-functions' when
-`message-ring-insert' is non-nil. Each function can transform or
-filter the message. Return MESSAGE unchanged.
+`message-ring-insert' is non-nil.  Each function can transform or
+filter the message.  Return MESSAGE unchanged.
 
 This function is designed to be added to `set-message-functions'."
   (prog1 message
