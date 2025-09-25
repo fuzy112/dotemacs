@@ -1,3 +1,10 @@
+2025-09-25  Zhengyi Fu  <i@fuzy.me>
+
+	Support emacs build without threads
+
+	* init.el (diff-hl-update-async): Set to the value of (fboundp
+	'make-thread).
+
 2025-09-24  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (help-fns-edit-variable, list-timers): Enable commands.
