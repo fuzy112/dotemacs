@@ -1,5 +1,9 @@
 2025-09-25  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Disable meow-indicator since we use doom-modeline.
+
+2025-09-25  Zhengyi Fu  <i@fuzy.me>
+
 	Fix error `C-<space>' undefined
 
 	* site-lisp/modify-other-keys.el

@@ -143,16 +143,16 @@
    '("`"        . meow-universal-argument)))
 
 (meow-setup)
-(alist-setq! meow-replace-state-name-list
-  normal "🅝"
-  motion "🅼"
-  keypad "🅺"
-  beacon "🅑"
-  insert "🅘")
-(defun +meow-setup-indicator ()
-  (when meow-global-mode
-    (meow-setup-indicator)))
-(add-hook 'meow-global-mode-hook #'+meow-setup-indicator)
+;; (alist-setq! meow-replace-state-name-list
+;;   normal "🅝"
+;;   motion "🅼"
+;;   keypad "🅺"
+;;   beacon "🅑"
+;;   insert "🅘")
+;; (defun +meow-setup-indicator ()
+;;   (when meow-global-mode
+;;     (meow-setup-indicator)))
+;; (add-hook 'meow-global-mode-hook #'+meow-setup-indicator)
 (meow-global-mode)
 
 (when (treesit-available-p)
