@@ -1,5 +1,13 @@
 2025-09-25  Zhengyi Fu  <i@fuzy.me>
 
+	Improve message-insert-ring
+
+	* init.el (message-ring-insert): Use `ring-remove+insert+extend'
+	to make sure the message is not duplicated.
+	(message-ring-inhibit-regexps): Update default ignore regexps.
+
+2025-09-25  Zhengyi Fu  <i@fuzy.me>
+
 	Workaround an Emacs bug
 
 	* init.el: Do not reenable `lin-global-mode' when reloading

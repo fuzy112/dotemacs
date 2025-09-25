@@ -928,8 +928,9 @@ falls back to its default handling."
 When nil, messages are not stored in the ring buffer.")
 
 (defvar message-ring-inhibit-regexps
-  '("\\`Keypad: "
-    " is undefined\\'")
+  (list "Keypad: "
+        " is undefined\\'"
+        "\\.\\{3\\}\\(?:done\\)?\\'")
   "List of regexps matching messages that should not be stored.
 Messages matching any regexp in this list will be excluded from the ring.")
 
@@ -966,7 +967,7 @@ in `message-ring-inhibit-regexps' and should be discarded."
   "Insert MESSAGE into `message-ring' buffer.
 This is the final function in the processing chain that actually
 stores the message in the ring buffer."
-  (ring-insert message-ring message)
+  (ring-remove+insert+extend message-ring message)
   t)
 
 (defun message-insert-ring (message)
