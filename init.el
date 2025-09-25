@@ -2302,7 +2302,8 @@ new record is started."
                                      (change  . "改")
                                      (unknown . "疑")
                                      (ignored . "略")))
-(setq diff-hl-update-async t)
+
+(setq diff-hl-update-async (fboundp 'make-thread))
 
 (define-advice diff-hl-margin-ensure-visible (:override () auto-width)
   "Ensure that diff-hl margin is wide enough to display all symbols.
