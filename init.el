@@ -918,6 +918,101 @@ falls back to its default handling."
     "\\<Log rev,s\\>" 'magit-rev)
   (marginalia-mode))
 
+;;;; Echo message
+
+(defvar message-ring (make-ring 100)
+  "Ring buffer to store recent messages.")
+
+(defvar message-ring-insert t
+  "When non-nil, store messages in `message-ring'.
+When nil, messages are not stored in the ring buffer.")
+
+(defvar message-ring-inhibit-regexps
+  '("\\`Keypad: "
+    " is undefined\\'")
+  "List of regexps matching messages that should not be stored.
+Messages matching any regexp in this list will be excluded from the ring.")
+
+(defvar message-ring-insert-functions
+  '(message-ring-ignore-keystroke
+    message-ring-inhibit
+    message-ring-insert)
+  "List of functions to process messages before insertion.
+Each function is called with the message string and should return:
+- A string to continue processing with the next function
+- nil to stop processing and discard the message
+- Any other value to stop processing")
+
+(defun message-ring-ignore-keystroke (message)
+  "Filter out incomplete keystroke messages from MESSAGE.
+If MESSAGE ends with '-' (indicating an incomplete key sequence),
+attempt to validate it as a key. Return valid key or original MESSAGE."
+  (let ((msg message))
+    (when (string-suffix-p "-" msg)
+      (setq msg (substring msg 0 -1)))
+    (or (ignore-errors (key-valid-p msg))
+        message)))
+
+(defun message-ring-inhibit (message)
+  "Check if MESSAGE should be inhibited from ring storage.
+Return MESSAGE if it should be stored, nil if it matches any pattern
+in `message-ring-inhibit-regexps' and should be discarded."
+  (or (and (consp message-ring-inhibit-regexps)
+           (string-match-p (mapconcat #'identity message-ring-inhibit-regexps "\\|")
+                           message))
+      message))
+
+(defun message-ring-insert (message)
+  "Insert MESSAGE into `message-ring' buffer.
+This is the final function in the processing chain that actually
+stores the message in the ring buffer."
+  (ring-insert message-ring message)
+  t)
+
+(defun message-insert-ring (message)
+  "Insert MESSAGE into the message ring buffer when enabled.
+Process MESSAGE through `message-ring-insert-functions' when
+`message-ring-insert' is non-nil. Each function can transform or
+filter the message. Return MESSAGE unchanged.
+
+This function is designed to be added to `set-message-functions'."
+  (prog1 message
+    (when message-ring-insert
+      (catch 'message-handled
+        (dolist (fn message-ring-insert-functions)
+          (let ((result (funcall fn message)))
+            (cond
+             ((stringp result) (setq message result))
+             ((null result) nil)
+             (t (throw 'message-handled nil)))))))))
+
+(add-hook 'set-message-functions #'message-insert-ring)
+
+(defun message-ring-read (prompt)
+  "Read a message from the ring with PROMPT using completion.
+Return the selected message string from `message-ring'."
+  (let* ((messages (ring-elements message-ring))
+         (messages (mapcar #'substring-no-properties messages))
+         (metadata `((category . string)
+                     (display-sort-function . ,#'identity)
+                     (cycle-sort-function . ,#'identity)))
+         (table (completion-table-with-metadata messages metadata)))
+    (completing-read prompt table nil t)))
+
+(defun copy-message (&optional arg)
+  "Copy a message from the message ring to the kill ring.
+With prefix argument ARG, prompt for a message from the history to copy.
+Otherwise copy the most recent message (index 0)."
+  (interactive "P")
+  (let* ((msg (if arg
+                  (message-ring-read "Message to copy: ")
+                (ring-ref message-ring 0)))
+         ;; Prevent this operation from adding to message history
+         (message-ring-insert nil)
+         (message-log-max nil))
+    (kill-new msg)
+    (message "Message copied to kill-ring: %s" msg)))
+
 ;;;; crm
 
 (defvar crm-separator)
@@ -3357,7 +3452,8 @@ Otherwise disable it."
   "M-c"    #'capitalize-dwim
   "M-l"    #'downcase-dwim
   "M-u"    #'upcase-dwim
-  "<f5>"   #'project-recompile)
+  "<f5>"   #'project-recompile
+  "C-M-S-w" #'copy-message)
 
 ;;;; Enabling some disabled commands
 

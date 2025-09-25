@@ -1,5 +1,23 @@
 2025-09-25  Zhengyi Fu  <i@fuzy.me>
 
+	New command `copy-message'
+
+	* init.el (message-ring, message-ring-insert)
+	(message-ring-inhibit-regexps, message-ring-insert-functions): New
+	vars.
+	(message-ring-ignore-keystroke, message-ring-inhibit)
+	(message-ring-insert): New functions.  Added to
+	`message-ring-insert-functions'.
+	(message-insert-ring): New function.  Added to
+	`set-message-functions'.
+	(message-ring-read): New function.
+	(copy-message): New command.  Bound C-M-S-w to it.
+
+	* site-lisp/pp-posframe.el (pp-posframe-display-value): Do not
+	include `=>' in the message.
+
+2025-09-25  Zhengyi Fu  <i@fuzy.me>
+
 	Support emacs build without threads
 
 	* init.el (diff-hl-update-async): Set to the value of (fboundp
