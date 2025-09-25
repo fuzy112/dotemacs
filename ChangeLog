@@ -1,5 +1,13 @@
 2025-09-25  Zhengyi Fu  <i@fuzy.me>
 
+	Fix error `C-<space>' undefined
+
+	* site-lisp/modify-other-keys.el
+	(modify-other-keys--setup-input-decode-map): Use SPC instead of
+	<space>.
+
+2025-09-25  Zhengyi Fu  <i@fuzy.me>
+
 	Improve message-insert-ring
 
 	* init.el (message-ring-insert): Use `ring-remove+insert+extend'
