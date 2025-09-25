@@ -51,7 +51,7 @@
   (cl-loop for (key . base) in '(("<backspace>" . ?\d)
                                  ("<return>" . ?\r)
                                  ("<tab>" . ?\t)
-                                 ("<space>" . ?\s)
+                                 ("SPC" . ?\s)
                                  ("<escape>" . ?\e))
            do (modify-other-keys--define-key base key)))
 
