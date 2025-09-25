@@ -1,5 +1,9 @@
 2025-09-25  Zhengyi Fu  <i@fuzy.me>
 
+	* early-init.el: Only enable igc idle timer when supported.
+
+2025-09-25  Zhengyi Fu  <i@fuzy.me>
+
 	New command `copy-message'
 
 	* init.el (message-ring, message-ring-insert)
