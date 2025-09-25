@@ -102,7 +102,8 @@
     (add-text-properties 1 2 `(line-prefix "⇒ ")))
   (when (posframe-workable-p)
     (pp-posframe-mode))
-  (message "=> %S" value)
+  (message "%s" (with-current-buffer pp-posframe-buffer-name
+		  (buffer-string)))
   (redisplay))
 
 ;;;###autoload
