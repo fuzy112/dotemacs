@@ -32,10 +32,10 @@ This is morally equivalent to (setf PLACE (delq ELT PLACE)), except that
 PLACE is evaluated only once (after ELT)."
   (macroexp-let2 macroexp-copyable-p x elt
     (gv-letplace (getter setter) place
-      (funcall setter `(delq ,elt ,getter)))))
+      (funcall setter `(delq ,x ,getter)))))
 
 (defmacro remq! (elt place)
-  "Set PLACE to a new list with all occurrences of ELT removed.
+  "Set PLACE to a copy of PLACE's value with all occurrences of ELT removed.
 
 ELT is compared with elements of PLACE using `eq'.
 PLACE is a generalized variable.
@@ -44,7 +44,31 @@ This is morally equivalent to (setf PLACE (remq ELT PLACE)), except that
 PLACE is evaluated only once (after ELT)."
   (macroexp-let2 macroexp-copyable-p x elt
     (gv-letplace (getter setter) place
-      (funcall setter `(remq ,elt ,getter)))))
+      (funcall setter `(remq ,x ,getter)))))
+
+(defmacro delete! (elt place)
+  "Delete members of the sequence stored in PLACE which are `equal' to ELT.
+
+PLACE is a generalized variable.  The sequence stored in PLACE may be
+destructively modified if the sequence is a list.
+
+This is morally equivalent to (setf PLACE (delete ELT PLACE)), except
+that PLACE is evaluated only once (after ELT)."
+  (macroexp-let2 macroexp-copyable-p x elt
+    (gv-letplace (getter setter) place
+      (funcall setter `(delete ,x ,getter)))))
+
+(defmacro remove! (elt place)
+  "Set PLACE to a copy of PLACE's value with all occurrences of ELT removed.
+
+ELT is compared with `equal'.
+PLACE must be a generalized variable whose value is a sequence.
+
+This is morally equivalent to (setf PLACE (remove ELT PLACE)), except
+that PLACE is evaluated only once (after ELT)."
+  (macroexp-let2 macroexp-copyable-p x elt
+    (gv-letplace (getter setter) place
+      (funcall setter `(remove ,x ,getter)))))
 
 (defmacro alist-set! (alist key value &optional testfn)
   "Associate KEY with VALUE in ALIST.
