@@ -1,5 +1,12 @@
 2025-09-26  Zhengyi Fu  <i@fuzy.me>
 
+	Temporarily disable timeout support in gptel-tools--url-retrieve
+
+	* site-lisp/gptel-tools.el (gptel-tools--url-retrieve): Comment out
+	timer.  Add fixme.
+
+2025-09-26  Zhengyi Fu  <i@fuzy.me>
+
 	Use `completion-table-with-metadata'
 
 	* site-lisp/obsoletes/gtkdoc.el (gtkdoc-lookup):

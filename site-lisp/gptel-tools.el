@@ -453,6 +453,7 @@ Returns a list of diagnostic objects in JSON format."
 (defvar url-http-response-status)
 
 (defun gptel-tools--url-retrieve (callback url &optional timeout)
+  ;; FIXME cancel the process when timeout
   (let* ((timer nil)
 	 (cb (lambda (result)
 	       (unwind-protect
@@ -461,8 +462,8 @@ Returns a list of diagnostic objects in JSON format."
 		   (cancel-timer timer)
 		   (setq timer nil))
 		 (setq callback nil)))))
-    (when (numberp timeout)
-      (run-at-time timeout cb (list :error "Timed out")))
+    ;; (when (numberp timeout)
+    ;;   (run-at-time timeout nil cb (list :error "Timed out")))
     (condition-case err
 	(url-retrieve url cb)
       (error (funcall cb (list :error "Failed to retrieve URL"
