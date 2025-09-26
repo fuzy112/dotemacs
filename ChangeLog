@@ -1,5 +1,9 @@
 2025-09-26  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (pp-default-function): Declare.
+
+2025-09-26  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+straight-repo-up-to-date-p): Check push remote too.
 
 2025-09-26  Zhengyi Fu  <i@fuzy.me>
