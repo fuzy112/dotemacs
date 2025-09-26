@@ -240,11 +240,9 @@ PROJECT defaults to the current project."
                   (and (symbolp x)
                        x
                        (string-suffix-p "-mode" (symbol-name x))))
-                (map-values auto-mode-alist))))
-    (lambda (str pred action)
-      (if (eq action 'metadata)
-          '(metadata . ((category . command)))
-        (complete-with-action action modes str pred)))))
+                (map-values auto-mode-alist)))
+        (metadata '((category . command))))
+    (completion-table-with-metadata modes metadata)))
 
 (defun enable-minor-mode-in-project (mode project major-modes)
   "Enable MODE in all buffers of any MAJOR-MODES in PROJECT."

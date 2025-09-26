@@ -460,13 +460,9 @@ otherwise, offer only installed documents."
 
 INITIAL-INPUT is passed to `completing-read'."
   (let* ((cands (good-doc--entry-candidates documents))
-         (metadata '(metadata
-                     (category . good-doc)
+         (metadata '((category . good-doc)
                      (annotation-function . good-doc--annotate)))
-         (coll (lambda (str pred action)
-                 (if (eq action 'metadata)
-                     metadata
-                   (complete-with-action action cands str pred))))
+         (coll (completion-table-with-metadata cands metadata))
          (cand (completing-read prompt coll nil t initial-input
                                 'good-doc-history
                                 (thing-at-point 'symbol))))
