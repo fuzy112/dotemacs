@@ -1,5 +1,12 @@
 2025-09-26  Zhengyi Fu  <i@fuzy.me>
 
+	Fix modify-other-keys--init
+
+	* site-lisp/modify-other-keys.el (modify-other-keys--init):
+	Use setf with delete to make sure the value is actually deleted.
+
+2025-09-26  Zhengyi Fu  <i@fuzy.me>
+
 	* packages.el: Do not use built-in packages any more.
 
 2025-09-26  Zhengyi Fu  <i@fuzy.me>
