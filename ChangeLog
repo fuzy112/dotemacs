@@ -1,5 +1,9 @@
 2025-09-26  Zhengyi Fu  <i@fuzy.me>
 
+	* packages.el: Do not use built-in packages any more.
+
+2025-09-26  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (copy-message): Error if message ring is empty.
 
 2025-09-25  Zhengyi Fu  <i@fuzy.me>

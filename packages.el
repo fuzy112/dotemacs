@@ -6,21 +6,6 @@
       '((github . "fuzy112")
 	(codeberg . "fuzy")))
 
-;; Prefer built-in packages
-(straight-use-package '(eglot :type built-in))
-(straight-use-package '(eldoc :type built-in))
-(straight-use-package '(erc :type built-in))
-(straight-use-package '(external-completion :type built-in))
-(straight-use-package '(flymake :type built-in))
-(straight-use-package '(map :type built-in))
-(straight-use-package '(modus-themes :type built-in))
-(straight-use-package '(org :type built-in))
-(straight-use-package '(peg :type built-in))
-(straight-use-package '(project :type built-in))
-(straight-use-package '(xref :type built-in))
-(straight-use-package '(editorconfig :type built-in))
-(straight-use-package '(jsonrpc :type built-in))
-
 ;;; Utility libraries
 (straight-use-package 'dash)
 (straight-use-package 'f)
