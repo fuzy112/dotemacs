@@ -1922,6 +1922,8 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 
 ;;;; JSON
 
+(defvar pp-default-function)
+
 (defun copy-json-as-lisp (beg end)
   "Convert JSON between BEG–END to Lisp data and copy to kill ring.
 With no active region, operate on the whole buffer."
