@@ -1,5 +1,13 @@
 2025-09-26  Zhengyi Fu  <i@fuzy.me>
 
+	Use `completion-table-with-metadata'
+
+	* site-lisp/obsoletes/gtkdoc.el (gtkdoc-lookup):
+	* site-lisp/good-doc.el (good-doc--read-entry):
+	* site-lisp/dotemacs-core.el (dotemacs--major-mode-completion-table):
+
+2025-09-26  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Bind C-c DEL to delete-char in paredit-mode.
 
 2025-09-26  Zhengyi Fu  <i@fuzy.me>
