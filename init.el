@@ -1005,6 +1005,8 @@ Return the selected message string from `message-ring'."
 With prefix argument ARG, prompt for a message from the history to copy.
 Otherwise copy the most recent message (index 0)."
   (interactive "P")
+  (when (ring-empty-p message-ring)
+    (user-error "Message ring is empty"))
   (let* ((msg (if arg
                   (message-ring-read "Message to copy: ")
                 (ring-ref message-ring 0)))
