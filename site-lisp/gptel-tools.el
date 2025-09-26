@@ -452,22 +452,46 @@ Returns a list of diagnostic objects in JSON format."
 
 (defvar url-http-response-status)
 
+(defvar gptel-tools-default-timeout 30)
+
 (defun gptel-tools--url-retrieve (callback url &optional timeout)
-  ;; FIXME cancel the process when timeout
+  "Retrieve URL asynchronously and call CALLBACK with the result.
+
+CALLBACK is a function that takes one argument, which is either:
+- A list (:error MESSAGE [KEY VALUE]...) if an error occurred
+- The buffer containing the retrieved content on success
+
+URL is the URL to retrieve.
+
+Optional TIMEOUT is the maximum time in seconds to wait for a response.
+If the request takes longer than TIMEOUT seconds, it will be canceled
+and CALLBACK will be called with a timeout error. If TIMEOUT is nil,
+`gptel-tools-default-timeout' will be used.
+
+Returns the process object for the URL retrieval."
   (let* ((timer nil)
-	 (cb (lambda (result)
-	       (unwind-protect
-		   (funcall callback result)
-		 (when (timerp timer)
-		   (cancel-timer timer)
-		   (setq timer nil))
-		 (setq callback nil)))))
-    ;; (when (numberp timeout)
-    ;;   (run-at-time timeout nil cb (list :error "Timed out")))
+         (process nil)
+         (cb (lambda (result)
+               (unwind-protect
+                   (funcall callback result)
+                 (when (timerp timer)
+                   (cancel-timer timer)
+                   (setq timer nil))
+                 (when (processp process)
+                   (delete-process process)
+                   (setq process nil))
+                 (setq callback nil)))))
+    (when (null timeout) (setq timeout gptel-tools-default-timeout))
+    (when (numberp timeout)
+      (setq timer (run-at-time timeout nil
+                               (lambda ()
+                                 (when (processp process)
+                                   (delete-process process))
+                                 (funcall cb (list :error "Timed out"))))))
     (condition-case err
-	(url-retrieve url cb)
+        (setq process (get-buffer-process (url-retrieve url cb)))
       (error (funcall cb (list :error "Failed to retrieve URL"
-			       :internal-error (gptel--to-string err)))))))
+                               :internal-error (gptel--to-string err)))))))
 
 (defun gptel-tools--read-url-async (callback url)
   "Call CALLBACK with parsed contents of URL, or (:error MESSAGE ...)."
@@ -488,7 +512,7 @@ Returns a list of diagnostic objects in JSON format."
 			  (buffer-substring-no-properties (point-min) (point-max)))))))
        (error (funcall callback (list :error "Failed to read url"
 				      :internal-error (gptel--to-string err))))))
-   url 30))
+   url))
 
 (defun gptel-tools--insert-link-strip-href (dom)
   "Insert a link from DOM element.
@@ -539,8 +563,7 @@ a relative or protocol-based URL, append the URL in parentheses."
 		 (list :error
 		       "Failed to fetch the URL"
 		       :internal-error (gptel--to-string err))))))
-   (format "https://html.duckduckgo.com/html/?q=%s" query)
-   30))
+   (format "https://html.duckduckgo.com/html/?q=%s" query)))
 
 
 (defvar gptel-tools-jira-host nil)
@@ -577,7 +600,7 @@ a relative or protocol-based URL, append the URL in parentheses."
 	       (t (kill-buffer (current-buffer)))
 	       (error (funcall callback (list :error "Failed to search issues"
 					      :internal-error (gptel--to-string err1)))))))
-	 url 30))
+	 url))
     (error (funcall callback (list :error "Failed to search jira"
 				   :internal-error (gptel--to-string err))))))
 
@@ -603,7 +626,7 @@ a relative or protocol-based URL, append the URL in parentheses."
 	       (t (kill-buffer (current-buffer)))
 	       (error (funcall callback (list :error "Failed to get issue"
 					      :internal-error (gptel--to-string err1)))))))
-	 url 30))
+	 url))
     (error (funcall callback (list :error "Failed to get issue"
 				   :internal-error (gptel--to-string err))))))
 

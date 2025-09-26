@@ -1,5 +1,15 @@
 2025-09-26  Zhengyi Fu  <i@fuzy.me>
 
+	Fix timeout support in `gptel-tools--url-retrieve'
+
+	* site-lisp/gptel-tools.el (gptel-tools-default-timeout): New variable.
+	(gptel-tools--url-retrieve): Fix timeout support.  Omitting
+	timeout arg now means using `gptel-tools-default-timeout'.  All
+	call site changed.
+
+
+2025-09-26  Zhengyi Fu  <i@fuzy.me>
+
 	Temporarily disable timeout support in gptel-tools--url-retrieve
 
 	* site-lisp/gptel-tools.el (gptel-tools--url-retrieve): Comment out
