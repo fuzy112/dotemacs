@@ -209,8 +209,10 @@
   (with-temp-buffer
     (process-file "git" nil t nil "rev-list"
                   (if strictly
-                      "HEAD...HEAD@{upstream}"
-                    "HEAD..HEAD@{upstream}"))
+                      "@...@{upstream}"
+                    "@..@{upstream}"))
+    ;; need git config push.default current
+    (process-file "git" nil t nil "rev-list" "@..@{push}")
     (zerop (buffer-size))))
 
 (defun +straight-review-updated-repos ()
