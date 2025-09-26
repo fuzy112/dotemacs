@@ -23,11 +23,25 @@
 ;;; Code:
 
 (defmacro delq! (elt place)
+  "Delete members of the list stored in PLACE which are `eq' to ELT.
+
+PLACE is a generalized variable.
+The list stored in PLACE is destructively modified.
+
+This is morally equivalent to (setf PLACE (delq ELT PLACE)), except that
+PLACE is evaluated only once (after ELT)."
   (macroexp-let2 macroexp-copyable-p x elt
     (gv-letplace (getter setter) place
       (funcall setter `(delq ,elt ,getter)))))
 
 (defmacro remq! (elt place)
+  "Set PLACE to a new list with all occurrences of ELT removed.
+
+ELT is compared with elements of PLACE using `eq'.
+PLACE is a generalized variable.
+
+This is morally equivalent to (setf PLACE (remq ELT PLACE)), except that
+PLACE is evaluated only once (after ELT)."
   (macroexp-let2 macroexp-copyable-p x elt
     (gv-letplace (getter setter) place
       (funcall setter `(remq ,elt ,getter)))))
@@ -44,6 +58,7 @@ Equality with KEY is tested by TESTFN, defaulting to `eq'."
 
 (defmacro alist-setq! (alist &rest args)
   "Associate each of KEY with VALUE in ALIST.
+
 If KEY is a symbol, equality is tested by `eq'.
 If KEY is an integer, equality is tested by `eql'.
 Otherwise, equality is tested by `equal'.
