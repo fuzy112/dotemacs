@@ -1,3 +1,7 @@
+2025-09-26  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (copy-message): Error if message ring is empty.
+
 2025-09-25  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Disable meow-indicator since we use doom-modeline.
