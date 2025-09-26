@@ -89,13 +89,8 @@
 
 (setq native-comp-async-on-battery-power nil)
 
-(setq-default cursor-in-non-selected-windows nil)
-(setq highlight-nonselected-windows          nil)
-(setq inhibit-compacting-font-caches         t)
 (setq use-file-dialog                        nil)
 (setq system-time-locale                     "C")
-(setq bidi-paragraph-direction               'left-to-right
-      bidi-inhibit-bpa                       t)
 
 (setq undo-limit        (* 16 1024 1024)
       undo-strong-limit (* 64 1024 1024))
