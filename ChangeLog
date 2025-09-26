@@ -1,5 +1,13 @@
 2025-09-26  Zhengyi Fu  <i@fuzy.me>
 
+	Remove some settings in early-init.el
+
+	* early-init.el (cursor-in-non-selected-windows)
+	(highlight-nonselected-windows, inhibit-compacting-font-caches)
+	(bidi-paragraph-direction, bidi-inhibit-bpa): No longer set.
+
+2025-09-26  Zhengyi Fu  <i@fuzy.me>
+
 	Fix timeout support in `gptel-tools--url-retrieve'
 
 	* site-lisp/gptel-tools.el (gptel-tools-default-timeout): New variable.
