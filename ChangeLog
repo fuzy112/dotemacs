@@ -1,3 +1,10 @@
+2025-09-27  Zhengyi Fu  <i@fuzy.me>
+
+	Add configuration for verilog
+
+	* init.el (+verilog-mode-setup): New function. Added to `verilog-mode-hook'.
+	* site-lisp/flymake-verilator.el (flymake-verilator): Fix.
+
 2025-09-26  Zhengyi Fu  <i@fuzy.me>
 
 	Remove some settings in early-init.el

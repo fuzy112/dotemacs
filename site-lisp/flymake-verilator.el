@@ -27,10 +27,11 @@
 
 (flymake-define flymake-verilator
   :documentation "Lint the verlog code."
-  :command ("verilator" "--timing" "--lint-only" :input)
+  :command ("verilator" "--lint-only" :input)
   :input :file
   :patterns
-  ((:error bol "%Error: " (file) ":" line ":" column ": " (message) eol)))
+  ((:error bol "%Error: " (file) ":" line ":" column ": " (message) eol)
+   (:warning bol "%Warning" (? "-" (* upper)) ": " (file) ":" line ":" column ": " (message) eol)))
 
 (provide 'flymake-verilator)
 ;;; flymake-verilator.el ends here
