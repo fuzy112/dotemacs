@@ -2154,6 +2154,13 @@ confirmed."
       (diff-apply-buffer)))
   (quit-windows-on " *shellcheck diff*" t))
 
+;;;; verilog
+
+(defun +verilog-mode-setup ()
+  (add-hook 'flymake-diagnostic-functions #'flymake-verilator nil t))
+
+(add-hook 'verilog-mode-hook #'+verilog-mode-setup)
+
 ;;;; udev rules
 
 ;; Use prog-mode to edit udev rules.
