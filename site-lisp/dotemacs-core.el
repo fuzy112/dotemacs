@@ -240,7 +240,12 @@ PROJECT defaults to the current project."
                   (and (symbolp x)
                        x
                        (string-suffix-p "-mode" (symbol-name x))))
-                (map-values auto-mode-alist)))
+                (seq-uniq
+                 (seq-concatenate
+                  'vector
+                  (map-values auto-mode-alist)
+                  (map-values magic-mode-alist)
+                  (map-values interpreter-mode-alist)))))
         (metadata '((category . command))))
     (completion-table-with-metadata modes metadata)))
 
@@ -262,20 +267,21 @@ PROJECT defaults to the current project."
                       nil
                       'emmip--minor-mode-history))
     (project-current 'maybe-prompt)
-    (mapcar #'intern-soft
-            (completing-read-multiple
-             "Major modes: "
-             (dotemacs--major-mode-completion-table)
-             nil
-             'require-match
-             nil
-             'emmip--major-modes-history
-             (let ((values nil)
+    (seq-map #'intern
+             (completing-read-multiple
+              "Major modes: "
+              (dotemacs--major-mode-completion-table)
+              nil
+              'require-match
+              nil
+              'emmip--major-modes-history
+              (named-let loop
+                  ((defaults nil)
                    (mode major-mode))
-               (while mode
-                 (push (symbol-name mode) values)
-                 (setq mode (get mode 'derived-mode-parent)))
-               (nreverse values))))))
+                (if (null mode)
+                    (seq-reverse defaults)
+                  (loop (cons (symbol-name mode) defaults)
+                        (get mode 'derived-mode-parent))))))))
   (let ((default-directory (project-root project)))
     (custom-load-symbol mode)
     (dolist (mm major-modes)
