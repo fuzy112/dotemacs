@@ -425,6 +425,9 @@ changed packages."
   (when (not custom-enabled-themes)
     (modus-themes-load-theme 'modus-operandi)))
 
+(eval-when-compile
+  (load-theme 'modus-vivendi t t))
+
 ;; Define a dedicated theme `dotemacs' instead of using the default
 ;; `user' theme to prevent the Emacs customization system from
 ;; automatically persisting face customizations.
