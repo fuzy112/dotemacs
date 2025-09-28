@@ -1,5 +1,14 @@
 2025-09-28  Zhengyi Fu  <i@fuzy.me>
 
+	Enable orderless style and move to minibuffer for Corfu
+
+	* init.el (corfu-map): Bind M-m to `corfu-move-to-minibuffer'.
+	Bind SPC to `corfu-insert-separator'.
+	* init.el (corfu-move-to-minibuffer): New command.  Bind M-m in
+	`corfu-map' to it.
+
+2025-09-28  Zhengyi Fu  <i@fuzy.me>
+
 	Prefer using `seq' and `named-let'
 
 	* site-lisp/dotemacs-core.el (dotemacs--major-mode-completion-table)
