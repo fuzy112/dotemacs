@@ -465,7 +465,7 @@ URL is the URL to retrieve.
 
 Optional TIMEOUT is the maximum time in seconds to wait for a response.
 If the request takes longer than TIMEOUT seconds, it will be canceled
-and CALLBACK will be called with a timeout error. If TIMEOUT is nil,
+and CALLBACK will be called with a timeout error.  If TIMEOUT is nil,
 `gptel-tools-default-timeout' will be used.
 
 Returns the process object for the URL retrieval."
