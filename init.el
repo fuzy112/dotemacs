@@ -1088,11 +1088,23 @@ ARGS: see `completion-read-multiple'."
   (corfu-history-mode)
   (corfu-popupinfo-mode)
   (define-keymap :keymap corfu-map
+    "M-m"       #'corfu-move-to-minibuffer
+    "SPC"       #'corfu-insert-separator
     "C-q"       #'corfu-quick-insert
     "M-q"       #'corfu-quick-complete
     "TAB"       #'corfu-next
     "S-TAB"     #'corfu-previous
-    "<backtab>" #'corfu-previous))
+    "<backtab>" #'corfu-previous)
+
+  (add-to-list 'corfu-continue-commands #'corfu-move-to-minibuffer))
+
+(defun corfu-move-to-minibuffer ()
+  (interactive)
+  (pcase completion-in-region--data
+    (`(,beg ,end ,table ,pred ,extras)
+     (let ((completion-extra-properties extras)
+           completion-cycle-threshold completion-cycling)
+       (consult-completion-in-region beg end table pred)))))
 
 (unless (featurep 'tty-child-frames)
   (add-hook 'tty-setup-hook #'corfu-terminal-mode)
