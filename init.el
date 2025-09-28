@@ -408,6 +408,11 @@ changed packages."
 
 ;;;; modus-theme
 
+;; temporary workaround for bug, see bug#79504
+(define-advice modus-themes-with-colors (:around (&rest args) with-enabled-themes)
+  (let ((custom-enabled-themes (append custom-enabled-themes '(modus-vivendi))))
+    (apply args)))
+
 (setq modus-themes-mixed-fonts        t
       modus-themes-bold-constructs    t
       modus-themes-slanted-constructs t
@@ -437,7 +442,8 @@ changed packages."
   "Customize and set faces for the dotemacs theme.
 This function refreshes the dotemacs theme by setting various face
 attributes."
-  ;; Temporarily bind `custom--inhibit-theme-enable' to nil to enuser
+  (interactive)
+  ;; Temporarily bind `custom--inhibit-theme-enable' to nil to ensure
   ;; the face customizations take effect immediately.
   (let ((custom--inhibit-theme-enable nil))
     (custom-theme-set-faces

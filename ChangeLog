@@ -1,3 +1,10 @@
+2025-09-28  Zhengyi Fu  <i@fuzy.me>
+
+	Fix macro expansion probmlem in `modus-themes-with-colors'
+
+	* init.el (modus-themes-with-colors): Add a workaround for the bug
+	introduced when fixing bug#79504.
+
 2025-09-27  Zhengyi Fu  <i@fuzy.me>
 
 	Add configuration for verilog
