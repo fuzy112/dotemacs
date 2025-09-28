@@ -1,5 +1,12 @@
 2025-09-28  Zhengyi Fu  <i@fuzy.me>
 
+	Prefer using `seq' and `named-let'
+
+	* site-lisp/dotemacs-core.el (dotemacs--major-mode-completion-table)
+	(enable-minor-mode-in-project): Prefer using `seq' and `named-let'.
+
+2025-09-28  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Use `require' to load `modus-themes'.
 
 2025-09-28  Zhengyi Fu  <i@fuzy.me>
