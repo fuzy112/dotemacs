@@ -418,7 +418,8 @@ changed packages."
       modus-themes-slanted-constructs t
       modus-themes-variable-pitch-ui  nil
       modus-themes-to-toggle          '(modus-vivendi modus-operandi))
-(require-theme 'modus-themes)
+(or (require 'modus-themes nil t)
+    (require-theme 'modus-themes))
 (setopt modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
 
 (after-init!
