@@ -1,5 +1,9 @@
 2025-09-28  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Use `require' to load `modus-themes'.
+
+2025-09-28  Zhengyi Fu  <i@fuzy.me>
+
 	Fix macro expansion probmlem in `modus-themes-with-colors'
 
 	* init.el (modus-themes-with-colors): Add a workaround for the bug
