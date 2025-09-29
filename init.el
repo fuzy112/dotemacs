@@ -932,7 +932,7 @@ falls back to its default handling."
 
 ;;;; Echo message
 
-(defvar message-ring (make-ring 100)
+(defvar message-ring (make-ring 128)
   "Ring buffer to store recent messages.")
 
 (defvar message-ring-insert t
@@ -991,13 +991,14 @@ filter the message.  Return MESSAGE unchanged.
 This function is designed to be added to `set-message-functions'."
   (prog1 message
     (when message-ring-insert
-      (catch 'message-handled
-        (dolist (fn message-ring-insert-functions)
-          (let ((result (funcall fn message)))
-            (cond
-             ((stringp result) (setq message result))
-             ((null result) nil)
-             (t (throw 'message-handled nil)))))))))
+      (named-let loop
+          ((fns message-ring-insert-functions))
+        (unless (null fns)
+          (let* ((fn (car fns))
+                 (result (funcall fn message)))
+            (when (or (and (stringp result) (setq message result))
+                      (null result))
+              (loop (cdr fns)))))))))
 
 (add-hook 'set-message-functions #'message-insert-ring)
 
