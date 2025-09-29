@@ -1,5 +1,12 @@
 2025-09-29  Zhengyi Fu  <i@fuzy.me>
 
+	Style change on message-ring
+
+	* init.el (message-insert-ring): Use named-let.
+	(message-ring): Increase size to 128.
+
+2025-09-29  Zhengyi Fu  <i@fuzy.me>
+
 	Make `tramp-persistency-file-name' unreadable by other users
 
 	* init.el (tramp-dump-connection-properties): Change permission of
