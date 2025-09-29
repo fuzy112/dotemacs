@@ -85,7 +85,7 @@
 
 ;;;; Nerd-icons
 
-(straight-use-package 'nerd-icons)
+(straight-use-package '(nerd-icons :fork (:repo "fuzy112/nerd-icons.el")))
 (straight-use-package 'nerd-icons-completion)
 (straight-use-package 'nerd-icons-corfu)
 (straight-use-package 'nerd-icons-ibuffer)
