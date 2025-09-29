@@ -1,3 +1,10 @@
+2025-09-29  Zhengyi Fu  <i@fuzy.me>
+
+	Make `tramp-persistency-file-name' unreadable by other users
+
+	* init.el (tramp-dump-connection-properties): Change permission of
+	`tramp-persistency-file-name' to 0600.
+
 2025-09-28  Zhengyi Fu  <i@fuzy.me>
 
 	Enable orderless style and move to minibuffer for Corfu
