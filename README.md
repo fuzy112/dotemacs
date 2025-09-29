@@ -265,47 +265,11 @@ Create new configuration modules in `site-lisp/`:
 
 - **`C-c S x f`** (`straight-x-fetch-all`)
 - **`C-c S U`** (`+straight-review-updated-repos`)
-
-### Troubleshooting
-
-1. Check `*Messages*` buffer for error messages
-2. Use `M-x toggle-debug-on-error` to debug issues
-3. Review `custom.el` for custom settings
-4. Check package conflicts with `straight-check-all`
-
-### Backup and Sync
-
-The configuration includes:
-- Automatic backup of custom settings
-- Version-controlled configuration files
-- Easy migration between systems
-
-## Contributing
-
-This is a personal configuration, but contributions and suggestions are welcome. Please:
-
-1. Follow the existing code style and organization
-2. Add appropriate documentation
-3. Test changes thoroughly
-4. Update the ChangeLog with your changes
+- **`C-c S X`** (`+straight-update-and-review`)
 
 ## License
 
 This configuration is distributed under the GNU General Public License v3.0. See the `LICENSE` file for details.
-
-## Acknowledgments
-
-- The Emacs community for excellent packages and documentation
-- Prot authors for inspiration and best practices
-- Various Emacs configuration repositories for reference
-
-## Support
-
-For issues and questions:
-
-- Check the `AGENTS.md` file for development guidelines
-- Review existing GitHub issues
-- Create a new issue with detailed information
 
 ## Changelog
 
