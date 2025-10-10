@@ -540,7 +540,7 @@ attributes."
      ;; eat
      '(eat-term-font-0
        ((t :family "IosevkaTerm SS04" :fontset "fontset-term"))))
-    (when (modus-themes--current-theme)
+    (when (modus-themes-get-current-theme)
       (modus-themes-with-colors
         (custom-theme-set-faces
          'dotemacs

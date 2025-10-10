@@ -1,3 +1,7 @@
+2025-10-10  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (dotemacs-theme-refresh): Use `modus-themes-get-current-theme'.
+
 2025-09-29  Zhengyi Fu  <i@fuzy.me>
 
 	Style change on message-ring
