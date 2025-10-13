@@ -1,3 +1,10 @@
+2025-10-13  Zhengyi Fu  <i@fuzy.me>
+
+	Remove semel
+
+	* init.el (dotemacs-theme-refresh): Remove configuration of semel.
+	* packages.el: Remove semel.
+
 2025-10-10  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (dotemacs-theme-refresh): Use `modus-themes-get-current-theme'.

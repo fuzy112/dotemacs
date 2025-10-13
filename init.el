@@ -539,54 +539,7 @@ attributes."
        ((t :family "IosevkaTerm SS04" :fontset "fontset-term")))
      ;; eat
      '(eat-term-font-0
-       ((t :family "IosevkaTerm SS04" :fontset "fontset-term"))))
-    (when (modus-themes-get-current-theme)
-      (modus-themes-with-colors
-        (custom-theme-set-faces
-         'dotemacs
-         ;; semel
-         `(semel-symbol-at-mouse
-           ((,c :background ,bg-active)))
-         `(semel-free-variable
-           ((,c :inherit (font-lock-variable-name-face underline))))
-         `(semel-condition
-           ((,c :foreground ,red-intense)))
-         `(semel-major-mode-name
-           ((,c :foreground ,green-faint
-                :inherit font-lock-type-face)))
-         `(semel-face
-           ((,c :inherit font-lock-type-face)))
-         `(semel-symbol-type
-           ((,c :foreground ,blue
-                :inherit font-lock-function-call-face)))
-         `(semel-symbol-type-definition
-           ((,c :foreground ,blue-warmer
-                :inherit font-lock-function-name-face)))
-         `(semel-function-call
-           ((,c :inherit font-lock-function-call-face)))
-         `(semel-non-local-exit
-           ((,c :inherit semel-function-call
-                :underline ,red-intense)))
-         `(semel-macro-call
-           ((,c :inherit font-lock-keyword-face)))
-         `(semel-special-form
-           ((,c :inherit semel-macro-call)))
-         `(semel-throw-tag
-           ((,c :inherit font-lock-constant-face)))
-         `(semel-feature
-           ((,c :inherit font-lock-constant-face)))
-         `(semel-rx
-           ((,c :foreground ,magenta-intense)))
-         `(semel-theme
-           ((,c :inherit font-lock-constant-face)))
-         `(semel-binding-variable
-           ((,c :slant italic
-                :inherit font-lock-variable-name-face)))
-         `(semel-bound-variable
-           ((,c :slant italic
-                :inherit font-lock-variable-use-face)))
-         `(semel-variable-at-point
-           ((,c :inherit bold))))))))
+       ((t :family "IosevkaTerm SS04" :fontset "fontset-term"))))))
 
 (defun dotemacs-theme-disable ()
   "Disable the dotemacs theme."
@@ -2085,7 +2038,6 @@ current buffer state and calls REPORT-FN when done."
 
 ;;;; Semantic highlighting
 
-(add-hook 'emacs-lisp-mode-hook #'semel-mode)
 (add-hook 'emacs-lisp-mode-hook #'cursor-sensor-mode)
 
 ;;;; ielm
