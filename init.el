@@ -1939,6 +1939,7 @@ With no active region, operate on the whole buffer."
 
 ;;;; elisp-mode
 
+(setopt elisp-fontify-semantically t)
 (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
 (after-load! elisp-mode
   (when (boundp 'trusted-content)
