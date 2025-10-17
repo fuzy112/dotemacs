@@ -1,3 +1,10 @@
+2025-10-17  Zhengyi Fu  <i@fuzy.me>
+
+	Set correct type of warning
+
+	* site-lisp/tui/fuzzy-finder.el (fuzzy-finder-default-class):
+	Change type of the warning to `fuzzy-finder'.
+
 2025-10-14  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (elisp-fontify-semantically): Set to t.
