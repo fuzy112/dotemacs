@@ -334,7 +334,7 @@ changed packages."
 ;;  - https://github.com/be5invis/Sarasa-Gothic/releases/download/v1.0.26/Sarasa-SuperTTC-1.0.26.7z
 ;;  - https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/NerdFontsSymbolsOnly.zip
 
-(defvar +fontsets-initilize-hook nil)
+(defvar +fontsets-initialize-hook nil)
 
 (defun +init-fontsets ()
   "Initialize the font configuration"
