@@ -133,9 +133,10 @@
 ;;; Input methods
 (straight-use-package 'pyim)
 (straight-use-package 'pyim-basedict)
-(straight-use-package '(rime :fork (:host github :repo "fuzy112/emacs-rime")
-			     :pre-build ("make" "lib")
-			     :files (:defaults "lib*.so")))
+(unless emacs-is-installed-by-nix
+  (straight-use-package '(rime :fork (:host github :repo "fuzy112/emacs-rime")
+			       :pre-build ("make" "lib")
+			       :files (:defaults "lib*.so"))))
 
 ;;; AI/LLM
 (straight-use-package '(gptel :fork (:host github :repo "fuzy112/gptel")
@@ -188,14 +189,17 @@
 (straight-use-package 'markdown-mode)
 (straight-use-package 'debian-el)
 (straight-use-package 'dpkg-dev-el)
-(straight-use-package '(pdf-tools
-			:pre-build ("sh" "-c" "cd server && ./autobuild")
-			:files (:defaults "server/epdfinfo")))
+(unless emacs-is-installed-by-nix
+  (straight-use-package '(pdf-tools
+			  :pre-build ("sh" "-c" "cd server && ./autobuild")
+			  :files (:defaults "server/epdfinfo"))))
 (straight-use-package '(pcap-mode :fork (:host github :repo "fuzy112/pcap-mode")))
+(straight-use-package 'nix-mode)
 
 ;;; Applications
-(straight-use-package '(telega :pre-build ("make" "telega-server")
-			       :files (:defaults "etc" "contrib" "server/telega-server")))
+(unless emacs-is-installed-by-nix
+  (straight-use-package '(telega :pre-build ("make" "telega-server")
+				 :files (:defaults "etc" "contrib" "server/telega-server"))))
 (straight-use-package 'ement)
 (straight-use-package 'show-font)
 (straight-use-package '(elfeed :fork (:host github :repo "fuzy112/elfeed")))
@@ -204,14 +208,15 @@
 (straight-use-package '(video-trimmer :host github :repo "xenodium/video-trimmer"
 				      :fork (:host github :repo "fuzy112/video-trimmer")))
 (straight-use-package '(whisper :host github :repo "natrys/whisper.el"))
-(straight-use-package
- `(reader :type git :host codeberg :repo "divyaranjan/emacs-reader"
-	  :files ("*.el" "render-core.so")
-	  :pre-build ("cc" "-fPIC" "-shared" "-o" "render-core.so"
-		      "-DLINUX" "render/elisp-helpers.c"
-		      "render/mupdf-helpers.c" "render/render-core.c"
-		      "render/render-theme.c" "render/render-threads.c"
-		      "-lmupdf")))
+(unless emacs-is-installed-by-nix
+  (straight-use-package
+   `(reader :type git :host codeberg :repo "divyaranjan/emacs-reader"
+	    :files ("*.el" "render-core.so")
+	    :pre-build ("cc" "-fPIC" "-shared" "-o" "render-core.so"
+			"-DLINUX" "render/elisp-helpers.c"
+			"render/mupdf-helpers.c" "render/render-core.c"
+			"render/render-theme.c" "render/render-threads.c"
+			"-lmupdf"))))
 
 ;;; Email
 (straight-use-package 'autocrypt)

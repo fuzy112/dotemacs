@@ -30,6 +30,17 @@
 (when (fboundp 'igc-start-idle-timer)
   (add-hook 'emacs-startup-hook #'igc-start-idle-timer))
 
+
+;;;; nixos hack
+
+(defconst emacs-is-installed-by-nix
+  (string-prefix-p "/nix/store/" invocation-directory))
+
+(when emacs-is-installed-by-nix
+  (setenv "PATH" (concat (string-join exec-path ":")
+                         (and (getenv "PATH")
+                              (concat ":" (getenv "PATH"))))))
+
 ;;;; File loading
 
 (setq load-prefer-newer t)
@@ -43,9 +54,9 @@
   (load pre-early-init-file nil t))
 
 
-(setq package-enable-at-startup nil)
+(setq package-enable-at-startup emacs-is-installed-by-nix)
 (setq straight-use-version-specific-build-dir t)
-(setq straight-enable-use-package-integration t)
+(setq straight-enable-use-package-integration nil)
 (defvar straight-current-profile)
 (setq straight-current-profile nil)
 (setq straight-profiles '((nil      . "default.el")

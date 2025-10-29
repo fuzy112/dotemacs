@@ -1,3 +1,14 @@
+2025-10-29  Zhengyi Fu  <i@fuzy.me>
+
+	Hack to run on NixOS
+
+	* site-lisp/telega-config.el  (telega-server-command): Do not set
+	on NixOS.
+	* packages.el: Do not install packages
+	that depends on native libraries on NixOS.
+	* early-init.el (emacs-is-installed-by-nix): New constant.
+	Export exec-path to PATH if running in NixOS.
+
 2025-10-17  Zhengyi Fu  <i@fuzy.me>
 
 	Set correct type of warning
