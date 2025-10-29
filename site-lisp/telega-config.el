@@ -22,8 +22,9 @@
 (require 'dotemacs-core)
 (require 'telega-customize)
 
-(setq telega-server-command (expand-file-name "telega-server"
-                                              (file-name-directory (locate-library "telega"))))
+(unless emacs-is-installed-by-nix
+  (setq telega-server-command (expand-file-name "telega-server"
+                                                (file-name-directory (locate-library "telega")))))
 (setq telega-translate-to-language-by-default "zh")
 (setq telega-emoji-use-images nil)
 
