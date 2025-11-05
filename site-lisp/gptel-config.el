@@ -496,6 +496,7 @@ command is invoked."
 	(message "gptel-agent session started with coding-agent preset")))))
 
 (defun gptel-agent--setup-context ()
+  (make-local-variable 'gptel-context)
   (dolist (filename (list "AGENTS.md"))
     (let ((filename (expand-file-name filename)))
       (when (file-exists-p filename)

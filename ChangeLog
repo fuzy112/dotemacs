@@ -1,3 +1,10 @@
+2025-11-05  Zhengyi Fu <i@fuzy.me>
+
+        gptel-config.el: Do not change global context
+
+	* site-lisp/gptel-config.el (gptel-agent--setup-context): Make
+	`gptel-context' buffer local variable.
+
 2025-10-29  Zhengyi Fu  <i@fuzy.me>
 
 	Hack to run on NixOS
