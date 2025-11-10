@@ -1,5 +1,12 @@
 2025-11-10  Zhengyi Fu  <i@fuzy.me>
 
+	Use magit to show consult-git-log-grep's results
+
+	* init.el (consult-git-log-grep-open-function): Set to `magit-show-commit'.
+	(consult-git-log-grep-preview): Set to t.
+
+2025-11-10  Zhengyi Fu  <i@fuzy.me>
+
 	* packages.el: New package consult-git-log-grep.
 
 2025-11-05  Zhengyi Fu <i@fuzy.me>
