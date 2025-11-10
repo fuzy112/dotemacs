@@ -1,3 +1,7 @@
+2025-11-10  Zhengyi Fu  <i@fuzy.me>
+
+	* packages.el: New package consult-git-log-grep.
+
 2025-11-05  Zhengyi Fu <i@fuzy.me>
 
         gptel-config.el: Do not change global context
