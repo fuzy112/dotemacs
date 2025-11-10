@@ -125,6 +125,7 @@
 (straight-use-package 'git-modes)
 (straight-use-package 'forge)
 (straight-use-package 'diff-hl)
+(straight-use-package 'consult-git-log-grep)
 
 ;;; eldoc
 (straight-use-package 'eldoc-box)
