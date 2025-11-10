@@ -2421,6 +2421,12 @@ Then refresh all windows displaying the current buffer."
   (add-hook 'magit-blame-mode-hook #'eldoc-diffstat-mode))
 (add-hook 'vc-annotate-mode-hook #'eldoc-diffstat-mode)
 
+
+;;;; consult-git-log-grep
+
+(setopt consult-git-log-grep-open-function #'magit-show-commit
+        consult-git-log-grep-preview t)
+
 ;;;; eat
 
 (after-load! eat
