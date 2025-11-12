@@ -406,7 +406,7 @@ This is the case when either COMMAND is not allowed, or WORKING-DIR
 falls outside the `default-directory' hierarchy."
   (not
    (and-let* ((allowed (gptel-tools--shell-command-allowed-p command))
-	      (dir (expand-file-name (file-name-as-directory working-dir))))
+	      (dir (expand-file-name (file-name-as-directory (or working-dir default-directory)))))
      (string-prefix-p
       (expand-file-name default-directory)
       dir))))
