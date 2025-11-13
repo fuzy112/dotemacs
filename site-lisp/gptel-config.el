@@ -118,27 +118,6 @@
 (setq-default gptel-backend (gptel-get-backend "DeepSeek"))
 (setq-default gptel-model 'deepseek-chat)
 
-;;; Tools
-
-(defun +gptel-read-documentation (symbol)
-  "Read the documentation for SYMBOL, which can be a function or variable."
-  (let ((sym (intern symbol)))
-    (cond
-     ((fboundp sym)
-      (documentation sym))
-     ((boundp sym)
-      (documentation-property sym 'variable-documentation))
-     (t
-      (format "No documentation found for %s" symbol)))))
-
-(gptel-make-tool
- :name "read_documentation"
- :function #'+gptel-read-documentation
- :description "Read the documentation for a given function or variable"
- :args (list '(:name "name"
-		     :type string
-		     :description "The name of the function or variable whose documentation is to be retrieved"))
- :category "emacs")
 
 ;;; Tweaks
 
@@ -449,58 +428,7 @@ script readability and reliability.")
 		      file))
       (let ((gptel-use-tools 'force))
 	(gptel-send)))))
-
 
-(defvar gptel-agent-backend gptel-backend)
-(defvar gptel-agent-model gptel-model)
-
-;;;###autoload
-(defun gptel-agent ()
-  "Create or switch to a gptel session buffer for the current project.
-The buffer will be displayed in a side window by default, but this behavior
-can be customized.
-The session buffer will use the coding-agent preset.  The default-directory in
-the session buffer will be the project root if there is a project (as found
-by project-current in project.el), otherwise the default-directory where the
-command is invoked."
-  (interactive)
-  (let* ((project-root (when-let* ((proj (project-current)))
-			 (if (fboundp 'project-root)
-			     (project-root proj)
-			   ;; Suppress warning about obsolete project-roots function
-			   (with-suppressed-warnings ((obsolete project-roots))
-			     (car (project-roots proj))))))
-	 (proj-name (and project-root
-			 (project-name (project-current))))
-	 (buffer-name (if proj-name
-			  (format "*gptel-agent : %s*" proj-name)
-			"*gptel-agent*"))
-	 (existing-buffer-p (get-buffer buffer-name)))
-    (gptel buffer-name)
-    (pop-to-buffer buffer-name '((display-buffer-in-side-window)
-				 (side . right)))
-    (with-current-buffer (get-buffer buffer-name)
-      (unless existing-buffer-p
-	;; Apply coding-agent preset settings
-	(gptel--apply-preset 'coding-agent
-			     (lambda (sym val)
-			       (set (make-local-variable sym) val)))
-	;; Set local variable to include tool results in buffer
-	(setq-local gptel-include-tool-results t)
-	(setq-local gptel-backend gptel-agent-backend
-		    gptel-model gptel-agent-model))
-      (when project-root
-	(cd project-root))
-      (gptel-agent--setup-context)
-      (unless existing-buffer-p
-	(message "gptel-agent session started with coding-agent preset")))))
-
-(defun gptel-agent--setup-context ()
-  (make-local-variable 'gptel-context)
-  (dolist (filename (list "AGENTS.md"))
-    (let ((filename (expand-file-name filename)))
-      (when (file-exists-p filename)
-	(gptel-add-file filename)))))
 
 (provide 'gptel-config)
 ;;; gptel-config.el ends here

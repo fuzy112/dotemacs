@@ -142,6 +142,8 @@
 ;;; AI/LLM
 (straight-use-package '(gptel :fork (:host github :repo "fuzy112/gptel")
 			      :build (:not compile)))
+(straight-use-package '(gptel-agent :host github :repo "karthink/gptel-agent"
+				    :files (:defaults "agents")))
 (straight-use-package 'gptel-aibo)
 (straight-use-package '(claude-code-ide :host github :repo "manzaltu/claude-code-ide.el"))
 (straight-use-package '(whisper :host github :repo "natrys/whisper.el"))
