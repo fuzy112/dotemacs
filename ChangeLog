@@ -1,3 +1,14 @@
+2025-11-13  Zhengyi Fu  <i@fuzy.me>
+
+	Replace homebrewed gptel-agent command by the gptel-agent package
+
+	* site-lisp/gptel-tools.el: Moved to site-lisp/obsoletes/gptel-tools.el.
+	* site-lisp/gptel-config.el (+gptel-read-documentation)
+	(gptel-agent, gptel-agent--setup-context): Remove.
+	(gptel-agent-backend, gptel-agent-model, "read_documentation"): Remove.
+	* packages.el: Add package `gptel-agent'.
+	* init.el: Remove autoloaded gptel-agent command.
+
 2025-11-12  Zhengyi Fu  <i@fuzy.me>
 
 	Fix error in gptel-tools
