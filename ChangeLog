@@ -1,5 +1,9 @@
 2025-11-13  Zhengyi Fu  <i@fuzy.me>
 
+	* site-lisp/gptel-config.el: Don't require gptel-tools.
+
+2025-11-13  Zhengyi Fu  <i@fuzy.me>
+
 	Replace homebrewed gptel-agent command by the gptel-agent package
 
 	* site-lisp/gptel-tools.el: Moved to site-lisp/obsoletes/gptel-tools.el.
