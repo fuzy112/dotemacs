@@ -1,3 +1,10 @@
+2025-11-17  Zhengyi Fu  <i@fuzy.me>
+
+	Remove some customizations on themes
+
+	* init.el (dotemacs-theme-refresh): Remove some customizations.
+	(dotemacs-theme-disable): Remove hooks.
+
 2025-11-13  Zhengyi Fu  <i@fuzy.me>
 
 	* site-lisp/gptel-config.el: Don't require gptel-tools.

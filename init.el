@@ -488,31 +488,31 @@ attributes."
      '(whitespace-space-after-tab ((t :underline "yellow")))
      '(parenthesis
        ((t :inherit shadow)))
-     `(header-line
-       ((((supports :underline t) (class color grayscale))
-         :background ,(face-background 'default)
-         :underline ( :color ,(face-foreground 'default)
-                      :style line
-                      :position t)
-         :box (:line-width 6 :style flat-button))))
-     `(header-line-inactive
-       ((t :inherit (shadow header-line))))
-     `(mode-line-active
-       ((((supports :overline t) (class color grayscale))
-         :background ,(face-background 'default)
-         :foreground ,(face-foreground 'default)
-         :overline ,(face-foreground 'default)
-         :box ( :line-width 6
-                :color ,(face-background 'default)
-                :style nil))))
-     `(mode-line-inactive
-       ((((supports :overline t) (class color grayscale))
-         :background ,(face-background 'default)
-         :foreground ,(face-foreground 'shadow)
-         :overline t
-         :box ( :line-width 6
-                :color ,(face-background 'default)
-                :style nil))))
+     ;; `(header-line
+     ;;   ((((supports :underline t) (class color grayscale))
+     ;;     :background ,(face-background 'default)
+     ;;     :underline ( :color ,(face-foreground 'default)
+     ;;                  :style line
+     ;;                  :position t)
+     ;;     :box (:line-width 6 :style flat-button))))
+     ;; `(header-line-inactive
+     ;;   ((t :inherit (shadow header-line))))
+     ;; `(mode-line-active
+     ;;   ((((supports :overline t) (class color grayscale))
+     ;;     :background ,(face-background 'default)
+     ;;     :foreground ,(face-foreground 'default)
+     ;;     :overline ,(face-foreground 'default)
+     ;;     :box ( :line-width 6
+     ;;            :color ,(face-background 'default)
+     ;;            :style nil))))
+     ;; `(mode-line-inactive
+     ;;   ((((supports :overline t) (class color grayscale))
+     ;;     :background ,(face-background 'default)
+     ;;     :foreground ,(face-foreground 'shadow)
+     ;;     :overline t
+     ;;     :box ( :line-width 6
+     ;;            :color ,(face-background 'default)
+     ;;            :style nil))))
      `(tab-line-tab-current
        ((((min-colors 256) (background dark))
          :background "purple"
@@ -523,10 +523,10 @@ attributes."
          :background "DarkGreen"
          :foreground "white"
          :box nil)))
-     `(tab-bar
-       ((((supports :box t))
-         :box ( :line-width (-2 . 6)
-                :style flat-button))))
+     ;; `(tab-bar
+     ;;   ((((supports :box t))
+     ;;     :box ( :line-width (-2 . 6)
+     ;;            :style flat-button))))
      '(region
        ((t :foreground unspecified)))
      '(secondary-selection
@@ -545,7 +545,9 @@ attributes."
   "Disable the dotemacs theme."
   (interactive)
   (push 'dotemacs custom-enabled-themes)
-  (disable-theme 'dotemacs))
+  (disable-theme 'dotemacs)
+  (remove-hook 'server-after-make-frame-hook #'dotemacs-theme-refresh)
+  (remove-hook 'enable-theme-functions #'dotemacs-theme-refresh))
 
 (if (daemonp)
     ;; Refresh theme for new frames in server mode
