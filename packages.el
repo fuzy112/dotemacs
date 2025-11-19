@@ -178,6 +178,10 @@
 (straight-use-package 'logos)
 (straight-use-package 'paredit)
 
+;;; Encryption
+
+(straight-use-package 'agenix)
+
 ;;; Extra major modes
 (straight-use-package 'clojure-mode)
 (straight-use-package 'yaml-mode)
