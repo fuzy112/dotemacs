@@ -1,3 +1,7 @@
+2025-11-25  Zhengyi Fu  <i@fuzy.me>
+
+	* setup.sh: Add some hooks.
+
 2025-11-19  Zhengyi Fu  <i@fuzy.me>
 
 	Add package `agenix'
