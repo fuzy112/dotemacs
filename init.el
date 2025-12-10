@@ -2243,10 +2243,7 @@ confirmed."
 ;;;; vc
 
 (setq vc-follow-symlinks t)
-(setq vc-svn-global-switches
-      '("--config-option"
-        "config:auth:password-stores=gnome-keyring")
-      vc-svn-diff-switches '("-x" "-u -p"))
+(setq vc-svn-diff-switches '("-x" "-u -p"))
 (keymap-set vc-prefix-map "." '+vc/dir-here)
 
 (defun +vc/dir-here (&optional backend)
