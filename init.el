@@ -1523,7 +1523,7 @@ value for USE-OVERLAYS."
 (add-hook 'hack-local-variables-hook #'+indent-tabs-mode--hack-local-variables-h)
 
 ;;;; recentf
-(setq recentf-save-file (locate-user-emacs-file '("recentf.eld.zst")))
+;; (setq recentf-save-file (locate-user-emacs-file '("recentf.eld.zst")))
 
 (autoload 'recentf-track-opened-file "recentf"
   "Insert the name of the file just opened or written into the recent list." )
@@ -1540,8 +1540,8 @@ value for USE-OVERLAYS."
 
 ;;;; saveplace
 
-(setq save-place-file
-      (locate-user-emacs-file '("places.eld.zst")))
+;; (setq save-place-file
+;;       (locate-user-emacs-file '("places.eld.zst")))
 (setq save-place-limit 65536)
 (autoload 'save-place-find-file-hook "saveplace")
 (autoload 'save-place-dired-hook "saveplace")
@@ -2045,7 +2045,7 @@ current buffer state and calls REPORT-FN when done."
 
 ;;;; ielm
 
-(setq ielm-history-file-name (locate-user-emacs-file "ielm-history.eld.zst"))
+;; (setq ielm-history-file-name (locate-user-emacs-file "ielm-history.eld.zst"))
 
 ;;;; pp
 
@@ -2156,7 +2156,7 @@ confirmed."
 
 ;;;; project
 
-(setq project-list-file (locate-user-emacs-file '("projects.eld.zst")))
+;; (setq project-list-file (locate-user-emacs-file '("projects.eld.zst")))
 
 (declare-function project-root "project.el" (&rest rest))
 (defun +project--external-roots ()
@@ -2563,7 +2563,7 @@ Then refresh all windows displaying the current buffer."
 
 ;;;; savehist
 
-(setq savehist-file (locate-user-emacs-file '("savehist.eld.zst")))
+;; (setq savehist-file (locate-user-emacs-file '("savehist.eld.zst")))
 (setq savehist-additional-variables '((kill-ring . 5)
                                       compile-command
                                       corfu-history))
