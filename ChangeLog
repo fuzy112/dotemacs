@@ -1,3 +1,7 @@
+2025-12-31  Zhengyi Fu  <i@fuzy.me>
+
+	* README.md: Remove the AI generated README.md.
+
 2025-12-10  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (vc-svn-global-switches): Do not set anymore.
