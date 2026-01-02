@@ -1,6 +1,6 @@
 ;;; early-init.el --- Early init file                -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024, 2025  Zhengyi Fu
+;; Copyright (C) 2024, 2025, 2026  Zhengyi Fu
 
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Keywords: local
@@ -91,10 +91,10 @@
 
 ;;;; site lisp
 
-(add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
-(add-to-list 'load-path (locate-user-emacs-file "site-lisp/tui"))
+;; (add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
+;; (add-to-list 'load-path (locate-user-emacs-file "site-lisp/tui"))
 
-(eval-when-compile (require 'dotemacs-core))
+;; (eval-when-compile (require 'dotemacs-core))
 
 ;;;; emacs core
 
