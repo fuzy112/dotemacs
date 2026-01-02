@@ -27,6 +27,7 @@
  ("copilot.el" . "7ee4758bb748beac7d29e62de5d2e752ebafb858")
  ("corfu" . "125dd17e0c2a9028aa5649d8bf92bdbc8e334a0b")
  ("corfu-terminal" . "501548c3d51f926c687e8cd838c5865ec45d03cc")
+ ("ctrlf" . "3e1d4d74b201e45a2d471675f5fdae370f23f947")
  ("dash.el" . "fb443e7a6e660ba849cafcd01021d9aac3ac6764")
  ("debian-el" . "1510058c392894faf6c94ada0f2cfe67d62894fd")
  ("devdocs.el" . "25c746024ddf73570195bf42b841f761a2fee10c")
