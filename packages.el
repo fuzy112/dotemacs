@@ -74,6 +74,7 @@
 
 ;;; Search
 
+(straight-use-package 'ctrlf)		; isearch is laggy when breadcrumb-mode is enabled
 (straight-use-package 'rg)
 (straight-use-package '(p-search :host github :repo "zkry/p-search" :files (:defaults "extensions")))
 
