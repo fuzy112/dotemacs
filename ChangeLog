@@ -1,13 +1,9 @@
-2025-12-31  Zhengyi Fu  <i@fuzy.me>
+2026-01-02  Zhengyi Fu  <i@fuzy.me>
 
-	* init.el: Do not compress these files anymore.
+	Replace `isearch' with `ctrlf'
 
-	Since I use btrfs with Z-standard compression for my root
-	filesystem, there is no point compressing these files anymore.
-
-2025-12-31  Zhengyi Fu  <i@fuzy.me>
-
-	* README.md: Remove the AI generated README.md.
+	* packages.el (ctrlf-mode): New package.
+	* init.el: Enable `ctrlf-mode'.
 
 2025-12-10  Zhengyi Fu  <i@fuzy.me>
 

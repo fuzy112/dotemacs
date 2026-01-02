@@ -1,6 +1,6 @@
 ;;; init.el --- Emacs configuration file           -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024, 2025  Zhengyi Fu
+;; Copyright (C) 2024, 2025, 2026  Zhengyi Fu
 
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Keywords: local
@@ -27,8 +27,8 @@
 (require 'early-init early-init-file t)
 (when (featurep 'init)
   (load early-init-file nil t))
+(require 'dotemacs-core)
 (eval-when-compile
-  (require 'dotemacs-core)
   (require 'compat))
 
 ;;;; pre-init.el
@@ -731,6 +731,10 @@ font-locking and indentation."
 (add-hook 'text-mode-hook #'breadcrumb-local-mode)    ; Enable for text files
 (add-hook 'conf-mode-hook #'breadcrumb-local-mode)    ; Enable for configuration files
 (add-hook 'prog-mode-hook #'breadcrumb-local-mode)    ; Enable for programming modes
+
+;;;; ctrlf
+
+(ctrlf-mode)
 
 ;;;; orderless
 
