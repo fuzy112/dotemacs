@@ -1,5 +1,5 @@
 ;;; tui.el --- Run TUI tools in terminal -*- lexical-binding: t -*-
-;; Copyright © 2024, 2025  Zhengyi Fu <i@fuzy.me>
+;; Copyright © 2024, 2025, 2026  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu
 ;; Version:  0.2.0

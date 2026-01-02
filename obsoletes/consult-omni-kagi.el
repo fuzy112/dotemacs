@@ -1,5 +1,5 @@
 ;;; consult-omni-kagi.el --- Consult-Omni sources for Kagi -*- lexical-binding: t -*-
-;; Copyright © 2025  Zhengyi Fu <i@fuzy.me>
+;; Copyright © 2025, 2026  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
 ;; Package-Requires: ((emacs "29.1") (consult-omni "0.2"))
@@ -110,4 +110,5 @@
 (provide 'consult-omni-kagi)
 
 ;;;###autoload
-(add-to-list 'consult-omni-sources-modules-to-load 'consult-omni-kagi)
+(with-eval-after-load 'consult-omni
+  (add-to-list 'consult-omni-sources-modules-to-load 'consult-omni-kagi))
