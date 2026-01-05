@@ -1708,6 +1708,10 @@ value for USE-OVERLAYS."
 (alist-setq! auto-mode-alist "\\.pdf\\'" #'pdf-view-mode)
 (alist-setq! magic-mode-alist "%PDF" #'pdf-view-mode)
 
+(defun +pdf-isearch-minor-mode-disable-ctrlf ()
+  (ctrlf-local-mode -1))
+(add-hook 'pdf-isearch-minor-mode #'+pdf-isearch-minor-mode-disable-ctrlf)
+
 ;;;; outline
 
 (defun +outline-minor-faces ()
