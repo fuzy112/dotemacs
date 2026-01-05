@@ -1,3 +1,9 @@
+2026-01-05  Zhengyi Fu  <i@fuzy.me>
+
+	Disable ctrlf in pdf-isearch-minor-mode
+
+	* init.el (+pdf-isearch-minor-mode-disable-ctrlf): New function.
+
 2026-01-02  Zhengyi Fu  <i@fuzy.me>
 
 	Replace `isearch' with `ctrlf'
