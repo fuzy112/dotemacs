@@ -2262,7 +2262,7 @@ confirmed."
 
 (connection-local-set-profile-variables
  'remote-explicit-shell-file-name
- '((explicit-shell-file-name . "/bin/bash")))
+ '((explicit-shell-file-name . "/bin/sh")))
 
 (dolist (protocol '("ssh" "sshx" "scp" "scpx"))
   (connection-local-set-profiles
