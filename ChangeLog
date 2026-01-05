@@ -1,5 +1,11 @@
 2026-01-05  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (eat-tramp-shells): Do not customize any more.
+
+	/bin/bash doesn't exist on all systems.
+
+2026-01-05  Zhengyi Fu  <i@fuzy.me>
+
 	Use /bin/sh in remote connections
 
 	* init.el (remote-explicit-shell-file-name): Set

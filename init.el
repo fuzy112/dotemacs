@@ -2479,13 +2479,6 @@ Then refresh all windows displaying the current buffer."
 
 (setopt eat-kill-buffer-on-exit t)
 
-(after-load! eat
-  (alist-setq! eat-tramp-shells
-    "sshx" "/bin/bash"
-    "ssh" "/bin/bash"
-    "scp" "/bin/bash"
-    "scpx" "/bin/bash" ))
-
 (defun +eat-install-helpers ()
   (interactive)
   (unless (file-remote-p default-directory)
