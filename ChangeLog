@@ -1,5 +1,13 @@
 2026-01-05  Zhengyi Fu  <i@fuzy.me>
 
+	Specify fonts for nerd icons
+
+	* init.el (+init-fontsets): Specify fonts for nerd icons..
+	(nerd-icons-set-font): Remove advice.  The ranges of nerd font
+	icons in `nerd-icons-set-font' are out-of-date.
+
+2026-01-05  Zhengyi Fu  <i@fuzy.me>
+
 	Disable ctrlf in pdf-isearch-minor-mode
 
 	* init.el (+pdf-isearch-minor-mode-disable-ctrlf): New function.

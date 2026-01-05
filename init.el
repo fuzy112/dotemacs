@@ -365,6 +365,36 @@ changed packages."
   ;; Emoji
   (set-fontset-font "fontset-default" 'emoji (font-spec :family "Noto Color Emoji"))
 
+  ;; Nerd Font symbols
+  (let* ((nf-font-family "Symbols Nerd Font")
+         (nf-font-spec (font-spec :family nf-font-family)))
+    (dolist (range '((#x23fb . #x23fe)    ; IEC Power Symbols
+                     (#x2b58 . #x2b58)    ; IEC Power Symbols
+                     (#x2500 . #x259f)    ; Box Drawing
+                     (#x2630 . #x2630)    ; Powerline Extra Symbols
+                     (#x2665 . #x2665)    ; Octicons
+                     (#x26a1 . #x26a1)    ; Octicons
+                     (#x276c . #x2771)    ; Heavy Angle Brackets
+                     (#xe000 . #xe00a)    ; Pomicons
+                     (#xe0a0 . #xe0a3) ; Powerline Symbols + Extra (merged)
+                     (#xe0b0 . #xe0d7) ; Powerline Symbols + Extra (merged)
+                     (#xe200 . #xe2a9) ; Font Awesome Extension
+                     (#xe300 . #xe3e3) ; Weather Icons
+                     (#xe5fa . #xe6b7) ; Seti-UI + Custom
+                     (#xe700 . #xe8ef) ; Devicons
+                     (#xea60 . #xec1e) ; Codicons
+                     (#xed00 . #xefce) ; Font Awesome (part 1, includes gap for progress)
+                     (#xee00 . #xee0b) ; Progress indicators
+                     (#xf000 . #xf2ff) ; Font Awesome (part 2)
+                     (#xf300 . #xf381) ; Font Logos
+                     (#xf400 . #xf533) ; Octicons
+                     (#xf500 . #xfd46) ; Material Design Icons (part 1)
+                     (#xf0001 . #xf1af0))) ; Material Design Icons (part 2, supplementary private use area)
+      (set-fontset-font "fontset-default" range nf-font-spec nil 'prepend)
+      (set-fontset-font "fontset-variable" range nf-font-spec nil 'prepend)
+      (set-fontset-font "fontset-fixed" range nf-font-spec nil 'prepend)
+      (set-fontset-font "fontset-term" range nf-font-spec nil 'prepend)))
+
   ;; Fallback fonts
   (set-fontset-font "fontset-default" 'unicode (font-spec :family "Unifont") nil 'append)
   (set-fontset-font "fontset-default" 'unicode-smp (font-spec :family "Unifont Upper") nil 'append)
@@ -586,14 +616,6 @@ attributes."
               (seq-union '((:eval (nerd-icons-icon-for-buffer)) " ")
                          mode-line-buffer-identification))
 
-(define-advice nerd-icons-set-font (:around (&rest args) if-display-graphic-p)
-  (when (display-graphic-p)
-    (apply args)))
-
-(after-load! nerd-icons
-  (nerd-icons-set-font)
-  (add-hook '+fontsets-initialize-hook #'nerd-icons-set-font)
-  (add-hook 'server-after-make-frame-hook #'nerd-icons-set-font))
 
 ;;;; ultra-scroll
 
