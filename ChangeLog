@@ -1,5 +1,14 @@
 2026-01-05  Zhengyi Fu  <i@fuzy.me>
 
+	Use /bin/sh in remote connections
+
+	* init.el (remote-explicit-shell-file-name): Set
+	`explicit-shell-file-name' to "/bin/sh".
+
+	There are usually no /bin/bash on NixOS.
+
+2026-01-05  Zhengyi Fu  <i@fuzy.me>
+
 	Specify fonts for nerd icons
 
 	* init.el (+init-fontsets): Specify fonts for nerd icons..
