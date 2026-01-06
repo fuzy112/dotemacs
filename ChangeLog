@@ -8,6 +8,13 @@
 
 2026-01-06  Zhengyi Fu  <i@fuzy.me>
 
+	Remove AGENTS.md and bootstrap.sh
+
+	* AGENTS.md:
+	* bootstrap.sh: Remove.
+
+2026-01-06  Zhengyi Fu  <i@fuzy.me>
+
 	Do not use straight.el anymore
 
 	* early-init.el:
