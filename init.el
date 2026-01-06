@@ -36,10 +36,8 @@
 (defvar pre-init-file (locate-user-emacs-file "pre-init.el")
   "The file to load before the init file.")
 
-(defvar straight-current-profile)
 (when (file-exists-p pre-init-file)
-  (let ((straight-current-profile 'user))
-    (load pre-init-file nil t)))
+                (load pre-init-file nil t))
 
 ;;;; custom
 
@@ -156,6 +154,7 @@
 (meow-global-mode)
 
 (when (treesit-available-p)
+  (require 'meow-tree-sitter)
   (meow-tree-sitter-register-defaults))
 
 ;; Automatically switch to meow-motion-state when magit-blob-mode is
@@ -186,145 +185,6 @@
 
 (after-load! treesit
   (require 'treesit-config))
-
-
-;;;; straight commands
-
-;; Define a command to run `magit' in package repos.
-
-(eval-when-compile
-  (require 'llama))
-
-(defvar straight--recipe-cache)
-(defun straight-magit-package-status (pkg)
-  "Run `magit-dispatch' in the repo of PKG."
-  (interactive
-   (list (straight--select-package
-          "Visit" (##plist-get %1 :local-repo))))
-  (let ((repo (plist-get (gethash pkg straight--recipe-cache)
-                         :local-repo)))
-    (magit-status-setup-buffer (straight--repos-dir repo))))
-
-(defun +straight-repo-up-to-date-p (&optional strictly)
-  (with-temp-buffer
-    (process-file "git" nil t nil "rev-list"
-                  (if strictly
-                      "@...@{upstream}"
-                    "@..@{upstream}"))
-    ;; need git config push.default current
-    (process-file "git" nil t nil "rev-list" "@..@{push}")
-    (zerop (buffer-size))))
-
-(defun +straight-review-updated-repos ()
-  "Review repositories with unmerged upstream commits interactively.
-
-This command scans all repositories managed by straight.el and identifies
-those with unmerged commits from their upstream branches. It then presents
-each such repository in a Magit status buffer sequentially.
-
-During review:
-- The mode-line shows progress (current/total) and repository name
-- Header displays navigation instructions
-- Repository automatically closes when fully synced (during refresh)
-- Press \\[exit-recursive-edit] to proceed or \\[abort-recursive-edit] to abort
-
-After processing all repositories, runs `straight-check-all' to rebuild
-changed packages."
-  (interactive)
-  (require 'map)
-  (let* ((updated-repos
-          (seq-filter (lambda (repo-dir)
-                        (let ((default-directory repo-dir))
-                          (not (+straight-repo-up-to-date-p))))
-                      (seq-map #'straight--repos-dir
-                               (map-keys straight--repo-cache))))
-         (total (length updated-repos))
-         (orig-modeline (default-value 'mode-line-format)))
-    (unwind-protect
-        (seq-do-indexed
-         (lambda (repo-dir index)
-           (let* ((default-directory repo-dir)
-                  (buf (magit-status-setup-buffer))
-                  (proc-buf (magit-process-buffer 'no-display)))
-             (unwind-protect
-                 (save-window-excursion
-                   (add-hook 'kill-buffer-hook #'exit-recursive-edit nil t)
-                   (setq-local quit-window-kill-buffer t)
-                   (setq mode-line-format
-                         (cons (format "(Reviewing %d/%d: %s)"
-                                       (1+ index) total
-                                       (file-name-nondirectory (directory-file-name repo-dir)))
-                               orig-modeline))
-                   (setq header-line-format
-                         (list (substitute-command-keys "\\[exit-recursive-edit] process next repo, \\[abort-recursive-edit] abort processing")))
-                   (add-hook 'magit-pre-refresh-hook
-                             (lambda ()
-                               (when (+straight-repo-up-to-date-p :strictly)
-                                 (exit-recursive-edit)))
-                             nil t)
-                   (force-mode-line-update)
-                   (recursive-edit))
-               (when (buffer-live-p buf)
-                 (with-current-buffer buf
-                   (kill-local-variable 'kill-buffer-hook))
-                 (kill-buffer buf))
-               (and (buffer-live-p proc-buf)
-                    (null (get-buffer-process proc-buf))
-                    (kill-buffer proc-buf)))))
-         updated-repos)
-      (redisplay)
-      (straight-check-all)
-      (message "Finished processing all updated repos"))))
-
-(defun +straight-update-and-review ()
-  "Update all straight.el packages and review changes."
-  (interactive)
-  (require 'straight-x)
-  (with-current-buffer (get-buffer-create straight-x-buffer)
-    (letrec ((review-fn (lambda ()
-                          (and (null straight-x-waiting)
-                               (null straight-x-running)
-                               (unwind-protect
-                                   (+straight-review-updated-repos)
-                                 (advice-remove 'straight-x-start-process review-fn)
-                                 (kill-buffer straight-x-buffer))))))
-      (advice-add 'straight-x-start-process :after review-fn)
-      (straight-x-fetch-all))))
-
-;; Command for fetching all repos asynchronously.
-(autoload 'straight-x-fetch-all "straight-x" nil t)
-
-;; Define a prefix keymap for `straight' commands.
-(defvar-keymap straight-prefix-map
-  :doc    "Prefix map for straight.el commands."
-  :prefix 'straight-prefix-map
-  "c"     #'straight-check-package
-  "C"     #'straight-check-all
-  "p"     #'straight-pull-package
-  "P"     #'straight-pull-all
-  "f"     #'straight-fetch-package
-  "F"     #'straight-fetch-all
-  "b"     #'straight-rebuild-package
-  "B"     #'straight-rebuild-all
-  "v"     #'straight-freeze-versions
-  "V"     #'straight-thaw-versions
-  "n"     #'straight-normalize-package
-  "N"     #'straight-normalize-all
-  "m"     #'straight-merge-package
-  "M"     #'straight-merge-all
-  "u"     #'straight-use-package
-  "U"     #'+straight-review-updated-repos
-  "d"     #'straight-visit-package
-  "w"     #'straight-visit-package-website
-  "g"     #'straight-magit-package-status
-  "r"     #'straight-remove-unused-repos
-  "R"     #'straight-prune-build
-  "s"     #'straight-push-package
-  "S"     #'straight-push-all
-  "l"     #'straight-get-recipe
-  "L"     #'straight-pull-recipe-repositories
-  "x f"   #'straight-x-fetch-all
-  "X"     #'+straight-update-and-review)
 
 
 ;;;; fonts
@@ -1975,99 +1835,10 @@ With no active region, operate on the whole buffer."
 (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
 (after-load! elisp-mode
   (when (boundp 'trusted-content)
-    (add-to-list 'trusted-content (locate-user-emacs-file "site-lisp/"))
-    (add-to-list 'trusted-content (abbreviate-file-name (straight--build-dir)))
-    (add-to-list 'trusted-content (abbreviate-file-name (straight--repos-dir))))
+    (add-to-list 'trusted-content (locate-user-emacs-file "site-lisp/")))
   (when (native-comp-available-p)
     (keymap-set emacs-lisp-mode-map "C-c C-l" #'emacs-lisp-native-compile-and-load))
   (keymap-set lisp-interaction-mode-map "C-c C-j" #'eval-print-last-sexp))
-
-(defun straight-flymake-byte-compile (report-fn &rest _args)
-  "A Flymake backend for elisp byte compilation.
-Spawn an Emacs process that byte-compiles a file representing the
-current buffer state and calls REPORT-FN when done."
-  (unless (trusted-content-p)
-    ;; FIXME: Use `bwrap' and friends to compile untrusted content.
-    ;; FIXME: We emit a message *and* signal an error, because by default
-    ;; Flymake doesn't display the warning it puts into "*flmake log*".
-    (message "Disabling straight-flymake-byte-compile in %s (untrusted content)"
-             (buffer-name))
-    (user-error "Disabling straight-flymake-byte-compile in %s (untrusted content)"
-                (buffer-name)))
-  (when elisp-flymake--byte-compile-process
-    (when (process-live-p elisp-flymake--byte-compile-process)
-      (kill-process elisp-flymake--byte-compile-process)))
-  (let ((temp-file (make-temp-file "straight-flymake-byte-compile"))
-        (source-buffer (current-buffer))
-        (coding-system-for-write 'utf-8-unix)
-        (coding-system-for-read 'utf-8))
-    (save-restriction
-      (widen)
-      (write-region (point-min) (point-max) temp-file nil 'nomessage))
-    (let* ((output-buffer (generate-new-buffer " *straight-flymake-byte-compile*"))
-           ;; Hack: suppress warning about missing lexical cookie in
-           ;; *scratch* buffers.
-           (warning-suppression-opt
-            (and (derived-mode-p 'lisp-interaction-mode)
-                 '("--eval"
-                   "(setq bytecomp--inhibit-lexical-cookie-warning t)"))))
-      (setq-local
-       elisp-flymake--byte-compile-process
-       (make-process
-        :name "straight-flymake-byte-compile"
-        :buffer output-buffer
-        :command `(,(elisp-flymake-byte-compile--executable)
-                   "-Q"
-                   "--batch"
-                   "--eval"
-                   ,(prin1-to-string
-                     `(let ((recipes ',(map-apply (lambda (p r)
-                                                    (cons (intern p) r))
-                                                  straight--recipe-cache)))
-                        (setopt straight-use-symlinks ,straight-use-symlinks
-                                straight-build-dir ,straight-build-dir)
-                        (load ,(expand-file-name
-                                "straight/repos/straight.el/bootstrap.el"
-                                (or (bound-and-true-p straight-base-dir)
-                                    user-emacs-directory)))
-                        (dolist (recipe recipes)
-                          (straight-register-package recipe))
-                        (dolist (recipe recipes)
-                          (straight-use-package recipe))))
-                   ;; "--eval" "(setq load-prefer-newer t)" ; for testing
-                   ,@(mapcan (lambda (path) (list "-L" path))
-                             elisp-flymake-byte-compile-load-path)
-                   ,@warning-suppression-opt
-                   "-f" "elisp-flymake--batch-compile-for-flymake"
-                   ,temp-file)
-        :connection-type 'pipe
-        :sentinel
-        (lambda (proc _event)
-          (unless (process-live-p proc)
-            (unwind-protect
-                (cond
-                 ((not (and (buffer-live-p source-buffer)
-                            (eq proc (with-current-buffer source-buffer
-                                       elisp-flymake--byte-compile-process))))
-                  (flymake-log :warning
-                               "byte-compile process %s obsolete" proc))
-                 ((zerop (process-exit-status proc))
-                  (elisp-flymake--byte-compile-done report-fn
-                                                    source-buffer
-                                                    output-buffer))
-                 (t
-                  (funcall report-fn
-                           :panic
-                           :explanation
-                           (format "byte-compile process %s died " proc))))
-              (ignore-errors (delete-file temp-file))
-              ;; (with-current-buffer output-buffer
-              ;;   (message "Log: %s" (buffer-string)))
-              (kill-buffer output-buffer))))
-        :stderr " *stderr of straight-flymake-byte-compile*"
-        :noquery t)))))
-
-(advice-add 'elisp-flymake-byte-compile :override #'straight-flymake-byte-compile)
 
 ;;;; Semantic highlighting
 
@@ -2217,17 +1988,17 @@ confirmed."
 
 ;;;; buffer-env
 
-(add-hook 'hack-local-variables-hook #'buffer-env-update)
-(add-hook 'comint-mode-hook #'buffer-env-update)
-(defvar buffer-env--cache)
-(defun +buffer-env/clear-cache ()
-  "Clear buffer-env cache."
-  (interactive)
-  (clrhash buffer-env--cache))
-(defvar buffer-env-command-alist)
-(after-load! buffer-env
-  (alist-setq! buffer-env-command-alist "/\\.nvmrc\\'" "~/.nvm/nvm-exec env -0")
-  (setopt buffer-env-script-name '(".envrc" ".nvmrc" ".env")))
+;; (add-hook 'hack-local-variables-hook #'buffer-env-update)
+;; (add-hook 'comint-mode-hook #'buffer-env-update)
+;; (defvar buffer-env--cache)
+;; (defun +buffer-env/clear-cache ()
+;;   "Clear buffer-env cache."
+;;   (interactive)
+;;   (clrhash buffer-env--cache))
+;; (defvar buffer-env-command-alist)
+;; (after-load! buffer-env
+;;   (alist-setq! buffer-env-command-alist "/\\.nvmrc\\'" "~/.nvm/nvm-exec env -0")
+;;   (setopt buffer-env-script-name '(".envrc" ".nvmrc" ".env")))
 
 ;;;; tramp
 
@@ -2442,14 +2213,6 @@ Then refresh all windows displaying the current buffer."
 (after-load! (:or diff-hl vc magit)
   (global-diff-hl-mode)
   (keymap-set diff-hl-mode-map "C-c v" diff-hl-command-map))
-
-;;;; eldoc-diffstat
-
-(after-load! magit-mode
-  (add-hook 'magit-mode-hook #'eldoc-diffstat-mode)
-  (add-hook 'magit-blame-mode-hook #'eldoc-diffstat-mode))
-(add-hook 'vc-annotate-mode-hook #'eldoc-diffstat-mode)
-
 
 ;;;; consult-git-log-grep
 
@@ -3108,11 +2871,11 @@ of feed configurations without modifying init files."
 
 ;;;; copilot
 
-(after-load! copilot
-  ;; TODO choose better keybindings
-  (define-keymap :keymap copilot-mode-map
-    "<tab>"   #'copilot-accept-completion
-    "C-<tab>" #'copilot-accept-completion-by-word))
+;; (after-load! copilot
+;;   ;; TODO choose better keybindings
+;;   (define-keymap :keymap copilot-mode-map
+;;     "<tab>"   #'copilot-accept-completion
+;;     "C-<tab>" #'copilot-accept-completion-by-word))
 
 ;;;; consult-browser-hist
 
@@ -3422,7 +3185,6 @@ Otherwise disable it."
   "D"   debug-map
   "E"   #'elfeed
   "L"   #'org-store-link
-  "S"   straight-prefix-map
   "T"   #'telega
   "G"   #'gnus
   "V"   #'vundo
@@ -3495,8 +3257,8 @@ Otherwise disable it."
 (defvar post-init-file (locate-user-emacs-file "post-init.el"))
 
 (when (file-exists-p post-init-file)
-  (let ((straight-current-profile 'user))
-    (load post-init-file nil t)))
+
+    (load post-init-file nil t))
 
 ;;;; _
 
