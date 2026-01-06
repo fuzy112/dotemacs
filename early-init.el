@@ -54,47 +54,6 @@
   (load pre-early-init-file nil t))
 
 
-(setq package-enable-at-startup emacs-is-installed-by-nix)
-(setq straight-use-version-specific-build-dir t)
-(setq straight-enable-use-package-integration nil)
-(defvar straight-current-profile)
-(setq straight-current-profile nil)
-(setq straight-profiles '((nil      . "default.el")
-                          (dotemacs . "dotemacs.el")
-                          (user     . "user.el")
-                          (custom   . "custom.el")))
-(setq straight-use-symlinks nil)
-
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name
-        "straight/repos/straight.el/bootstrap.el"
-        (or (bound-and-true-p straight-base-dir)
-            user-emacs-directory)))
-      (bootstrap-version 7)
-      (straight-current-profile nil))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-(setq straight-default-files-directive
-      (seq-union straight-default-files-directive
-                 '("docs/dir" "docs/*.info" "docs/*.texi" "docs/*.texinfo")))
-
-(let ((straight-current-profile 'dotemacs))
-  (load (expand-file-name "packages" user-emacs-directory) nil t))
-
-;;;; site lisp
-
-;; (add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
-;; (add-to-list 'load-path (locate-user-emacs-file "site-lisp/tui"))
-
-;; (eval-when-compile (require 'dotemacs-core))
 
 ;;;; emacs core
 
@@ -145,8 +104,7 @@
   "The file to load after `early-init'.")
 
 (when (file-exists-p post-early-init-file)
-  (let ((straight-current-profile 'user))
-    (load post-early-init-file nil t)))
+    (load post-early-init-file nil t))
 
 
 (provide 'early-init)
