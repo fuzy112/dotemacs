@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
@@ -37,4 +37,14 @@ case "$provider" in
 esac
 export ANTHROPIC_API_KEY
 
-exec npm exec --package=@anthropic-ai/claude-code@latest claude -- "${args[@]}"
+CLAUDE_CODE_CLI=
+if command -v claude >/dev/null; then
+	CLAUDE_CODE_CLI=claude
+elif command -v nix >/dev/null; then
+	# Use nix shell to run claude if nix is available
+	CLAUDE_CODE_CLI="nix shell nixpkgs#claude-code --command claude --"
+else
+	CLAUDE_CODE_CLI="npm exec --package=@anthropic-ai/claude-code@latest claude --"
+fi
+
+exec $CLAUDE_CODE_CLI "${args[@]}"
