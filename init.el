@@ -2348,9 +2348,6 @@ Then refresh all windows displaying the current buffer."
           auth-source-gpg-encrypt-to (list  "0xBBE2757FC7BFC23B"))
   (auth-source-forget-all-cached))
 
-;;;; agenix
-
-(setopt agenix-age-program "rage")
 
 ;;;; lin
 
