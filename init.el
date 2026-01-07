@@ -1986,20 +1986,6 @@ confirmed."
              (consp project-switch-commands))
     (add-to-list 'project-switch-commands '(project-compile "Compile") t)))
 
-;;;; buffer-env
-
-;; (add-hook 'hack-local-variables-hook #'buffer-env-update)
-;; (add-hook 'comint-mode-hook #'buffer-env-update)
-;; (defvar buffer-env--cache)
-;; (defun +buffer-env/clear-cache ()
-;;   "Clear buffer-env cache."
-;;   (interactive)
-;;   (clrhash buffer-env--cache))
-;; (defvar buffer-env-command-alist)
-;; (after-load! buffer-env
-;;   (alist-setq! buffer-env-command-alist "/\\.nvmrc\\'" "~/.nvm/nvm-exec env -0")
-;;   (setopt buffer-env-script-name '(".envrc" ".nvmrc" ".env")))
-
 ;;;; tramp
 
 (setq tramp-persistency-file-name
