@@ -2289,11 +2289,6 @@ Then refresh all windows displaying the current buffer."
 
 (setq word-wrap-by-category t)
 
-;;;; kkp
-
-(when (or (daemonp) (eq t (terminal-live-p nil)))
-  (global-kkp-mode))
-
 ;;;; xterm
 
 (setopt xterm-set-window-title t)
