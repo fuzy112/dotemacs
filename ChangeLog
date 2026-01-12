@@ -1,3 +1,7 @@
+2026-01-12  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Do not enable kkp.
+
 2026-01-07  Zhengyi Fu  <i@fuzy.me>
 
 	* scripts/claude: Add support for nix shell.
