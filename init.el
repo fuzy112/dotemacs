@@ -141,6 +141,12 @@
    '("}"        . meow-forward-barf)
    '("`"        . meow-universal-argument)))
 
+(define-advice meow--set-cursor-type (:override (type) terminal)
+  ;; On terminals meow tries to set cursor type with escape sequences
+  ;; which may conflict with a recent change in Emacs core, where
+  ;; automatic cursor type change is implemented.
+  (setq cursor-type type))
+
 (meow-setup)
 ;; (alist-setq! meow-replace-state-name-list
 ;;   normal "🅝"
