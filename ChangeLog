@@ -1,5 +1,9 @@
 2026-01-13  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+init-fontsets): Use `set-face-font' to set default font.
+
+2026-01-13  Zhengyi Fu  <i@fuzy.me>
+
 	Make modus-vivendi background pure dark on terminals
 
 	* init.el (dotemacs-theme-refresh): Use unspecified-bg on
