@@ -148,9 +148,7 @@
   (setq cursor-type type))
 
 (define-advice meow--set-cursor-color (:after (face) terminal)
-  (unless (display-graphic-p)
-    ;; xterm.el always get the cursor color from the `cursor' face.
-    (set-face-background 'cursor (face-background face))))
+  (set-face-background 'cursor (face-background face)))
 
 (meow-setup)
 ;; (alist-setq! meow-replace-state-name-list

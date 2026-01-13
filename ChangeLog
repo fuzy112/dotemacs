@@ -1,5 +1,12 @@
 2026-01-13  Zhengyi Fu  <i@fuzy.me>
 
+	Fix emacsclient start error
+
+	* init.el (meow--set-cursor-color): Also set cursor face on
+	graphical display.  Otherwise, emacsclient fails to start.
+
+2026-01-13  Zhengyi Fu  <i@fuzy.me>
+
 	Reconsider support for terminal cursor color in meow
 
 	The best way I think is to modify xterm.el and let it get the
