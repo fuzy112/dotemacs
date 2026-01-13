@@ -326,6 +326,8 @@
 (deftheme dotemacs
   "Central theme for customizing fonts and face properties in this configuration.")
 
+(put 'dotemacs 'theme-immediate t)
+
 ;; Activate the custom theme immediately after definition
 (enable-theme 'dotemacs)
 
