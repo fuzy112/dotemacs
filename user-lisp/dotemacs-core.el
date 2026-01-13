@@ -1,5 +1,5 @@
 ;;; dotemacs-core.el --- Core library of DotEmacs -*- lexical-binding: t -*-
-;; Copyright © 2024, 2025  Zhengyi Fu <i@fuzy.me>
+;; Copyright © 2024, 2025, 2026  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
 ;; Package-Requires: ((emacs "29.1"))
@@ -197,7 +197,7 @@ See `project-add-hook!'."
               (hooks (alist-get project dotemacs--project-hooks nil t #'equal))
               (functions (alist-get hook hooks)))
     (if (functionp functions)
-        (apply functions args)
+ (apply functions args)
       (dolist (fun functions)
         (apply fun args)))))
 

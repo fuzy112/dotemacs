@@ -938,11 +938,13 @@ ARGS: see `completion-read-multiple'."
   (global-corfu-mode)
   (corfu-history-mode)
   (corfu-popupinfo-mode)
+  (keymap-unset corfu-popupinfo-map "M-t")
   (define-keymap :keymap corfu-map
     "M-m"       #'corfu-move-to-minibuffer
     "SPC"       #'corfu-insert-separator
     "C-q"       #'corfu-quick-insert
     "M-q"       #'corfu-quick-complete
+    "M-t"       #'corfu-popupinfo-toggle
     "TAB"       #'corfu-next
     "S-TAB"     #'corfu-previous
     "<backtab>" #'corfu-previous)
