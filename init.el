@@ -2305,7 +2305,17 @@ Then refresh all windows displaying the current buffer."
 
 ;;;; xterm
 
-(setopt xterm-set-window-title t)
+(setopt xterm-set-window-title t
+        xterm-update-cursor t)
+
+(define-advice xterm--update-cursor-color (:override () frame-cursor)
+  ;; Get the cursor color from frame parameter `cursor-color' instead
+  ;; of face `cursor', to be compatible with `meow'.
+  (let* ((color (color-values (frame-parameter nil 'cursor-color)))
+         (r (nth 0 color))
+         (g (nth 1 color))
+         (b (nth 2 color)))
+    (send-string-to-terminal (format "\e]12;rgb:%04x/%04x/%04x\e\\" r g b))))
 
 ;;;; xt-mouse
 

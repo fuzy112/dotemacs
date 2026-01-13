@@ -1,5 +1,13 @@
 2026-01-13  Zhengyi Fu  <i@fuzy.me>
 
+	Update configuration for terminal support
+
+	* init.el (xterm-update-cursor): Set to t.
+	(xterm--update-cursor-color): Override to get cursor color from
+	frame parameter `cursor-color'.
+
+2026-01-13  Zhengyi Fu  <i@fuzy.me>
+
 	Fix M-DEL
 
 	* user-lisp/modify-other-keys.el
