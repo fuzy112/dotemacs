@@ -1,5 +1,9 @@
 2026-01-13  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (meow--set-cursor-type): Workaround cursor type issue.
+
+2026-01-13  Zhengyi Fu  <i@fuzy.me>
+
 	Update configuration for terminal support
 
 	* init.el (xterm-update-cursor): Set to t.
