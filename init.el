@@ -147,6 +147,11 @@
   ;; automatic cursor type change is implemented.
   (setq cursor-type type))
 
+(define-advice meow--set-cursor-color (:after (face) terminal)
+  (unless (display-graphic-p)
+    ;; xterm.el always get the cursor color from the `cursor' face.
+    (set-face-background 'cursor (face-background face))))
+
 (meow-setup)
 ;; (alist-setq! meow-replace-state-name-list
 ;;   normal "🅝"
@@ -363,6 +368,12 @@ attributes."
         (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
      `(meow-insert-cursor
        ((((class color) (min-colors 256) (background dark)) :background "#ec7745")))
+     `(meow-normal-cursor
+       ((((class color) (min-colors 256) (background light)) :background "#005077")
+        (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
+     `(meow-motion-cursor
+       ((((class color) (min-colors 256) (background light)) :background "#005077")
+        (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
      `(fill-column-indicator
        ((((type w32 tty))
          :height 1.0 :foreground "gray50" :background ,(face-background 'default))))
@@ -2313,15 +2324,6 @@ Then refresh all windows displaying the current buffer."
 
 (setopt xterm-set-window-title t
         xterm-update-cursor t)
-
-(define-advice xterm--update-cursor-color (:override () frame-cursor)
-  ;; Get the cursor color from frame parameter `cursor-color' instead
-  ;; of face `cursor', to be compatible with `meow'.
-  (let* ((color (color-values (frame-parameter nil 'cursor-color)))
-         (r (nth 0 color))
-         (g (nth 1 color))
-         (b (nth 2 color)))
-    (send-string-to-terminal (format "\e]12;rgb:%04x/%04x/%04x\e\\" r g b))))
 
 ;;;; xt-mouse
 

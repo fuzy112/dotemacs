@@ -1,5 +1,17 @@
 2026-01-13  Zhengyi Fu  <i@fuzy.me>
 
+	Reconsider support for terminal cursor color in meow
+
+	The best way I think is to modify xterm.el and let it get the
+	colors from the frame parameter `cursor-color'.
+
+	* init.el (meow--set-cursor-color): Modify `cursor' face.
+	(xterm--update-cursor-color): Remove advice.
+	(dotemacs-theme-refresh): Customize `meow-normal-cursor',
+	`meow-motion-cursor'.
+
+2026-01-13  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (meow--set-cursor-type): Workaround cursor type issue.
 
 2026-01-13  Zhengyi Fu  <i@fuzy.me>
