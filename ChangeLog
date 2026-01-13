@@ -1,5 +1,12 @@
 2026-01-13  Zhengyi Fu  <i@fuzy.me>
 
+	Restore keybinding for `transpose-words'
+
+	* init.el (corfu): Unset M-t in `corfu-popupinfo-map'.  Bind it in
+	`corfu-map' instead.
+
+2026-01-13  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (dotemacs): Set property theme-immediate to t.
 
 2026-01-13  Zhengyi Fu  <i@fuzy.me>
