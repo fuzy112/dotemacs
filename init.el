@@ -42,7 +42,8 @@
 ;;;; custom
 
 (defvar custom-file)
-(when (file-exists-p custom-file)
+(and custom-file
+     (file-exists-p custom-file)
   (load custom-file))
 
 ;;;; meow-edit
@@ -342,6 +343,12 @@ attributes."
   (let ((custom--inhibit-theme-enable nil))
     (custom-theme-set-faces
      'dotemacs
+     `(default
+       ((((type tty) (class color) (background dark))
+         :background ,(if-let ((bg (face-attribute 'default :background))
+                               ((string= bg "#000000")))
+                          "unspecified-bg"
+                        bg))))
      `(cursor
        ((((class color) (min-colors 256) (background light)) :background "#005077")
         (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))

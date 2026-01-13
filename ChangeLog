@@ -1,3 +1,10 @@
+2026-01-13  Zhengyi Fu  <i@fuzy.me>
+
+	Make modus-vivendi background pure dark on terminals
+
+	* init.el (dotemacs-theme-refresh): Use unspecified-bg on
+	terminals when using dark themes.
+
 2026-01-12  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Do not enable kkp.
