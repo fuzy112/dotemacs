@@ -1,5 +1,12 @@
 2026-01-13  Zhengyi Fu  <i@fuzy.me>
 
+	dotemacs theme customization
+
+	* init.el (dotemacs-theme-refresh): Fix background color on terminal.
+	Customize meow-insert-cursor face.
+
+2026-01-13  Zhengyi Fu  <i@fuzy.me>
+
 	Restore keybinding for `transpose-words'
 
 	* init.el (corfu): Unset M-t in `corfu-popupinfo-map'.  Bind it in

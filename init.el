@@ -347,13 +347,16 @@ attributes."
      'dotemacs
      `(default
        ((((type tty) (class color) (background dark))
-         :background ,(if-let ((bg (face-attribute 'default :background))
-                               ((string= bg "#000000")))
+         :background ,(if-let* ((bg (face-attribute 'default :background))
+                                (colors (color-values bg))
+                                ((equal '(0 0 0) colors)))
                           "unspecified-bg"
                         bg))))
      `(cursor
        ((((class color) (min-colors 256) (background light)) :background "#005077")
         (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
+     `(meow-insert-cursor
+       ((((class color) (min-colors 256) (background dark)) :background "#ec7745")))
      `(fill-column-indicator
        ((((type w32 tty))
          :height 1.0 :foreground "gray50" :background ,(face-background 'default))))
