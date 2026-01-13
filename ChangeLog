@@ -1,5 +1,9 @@
 2026-01-13  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (dotemacs): Set property theme-immediate to t.
+
+2026-01-13  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (+init-fontsets): Use `set-face-font' to set default font.
 
 2026-01-13  Zhengyi Fu  <i@fuzy.me>
