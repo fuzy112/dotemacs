@@ -1,5 +1,13 @@
 2026-01-13  Zhengyi Fu  <i@fuzy.me>
 
+	Fix M-DEL
+
+	* user-lisp/modify-other-keys.el
+	(modify-other-keys--setup-input-decode-map): Use DEL instead of
+	<backspace>.
+
+2026-01-13  Zhengyi Fu  <i@fuzy.me>
+
 	dotemacs theme customization
 
 	* init.el (dotemacs-theme-refresh): Fix background color on terminal.

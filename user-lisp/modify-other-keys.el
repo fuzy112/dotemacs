@@ -1,6 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
-;; Copyright © 2025  Zhengyi Fu <i@fuzy.me>
+;; Copyright © 2025, 2026  Zhengyi Fu <i@fuzy.me>
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@
            do (modify-other-keys--define-key base (char-to-string base)))
 
   ;; Special whitespace characters
-  (cl-loop for (key . base) in '(("<backspace>" . ?\d)
+  (cl-loop for (key . base) in '(("DEL" . ?\d)
                                  ("<return>" . ?\r)
                                  ("<tab>" . ?\t)
                                  ("SPC" . ?\s)
