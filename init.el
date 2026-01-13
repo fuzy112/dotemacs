@@ -2905,6 +2905,7 @@ of feed configurations without modifying init files."
 
 ;;;; undo-fu-session
 
+(setq undo-fu-session-compression 'zst)
 (undo-fu-session-global-mode)
 
 ;;;; vundo
