@@ -1,5 +1,12 @@
 2026-01-14  Zhengyi Fu  <i@fuzy.me>
 
+	Fix consult configuration error
+
+	* init.el: Change consult--source-recent-file to
+	consult-source-recent-file.
+
+2026-01-14  Zhengyi Fu  <i@fuzy.me>
+
 	Remove some unneeded autoloads.
 
 	* init.el (quick-window-jump, list-backups, backup-list-backups)
