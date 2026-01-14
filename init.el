@@ -915,11 +915,6 @@ ARGS: see `completion-read-multiple'."
 ;; Prevent typing before the prompt.
 (setq minibuffer-prompt-properties '(read-only t face minibuffer-prompt cursor-intangible t))
 
-;;;; pulsar
-
-(when (display-graphic-p)
-  (pulsar-global-mode))
-
 ;;;; goggles
 
 (add-hook 'prog-mode-hook #'goggles-mode)
@@ -970,11 +965,6 @@ ARGS: see `completion-read-multiple'."
      (let ((completion-extra-properties extras)
            completion-cycle-threshold completion-cycling)
        (consult-completion-in-region beg end table pred)))))
-
-(unless (featurep 'tty-child-frames)
-  (add-hook 'tty-setup-hook #'corfu-terminal-mode)
-  (unless (display-graphic-p)
-    (corfu-terminal-mode)))
 
 ;;;; cape
 
@@ -2340,32 +2330,7 @@ Then refresh all windows displaying the current buffer."
           auth-source-gpg-encrypt-to (list  "0xBBE2757FC7BFC23B"))
   (auth-source-forget-all-cached))
 
-
-;;;; lin
-
-(defvar lin-mode-hooks)
-(setq lin-mode-hooks
-      '( gnus-group-mode-hook gnus-server-mode-hook
-         gnus-summary-mode-hook mu4e-main-mode-hook magit-mode-hook
-         backup-list-mode-hook deadgrep-mode-hook rg-mode-hook
-         archive-mode-hook bongo-mode-hook dired-mode-hook
-         elfeed-search-mode-hook git-rebase-mode-hook grep-mode-hook
-         ibuffer-mode-hook ilist-mode-hook ledger-report-mode-hook
-         log-view-mode-hook magit-log-mode-hook mu4e-headers-mode-hook
-         notmuch-search-mode-hook notmuch-tree-mode-hook
-         occur-mode-hook org-agenda-mode-hook
-         pdf-outline-buffer-mode-hook proced-mode-hook
-         tabulated-list-mode-hook tar-mode-hook world-clock-mode-hook
-         telega-root-mode-hook))
-(dolist (hook lin-mode-hooks)
-  (add-hook hook #'lin-mode))
-
-(after-load! lin
-  (setq lin-face 'lin-magenta)
-  (setq lin-mode-hooks
-        (seq-union lin-mode-hooks (custom--standard-value 'lin-mode-hooks)))
-  (unless lin-global-mode
-    (lin-global-mode)))
+;;;; hl-line
 
 ;; Highlight current line in the error buffer after running `next-error'.
 (declare-function hl-line-highlight "hl-line.el")
@@ -2375,9 +2340,11 @@ Then refresh all windows displaying the current buffer."
     (when-let* ((win (get-buffer-window next-error-buffer)))
       (select-window win)
       (recenter))
-    (when (bound-and-true-p lin-mode)
+    (when (bound-and-true-p hl-line-mode)
       (hl-line-highlight))))
-(add-hook 'next-error-hook '+lin-line--next-error-h)
+
+(after-load! hl-line
+  (add-hook 'next-error-hook '+lin-line--next-error-h))
 
 ;; Highlight the current gnus header buffer item.
 (after-load! gnus-sum
@@ -2654,40 +2621,6 @@ of feed configurations without modifying init files."
 (setq claude-code-ide-terminal-backend 'eat)
 (setq claude-code-ide-cli-path
       (expand-file-name "scripts/claude" user-emacs-directory))
-
-;;;; logos
-
-(keymap-global-set "<f8>" #'logos-focus-mode)
-(keymap-global-set "<remap> <narrow-to-region>" #'logos-narrow-dwim)
-(keymap-global-set "<remap> <forward-page>" #'logos-forward-page-dwim)
-(keymap-global-set "<remap> <backward-page>" #'logos-backward-page-dwim)
-
-(defun logos-focus--narrow ()
-  (declare-function logos--narrow-to-page "logos.el")
-  (when (symbol-value 'logos-focus-mode)
-    (logos--narrow-to-page 0)
-    (make-local-variable 'logos--restore)
-    (push #'widen logos--restore)))
-
-(after-load! logos
-  (define-keymap :keymap logos-focus-mode-map
-    "<left>" #'logos-backward-page-dwim
-    "<right>" #'logos-forward-page-dwim)
-  (setq logos-outline-regexp-alist
-        `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos-page-delimiter))
-          (org-mode . ,(format "\\(^\\*+ +\\|^-\\{5\\}$\\|%s\\)"
-                               logos-page-delimiter)))
-        logos-outlines-are-pages t)
-  (setq-default logos-hide-cursor nil
-                logos-hide-mode-line t
-                logos-hide-header-line t
-                logos-hide-buffer-boundaries t
-                logos-hide-fringe t
-                logos-buffer-read-only nil
-                logos-scroll-lock nil
-                logos-olivetti t)
-  (add-hook 'logos-focus-mode-hook #'logos-focus--narrow)
-  (add-hook 'enable-theme-functions #'logos-update-fringe-in-buffers))
 
 ;;;; bookmark
 
