@@ -60,3 +60,9 @@ tramp.eld
 /ecompleterc
 /ielm-history.eld.zst
 /undo-fu-session/
+/history
+/places.eld
+/recentf.eld
+/ido.last
+/user-lisp/.user-lisp-autoloads.el
+/elpa/
