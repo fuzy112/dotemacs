@@ -1439,7 +1439,7 @@ value for USE-OVERLAYS."
     (recentf-mode)))
 (after-load! consult
   ;; enable recentf when accessing the recentf-file source from consult.
-  (setf (plist-get consult--source-recent-file :enabled)
+  (setf (plist-get consult-source-recent-file :enabled)
         (lambda () (require 'recentf) (symbol-value 'recentf-mode))))
 
 ;;;; saveplace
