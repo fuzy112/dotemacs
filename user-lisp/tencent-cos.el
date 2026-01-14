@@ -6,6 +6,11 @@
 (require 'url)
 (require 'url-http)
 
+(defgroup tencent-cos nil
+  "Tencent Cloud Object Storage (COS) integration."
+  :tag "Tencent COS"
+  :group 'comm)
+
 (defun tencent-cos--binary-to-hex (input)
   (mapconcat (lambda (byte) (format "%02x" byte)) input ""))
 
@@ -182,11 +187,22 @@ CALLBACK: Function to call after upload completion.
                           (kill-buffer buffer)
                           )))))))
 
-(defvar tencent-cos-default-link-validity (* 60 60 24))
+(defcustom tencent-cos-default-link-validity (* 60 60 24)
+  "Default validity period for COS download links in seconds."
+  :type 'integer
+  :group 'tencent-cos)
 
-(defvar tencent-cos-default-bucket nil)
-(defvar tencent-cos-default-region nil)
+(defcustom tencent-cos-default-bucket nil
+  "Default COS bucket name with APPID."
+  :type '(choice (const nil) string)
+  :group 'tencent-cos)
 
+(defcustom tencent-cos-default-region nil
+  "Default COS bucket region."
+  :type '(choice (const nil) string)
+  :group 'tencent-cos)
+
+;;;###autoload
 (defun tencent-cos-get-new-url (url)
   (interactive "sOld URL: ")
   (let* ((url (url-generic-parse-url url))
@@ -216,6 +232,7 @@ CALLBACK: Function to call after upload completion.
     (kill-new download-url)
     (message "New URL copied to the kill ring")))
 
+;;;###autoload
 (defun tencent-cos-get-url (file-key duration)
   (interactive
    (list (read-string "File key: ")
@@ -228,7 +245,7 @@ CALLBACK: Function to call after upload completion.
                   (number-to-string (/ tencent-cos-default-link-validity 3600)))))
            tencent-cos-default-link-validity)))
   (let* ((host (tencent-cos-host tencent-cos-default-bucket
-                                       tencent-cos-default-region))
+                                 tencent-cos-default-region))
          (secret (tencent-cos-auth-info host))
          (download-url
           (format "https://%s%s?%s"
@@ -246,6 +263,7 @@ CALLBACK: Function to call after upload completion.
     (kill-new download-url)
     (message "URL copied to the kill ring")))
 
+;;;###autoload
 (defun tencent-cos-put-buffer (type duration)
   "Upload current buffer contents to Tencent Cloud COS and create a download link.
 
@@ -283,7 +301,7 @@ and the buffer name to ensure uniqueness."
                            "-"
                            (buffer-name)))
          (host (tencent-cos-host tencent-cos-default-bucket
-                                       tencent-cos-default-region))
+                                 tencent-cos-default-region))
          (secret (tencent-cos-auth-info host))
          (buffer (current-buffer))
          (mode-line-process-orig mode-line-process))
@@ -309,6 +327,7 @@ and the buffer name to ensure uniqueness."
            (message "Upload failed: %s" error)
          (tencent-cos-get-url file-key duration))))))
 
+;;;###autoload
 (defun tencent-cos-put-file (file type duration)
   "Upload file to Tencent Cloud COS and create a download link.
 
