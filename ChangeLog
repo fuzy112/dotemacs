@@ -1,3 +1,13 @@
+2026-01-14  Zhengyi Fu  <i@fuzy.me>
+
+	Update tencent-cos.el
+
+	* user-lisp/tencent-cos.el: (tencent-cos)
+	(tencent-cos-default-link-validity, tencent-cos-default-bucket)
+	(tencent-cos-default-region): Change global vars into user options.
+	(tencent-cos-get-new-url, tencent-cos-get-url)
+	(tencent-cos-put-buffer, tencent-cos-put-file): Autoload.
+
 2026-01-13  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (magit-openpgp-default-signing-key): Unset.
