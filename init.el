@@ -537,7 +537,6 @@ attributes."
 
 ;;;; quick-window
 
-(autoload 'quick-window-jump "quick-window" nil t)
 (keymap-global-set "M-o" #'quick-window-jump)
 
 ;;;; help
@@ -628,11 +627,6 @@ font-locking and indentation."
     (gnus-group-read-ephemeral-group "emacs"
                                      `(nndoc ,query
                                              (nndoc-address ,mbox)))))
-
-;;;; backup
-
-(autoload 'list-backups "backup" nil t)
-(autoload 'backup-list-backups "backup" nil t)
 
 ;;;; breadcrumb
 
@@ -1025,6 +1019,7 @@ ARGS: see `completion-read-multiple'."
 
 (keymap-global-set "C-." #'embark-act)
 (keymap-global-set "C-c a" #'embark-act)
+(setq embark-help-key "?")
 (setq prefix-help-command #'embark-prefix-help-command)
 
 (define-advice embark-dwim (:before (&rest _args) mouse)
@@ -1091,8 +1086,6 @@ value for USE-OVERLAYS."
   (keymap-set embark-region-map "[" '+embark/apply-ansi-color))
 
 ;;;; consult
-
-(autoload 'consult-ugrep "consult-ugrep" nil t)
 
 (define-keymap
   :keymap global-map
@@ -1259,10 +1252,6 @@ value for USE-OVERLAYS."
 (define-keymap :keymap minibuffer-local-map
   "C-x C-d" #'consult-dir
   "C-x C-j" #'consult-dir-jump-file)
-
-
-;; Custom consult commands.
-(autoload 'consult-kill "consult-kill" nil t)
 
 
 (defun send-password-to-process (process)
@@ -1591,7 +1580,6 @@ value for USE-OVERLAYS."
 
 ;;;; cmake
 
-(autoload 'cmake-capf-setup "cmake-capf")
 (add-hook 'cmake-mode-hook #'cmake-capf-setup)
 (add-hook 'cmake-ts-mode-hook #'cmake-capf-setup)
 
@@ -1601,9 +1589,6 @@ value for USE-OVERLAYS."
   "\\.pr[oi]\\'" 'makefile-mode)
 
 ;;;; systemd-mode
-
-(autoload 'flymake-systemd "flymake-systemd"
-  "Verify the systemd unit file.")
 
 (defun +systemd-mode--setup ()
   (flymake-mode 1)
@@ -1788,14 +1773,6 @@ See `xref-show-xrefs' for FETCHER and ALIST."
   (remove-hook 'xref-after-jump-hook #'recenter)
   (add-hook 'xref-after-jump-hook #'reposition-window))
 
-;;;; good-doc
-
-(autoload 'good-doc-lookup "good-doc" nil t)
-
-;;;; rust-docs
-
-(autoload 'rust-docs-lookup "rust-docs" nil t)
-
 ;;;; javascript
 
 (declare-function js-jsx--comment-region "js.el")
@@ -1884,14 +1861,6 @@ With no active region, operate on the whole buffer."
 ;;;; pp-posframe
 
 ;; Show results of `eval-last-sexp' in posframes.
-
-(autoload 'pp-posframe-eval-last-sexp "pp-posframe"
-  "Evaluate sexp before point; display the value in a posframe." t)
-(autoload 'pp-posframe-compile-defun "pp-posframe"
-  "Compile and evaluate the current top-level form.
-Display the result in a posframe." t)
-(autoload 'pp-posframe-macroexpand-last-sexp "pp-posframe"
-  "Macroexpand the sexp before point; display the result in a posframe." t)
 (keymap-global-set "C-x C-e" #'pp-posframe-eval-last-sexp)
 (after-load! elisp-mode
   (keymap-set emacs-lisp-mode-map "C-M-x" #'pp-posframe-compile-defun)
@@ -1910,7 +1879,6 @@ Display the result in a posframe." t)
 
 (setq c-tab-always-indent nil
       c-insert-tab-function #'completion-at-point)
-(autoload 'flymake-clang-tidy "flymake-clang-tidy")
 (defun +cc-mode--hook ()
   (add-hook 'flymake-diagnostic-functions #'flymake-clang-tidy nil t))
 (add-hook 'c-mode-common-hook '+cc-mode--hook)
@@ -1930,11 +1898,11 @@ Display the result in a posframe." t)
 ;;;; sh-script
 
 (add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
-(autoload 'flymake-checkbashisms "flymake-checkbashisms")
 (defun +sh-mode-h ()
   (add-hook 'flymake-diagnostic-functions #'flymake-checkbashisms nil t))
 (after-load! 'sh-script
   (add-hook 'sh-mode-hook #'+sh-mode-h))
+(add-hook 'sh-mode-hook #'flymake-mode)
 
 (defun +shellcheck-auto-fix ()
   "Run shellcheck on current buffer to generate fix suggestions.
@@ -2663,14 +2631,6 @@ of feed configurations without modifying init files."
 
 ;;;; tui
 
-(autoload 'tui-run    "tui" nil t)
-(autoload 'tui-rg     "tui" nil t)
-(autoload 'tui-ugrep  "tui" nil t)
-(autoload 'tui-yazi   "tui" nil t)
-(autoload 'tui-kill   "tui" nil t)
-(autoload 'tui-line   "tui" nil t)
-(autoload 'tui-find   "tui" nil t)
-(autoload 'tui-locate "tui" nil t)
 (after-load! tui
   (alist-setq! display-buffer-alist "^\\*tui-" '((display-buffer-same-window))))
 
@@ -2729,11 +2689,6 @@ of feed configurations without modifying init files."
   (add-hook 'logos-focus-mode-hook #'logos-focus--narrow)
   (add-hook 'enable-theme-functions #'logos-update-fringe-in-buffers))
 
-;;;; image-slicing
-
-(autoload 'image-slicing-mode "image-slicing" nil t)
-(add-hook 'eww-mode-hook #'image-slicing-mode)
-
 ;;;; bookmark
 
 (defvar pp-default-function)
@@ -2741,7 +2696,6 @@ of feed configurations without modifying init files."
   (let ((pp-default-function 'pp-28))
     (apply args)))
 
-(autoload 'url-bookmark-add "bookmark-extras" "" t)
 (keymap-global-set "C-x r u" #'url-bookmark-add)
 (after-load! bookmark
   (advice-add #'bookmark-write-file :around '+bookmark--pp-28)
@@ -2753,8 +2707,6 @@ of feed configurations without modifying init files."
   (require 'bookmark-extras))
 
 ;;;; org
-
-(autoload 'org-store-link "ol" nil t)
 
 (defvar org-hide-emphasis-markers)
 
@@ -2886,7 +2838,6 @@ of feed configurations without modifying init files."
 
 ;;;; consult-browser-hist
 
-(autoload 'consult-browser-hist "consult-browser-hist" nil t)
 (keymap-global-set "M-s b" #'consult-browser-hist)
 
 ;;;; webjump
@@ -2938,9 +2889,6 @@ of feed configurations without modifying init files."
 
 (setopt copyright-year-ranges t)
 (add-hook 'before-save-hook #'copyright-update)
-
-;;;; sftp
-(autoload 'sftp "sftp" nil t)
 
 ;;;; mode-line
 
@@ -3252,7 +3200,8 @@ Otherwise disable it."
   "M-l"    #'downcase-dwim
   "M-u"    #'upcase-dwim
   "<f5>"   #'project-recompile
-  "C-M-S-w" #'copy-message)
+  "C-M-S-w" #'copy-message
+  "<remap> <dabbrev-expand>" #'hippie-expand)
 
 ;;;; Enabling some disabled commands
 
