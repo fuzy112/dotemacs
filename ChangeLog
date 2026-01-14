@@ -1,5 +1,20 @@
 2026-01-14  Zhengyi Fu  <i@fuzy.me>
 
+	Remove some unneeded autoloads.
+
+	* init.el (quick-window-jump, list-backups, backup-list-backups)
+	(consult-ugrep, consult-kill, cmake-capf-setup, flymake-systemd)
+	(good-doc-lookup, rust-docs-lookup, pp-posframe-eval-last-sexp)
+	(pp-posframe-compile-defun, pp-posframe-macroexpand-last-sexp)
+	(flymake-clang-tidy, flymake-checkbashisms, tui-run, tui-rg)
+	(tui-ugrep, tui-yazi, tui-kill, tui-line, tui-find, tui-locate)
+	(image-slicing-mode, url-bookmark-add, org-store-link)
+	(consult-browser-hist, sftp): Remove autoload form.
+	(embark-help-key): Set to "?".
+	(sh-mode-hook): Add `flymake-mode'.
+
+2026-01-14  Zhengyi Fu  <i@fuzy.me>
+
 	Update tencent-cos.el
 
 	* user-lisp/tencent-cos.el: (tencent-cos)
