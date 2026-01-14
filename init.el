@@ -469,8 +469,8 @@ attributes."
 (if (daemonp)
     ;; Refresh theme for new frames in server mode
     (add-hook 'server-after-make-frame-hook #'dotemacs-theme-refresh t)
-  ;; Refresh theme immediately
-  (dotemacs-theme-refresh))
+  ;; Refresh on startup
+  (add-hook 'emacs-startup-hook #'dotemacs-theme-refresh))
 
 ;; Refresh theme when themes are enabled
 (add-hook 'enable-theme-functions #'dotemacs-theme-refresh)
