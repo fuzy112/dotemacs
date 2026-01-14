@@ -1,5 +1,9 @@
 2026-01-14  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Add `dotemacs-theme-refresh' to `emacs-startup-hook'.
+
+2026-01-14  Zhengyi Fu  <i@fuzy.me>
+
 	Fix consult configuration error
 
 	* init.el: Change consult--source-recent-file to
