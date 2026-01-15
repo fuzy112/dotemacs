@@ -1,3 +1,7 @@
+2026-01-15  Zhengyi Fu  <i@fuzy.me>
+
+	* user-lisp/tui.el (tui-recentf): Filter out remote files.
+
 2026-01-14  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Remove some packages (pulsar, corfu-terminal, lin, logos).
