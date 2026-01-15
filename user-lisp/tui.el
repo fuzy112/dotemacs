@@ -365,8 +365,9 @@ When called interactively, the symbol at point is used as the initial query."
 			      (let ((standard-output #'external-debugging-output))
 				(load ,recentf-save-file)
 				(dolist (file recentf-list)
-				  (princ (expand-file-name file) t)
-				  (princ "\n" t)))))))
+				  (unless (file-remote-p file)
+				    (princ (expand-file-name file) t)
+				    (princ "\n" t))))))))
 	    :preview tui--file-preview
 	    :preview-window "up:60%:+{2}/3")
 	   #'tui--file-callback))
