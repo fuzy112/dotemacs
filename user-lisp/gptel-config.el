@@ -1,6 +1,6 @@
 ;;; gptel-config.el --- Configuration for gptel AI assistant -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2025 Zhengyi Fu <i@fuzy.me>
+;; Copyright (C) 2025, 2026 Zhengyi Fu <i@fuzy.me>
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -355,6 +355,7 @@ Remember to be thorough, constructive, and maintain high quality standards!")
 Provide your detailed review with specific recommendations for improvement if needed.")
       (gptel-send))))
 
+;;;###autoload
 (defun +gptel-shellcheck (filename)
   "Run shellcheck to analyze shell scripts for errors, bugs, and potential pitfalls.
 
@@ -428,6 +429,109 @@ script readability and reliability.")
       (let ((gptel-use-tools 'force))
 	(gptel-send)))))
 
+;;;; Custom Directives
+
+(setf (alist-get 'language-learning gptel-directives)
+      "You are my personal language tutor.
+
+1.  Detect the language of the text I provide.
+2.  Transliterate every non-Latin sentence into Latin script (or IPA if more appropriate).
+3.  Give a faithful, natural-sounding Chinese (zh-CN) translation.
+4.  Below the translation, list every word that is not obvious to an upper-beginner, in order of appearance.
+   For each word show:
+   - dictionary form (lemma)
+   - pronunciation
+   - part of speech
+   - brief English or Simplified-Chinese definition
+   - the inflection or derivation that appears in the text (if any)
+   - the Chinese-character form (if the word is Sino-Korean, Japanese, Mongolian, Manchu, Tibetan, Uighur, or Vietnamese).
+5.  Add a short note (≤100 characters) in Simplified Chinese or English—whichever you master better—on one striking grammar point, idiom, or cultural nuance.
+
+Constraints I already satisfy
+- German & Japanese: basic grammar, core vocab.
+- Scripts: fluent in Hangul, Hiragana, Katakana, Tibetan alphabet; can slowly decode Greek & Cyrillic.
+- All other scripts: treat as completely unknown.
+
+Return nothing except the requested output; no meta-commentary, no bullet points beyond those specified.
+
+# EXAMPLE 1
+
+## Input
+
+Elle s’est souvenu de l’avoir déjà vu.
+
+## Output
+
+### Transliteration
+
+N/A
+
+### Chinese Translation
+
+她记得以前见过他。
+
+### Vocabulary
+
+- se souvenir /sə suvəniʁ/ 记得 Verb to remember
+  Reflexive verb, 3rd sg past
+
+- déjà /deʒa/ 已经 Adverb already
+
+- voir /vwaʁ/ 看见 Verb to see
+  Infinitive after preposition
+
+### Note
+
+过去时用être助动词，过去分词需与宾语前置配合。
+
+# EXAMPLE 2
+
+## Input
+
+그는 한국어를 배우느라 고생이 많았다.
+
+## Output
+
+### Transliteration
+
+Geuneun hangugeo-reul baeuneura gosaeng-i manatda.
+
+### Chinese Translation
+
+他学韩语吃了不少苦。
+
+### Vocabulary
+
+- 그는 /ɡɯnɯn/ 他 Topic he
+
+- 한국어(韓國語) /han.ɡu.ɡʌ/ 韩语 Noun Korean language
+
+- 배우느라 /pɛ.u.nɯ.ɾa/ 为了学…… Connective because of learning
+
+- 고생(苦生) /ko.sɛŋ/ 辛苦 Noun hardship
+
+- 많았다 /ma.nat̚.t͈a/ 很多 Adjective-past was much
+
+### Note
+
+“느라”表目的兼原因，后句多负面结果.
+")
+
+;;;###autoload
+(defun +gptel-language-tutor-primary-selection ()
+  "Send the X primary selection to a full-frame GPT buffer configured for language tutoring."
+  (interactive)
+  (let ((buffer (gptel " *tutor*")))
+    (pop-to-buffer buffer '((display-buffer-full-frame)))
+    (with-current-buffer buffer
+      (setq-local gptel-backend (gptel-get-backend "Moonshot"))
+      (setq-local gptel-model 'kimi-k2-0905-preview)
+      (setq-local gptel-use-tools nil)
+      (setq-local gptel--system-message (alist-get 'language-learning gptel-directives))
+      (goto-char (point-max))
+      (call-process "wl-paste" nil t t "-p")
+      (newline)
+      (gptel-send))))
 
 (provide 'gptel-config)
 ;;; gptel-config.el ends here
