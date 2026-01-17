@@ -1140,8 +1140,7 @@ value for USE-OVERLAYS."
   (remove-hook 'consult-after-jump-hook #'recenter)
   (add-hook 'consult-after-jump-hook #'reposition-window)
 
-  (add-to-list 'consult-buffer-filter "\\`\\*EGLOT")
-  (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode))
+  (add-to-list 'consult-buffer-filter "\\`\\*EGLOT"))
 
 (setq register-preview-delay 0.5
       register-preview-function #'consult-register-format)
@@ -2345,10 +2344,6 @@ Then refresh all windows displaying the current buffer."
 
 (after-load! hl-line
   (add-hook 'next-error-hook '+lin-line--next-error-h))
-
-;; Highlight the current gnus header buffer item.
-(after-load! gnus-sum
-  (add-hook 'gnus-visual-mark-article-hook #'hl-line-highlight))
 
 ;;;; prism
 
