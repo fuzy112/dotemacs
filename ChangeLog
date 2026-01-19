@@ -1,3 +1,7 @@
+2026-01-19  Zhengyi Fu  <i@fuzy.me>
+
+	* transient/levels.el (magit-log): Set level of first-parent to 1.
+
 2026-01-16  Zhengyi Fu  <i@fuzy.me>
 
 	* user-lisp/gptel-config.el (+gptel-language-tutor-primary-selection): New command.
