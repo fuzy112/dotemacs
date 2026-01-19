@@ -1,5 +1,9 @@
 2026-01-19  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+gnus-read-ephemeral-public-inbox-search-group): New command.
+
+2026-01-19  Zhengyi Fu  <i@fuzy.me>
+
 	* transient/levels.el (magit-log): Set level of first-parent to 1.
 
 2026-01-16  Zhengyi Fu  <i@fuzy.me>
