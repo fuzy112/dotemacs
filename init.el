@@ -598,11 +598,11 @@ font-locking and indentation."
   (keymap-set help-map "M" #'+gnus-read-ephemeral-emacs-search-group))
 
 (defvar url-http-response-status)
-(defun +gnus-read-ephemeral-emacs-search-group (query include-all)
-  (interactive "sQuery: \nP")
+(defun +gnus-read-ephemeral-public-inbox-search-group (url query include-all)
+  (interactive "sURL: \nsQuery: \nP")
   (require 'gnus-group)
   (require 'mm-url)
-  (let* ((url (format "https://yhetil.org/emacs/?q=%s&x=m" (url-hexify-string query)))
+  (let* ((url (format "%s/?q=%s&x=m" url (url-hexify-string query)))
          (mbox (make-temp-file "mbox-"))
          (boundary (mml-compute-boundary '()))
          (values (list (if include-all
@@ -627,6 +627,12 @@ font-locking and indentation."
     (gnus-group-read-ephemeral-group "emacs"
                                      `(nndoc ,query
                                              (nndoc-address ,mbox)))))
+
+(defun +gnus-read-ephemeral-emacs-search-group (query include-all)
+  (interactive "sQuery: \nP")
+  (+gnus-read-ephemeral-public-inbox-search-group
+   "https://yhetil.org/emacs"
+   query include-all))
 
 ;;;; breadcrumb
 
