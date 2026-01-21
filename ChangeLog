@@ -1,3 +1,10 @@
+2026-01-21  Zhengyi Fu  <i@fuzy.me>
+
+	Add per-project history for project-compile
+
+	* init.el (per-project-compile-history): New variable.
+	(project-compile): New advice.
+
 2026-01-19  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (+gnus-read-ephemeral-public-inbox-search-group): New command.
