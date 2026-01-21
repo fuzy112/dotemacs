@@ -1978,6 +1978,18 @@ confirmed."
              (consp project-switch-commands))
     (add-to-list 'project-switch-commands '(project-compile "Compile") t)))
 
+(defvar per-project-compile-history nil)
+
+(define-advice project-compile (:around (&rest args) project-local-history)
+  (let* ((root (project-root (project-current t)))
+         (project-hist (alist-get root per-project-compile-history nil nil #'equal))
+         (compile-history project-hist)
+         (compile-command (and project-hist
+                               (car project-hist))))
+    (unwind-protect
+        (apply args)
+      (setf (alist-get root per-project-compile-history nil nil #'equal) compile-history))))
+
 ;;;; tramp
 
 (setq tramp-persistency-file-name
@@ -2325,6 +2337,7 @@ Then refresh all windows displaying the current buffer."
 ;; (setq savehist-file (locate-user-emacs-file '("savehist.eld.zst")))
 (setq savehist-additional-variables '((kill-ring . 5)
                                       compile-command
+                                      per-project-compile-history
                                       corfu-history))
 (add-hook 'after-init-hook #'savehist-mode)
 
