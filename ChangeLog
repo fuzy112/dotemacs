@@ -1,5 +1,9 @@
 2026-01-22  Zhengyi Fu  <i@fuzy.me>
 
+	* templates/bash.eld: Add new template for Bash shell scripts.
+
+2026-01-22  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Do not enable `corfu-popupinfo-mode'.
 
 2026-01-21  Zhengyi Fu  <i@fuzy.me>
