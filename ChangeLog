@@ -1,3 +1,7 @@
+2026-01-22  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Do not enable `corfu-popupinfo-mode'.
+
 2026-01-21  Zhengyi Fu  <i@fuzy.me>
 
 	Add per-project history for project-compile

@@ -950,8 +950,6 @@ ARGS: see `completion-read-multiple'."
           corfu-quick2 "ueoai")
   (global-corfu-mode)
   (corfu-history-mode)
-  (corfu-popupinfo-mode)
-  (keymap-unset corfu-popupinfo-map "M-t")
   (define-keymap :keymap corfu-map
     "M-m"       #'corfu-move-to-minibuffer
     "SPC"       #'corfu-insert-separator
@@ -963,6 +961,10 @@ ARGS: see `completion-read-multiple'."
     "<backtab>" #'corfu-previous)
 
   (add-to-list 'corfu-continue-commands #'corfu-move-to-minibuffer))
+
+(after-load! corfu-popupinfo
+  (keymap-unset corfu-popupinfo-map "M-t"))
+
 
 (defun corfu-move-to-minibuffer ()
   (interactive)
