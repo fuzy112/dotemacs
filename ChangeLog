@@ -1,3 +1,7 @@
+2026-01-23  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (send-password-to-process): Fix the prompt.
+
 2026-01-22  Zhengyi Fu  <i@fuzy.me>
 
 	* templates/bash.eld: Add new template for Bash shell scripts.
