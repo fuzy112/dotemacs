@@ -91,8 +91,8 @@ Returns VALUE unchanged if not a boolean."
       (if (not (null example))
           (setcdr (assoc nixos-options-example option)
                   (nixos-options--boolean-string example)))
-      (add-to-list 'data `(,nixos-options-name . ,name))
-      `(,name . ,data))))
+      (push `(,nixos-options-name . ,name) data)
+      `(,name . ,(nreverse data)))))
 
 (defvar nixos-options
   (if (file-exists-p nixos-options-json-file)
