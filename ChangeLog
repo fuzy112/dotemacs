@@ -1,5 +1,9 @@
 2026-01-23  Zhengyi Fu  <i@fuzy.me>
 
+	* user-lisp/gptel-config.el: Add directive for generating commit messages.
+
+2026-01-23  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (send-password-to-process): Fix the prompt.
 
 2026-01-22  Zhengyi Fu  <i@fuzy.me>
