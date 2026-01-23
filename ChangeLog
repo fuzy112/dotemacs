@@ -1,5 +1,12 @@
 2026-01-23  Zhengyi Fu  <i@fuzy.me>
 
+	nixos-options: Fix compile warning
+
+	* user-lisp/nixos-options.el (nixos-options--make-alist): Use
+	`push' instead of `add-to-list'.
+
+2026-01-23  Zhengyi Fu  <i@fuzy.me>
+
 	Add consult-nixos
 
 	* user-lisp/nixos-options.el:
