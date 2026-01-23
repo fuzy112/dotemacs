@@ -517,6 +517,14 @@ Geuneun hangugeo-reul baeuneura gosaeng-i manatda.
 “느라”表目的兼原因，后句多负面结果.
 ")
 
+(setf (alist-get 'commit gptel-directives)
+      "You are a large language model and a careful software developer.
+You will be given a set of diffs and maybe some other information retrieved from magit, a Git interface in Emacs.
+Your task to generate a commit message for the diffs.
+The commit message should be brief but contains necessary information.
+The commit message should focus on the staged changes and should omit unstaged and untracked changes.
+If the git log is available to you, you should generate the commit message based on existing commit message convention.")
+
 ;;;###autoload
 (defun +gptel-language-tutor-primary-selection ()
   "Send the X primary selection to a full-frame GPT buffer configured for language tutoring."
