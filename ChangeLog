@@ -1,5 +1,12 @@
 2026-01-23  Zhengyi Fu  <i@fuzy.me>
 
+	Add consult-nixos
+
+	* user-lisp/nixos-options.el:
+	* user-lisp/consult-nixos.el: New files.
+
+2026-01-23  Zhengyi Fu  <i@fuzy.me>
+
 	* user-lisp/gptel-config.el: Add directive for generating commit messages.
 
 2026-01-23  Zhengyi Fu  <i@fuzy.me>
