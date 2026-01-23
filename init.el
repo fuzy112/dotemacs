@@ -1258,7 +1258,7 @@ value for USE-OVERLAYS."
     (if-let* ((proc (get-buffer-process (current-buffer)))
               ((not current-prefix-arg)))
         proc
-      (read-process-name "Process: "))))
+      (read-process-name "Process"))))
   (process-send-string process
                        (concat
                         (read-passwd "Password: ")
