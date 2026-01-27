@@ -1,3 +1,7 @@
+2026-01-27  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el: Enable envrc-global-mode.
+
 2026-01-23  Zhengyi Fu  <i@fuzy.me>
 
 	nixos-options: Fix compile warning
