@@ -1511,6 +1511,10 @@ value for USE-OVERLAYS."
         compilation-ask-about-save t
         compilation-scroll-output 'first-error))
 
+(defun process-use-pipe ()
+  (setq-local process-connection-type nil))
+(add-hook 'compilation-mode-hook #'process-use-pipe)
+
 ;;;; comint
 
 (after-load! comint
