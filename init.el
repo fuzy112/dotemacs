@@ -2828,6 +2828,10 @@ of feed configurations without modifying init files."
 
 (add-hook 'pcap-mode-hook #'hl-line-mode)
 
+;;;; envrc
+
+(add-hook 'emacs-startup-hook #'envrc-global-mode)
+
 ;;;; p-search
 
 (after-load! p-search
