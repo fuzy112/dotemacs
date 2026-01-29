@@ -745,8 +745,23 @@ falls back to its default handling."
   ;; otherwise orderless-style-dispatchers may not be defined yet.
   (add-to-list 'orderless-style-dispatchers #'+orderless--consult-dispatch))
 
-;;;; vertico
+;;;; Default completion UI
 
+(setq completions-format 'one-column
+      completions-detailed t
+      completions-group t
+      completions-sort 'historical
+      completions-max-height 15
+      minibuffer-visible-completions 'up-down
+      completion-eager-update t
+      completion-eager-display t
+      completion-auto-help 'always
+      completion-show-help nil
+      completion-show-inline-help nil)
+
+(keymap-unset minibuffer-local-completion-map "SPC")
+
+;;;; vertico
 
 ;; Allow recursive minibuffers, so commands invoked from within the minibuffer
 ;; (e.g., C-x C-f followed by M-:) can themselves use the minibuffer.
