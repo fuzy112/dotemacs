@@ -51,26 +51,27 @@
   :host "api.moonshot.cn"
   :stream t
   :key #'gptel-api-key-from-auth-source
-  :models '((kimi-latest
-	     :description "The latest model used by Kimi Assistant"
+  :models '((kimi-k2.5
+	     :description "Kimi's most versatile model to date"
 	     :capabilities (media tool-use json)
 	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
-	     :context-window 128
-	     :input-cost 1.50	  ; when cache hit
-					; when cache misses:
-					;  0.20 when (context < 8k)
-					;  1.00 when (8k  <= context < 32k)
-					;  2.00 when (32k <= context < 128k)
-	     :output-cost 2.00)	      	; (context < 8k)
-					; 3.00  hen (8k <= context < 32k)
-					; 5.00 when (32k <= context < 127k)
-	    (kimi-thinking-preview
+	     :context-window 256
+	     :input-cost 0.10		; 0.60 if cache miss
+	     :output-cost 3.00)
+	    (kimi-k2-thinking
 	     :description "The Kimi reasoning model"
 	     :capabilities (reasoning media)
 	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
-	     :context-window 128
-	     :input-cost 30
-	     :output-cost 30)
+	     :context-window 256
+	     :input-cost 0.15		;  0.60 if cache miss
+	     :output-cost 2.50)
+	    (kimi-k2-thinking-turbo
+	     :description "The Kimi reasoning model"
+	     :capabilities (reasoning media)
+	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
+	     :context-window 256
+	     :input-cost 0.15		; 1.15 if cache miss
+	     :output-cost 8.00)
 	    (kimi-k2-0711-preview
 	     :description "A model suitable for coding"
 	     :capabilities (media tool-use json)
@@ -90,8 +91,8 @@
 	     :capabilities (media tool-use json)
 	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
 	     :context-window 256
-	     :input-cost 0.60		; 2.50 if cache miss
-	     :output-cost 10.00)
+	     :input-cost 0.10		; 1.15 if cache miss
+	     :output-cost 8.00)
 	    (moonshot-v1-auto
 	     :description "The standard Moonshot V1 model"
 	     :capabilities (tool-use json)
