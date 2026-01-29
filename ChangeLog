@@ -1,3 +1,7 @@
+2026-01-29  Zhengyi Fu  <i@fuzy.me>
+
+	* user-lisp/gptel-config.el ("Moonshot"): Update moonshot models.
+
 2026-01-27  Zhengyi Fu  <i@fuzy.me>
 
 	Use pipes in compilation-mode
