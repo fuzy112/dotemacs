@@ -1,5 +1,18 @@
 2026-01-29  Zhengyi Fu  <i@fuzy.me>
 
+	Update default completion UI configuration
+
+	* init.el (completions-format): Set to `one-column'.
+	(completions-detailed, completions-group): Set to t.
+	(completions-sort): Set to `historical'.
+	(completions-max-height): Set to 15.
+	(minibuffer-visible-completions): Set to `up-down'.
+	(completion-eager-update, completion-eager-display): Set to t.
+	(completion-auto-help): Set to `always'.
+	(completion-show-help, completion-show-inline-help): Set to nil.
+
+2026-01-29  Zhengyi Fu  <i@fuzy.me>
+
 	* user-lisp/gptel-config.el ("Moonshot"): Update moonshot models.
 
 2026-01-27  Zhengyi Fu  <i@fuzy.me>
