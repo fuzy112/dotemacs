@@ -1160,8 +1160,9 @@ value for USE-OVERLAYS."
   "M-r" #'consult-history)
 
 (after-load! consult
-  (remove-hook 'consult-after-jump-hook #'recenter)
-  (add-hook 'consult-after-jump-hook #'reposition-window)
+  (setq consult-after-jump-hook
+        (cl-nsubstitute #'reposition-window #'recenter
+                        consult-after-jump-hook))
 
   (add-to-list 'consult-buffer-filter "\\`\\*EGLOT"))
 
@@ -1786,8 +1787,8 @@ See `xref-show-xrefs' for FETCHER and ALIST."
               (t 'grep))
         xref-show-definitions-function #'+xref--show-definition
         xref-auto-jump-to-first-definition t)
-  (remove-hook 'xref-after-jump-hook #'recenter)
-  (add-hook 'xref-after-jump-hook #'reposition-window))
+  (setq xref-after-jump-hook
+        (cl-nsubstitute #'reposition-window #'recenter xref-after-jump-hook)))
 
 ;;;; javascript
 
