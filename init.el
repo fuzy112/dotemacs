@@ -1711,9 +1711,77 @@ value for USE-OVERLAYS."
   (keymap-set eglot-mode-map "C-c l" '+eglot-prefix-map)
   (eglot-tempel-mode))
 
+;;;;; Nix integration
+
+(defvar lsp-server-nix-packages
+  '(("rust-analyzer"                   . ("nixpkgs#rust-analyzer" "nixpkgs#cargo"))
+    ("neocmakelsp"                     . ("nixpkgs#neocmakelsp"))
+    ("cmake-language-server"           . ("nixpkgs#cmake-language-server"))
+    ("vim-language-server"             . ("nixpkgs#vim-language-server"))
+    ("pyright-langserver"              . ("nixpkgs#pyright"))
+    ("basedpyright-langserver"         . ("nixpkgs#basedpyright"))
+    ("pyrefly"                         . ("nixpkgs#pyrefly"))
+    ("ty"                              . ("nixpkgs#ty"))
+    ("ruff"                            . ("nixpkgs#ruff"))
+    ("vscode-json-language-server"     . ("nixpkgs#vscode-json-languageserver"))
+    ("typescript-language-server"      . ("nixpkgs#typescript-language-server"))
+    ("bash-language-server"            . ("nixpkgs#bash-language-server"))
+    ("clangd"                          . ("nixpkgs#clang-tools" "nixpkgs#gcc"))
+    ("solargraph"                      . ("nixpkgs#solargraph"))
+    ("ruby-lsp"                        . ("nixpkgs#ruby-lsp"))
+    ("haskell-language-server-wrapper" . ("nixpkgs#haskell-language-server"))
+    ("kotlin-language-server"          . ("nixpkgs#kotlin-language-server"))
+    ("gopls"                           . ("nixpkgs#gopls" "nixpkgs#go"))
+    ("jdtls"                           . ("nixpkgs#jdt-language-server"))
+    ("texlab"                          . ("nixpkgs#texlab"))
+    ("erlang_ls"                       . ("nixpkgs#erlang-ls"))
+    ("yaml-language-server"            . ("nixpkgs#yaml-language-server"))
+    ("tombi"                           . ("nixpkgs#tombi"))
+    ("nixd"                            . ("nixpkgs#nixd"))
+    ("nls"                             . ("nixpkgs#nls"))))
+
+(define-advice eglot--executable-find (:around (fn command &optional remote) nix)
+  "Find executable COMMAND, possibly via Nix.
+If COMMAND is not found in PATH and we are not in a remote buffer,
+look up COMMAND in `lsp-server-nix-packages'.  If found, run
+'nix shell' with the associated packages to locate the command.
+If that succeeds and the resulting program exists, return its path.
+Otherwise, fall back to the original function FN."
+  (if-let* (((not (file-remote-p default-directory)))
+            ((not (executable-find command remote)))
+            (pkgs (cdr (assoc-string command lsp-server-nix-packages)))
+            (prog
+             (with-temp-buffer
+               (apply #'call-process "nix" nil t nil
+                      "shell" "--quiet"
+                      (append pkgs
+                              (list  "-c" "which" command)))
+               (string-trim (buffer-string))))
+            ((file-exists-p prog)))
+       prog
+    (funcall fn command remote)))
+
+(define-advice eglot--guess-contact (:filter-return (result) nix)
+  "Adjust Eglot server contact to run via Nix if needed.
+When RESULT contains a contact list and its command is not in PATH,
+look up the command in `lsp-server-nix-packages'.  If found, wrap
+the contact list to run via 'nix shell' with the associated packages."
+  (when-let ((contact (nth 3 result))
+             ((listp contact))
+             (command (car (ensure-list contact)))
+             ((not (executable-find command)))
+             (pkgs (cdr (assoc-string command lsp-server-nix-packages))))
+    (setf (nth 3 result) (append (list "nix" "shell" "--quiet")
+                                 pkgs
+                                 (list "-c")
+                                 contact)))
+  result)
+
 ;;;;; consult-eglot
 
 (after-load! consult
+  ;; Add a split style for consult-eglot-symbols, which splits the input by spaces,
+  ;; where the first component is the input to the LSP.
   (add-to-list 'consult-async-split-styles-alist `(space :separator ?\s :function ,#'consult--split-separator)))
 
 (keymap-set search-map "s" #'consult-eglot-symbols)
@@ -1723,6 +1791,10 @@ value for USE-OVERLAYS."
   (keymap-set eglot-mode-map "<remap> <xref-find-apropos>" 'consult-eglot-symbols))
 
 (defun +consult--async-wrap--split-space (async)
+  "Wrap ASYNC function with a pipeline that splits input on spaces.
+This is a modified version of `consult--async-wrap' that uses
+`consult--async-split' with the 'space argument to split the
+input stream on spaces instead of the default newline character."
   (consult--async-pipeline
    (consult--async-split 'space)
    async
@@ -1734,17 +1806,27 @@ value for USE-OVERLAYS."
     (consult-customize consult-eglot-symbols
                        :async-wrap #'+consult--async-wrap--split-space)))
 
+(defun +consult-eglot-symbols--highlight (input)
+  "Return a highlighting function for consult-eglot-symbols.
+INPUT is the orderless pattern string.  The returned function
+takes a candidate string and highlights matches using a regexp
+generated by `orderless-flex' from INPUT."
+  (let ((re (rx-to-string (orderless-flex input) t)))
+    (lambda (str)
+      (consult--highlight-regexps (list re) t str))))
+
 (define-advice consult-eglot-symbols (:around (fun) highlight)
-  (cl-letf* ((orig-highlight (symbol-function 'consult--async-highlight))
-             ((symbol-function 'consult--async-highlight)
-              (lambda (&optional highlight)
-                (funcall orig-highlight
-                         (or highlight
-                             (lambda (input)
-                               (let ((re (rx-to-string (orderless-flex input) t)))
-                                 (lambda (str)
-                                   (consult--highlight-regexps (list re) t str)))))))))
-    (funcall fun)))
+  "Highlight consult-eglot-symbols matches using orderless-flex regexps.
+This advice overrides `consult--async-highlight' to generate regexps
+from input using `orderless-flex', ensuring that symbol matches are
+highlighted according to the orderless matching style."
+  (let* ((orig-highlight (symbol-function 'consult--async-highlight))
+         (new-highlight (lambda (&optional highlight)
+                          (funcall orig-highlight
+                                   (or highlight
+                                       #'+consult-eglot-symbols--highlight)))))
+    (cl-letf (((symbol-function 'consult--async-highlight) new-highlight))
+      (funcall fun))))
 
 ;;;; xref
 
