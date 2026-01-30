@@ -1,3 +1,12 @@
+2026-01-30  Zhengyi Fu  <i@fuzy.me>
+
+	Update eglot configuration
+
+	* init.el (lsp-server-nix-packages): New variable.
+	(eglot--executable-find, eglot--guess-contact): New advice.
+	(+consult-eglot-symbols--highlight): New defun.
+	(consult-eglot-symbols): Use `+consult-eglot-symbols--highlight'.
+
 2026-01-29  Zhengyi Fu  <i@fuzy.me>
 
 	Update default completion UI configuration
