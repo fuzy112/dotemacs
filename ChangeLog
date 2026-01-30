@@ -1,5 +1,9 @@
 2026-01-30  Zhengyi Fu  <i@fuzy.me>
 
+	* transient/values.el (magit-log:magit-log-mode): Remove --graph and --color.
+
+2026-01-30  Zhengyi Fu  <i@fuzy.me>
+
 	Update eglot configuration
 
 	* init.el (lsp-server-nix-packages): New variable.
