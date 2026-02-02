@@ -1735,6 +1735,7 @@ value for USE-OVERLAYS."
     ("jdtls"                           . ("nixpkgs#jdt-language-server"))
     ("texlab"                          . ("nixpkgs#texlab"))
     ("erlang_ls"                       . ("nixpkgs#erlang-ls"))
+    ("elp"                             . ("nixpkgs#erlang-language-platform"))
     ("yaml-language-server"            . ("nixpkgs#yaml-language-server"))
     ("tombi"                           . ("nixpkgs#tombi"))
     ("nixd"                            . ("nixpkgs#nixd"))
