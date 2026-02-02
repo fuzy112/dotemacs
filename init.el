@@ -1740,45 +1740,56 @@ value for USE-OVERLAYS."
     ("nixd"                            . ("nixpkgs#nixd"))
     ("nls"                             . ("nixpkgs#nls"))))
 
-(define-advice eglot--executable-find (:around (fn command &optional remote) nix)
+(defun eglot--executable-find@nix (fn command &optional remote)
   "Find executable COMMAND, possibly via Nix.
-If COMMAND is not found in PATH and we are not in a remote buffer,
-look up COMMAND in `lsp-server-nix-packages'.  If found, run
-'nix shell' with the associated packages to locate the command.
-If that succeeds and the resulting program exists, return its path.
-Otherwise, fall back to the original function FN."
-  (if-let* (((not (file-remote-p default-directory)))
-            ((not (executable-find command remote)))
-            (pkgs (cdr (assoc-string command lsp-server-nix-packages)))
-            (prog
-             (with-temp-buffer
-               (apply #'call-process "nix" nil t nil
-                      "shell" "--quiet"
-                      (append pkgs
-                              (list  "-c" "which" command)))
-               (string-trim (buffer-string))))
-            ((file-exists-p prog)))
-       prog
+If COMMAND is not found in PATH and we are not in a remote buffer, look
+up COMMAND in `lsp-server-nix-packages'.  If found, run 'nix shell' with
+the associated packages to locate the command.  If that succeeds and the
+resulting program exists, return its path.  Otherwise, fall back to the
+original function FN."
+  (if-let*
+      (((not (file-remote-p default-directory)))
+       ((not (executable-find command remote)))
+       (pkgs (cdr (assoc-string command lsp-server-nix-packages)))
+       (prog
+        (with-temp-buffer
+          (apply #'call-process "nix" nil t nil "shell" "--quiet"
+                 (append pkgs (list "-c" "which" command)))
+          (string-trim (buffer-string))))
+       ((file-exists-p prog)))
+      prog
     (funcall fn command remote)))
 
-(define-advice eglot--guess-contact (:filter-return (result) nix)
+(defun eglot--guess-contact@nix (result)
   "Adjust Eglot server contact to run via Nix if needed.
-When RESULT contains a contact list and its command is not in PATH,
-look up the command in `lsp-server-nix-packages'.  If found, wrap
-the contact list to run via 'nix shell' with the associated packages."
-  (when-let ((contact (nth 3 result))
-             ((listp contact))
-             (command (car (ensure-list contact)))
-             ((not (executable-find command)))
-             (pkgs (cdr (assoc-string command lsp-server-nix-packages))))
-    (setf (nth 3 result) (append (list "nix" "shell" "--quiet")
-                                 pkgs
-                                 (list "-c")
-                                 contact)))
+When RESULT contains a contact list and its command is not in PATH, look
+up the command in `lsp-server-nix-packages'.  If found, wrap the contact
+list to run via 'nix shell' with the associated packages."
+  (when-let
+      ((contact (nth 3 result)) ((listp contact))
+       (command (car (ensure-list contact)))
+       ((not (executable-find command)))
+       (pkgs (cdr (assoc-string command lsp-server-nix-packages))))
+    (setf (nth 3 result)
+          (append (list "nix" "shell" "--quiet") pkgs (list "-c")
+                  contact)))
   result)
 
-;;;;; consult-eglot
+(define-minor-mode eglot-nix-mode
+  "Global minor mode for Eglot with Nix-managed language servers.
+When enabled, this mode integrates Nix-managed language servers with Eglot,
+handling server discovery and environment setup automatically.
+Disabling the mode restores the default Eglot behavior."
+  :global t
+  (advice-remove 'eglot--executable-find #'eglot--executable-find@nix)
+  (advice-remove 'eglot--guess-contact #'eglot--guess-contact@nix)
+  (when eglot-nix-mode
+    (advice-add 'eglot--executable-find :around
+                #'eglot--executable-find@nix '((name . nix)))
+    (advice-add 'eglot--guess-contact :filter-return
+                #'eglot--guess-contact@nix '((name . nix)))))
 
+;;;;; consult-eglot
 (after-load! consult
   ;; Add a split style for consult-eglot-symbols, which splits the input by spaces,
   ;; where the first component is the input to the LSP.
@@ -2895,10 +2906,9 @@ of feed configurations without modifying init files."
 
 (define-advice proced-format-args (:override (args) nix)
   (if-let* ((splitted (split-string args))
-            (splitted)
-            ((string-prefix-p "/nix/" (car splitted))))
+            (exe (string-prefix-p "/nix/" (car splitted))))
       (string-join
-       (cons (file-name-nondirectory (car splitted))
+       (cons (file-name-nondirectory exe)
              (cdr splitted))
        " ")
     args))
