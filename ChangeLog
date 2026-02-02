@@ -9,6 +9,7 @@
 2026-02-02  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (eglot-nix-mode): New global minor mode.
+	(lsp-server-nix-packages): New variable.
 
 2026-02-02  Zhengyi Fu  <i@fuzy.me>
 
