@@ -1,3 +1,7 @@
+2026-02-02  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (proced-format-args@nix): New advice.
+
 2026-01-30  Zhengyi Fu  <i@fuzy.me>
 
 	* transient/values.el (magit-log:magit-log-mode): Remove --graph and --color.

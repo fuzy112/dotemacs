@@ -2891,6 +2891,18 @@ of feed configurations without modifying init files."
 
 (keymap-global-set "M-s b" #'consult-browser-hist)
 
+;;;; proced
+
+(define-advice proced-format-args (:override (args) nix)
+  (if-let* ((splitted (split-string args))
+            (splitted)
+            ((string-prefix-p "/nix/" (car splitted))))
+      (string-join
+       (cons (file-name-nondirectory (car splitted))
+             (cdr splitted))
+       " ")
+    args))
+
 ;;;; webjump
 
 (after-load! webjump
