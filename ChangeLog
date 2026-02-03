@@ -1,3 +1,7 @@
+2026-02-03  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (webjump-sites): Add NixOS Packages and NixOS Options.
+
 2026-02-02  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (lsp-server-nix-packages): Add elp.

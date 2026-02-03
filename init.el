@@ -2925,7 +2925,11 @@ of feed configurations without modifying init files."
                                 "www.kagi.com/search?q=" ""]
     "Kagi Assistant" [simple-query "www.kagi.com/assistant/"
                                    "www.kagi.com/assistant?q=" ""]
-    "yhetil.org" "https://yhetil.org"))
+    "yhetil.org" "https://yhetil.org"
+    "NixOS Packages" [simple-query "search.nixos.org"
+                                   "search.nixos.org/packages?query=" ""]
+    "NixOS Options" [simple-query "search.nixos.org"
+                                  "search.nixos.org/options?query=" ""]))
 
 
 ;;;; undo-fu-session
