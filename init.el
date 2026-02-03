@@ -2907,7 +2907,8 @@ of feed configurations without modifying init files."
 
 (define-advice proced-format-args (:override (args) nix)
   (if-let* ((splitted (split-string args))
-            (exe (string-prefix-p "/nix/" (car splitted))))
+            (exe (car splitted))
+            ((string-prefix-p "/nix/" exe)))
       (string-join
        (cons (file-name-nondirectory exe)
              (cdr splitted))
