@@ -23,7 +23,9 @@ git config diff.gpg.textconv 'gpg -d --quiet --yes --compress-algo=none --no-enc
 git config diff.gpg.binary true
 git config commit.gpgSign true
 
-cat >.git/hooks/pre-push <<-"EOF"
+GIT_DIR=$(git rev-parse --git-dir)
+
+cat >"$GIT_DIR/hooks/pre-push" <<-"EOF"
 #!/bin/sh
 
 # Exit immediately if a command exits with a non-zero status.
@@ -49,9 +51,9 @@ while read local_ref local_sha remote_ref remote_sha; do
   done
 done
 EOF
-chmod +x .git/hooks/pre-push
+chmod +x "$GIT_DIR/hooks/pre-push"
 
-cat >.git/hooks/post-receive <<-"EOF"
+cat >"$GIT_DIR/hooks/post-receive" <<-"EOF"
 set -e
 
 while read old_sha new_sha ref_name; do
@@ -82,4 +84,4 @@ while read old_sha new_sha ref_name; do
   done
 done
 EOF
-chmod +x .git/hooks/post-receive
+chmod +x "$GIT_DIR/hooks/post-receive"

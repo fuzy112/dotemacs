@@ -1,3 +1,7 @@
+2026-02-05  Zhengyi Fu  <i@fuzy.me>
+
+	* setup.sh: Use git rev-parse to get GIT_DIR for hook installation.
+
 2026-02-03  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (webjump-sites): Add NixOS Packages and NixOS Options.
