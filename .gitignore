@@ -67,3 +67,4 @@ tramp.eld
 /user-lisp/.user-lisp-autoloads.el
 /elpa/
 /projects
+/.envrc
