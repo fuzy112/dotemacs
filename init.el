@@ -44,7 +44,7 @@
 (defvar custom-file)
 (and custom-file
      (file-exists-p custom-file)
-  (load custom-file))
+     (load custom-file))
 
 ;;;; meow-edit
 
