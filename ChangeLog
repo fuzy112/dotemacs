@@ -1,3 +1,7 @@
+2026-02-06  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (auth-sources): Only change it when it is not customized.
+
 2026-02-05  Zhengyi Fu  <i@fuzy.me>
 
 	* setup.sh: Use git rev-parse to get GIT_DIR for hook installation.
