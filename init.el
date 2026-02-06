@@ -2458,8 +2458,9 @@ Then refresh all windows displaying the current buffer."
 (add-hook 'after-init-hook #'savehist-mode)
 
 ;;;; auth-sources
-(setopt auth-sources '("~/.authinfo.gpg"))
 (after-load! auth-sources
+  (when (custom--standard-value-p 'auth-sources auth-sources)
+    (setopt auth-sources '("~/.authinfo.gpg")))
   (setopt auth-source-save-behavior t
           auth-source-gpg-encrypt-to (list  "0xBBE2757FC7BFC23B"))
   (auth-source-forget-all-cached))
