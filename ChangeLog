@@ -1,3 +1,8 @@
+2026-02-26  Zhengyi Fu  <i@fuzy.me>
+
+	* user-lisp/telega-config.el (telega-root-mode-hook): Enable
+	`hl-line-mode'.
+
 2026-02-06  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (auth-sources): Only change it when it is not customized.
