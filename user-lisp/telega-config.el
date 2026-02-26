@@ -49,5 +49,7 @@
   (let ((default-directory "~/"))
     (apply args)))
 
+(add-hook 'telega-root-mode-hook #'hl-line-mode)
+
 (provide 'telega-config)
 ;;; telega-config.el ends here
