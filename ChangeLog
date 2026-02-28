@@ -1,3 +1,14 @@
+2026-02-28  Zhengyi Fu  <i@fuzy.me>
+
+	Add gptel backends for Kimi Code and Volcengine Coding
+
+	* user-lisp/gptel-config.el: Add "Kimi Code" backend with models
+	kimi-for-coding and kimi-k2-thinking.  Add "Volcengine Coding"
+	backend with models ark-code-latest, deepseek-v3.2,
+	doubao-seed-code, glm-4.7, kimi-k2-thinking, and kimi-k2.5.
+	Change default gptel-backend to "Volcengine Coding" and
+	gptel-model to 'ark-code-latest.
+
 2026-02-26  Zhengyi Fu  <i@fuzy.me>
 
 	* user-lisp/telega-config.el (telega-root-mode-hook): Enable
