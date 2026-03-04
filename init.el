@@ -1028,6 +1028,8 @@ ARGS: see `completion-read-multiple'."
   (setq tempel-path (concat user-emacs-directory "/templates/*.eld"))
   (add-to-list 'tempel-user-elements #'tempel-include))
 
+(add-hook 'abbrev-mode-hook #'tempel-abbrev-mode)
+
 ;;;; embark
 
 (keymap-global-set "C-." #'embark-act)
@@ -1671,16 +1673,10 @@ value for USE-OVERLAYS."
 
 ;;;; eglot
 
-(declare-function eglot-completion-at-point "eglot.el")
-(defun +eglot--capf ()
-  (setq-local completion-at-point-functions
-              (list (cape-capf-super #'eglot-completion-at-point
-                                     #'tempel-expand
-                                     #'cape-file))))
-(add-hook 'eglot-managed-mode-hook #'+eglot--capf)
+(define-advice eglot-completion-at-point (:around (fn &rest _args) tempel)
+  (cape-wrap-super fn :with #'tempel-complete))
 
-(when (fboundp 'cape-wrap-buster)
-  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
+(advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
 
 (setopt eglot-autoshutdown t
         eglot-extend-to-xref t)
