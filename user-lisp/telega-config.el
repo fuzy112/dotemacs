@@ -61,10 +61,10 @@
            (suffix (string-remove-prefix "telega-company-" backend-str))
            (capf-name (intern (format "telega-capf-%s" suffix))))
       (defalias capf-name
-        (cape-capf-interactive
-         (cape-capf-properties
-          (cape-company-to-capf backend)
-          :company-kind (lambda (_) backend))))
+        (cape-capf-properties
+         (cape-company-to-capf backend)
+         :company-kind (lambda (_) backend)
+         :company-prefix-length 0))
       (push capf-name capfs)))
   (setq telega-capfs (nreverse capfs)))
 
@@ -79,12 +79,27 @@
     telega-company-markdown-precode '(:style "cod" :icon "code_tags" :face font-lock-comment-face)
     telega-company-quick-reply '(:style "fa" :icon "comment" :face default)))
 
+(defmacro telega-capf-trigger (capf trigger)
+  `(define-advice ,capf (:around (fn &rest _) trigger)
+     (cape-wrap-trigger fn ,trigger)))
+
+(telega-capf-trigger telega-capf-username ?@)
+(telega-capf-trigger telega-capf-emoji ?:)
+(telega-capf-trigger telega-capf-telegram-emoji ?:)
+(telega-capf-trigger telega-capf-botcmd ?/)
+(telega-capf-trigger telega-capf-hashtag ?#)
+
 (defun telega-capf-setup ()
   "Setup Telega completion-at-point functions for current buffer."
   (interactive)
   (when (require 'company nil t)
-    (setq-local completion-at-point-functions
-                (append telega-capfs (list t)))))
+    (setq-local completion-at-point-functions (append telega-capfs (list t)))
+    (setq-local corfu-auto t
+                corfu-quit-no-match nil
+                corfu-auto-trigger "#:/@")))
+
+(define-advice telega-chatbuf-complete (:override () corfu)
+  (completion-at-point))
 
 (add-hook 'telega-chat-mode-hook #'telega-capf-setup)
 
