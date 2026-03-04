@@ -1,5 +1,13 @@
 2026-03-04  Zhengyi Fu  <i@fuzy.me>
 
+	Enable tempel abbrev and eglot integration
+
+	* init.el (abbrev-mode-hook): Add `tempel-abbrev-mode'.
+	(+eglot--capf): Remove defun.
+	(eglot-completion-at-point@tempel): New advice.
+
+2026-03-04  Zhengyi Fu  <i@fuzy.me>
+
 	Add Corfu and nerd-icons-corfu integration for telega completion
 
 	* user-lisp/telega-config.el (telega-capfs): New variable.
