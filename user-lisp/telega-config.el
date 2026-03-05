@@ -63,8 +63,7 @@
       (defalias capf-name
         (cape-capf-properties
          (cape-company-to-capf backend)
-         :company-kind (lambda (_) backend)
-         :company-prefix-length 0))
+         :company-kind (lambda (_) backend)))
       (push capf-name capfs)))
   (setq telega-capfs (nreverse capfs)))
 
@@ -83,17 +82,40 @@
   `(define-advice ,capf (:around (fn &rest _) trigger)
      (cape-wrap-trigger fn ,trigger)))
 
-(telega-capf-trigger telega-capf-username ?@)
 (telega-capf-trigger telega-capf-emoji ?:)
 (telega-capf-trigger telega-capf-telegram-emoji ?:)
 (telega-capf-trigger telega-capf-botcmd ?/)
 (telega-capf-trigger telega-capf-hashtag ?#)
 
+(define-advice telega-capf-username (:around (capf) prefix)
+  (when-let* ((pos (or (save-excursion (re-search-backward "@@" (pos-bol) 'noerror))
+                       (save-excursion (re-search-backward "@" (pos-bol) 'noerror))))
+              (len (length (match-string-no-properties 0)))
+              ((save-excursion (not (re-search-backward "\\s-" pos 'noerror)))))
+    (pcase
+        (funcall capf)
+      (`(,beg ,end ,table . ,plist)
+       (when (<= pos beg (+ len pos))
+         `( ,(+ len pos) ,end ,table
+            :company-prefix-length t
+            :exit-function
+            ,(let ((pos (copy-marker pos))
+                   (end (copy-marker (+ len pos))))
+               (lambda (str status)
+                 (delete-region pos end)
+                 (when-let* ((exit (plist-get plist :exit-function)))
+                   (funcall exit str status))))
+            . ,plist))))))
+
+(advice-add #'telega-capf-username :around #'cape-wrap-buster)
+(advice-add #'telega-capf-emoji :around #'cape-wrap-buster)
+(advice-add #'telega-capf-telegram-emoji :around #'cape-wrap-buster)
+
 (defun telega-capf-setup ()
   "Setup Telega completion-at-point functions for current buffer."
   (interactive)
   (when (require 'company nil t)
-    (setq-local completion-at-point-functions (append telega-capfs (list t)))
+    (setq-local completion-at-point-functions (append telega-capfs (list 'cape-file 'cape-tex)))
     (setq-local corfu-auto t
                 corfu-quit-no-match nil
                 corfu-auto-trigger "#:/@")))
@@ -102,6 +124,8 @@
   (completion-at-point))
 
 (add-hook 'telega-chat-mode-hook #'telega-capf-setup)
+
+(keymap-global-set "M-g t" telega-prefix-map)
 
 (provide 'telega-config)
 ;;; telega-config.el ends here

@@ -1,3 +1,14 @@
+2026-03-05  Zhengyi Fu  <i@fuzy.me>
+
+	Improve telega completion-at-point functions
+
+	* user-lisp/telega-config.el (telega-capf-setup): Add 'cape-file
+	and 'cape-tex to completion functions.
+	(telega-capf-username@prefix): New advice for handling @ mentions.
+	(telega-capf-username, telega-capf-emoji)
+	(telega-capf-telegram-emoji): Add cape-wrap-buster advice.
+	(keymap-global-set): Add "M-g t" binding for telega-prefix-map.
+
 2026-03-04  Zhengyi Fu  <i@fuzy.me>
 
 	Enable tempel abbrev and eglot integration
