@@ -123,9 +123,22 @@
 (define-advice telega-chatbuf-complete (:override () corfu)
   (completion-at-point))
 
-(add-hook 'telega-chat-mode-hook #'telega-capf-setup)
+;; (add-hook 'telega-chat-mode-hook #'telega-capf-setup)
+(defun telega-completion-setup-corfu ()
+  (setq-local corfu-auto t
+              corfu-auto-trigger "#:/@"
+              completion-at-point-functions
+              (list (cape-capf-super #'telega-completion-emoji
+                                     :with #'telega-completion-telegram-emoji)
+                    #'telega-completion-username
+                    (cape-capf-super #'telega-completion-botcmd
+                                     #'telega-completion-quick-reply)
+                    #'telega-completion-hashtag
+                    t)))
+(add-hook 'telega-chat-mode-hook #'telega-completion-setup-corfu)
 
 (keymap-global-set "M-g t" telega-prefix-map)
+
 
 (provide 'telega-config)
 ;;; telega-config.el ends here
