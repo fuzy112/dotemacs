@@ -1,3 +1,15 @@
+2026-03-06  Zhengyi Fu  <i@fuzy.me>
+
+	Add telega-completion.el for native CAPF support
+
+	* user-lisp/telega-completion.el: New file with completion at
+	point functions for telega, supporting usernames, emojis, hashtags,
+	bot commands, quick replies, and code block language completion.
+
+	* user-lisp/telega-config.el (telega-completion-setup-corfu):
+	New defun with cape-capf-super integration for Corfu.
+	(telega-chat-mode-hook): Use telega-completion-setup-corfu.
+
 2026-03-05  Zhengyi Fu  <i@fuzy.me>
 
 	Improve telega completion-at-point functions
