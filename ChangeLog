@@ -1,3 +1,11 @@
+2026-03-07  Zhengyi Fu  <i@fuzy.me>
+
+	Show avatars consistently in chat and completion
+
+	* user-lisp/telega-completion.el
+	(telega-completion-username-show-avatars): Set to value of
+	`telega-chat-show-avatars'.
+
 2026-03-06  Zhengyi Fu  <i@fuzy.me>
 
 	Refactor hashtag completion to use dynamic table helper

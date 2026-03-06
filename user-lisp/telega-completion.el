@@ -133,7 +133,7 @@ When nil, use telega's native mention format."
 		 (const markdown2))
   :group 'telega-completion)
 
-(defcustom telega-completion-username-show-avatars t
+(defcustom telega-completion-username-show-avatars telega-chat-show-avatars
   "If non-nil, show user avatars in username completion annotations."
   :type 'boolean
   :group 'telega-completion)
