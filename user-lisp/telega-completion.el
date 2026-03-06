@@ -242,7 +242,7 @@ Sorts by the actual emoji string associated with each candidate."
 
 (defun telega-completion--telegram-emoji-sort (completions)
   "Sort COMPLETIONS for Telegram emoji completion.
-Sorts by the 'emoji text property."
+Sorts by the `emoji' text property."
   (cl-sort completions telega-completion-emoji-sort-predicate
            :key (lambda (s) (get-text-property 0 'emoji s))))
 
@@ -532,57 +532,50 @@ immediately.  Otherwise, return a completion data structure for
 	    :exclusive 'no
 	    :exit-function (telega-completion--username-exit-function beg end)
 	    :display-sort-function #'telega-completion--username-sort
-	    :cycle-sort-function #'telega-completion--username-sort)))))
+	    :cycle-sort-function #'telega-completion--username-sort))))
 
 ;;;; Hashtag Completion
+
+(defun telega-completion--fetch-hashtags-candidates (input)
+  "Fetch hashtag candidates for INPUT string.
+Returns a list of hashtags with '#' prefix."
+  (mapcar (lambda (ht) (concat "#" ht))
+          (telega--searchHashtags (substring input 1))))
 
 (defun telega-completion--hashtag-table (beg end)
   "Return completion table for hashtags.
 BEG and END are markers for the completion region."
   (unless (derived-mode-p 'telega-chat-mode)
     (error "`telega-completion-hashtag' can be used only in chat buffer"))
-  (let ((beg (copy-marker beg))
-	(end (copy-marker end t))
-	(input 'init)
-	table)
-    (lambda (str pred action)
-      (unless (or (eq action 'metadata)
-		  (eq (car-safe action) 'boundaries))
-	(let ((new (buffer-substring-no-properties beg end)))
-	  (when (and (or (eq input 'init)
-			 (not (string= input new)))
-		     (> (length new) 0))
-	    (setq input new
-		  table (mapcar (lambda (ht) (concat "#" ht))
-				(telega--searchHashtags (substring new 1)))))
-	  (complete-with-action action table str pred)))))
+  (telega-completion--dynamic-table beg end
+                                    #'telega-completion--fetch-hashtags-candidates))
 
 ;;;###autoload
-  (defun telega-completion-hashtag (&optional interactive)
-    "Complete hashtag at point.
+(defun telega-completion-hashtag (&optional interactive)
+  "Complete hashtag at point.
 If INTERACTIVE is non-nil (called interactively), trigger completion
 immediately.  Otherwise, return a completion data structure for
 `completion-at-point-functions'."
-    (interactive (list t))
-    (if interactive
-	(let ((completion-at-point-functions (list #'telega-completion-hashtag)))
-	  (completion-at-point))
-      (when-let* ((beg (and (not (bobp))
-			    (= (char-before) ?#)
-			    (save-excursion
-			      (skip-chars-backward "#")
-			      (point))))
-		  (end (point))
-		  (table (telega-completion--hashtag-table beg end)))
-	(list beg end table
-	      :category 'telega-hashtag
-	      :company-kind (lambda (_) 'keyword)
-	      :exclusive 'no
-	      :exit-function (lambda (_str status)
-			       (unless (eq status 'exact)
-				 (insert " ")))
-	      :display-sort-function #'telega-completion--hashtag-sort
-	      :cycle-sort-function #'telega-completion--hashtag-sort)))))
+  (interactive (list t))
+  (if interactive
+      (let ((completion-at-point-functions (list #'telega-completion-hashtag)))
+	(completion-at-point))
+    (when-let* ((beg (and (not (bobp))
+			  (= (char-before) ?#)
+			  (save-excursion
+			    (skip-chars-backward "#")
+			    (point))))
+		(end (point))
+		(table (telega-completion--hashtag-table beg end)))
+      (list beg end table
+	    :category 'telega-hashtag
+	    :company-kind (lambda (_) 'keyword)
+	    :exclusive 'no
+	    :exit-function (lambda (_str status)
+			     (unless (eq status 'exact)
+			       (insert " ")))
+	    :display-sort-function #'telega-completion--hashtag-sort
+	    :cycle-sort-function #'telega-completion--hashtag-sort))))
 
 ;;;; Bot Command Completion
 
