@@ -1,5 +1,15 @@
 2026-03-06  Zhengyi Fu  <i@fuzy.me>
 
+	Refactor hashtag completion to use dynamic table helper
+
+	* user-lisp/telega-completion.el
+	(telega-completion--fetch-hashtags-candidates): New function to
+	fetch hashtag candidates.
+	(telega-completion--hashtag-table): Refactor to use
+	`telega-completion--dynamic-table' helper.
+
+2026-03-06  Zhengyi Fu  <i@fuzy.me>
+
 	Use CAPF sort properties in telega-completion
 
 	* user-lisp/telega-completion.el
