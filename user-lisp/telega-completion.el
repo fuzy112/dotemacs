@@ -233,6 +233,29 @@ a cache would need to be maintained."
   ;; In the future, could track usage frequency per session
   (string< a b))
 
+(defun telega-completion--emoji-sort (completions)
+  "Sort COMPLETIONS for emoji completion.
+Sorts by the actual emoji string associated with each candidate."
+  (cl-sort completions telega-completion-emoji-sort-predicate
+           :key (lambda (s) (or (get-text-property 0 'emoji s)
+                           (alist-get s telega-emoji-alist nil nil #'string=)))))
+
+(defun telega-completion--telegram-emoji-sort (completions)
+  "Sort COMPLETIONS for Telegram emoji completion.
+Sorts by the 'emoji text property."
+  (cl-sort completions telega-completion-emoji-sort-predicate
+           :key (lambda (s) (get-text-property 0 'emoji s))))
+
+(defun telega-completion--username-sort (completions)
+  "Sort COMPLETIONS for username completion.
+Sorts using `telega-completion-username-sort-predicate'."
+  (cl-sort completions telega-completion-username-sort-predicate))
+
+(defun telega-completion--hashtag-sort (completions)
+  "Sort COMPLETIONS for hashtag completion.
+Sorts using `telega-completion-hashtag-sort-predicate'."
+  (cl-sort completions telega-completion-hashtag-sort-predicate))
+
 (defun telega-completion--dynamic-table (beg end fetcher)
   "Create dynamic completion table using FETCHER function.
 BEG and END are the completion region boundaries.
@@ -295,14 +318,14 @@ immediately.  Otherwise, return a completion data structure for
 			  (match-beginning 0)))
 		(end (point)))
       (telega-emoji-init)
-      (list beg end (cl-sort (copy-sequence telega-emoji-alist)
-			     telega-completion-emoji-sort-predicate
-			     :key #'car)
+      (list beg end telega-emoji-alist
 	    :annotation-function #'telega-completion--emoji-annotation
 	    :exit-function (telega-completion--emoji-exit-function beg end)
 	    :company-kind (lambda (_) 'text)
 	    :exclusive 'no
-	    :category 'telega-emoji))))
+	    :category 'telega-emoji
+	    :display-sort-function #'telega-completion--emoji-sort
+	    :cycle-sort-function #'telega-completion--emoji-sort))))
 
 ;;;; Telegram Emoji Completion
 
@@ -333,14 +356,12 @@ BEG and END are the completion region boundaries."
 
 (defun telega-completion--fetch-telegram-emoji-candidates (pattern)
   "Fetch Telegram emoji candidates for PATTERN synchronously."
-  (cl-sort
-   (mapcar (lambda (ek)
-	     (propertize (concat ":" (telega-tl-str ek :keyword) ":")
-			 'emoji (telega-tl-str ek :emoji)))
-	   (telega--searchEmojis
-	    (string-remove-suffix ":" (string-remove-prefix ":" pattern))
-	    nil nil nil))
-   telega-completion-emoji-sort-predicate))
+  (mapcar (lambda (ek)
+	    (propertize (concat ":" (telega-tl-str ek :keyword) ":")
+			'emoji (telega-tl-str ek :emoji)))
+	  (telega--searchEmojis
+	   (string-remove-suffix ":" (string-remove-prefix ":" pattern))
+	   nil nil nil)))
 
 (defun telega-completion--telegram-emoji-table (beg end)
   "Create dynamic completion table for Telegram emoji.
@@ -368,7 +389,9 @@ immediately.  Otherwise, return a completion data structure for
 	    :annotation-function #'telega-completion--telegram-emoji-annotation
 	    :exit-function (telega-completion--telegram-emoji-exit-function beg end)
 	    :company-kind (lambda (_) 'text)
-	    :exclusive 'no))))
+	    :exclusive 'no
+	    :display-sort-function #'telega-completion--telegram-emoji-sort
+	    :cycle-sort-function #'telega-completion--telegram-emoji-sort))))
 
 ;;;; Username Completion
 
@@ -443,7 +466,7 @@ BEG and END are markers for the completion region."
 Returns a list of propertized strings with completion candidates,
 combining chat members, inline bots, and non-member users from the
 Main chat list.
-Candidates are sorted according to `telega-completion-username-sort-predicate'."
+Candidates are sorted using `telega-completion--username-sort'."
   (let* ((search-term (string-remove-prefix "@" input))
 	 (filter (if (string-prefix-p "@@" input)
 		     '(:@type "chatMembersFilterAdministrators")
@@ -451,33 +474,31 @@ Candidates are sorted according to `telega-completion-username-sort-predicate'."
 			 :topic_id (telega-chatbuf--MessageTopic))))
 	 (members (telega--searchChatMembers
 		      telega-chatbuf--chat search-term filter)))
-    (sort
-     (or
-      (nconc
-       (mapcar (lambda (member)
-		 (propertize
-		  (or (telega-msg-sender-username member 'with-@)
-		      (telega-msg-sender-title member))
-		  'telega-member member
-		  'telega-input input))
-	       (cl-remove-if (telega-match-gen-predicate 'sender
-				       '(or is-blocked (user is-deleted)))
-			     members))
-       (cl-remove-if-not (lambda (botname)
-			   (string-prefix-p input botname 'ignore-case))
-			 (cl-union telega--recent-inline-bots
-				   telega-known-inline-bots
-				   :test #'string=)))
-      ;; Non-member completion from Main chat list
-      (unless (string-prefix-p "@@" input)
-	(cl-remove-if-not
-	 (lambda (username)
-	   (and username
-		(string-prefix-p input (concat "@" username) 'ignore-case)))
-	 (mapcar #'telega-msg-sender-username
-		 (telega-filter-chats (telega-chats-list)
-		   telega-completion-username-complete-nonmember-for)))))
-     telega-completion-username-sort-predicate)))
+    (or
+     (nconc
+      (mapcar (lambda (member)
+		(propertize
+		 (or (telega-msg-sender-username member 'with-@)
+		     (telega-msg-sender-title member))
+		 'telega-member member
+		 'telega-input input))
+	      (cl-remove-if (telega-match-gen-predicate 'sender
+			      '(or is-blocked (user is-deleted)))
+			    members))
+      (cl-remove-if-not (lambda (botname)
+			  (string-prefix-p input botname 'ignore-case))
+			(cl-union telega--recent-inline-bots
+				  telega-known-inline-bots
+				  :test #'string=)))
+     ;; Non-member completion from Main chat list
+     (unless (string-prefix-p "@@" input)
+       (cl-remove-if-not
+	(lambda (username)
+	  (and username
+	       (string-prefix-p input (concat "@" username) 'ignore-case)))
+	(mapcar #'telega-msg-sender-username
+		(telega-filter-chats (telega-chats-list)
+		  telega-completion-username-complete-nonmember-for)))))))
 
 (defun telega-completion--username-table (beg end)
   "Create dynamic completion table for usernames.
@@ -509,7 +530,9 @@ immediately.  Otherwise, return a completion data structure for
 	    :category 'telega-username
 	    :annotation-function #'telega-completion--username-annotation
 	    :exclusive 'no
-	    :exit-function (telega-completion--username-exit-function beg end)))))
+	    :exit-function (telega-completion--username-exit-function beg end)
+	    :display-sort-function #'telega-completion--username-sort
+	    :cycle-sort-function #'telega-completion--username-sort)))))
 
 ;;;; Hashtag Completion
 
@@ -530,36 +553,36 @@ BEG and END are markers for the completion region."
 			 (not (string= input new)))
 		     (> (length new) 0))
 	    (setq input new
-		  table (cl-sort
-			 (mapcar (lambda (ht) (concat "#" ht))
-				 (telega--searchHashtags (substring new 1)))
-			 telega-completion-hashtag-sort-predicate))))
-	(complete-with-action action table str pred)))))
+		  table (mapcar (lambda (ht) (concat "#" ht))
+				(telega--searchHashtags (substring new 1)))))
+	  (complete-with-action action table str pred)))))
 
 ;;;###autoload
-(defun telega-completion-hashtag (&optional interactive)
-  "Complete hashtag at point.
+  (defun telega-completion-hashtag (&optional interactive)
+    "Complete hashtag at point.
 If INTERACTIVE is non-nil (called interactively), trigger completion
 immediately.  Otherwise, return a completion data structure for
 `completion-at-point-functions'."
-  (interactive (list t))
-  (if interactive
-      (let ((completion-at-point-functions (list #'telega-completion-hashtag)))
-	(completion-at-point))
-    (when-let* ((beg (and (not (bobp))
-			  (= (char-before) ?#)
-			  (save-excursion
-			    (skip-chars-backward "#")
-			    (point))))
-		(end (point))
-		(table (telega-completion--hashtag-table beg end)))
-      (list beg end table
-	    :category 'telega-hashtag
-	    :company-kind (lambda (_) 'keyword)
-	    :exclusive 'no
-	    :exit-function (lambda (_str status)
-			     (unless (eq status 'exact)
-			       (insert " ")))))))
+    (interactive (list t))
+    (if interactive
+	(let ((completion-at-point-functions (list #'telega-completion-hashtag)))
+	  (completion-at-point))
+      (when-let* ((beg (and (not (bobp))
+			    (= (char-before) ?#)
+			    (save-excursion
+			      (skip-chars-backward "#")
+			      (point))))
+		  (end (point))
+		  (table (telega-completion--hashtag-table beg end)))
+	(list beg end table
+	      :category 'telega-hashtag
+	      :company-kind (lambda (_) 'keyword)
+	      :exclusive 'no
+	      :exit-function (lambda (_str status)
+			       (unless (eq status 'exact)
+				 (insert " ")))
+	      :display-sort-function #'telega-completion--hashtag-sort
+	      :cycle-sort-function #'telega-completion--hashtag-sort)))))
 
 ;;;; Bot Command Completion
 
