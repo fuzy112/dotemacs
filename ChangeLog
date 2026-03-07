@@ -1,5 +1,9 @@
 2026-03-07  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (completion-at-point-functions): Add cape-keyword.
+
+2026-03-07  Zhengyi Fu  <i@fuzy.me>
+
 	Show avatars consistently in chat and completion
 
 	* user-lisp/telega-completion.el
