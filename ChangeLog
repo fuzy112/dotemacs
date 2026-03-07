@@ -1,3 +1,12 @@
+2026-03-08  Zhengyi Fu  <i@fuzy.me>
+
+	Convert ECMAScript regexps in bangs to Elisp regexps
+
+	* user-lisp/bangs.el (bangs--ecma-to-elisp-table): New constant.
+	(bangs--ecma-to-elisp): New defun.
+	(bangs--load-data): Convert the ECMAScript regexp to Elisp regexp.
+	(bangs): Add "!" to initial content.
+
 2026-03-07  Zhengyi Fu  <i@fuzy.me>
 
 	Optimize performance and UX of bangs.el
