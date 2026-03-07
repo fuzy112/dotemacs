@@ -34,7 +34,6 @@
 
 ;;; Code:
 
-(require 'json)
 (require 'url)
 (require 'browse-url)
 (require 'cl-lib)
@@ -99,9 +98,14 @@ is supported, which is the default behavior)."
                        (string :tag "URL Template")
                        (repeat :tag "Additional Arguments (keywords or triggers)" sexp))))
 
+(defvar-keymap bangs-minibuffer-map
+  :parent minibuffer-local-map
+  "<tab>" #'completion-at-point)
+
 (defun bangs--minibuffer-setup-default ()
-  "Default minibuffer setup function that adds completion-at-point for bangs."
-  (add-hook 'completion-at-point-functions #'bangs--completion-at-point nil t))
+  (add-hook 'completion-at-point-functions #'bangs--completion-at-point nil t)
+  (use-local-map
+   (make-composed-keymap (list bangs-minibuffer-map) (current-local-map))))
 
 (defcustom bangs-minibuffer-setup-function
   #'bangs--minibuffer-setup-default
@@ -132,10 +136,6 @@ FMT is the format list for encoding (nil for simple bangs).")
 (defvar bangs--cache-loaded nil
   "Non-nil if bangs data has been loaded into memory.")
 
-(defun bangs--vector-to-list (data)
-  "Convert DATA to a list if it's a vector, otherwise return as-is."
-  (if (vectorp data) (append data nil) data))
-
 (defun bangs--download-single-url (url)
   "Download bangs data from a single URL.
 Returns the parsed JSON data or signals an error."
@@ -148,12 +148,9 @@ Returns the parsed JSON data or signals an error."
         (unless (search-forward "\n\n" nil t)
           (kill-buffer buffer)
           (error "Invalid HTTP response from %s" url))
-        (let ((content (buffer-substring (point) (point-max))))
-          (kill-buffer buffer)
-          (condition-case nil
-              (json-read-from-string content)
-            (json-error
-             (error "Invalid JSON response from %s" url))))))))
+        (unwind-protect
+            (json-parse-buffer)
+          (kill-buffer buffer))))))
 
 (defun bangs--download-cache ()
   "Download the Kagi bangs database from all URLs and save to cache file.
@@ -163,7 +160,7 @@ Data from multiple sources is merged into a single list."
     (dolist (url bangs-urls)
       (condition-case err
           (let ((data (bangs--download-single-url url)))
-            (setq all-bangs (append all-bangs (bangs--vector-to-list data))))
+            (setq all-bangs (append data all-bangs)))
         (error (message "Warning: Failed to download from %s: %s"
                         url (error-message-string err)))))
     (if (null all-bangs)
@@ -281,21 +278,20 @@ User-defined bangs override downloaded bangs if there are trigger conflicts."
   (unless bangs--cache-loaded
     (setq bangs--table (make-hash-table :test 'equal))
     ;; Load downloaded bangs
-    (let ((bangs (json-read-file bangs-cache-file)))
-      (dolist (bang (bangs--vector-to-list bangs))
-        (let* ((name (cdr (assq 's bang)))
-               (trigger (cdr (assq 't bang)))
-               (url-template (cdr (assq 'u bang)))
-               (secondary-triggers (cdr (assq 'ts bang)))
-               (regex (cdr (assq 'x bang)))
-               (fmt (cdr (assq 'fmt bang)))
-               (fmt-list (when fmt
-                           (if (listp fmt) fmt (bangs--vector-to-list fmt))))
-               (secondary-list (when secondary-triggers
-                                 (if (listp secondary-triggers)
-                                     secondary-triggers
-                                   (bangs--vector-to-list secondary-triggers)))))
-          (bangs--insert-bang trigger name url-template secondary-list regex fmt-list))))
+    (cl-loop with all-bangs = (with-temp-buffer
+                                (insert-file-contents bangs-cache-file)
+                                (json-parse-buffer))
+             for bang across all-bangs
+             for name = (gethash "s" bang)
+             for trigger = (gethash "t" bang)
+             for url-template = (gethash "u" bang)
+             for secondary-triggers = (gethash "ts" bang)
+             for regex = (gethash "x" bang)
+             for fmt = (gethash "fmt" bang)
+             for fmt-list = (when fmt (append fmt nil))
+             for secondary-list = (when secondary-triggers (append secondary-triggers nil))
+             do (bangs--insert-bang trigger name url-template
+                                    secondary-list regex fmt-list))
     ;; Load user-defined bangs (override downloaded ones)
     (bangs--load-user-bangs)
     (setq bangs--cache-loaded t)))

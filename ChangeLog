@@ -1,5 +1,15 @@
 2026-03-07  Zhengyi Fu  <i@fuzy.me>
 
+	Optimize performance and UX of bangs.el
+
+	* user-lisp/bangs.el (bangs-minibuffer-map): New keymap.
+	(bangs--minibuffer-setup-default): Use `bangs-minibuffer-map'.
+	(bangs--vector-to-list): Remove.
+	(bangs--download-single-url): Use `json-parse-buffer'.
+	(bangs--load-data): Use `json-parse-buffer'.
+
+2026-03-07  Zhengyi Fu  <i@fuzy.me>
+
 	Add completion-at-point support to bangs.el
 
 	* user-lisp/bangs.el (bangs--minibuffer-setup-default)
