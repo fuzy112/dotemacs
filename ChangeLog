@@ -1,5 +1,12 @@
 2026-03-07  Zhengyi Fu  <i@fuzy.me>
 
+	Add bangs.el for Kagi bangs support
+
+	* user-lisp/bangs.el: New file.
+	* init.el: Replace webjump with bangs.
+
+2026-03-07  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (completion-at-point-functions): Add cape-keyword.
 
 2026-03-07  Zhengyi Fu  <i@fuzy.me>
