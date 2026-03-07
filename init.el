@@ -2913,23 +2913,6 @@ of feed configurations without modifying init files."
        " ")
     args))
 
-;;;; webjump
-
-(after-load! webjump
-  (alist-setq! webjump-sites
-    "GitHub" "https://github.com"
-    "CodeBerg" "https://codeberg.org"
-    "Kagi Search" [simple-query "www.kagi.com"
-                                "www.kagi.com/search?q=" ""]
-    "Kagi Assistant" [simple-query "www.kagi.com/assistant/"
-                                   "www.kagi.com/assistant?q=" ""]
-    "yhetil.org" "https://yhetil.org"
-    "NixOS Packages" [simple-query "search.nixos.org"
-                                   "search.nixos.org/packages?query=" ""]
-    "NixOS Options" [simple-query "search.nixos.org"
-                                  "search.nixos.org/options?query=" ""]))
-
-
 ;;;; undo-fu-session
 
 (setq undo-fu-session-compression 'zst)
@@ -3231,7 +3214,7 @@ Otherwise disable it."
   "d"   doc-map
   "e"   #'cape-prefix-map
   "f"   file-map
-  "j"   #'webjump
+  "!"   #'bangs
   "o"   toggle-map
   "M-g" #'magit-file-dispatch
   "p"   #'project-prefix-map
