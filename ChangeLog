@@ -1,5 +1,21 @@
 2026-03-07  Zhengyi Fu  <i@fuzy.me>
 
+	Add completion-at-point support to bangs.el
+
+	* user-lisp/bangs.el (bangs--minibuffer-setup-default)
+	(bangs-minibuffer-setup-function): New variables/functions for
+	customizable minibuffer setup with completion.
+	(bangs--completion-at-point): New completion-at-point function for
+	bang triggers.
+	(bangs--completion-metadata): Rename from
+	bangs--completion-properties.
+	(bangs, bangs--browse-url-advice): Use minibuffer-with-setup-hook
+	to enable completion.
+	(bangs--browse-url-advice): Add interactive form for completion.
+	(bangs-global-mode): Change advice order to remove before adding.
+
+2026-03-07  Zhengyi Fu  <i@fuzy.me>
+
 	Add bangs.el for Kagi bangs support
 
 	* user-lisp/bangs.el: New file.

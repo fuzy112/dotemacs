@@ -99,6 +99,30 @@ is supported, which is the default behavior)."
                        (string :tag "URL Template")
                        (repeat :tag "Additional Arguments (keywords or triggers)" sexp))))
 
+(defun bangs--minibuffer-setup-default ()
+  "Default minibuffer setup function that adds completion-at-point for bangs."
+  (add-hook 'completion-at-point-functions #'bangs--completion-at-point nil t))
+
+(defcustom bangs-minibuffer-setup-function
+  #'bangs--minibuffer-setup-default
+  "Function to run in minibuffer setup when using `bangs' with prefix arg.
+This function is called with no arguments in the minibuffer context when
+reading the bang input string with `C-u M-x bangs'.  The default value
+adds completion-at-point for bang triggers.
+
+Other valid usage of this hook could be enabling alternative completion
+UI, such as Corfu and Company.
+
+Example:
+
+  (lambda ()
+    (bangs--minibuffer-setup-default)
+    (corfu-mode)
+    (setq-local corfu-auto t
+                corfu-auto-trigger \"!\"))
+"
+  :type 'function)
+
 (defvar bangs--table nil
   "Hash table mapping triggers to bangs-data structs.
 Each value is a `bangs-data' struct.
@@ -192,16 +216,16 @@ Note: The name field is not set; callers must set it separately."
      ;; Regex-based template with $1, $2, etc.
      (has-regex-placeholder
       (make-bangs-data :base-url url-template :regex regex :fmt fmt))
-      ;; Simple template with {{{s}}}
-      (pos
-       (let* ((prefix (substring url-template 0 pos))
-              (suffix (substring url-template (+ pos (length placeholder))))
-              (base-url (or (and (string-match "\\`\\(https?://[^/]+\\)" url-template)
-                                 (match-string 1 url-template))
-                            (and (string-match "\\`\\(https?://[^/]+\\)" prefix)
-                                 (match-string 1 prefix))
-                            prefix)))
-         (make-bangs-data :base-url base-url :prefix prefix :suffix suffix)))
+     ;; Simple template with {{{s}}}
+     (pos
+      (let* ((prefix (substring url-template 0 pos))
+             (suffix (substring url-template (+ pos (length placeholder))))
+             (base-url (or (and (string-match "\\`\\(https?://[^/]+\\)" url-template)
+                                (match-string 1 url-template))
+                           (and (string-match "\\`\\(https?://[^/]+\\)" prefix)
+                                (match-string 1 prefix))
+                           prefix)))
+        (make-bangs-data :base-url base-url :prefix prefix :suffix suffix)))
      ;; No placeholder - just return the URL as base
      (t
       (make-bangs-data :base-url url-template :prefix url-template :suffix "")))))
@@ -240,8 +264,8 @@ User bangs override downloaded bangs if there are trigger conflicts."
                   rest (cddr rest)))
            ((eq (car rest) :fmt)
             (setq fmt (if (listp (cadr rest))
-                         (cadr rest)
-                       (list (cadr rest)))
+                          (cadr rest)
+                        (list (cadr rest)))
                   rest (cddr rest)))
            (t
             ;; Must be a secondary trigger
@@ -265,12 +289,12 @@ User-defined bangs override downloaded bangs if there are trigger conflicts."
                (secondary-triggers (cdr (assq 'ts bang)))
                (regex (cdr (assq 'x bang)))
                (fmt (cdr (assq 'fmt bang)))
-                (fmt-list (when fmt
-                            (if (listp fmt) fmt (bangs--vector-to-list fmt))))
-                (secondary-list (when secondary-triggers
-                                  (if (listp secondary-triggers)
-                                      secondary-triggers
-                                    (bangs--vector-to-list secondary-triggers)))))
+               (fmt-list (when fmt
+                           (if (listp fmt) fmt (bangs--vector-to-list fmt))))
+               (secondary-list (when secondary-triggers
+                                 (if (listp secondary-triggers)
+                                     secondary-triggers
+                                   (bangs--vector-to-list secondary-triggers)))))
           (bangs--insert-bang trigger name url-template secondary-list regex fmt-list))))
     ;; Load user-defined bangs (override downloaded ones)
     (bangs--load-user-bangs)
@@ -292,7 +316,7 @@ Returns URL-TEMPLATE with $N replaced by captured groups (URL-encoded)."
         (replace-regexp-in-string "\\$[0-9]+" (url-encode-url query) url-template t t)
       ;; Query matches regex, replace $N with captured groups
       (let ((result url-template)
-             (max-groups (/ (length (match-data)) 2)))
+            (max-groups (/ (length (match-data)) 2)))
         (dotimes (i max-groups)
           (let ((group-num (1+ i)))
             (when (match-beginning group-num)
@@ -336,7 +360,7 @@ and regex-based bangs ($1, $2, etc.)."
   "Completion category for completing bangs (!)."
   :styles '(substring basic))
 
-(defvar bangs--completion-properties
+(defvar bangs--completion-metadata
   `((category . bang)        ; categories are usually in singular form
     (affixation-function . ,#'bangs--affixation-function)
     (cycle-sort-function . ,#'identity)
@@ -347,12 +371,24 @@ and regex-based bangs ($1, $2, etc.)."
   (let ((table bangs--table))
     (lambda (str pred action)
       (if (eq action 'metadata)
-          `(metadata . ,bangs--completion-properties)
+          `(metadata . ,bangs--completion-metadata)
         (complete-with-action action table str pred)))))
 
 (defun bangs--completing-read-trigger ()
   "Read a bang trigger with completion and annotations."
   (completing-read "Bang: " (bangs--completion-table) nil t))
+
+(defun bangs--completion-at-point ()
+  (when-let* ((beg (and (looking-back "![a-zA-Z0-9._-]*" (pos-bol))
+                        (match-beginning 0)))
+              (end (point))
+              (table (bangs--completion-table)))
+    `( ,(1+ beg) ,end
+       ,table
+       :exclusive no
+       :exit-function ,(lambda (_str status)
+                         (unless (eq status 'exact)
+                           (insert " "))))))
 
 (defun bangs--parse-input (input)
   "Parse input like `!w emacs' or `w! emacs' into (TRIGGER . QUERY)."
@@ -360,8 +396,8 @@ and regex-based bangs ($1, $2, etc.)."
     (let* ((match (match-string 1 input))
            (query (match-string 2 input))
            (trigger (if (string-prefix-p "!" match)
-                       (substring match 1)
-                     (substring match 0 -1))))
+                        (substring match 1)
+                      (substring match 0 -1))))
       (cons trigger query))))
 
 ;;;###autoload
@@ -371,7 +407,9 @@ Without prefix ARG: prompt for trigger with completion, then query.
 With prefix ARG: read entire input like '!w emacs'."
   (interactive "P")
   (if arg
-      (let* ((input (read-string "Bang with query: "))
+      (let* ((input (minibuffer-with-setup-hook
+                        bangs-minibuffer-setup-function
+                      (read-string "Bang with query: ")))
              (parsed (bangs--parse-input input)))
         (if (not parsed)
             (message "Invalid bang format. Use: !w emacs or w! emacs")
@@ -398,6 +436,12 @@ Called via advice on `browse-url'."
 (defun bangs--browse-url-advice (args)
   "Advice for `browse-url' to transform bang patterns.
 Transforms the URL in ARGS if it matches a bang pattern."
+  ;; This interactive form replaces the one in the original function,
+  ;; even if this is a :filter-args advice.
+  (interactive
+   (minibuffer-with-setup-hook
+       bangs-minibuffer-setup-function
+     (browse-url-interactive-arg "URL: ")))
   (cons (bangs--transform-url (car args)) (cdr args)))
 
 ;;;###autoload
@@ -408,9 +452,9 @@ transformed to search URLs before opening.
 
 You can also use the `bangs' command for interactive completion."
   :global t
-  (if bangs-global-mode
-      (advice-add 'browse-url :filter-args #'bangs--browse-url-advice)
-    (advice-remove 'browse-url #'bangs--browse-url-advice)))
+  (advice-remove 'browse-url #'bangs--browse-url-advice)
+  (when bangs-global-mode
+    (advice-add 'browse-url :filter-args #'bangs--browse-url-advice)))
 
 (provide 'bangs)
 ;;; bangs.el ends here
