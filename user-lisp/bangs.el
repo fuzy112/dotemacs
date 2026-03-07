@@ -136,6 +136,44 @@ FMT is the format list for encoding (nil for simple bangs).")
 (defvar bangs--cache-loaded nil
   "Non-nil if bangs data has been loaded into memory.")
 
+(defconst bangs--ecma-to-elisp-table
+  (append
+   ;; Character classes
+   '(("\\s" . "[[:space:]]")
+     ("\\S" . "[^[:space:]]")
+     ("\\w" . "[[:word:]_]")
+     ("\\W" . "[^[:word:]_]")
+     ("\\d" . "[[:digit:]]")
+     ("\\D" . "[^[:digit:]]"))
+   ;; Groups - ECMAScript uses bare parens, Emacs uses escaped
+   (mapcan (lambda (x)
+             `((,(concat "(?" (car x)) . ,(concat "\\(?:" (cdr x)))
+               (,(concat "(?<" (car x)) . ,(concat "\\(" (cdr x)))))
+           '((":" . ":") ; Non-capturing (?:...)
+             (">" . ">")  ; Named groups (?<name>...)
+             ("P<" . "P<"))) ; Python-style named groups (?P<name>...)
+   ;; Bare parens become escaped parens
+   '(("(" . "\\(") (")" . "\\)")))
+  "Conversion table from ECMAScript regex to Emacs regex.")
+
+(defun bangs--ecma-to-elisp (ecma)
+  "Convert ECMAScript regex ECMA to Emacs regex.
+This function converts common ECMAScript regex patterns to their
+Emacs equivalents.  If pcre2el is available, it is used for more
+accurate conversion."
+  (if (fboundp 'pcre-to-elisp)
+      ;; Use pcre2el if available for more accurate conversion
+      (pcre-to-elisp ecma)
+    ;; Best-effort conversion using lookup table
+    (replace-regexp-in-string
+     (rx (or (seq "(?" (or ":" "<" "P<"))  ; Non-capturing and named groups
+             (seq "\\" (any "sSwWdD"))      ; Character classes
+             (any "()")))                    ; Capturing groups
+     (lambda (x)
+       (or (cdr (assoc x bangs--ecma-to-elisp-table))
+           x))
+      ecma 'fixedcase 'literal)))
+
 (defun bangs--download-single-url (url)
   "Download bangs data from a single URL.
 Returns the parsed JSON data or signals an error."
@@ -286,7 +324,8 @@ User-defined bangs override downloaded bangs if there are trigger conflicts."
              for trigger = (gethash "t" bang)
              for url-template = (gethash "u" bang)
              for secondary-triggers = (gethash "ts" bang)
-             for regex = (gethash "x" bang)
+             for regex = (when-let* ((rx (gethash "x" bang)))
+                           (bangs--ecma-to-elisp rx))
              for fmt = (gethash "fmt" bang)
              for fmt-list = (when fmt (append fmt nil))
              for secondary-list = (when secondary-triggers (append secondary-triggers nil))
@@ -405,7 +444,7 @@ With prefix ARG: read entire input like '!w emacs'."
   (if arg
       (let* ((input (minibuffer-with-setup-hook
                         bangs-minibuffer-setup-function
-                      (read-string "Bang with query: ")))
+                      (read-string "Bang with query: " "!")))
              (parsed (bangs--parse-input input)))
         (if (not parsed)
             (message "Invalid bang format. Use: !w emacs or w! emacs")
