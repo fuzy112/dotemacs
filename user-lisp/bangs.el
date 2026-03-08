@@ -77,28 +77,26 @@ before parsing templates that lack a scheme."
 (defcustom bangs-user-bangs
   nil
   "List of user-defined bangs.
-Each element is a plist with the following properties:
+Each element is a list of the form:
+  (NAME TRIGGER URL-TEMPLATE . PLIST)
 
-Required properties:
-  :trigger  - Primary trigger string (e.g., \"mysearch\")
-  :name     - Display name (e.g., \"My Search\")
-  :url      - URL template with {{{s}}} placeholder or $1, $2, etc.
+Required elements:
+  NAME         - Display name (e.g., \"My Search\")
+  TRIGGER      - Primary trigger string (e.g., \"mysearch\")
+  URL-TEMPLATE - URL template with {{{s}}} placeholder or $1, $2, etc.
 
-Optional properties:
+Optional properties in PLIST:
   :regex    - ECMAScript regex to split query into groups for $1, $2
   :fmt      - List of format specifiers (e.g., (url_encode_placeholder))
   :triggers - List of secondary trigger strings
 
 Examples:
   ;; Simple bang
-  (:trigger \"mysearch\" :name \"My Search\"
-   :url \"https://example.com?q={{{s}}}\")
+  (\"My Search\" \"mysearch\" \"https://example.com?q={{{s}}}\")
 
   ;; Regex-based bang with secondary triggers
-  (:trigger \"translate\" :name \"Translate\"
-   :url \"https://example.com/$1/$2\"
-   :regex \"(\\w+)\\s+(.*)\"
-   :triggers (\"en\" \"es\"))"
+  (\"Translate\" \"translate\" \"https://example.com/$1/$2\"
+   :regex \"(\\w+)\\s+(.*)\" :triggers (\"tr\" \"trans\"))"
   :type '(repeat (list (string :tag "Name")
                        (string :tag "Trigger")
                        (string :tag "URL template")
