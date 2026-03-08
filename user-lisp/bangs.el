@@ -77,26 +77,39 @@ before parsing templates that lack a scheme."
 (defcustom bangs-user-bangs
   nil
   "List of user-defined bangs.
-Each element is a list. There are two formats:
+Each element is a plist with the following properties:
 
-1. Simple bang with {{{s}}} placeholder:
-   (TRIGGER NAME URL-TEMPLATE &rest SECONDARY-TRIGGERS)
-   Example: (\"mysearch\" \"My Search\" \"https://example.com?q={{{s}}}\")
+Required properties:
+  :trigger  - Primary trigger string (e.g., \"mysearch\")
+  :name     - Display name (e.g., \"My Search\")
+  :url      - URL template with {{{s}}} placeholder or $1, $2, etc.
 
-2. Regex-based bang with $1, $2, etc.:
-   (TRIGGER NAME URL-TEMPLATE :regex REGEX [:fmt FMT] &rest SECONDARY-TRIGGERS)
-   Example: (\"translate\" \"Translate\" \"https://example.com/$1/$2\"
-             :regex \"(\\w+)\\s+(.*)\" \"en\" \"es\")
+Optional properties:
+  :regex    - ECMAScript regex to split query into groups for $1, $2
+  :fmt      - List of format specifiers (e.g., (url_encode_placeholder))
+  :triggers - List of secondary trigger strings
 
-For regex-based bangs, REGEX is used to split the query into groups
-that replace $1, $2, etc. in URL-TEMPLATE. The optional FMT is a
-list of format specifiers (currently only `url_encode_placeholder'
-is supported, which is the default behavior)."
-  :type '(repeat (list :tag "Bang"
+Examples:
+  ;; Simple bang
+  (:trigger \"mysearch\" :name \"My Search\"
+   :url \"https://example.com?q={{{s}}}\")
+
+  ;; Regex-based bang with secondary triggers
+  (:trigger \"translate\" :name \"Translate\"
+   :url \"https://example.com/$1/$2\"
+   :regex \"(\\w+)\\s+(.*)\"
+   :triggers (\"en\" \"es\"))"
+  :type '(repeat (list (string :tag "Name")
                        (string :tag "Trigger")
-                       (string :tag "Name")
-                       (string :tag "URL Template")
-                       (repeat :tag "Additional Arguments (keywords or triggers)" sexp))))
+                       (string :tag "URL template")
+                       (plist :inline t :tag "Optional properties"
+                              :options ((:regex (string :tag "ECMAScript regex to split query into groups"))
+                                        (:fmt (repeat :tag "List of format specifiers" symbol))
+                                        (:triggers (repeat :tag "List of secondary trigger strings" string))))))
+  :set (lambda (symbol value)
+         (set symbol value)
+         (when (fboundp 'bangs-clear-cache)
+           (bangs-clear-cache))))
 
 (defvar-keymap bangs-minibuffer-map
   :parent minibuffer-local-map
@@ -172,7 +185,7 @@ accurate conversion."
      (lambda (x)
        (or (cdr (assoc x bangs--ecma-to-elisp-table))
            x))
-      ecma 'fixedcase 'literal)))
+     ecma 'fixedcase 'literal)))
 
 (defun bangs--download-single-url (url)
   "Download bangs data from a single URL.
@@ -283,31 +296,14 @@ a list of format specifiers (or nil)."
   "Load user-defined bangs into the hash table.
 User bangs override downloaded bangs if there are trigger conflicts."
   (dolist (bang bangs-user-bangs)
-    (when (>= (length bang) 3)
-      (let ((trigger (nth 0 bang))
-            (name (nth 1 bang))
-            (url-template (nth 2 bang))
-            (regex nil)
-            (fmt nil)
-            (secondary-triggers nil)
-            (rest (nthcdr 3 bang)))
-        ;; Parse optional :regex and :fmt keywords
-        (while rest
-          (cond
-           ((eq (car rest) :regex)
-            (setq regex (cadr rest)
-                  rest (cddr rest)))
-           ((eq (car rest) :fmt)
-            (setq fmt (if (listp (cadr rest))
-                          (cadr rest)
-                        (list (cadr rest)))
-                  rest (cddr rest)))
-           (t
-            ;; Must be a secondary trigger
-            (push (car rest) secondary-triggers)
-            (setq rest (cdr rest)))))
-        (setq secondary-triggers (nreverse secondary-triggers))
-        (bangs--insert-bang trigger name url-template secondary-triggers regex fmt)))))
+    (pcase-let ((`(,name ,trigger ,url-template . ,plist) bang))
+      (when (and trigger name url-template)
+        (let ((regex (when-let* ((rx (plist-get plist :regex)))
+                       (bangs--ecma-to-elisp rx)))
+              (fmt (plist-get plist :fmt))
+              (secondary-triggers (plist-get plist :triggers)))
+          (bangs--insert-bang trigger name url-template
+                              secondary-triggers regex fmt))))))
 
 (defun bangs--load-data ()
   "Load bangs data from cache file and user-defined bangs into hash table.

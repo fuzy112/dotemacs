@@ -1,5 +1,12 @@
 2026-03-08  Zhengyi Fu  <i@fuzy.me>
 
+	Fix user defined bangs
+
+	* user-lisp/bangs.el (bangs-user-bangs): Fix docstring and type.
+	(bangs--load-user-bangs): Fix.
+
+2026-03-08  Zhengyi Fu  <i@fuzy.me>
+
 	Convert ECMAScript regexps in bangs to Elisp regexps
 
 	* user-lisp/bangs.el (bangs--ecma-to-elisp-table): New constant.
