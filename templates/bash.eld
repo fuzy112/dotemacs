@@ -5,3 +5,5 @@ sh-mode
 	  "}" n)
 
 (sourcedir "SOURCE_DIR=\"$( cd \"$( dirname \"${BASH_SOURCE[0]:-$0}\" )\" &> /dev/null && pwd )\"")
+
+(lorri "eval \"$(lorri direnv)\"" n)
