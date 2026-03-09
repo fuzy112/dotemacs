@@ -1,5 +1,14 @@
 2026-03-09  Zhengyi Fu  <i@fuzy.me>
 
+	Update telega configuration
+
+	* user-lisp/telega-config.el: Remove configuration for
+	telega-company.
+	(telega-chat-input-complete-function): Set to
+	`completion-at-point'.
+
+2026-03-09  Zhengyi Fu  <i@fuzy.me>
+
 	Refactor `telega-completion--dynamic-table'
 
 	* user-lisp/telega-completion.el (telega-completion--dynamic-table):
