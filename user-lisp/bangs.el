@@ -74,41 +74,6 @@ IMPORTANT: This variable must be set before loading the bangs package,
 before parsing templates that lack a scheme."
   :type 'string)
 
-(defcustom bangs-user-bangs
-  nil
-  "List of user-defined bangs.
-Each element is a list of the form:
-  (NAME TRIGGER URL-TEMPLATE . PLIST)
-
-Required elements:
-  NAME         - Display name (e.g., \"My Search\")
-  TRIGGER      - Primary trigger string (e.g., \"mysearch\")
-  URL-TEMPLATE - URL template with {{{s}}} placeholder or $1, $2, etc.
-
-Optional properties in PLIST:
-  :regex    - ECMAScript regex to split query into groups for $1, $2
-  :fmt      - List of format specifiers (e.g., (url_encode_placeholder))
-  :triggers - List of secondary trigger strings
-
-Examples:
-  ;; Simple bang
-  (\"My Search\" \"mysearch\" \"https://example.com?q={{{s}}}\")
-
-  ;; Regex-based bang with secondary triggers
-  (\"Translate\" \"translate\" \"https://example.com/$1/$2\"
-   :regex \"(\\w+)\\s+(.*)\" :triggers (\"tr\" \"trans\"))"
-  :type '(repeat (list (string :tag "Name")
-                       (string :tag "Trigger")
-                       (string :tag "URL template")
-                       (plist :inline t :tag "Optional properties"
-                              :options ((:regex (string :tag "ECMAScript regex to split query into groups"))
-                                        (:fmt (repeat :tag "List of format specifiers" symbol))
-                                        (:triggers (repeat :tag "List of secondary trigger strings" string))))))
-  :set (lambda (symbol value)
-         (set symbol value)
-         (when (fboundp 'bangs-clear-cache)
-           (bangs-clear-cache))))
-
 (defvar-keymap bangs-minibuffer-map
   :parent minibuffer-local-map
   "<tab>" #'completion-at-point)
@@ -244,6 +209,41 @@ Data from multiple sources is merged into a single list."
   "Ensure bangs cache file exists, downloading if necessary."
   (unless (file-exists-p bangs-cache-file)
     (bangs--download-cache)))
+
+(defcustom bangs-user-bangs
+  nil
+  "List of user-defined bangs.
+Each element is a list of the form:
+  (NAME TRIGGER URL-TEMPLATE . PLIST)
+
+Required elements:
+  NAME         - Display name (e.g., \"My Search\")
+  TRIGGER      - Primary trigger string (e.g., \"mysearch\")
+  URL-TEMPLATE - URL template with {{{s}}} placeholder or $1, $2, etc.
+
+Optional properties in PLIST:
+  :regex    - ECMAScript regex to split query into groups for $1, $2
+  :fmt      - List of format specifiers (e.g., (url_encode_placeholder))
+  :triggers - List of secondary trigger strings
+
+Examples:
+  ;; Simple bang
+  (\"My Search\" \"mysearch\" \"https://example.com?q={{{s}}}\")
+
+  ;; Regex-based bang with secondary triggers
+  (\"Translate\" \"translate\" \"https://example.com/$1/$2\"
+   :regex \"(\\w+)\\s+(.*)\" :triggers (\"tr\" \"trans\"))"
+  :type '(repeat (list (string :tag "Name")
+                       (string :tag "Trigger")
+                       (string :tag "URL template")
+                       (plist :inline t :tag "Optional properties"
+                              :options ((:regex (string :tag "ECMAScript regex to split query into groups"))
+                                        (:fmt (repeat :tag "List of format specifiers" symbol))
+                                        (:triggers (repeat :tag "List of secondary trigger strings" string))))))
+  :set (lambda (symbol value)
+         (set symbol value)
+         (when (fboundp 'bangs-clear-cache)
+           (bangs-clear-cache))))
 
 (defun bangs--parse-url-template (url-template &optional regex fmt)
   "Parse a Kagi URL TEMPLATE and return a `bangs-data' struct.
