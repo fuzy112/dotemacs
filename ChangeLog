@@ -1,3 +1,18 @@
+2026-03-09  Zhengyi Fu  <i@fuzy.me>
+
+	Refactor `telega-completion--dynamic-table'
+
+	* user-lisp/telega-completion.el (telega-completion--dynamic-table):
+	Return a predicate and a table.
+	(telega-completion-emoji): Add "#" to the regexp.  Use
+	`telega-completion--dynamic-table'.
+	(telega-completion--fetch-telegram-emoji-candidates):
+	(telega-completion--fetch-usernames-candidates)
+	(telega-completion--fetch-hashtags-candidates)
+	(telega-completion--hashtag-table)
+	(telega-completion--fetch-bot-commands)
+	(telega-completion-quick-reply):
+
 2026-03-08  Zhengyi Fu  <i@fuzy.me>
 
 	Fix user defined bangs
