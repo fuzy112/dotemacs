@@ -1,5 +1,9 @@
 2026-03-09  Zhengyi Fu  <i@fuzy.me>
 
+	* templates/bash.eld (lorri): New snippet.
+
+2026-03-09  Zhengyi Fu  <i@fuzy.me>
+
 	Update telega configuration
 
 	* user-lisp/telega-config.el: Remove configuration for
