@@ -23,6 +23,7 @@
 
 (setopt telega-translate-to-language-by-default "zh")
 (setopt telega-emoji-use-images nil)
+(setopt telega-language "zh")
 
 (unless emacs-is-installed-by-nix
   (setq telega-server-command (expand-file-name "telega-server"

@@ -1,3 +1,7 @@
+2026-03-10  Zhengyi Fu  <i@fuzy.me>
+
+	* user-lisp/telega-config.el (telega-language): Set to "zh".
+
 2026-03-09  Zhengyi Fu  <i@fuzy.me>
 
 	* templates/bash.eld (lorri): New snippet.
