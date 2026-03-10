@@ -568,7 +568,8 @@ You will be given a set of diffs and maybe some other information retrieved from
 Your task to generate a commit message for the diffs.
 The commit message should be brief but contains necessary information.
 The commit message should focus on the staged changes and should omit unstaged and untracked changes.
-If the git log is available to you, you should generate the commit message based on existing commit message convention.")
+If the git log is available to you, you should generate the commit message based on existing commit message convention.
+Output **only** the commit message, with any explanation or markdown code fences.")
 
 ;;;###autoload
 (defun +gptel-language-tutor-primary-selection ()
