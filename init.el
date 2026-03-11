@@ -1556,7 +1556,8 @@ value for USE-OVERLAYS."
 (after-load! comint
   (add-hook 'comint-output-filter-functions #'comint-osc-process-output)
   (setq comint-prompt-read-only t
-        comint-buffer-maximum-size 2048))
+        comint-buffer-maximum-size 2048
+        comint-terminfo-terminal "dumb-emacs-ansi"))
 
 ;;;; grep
 
