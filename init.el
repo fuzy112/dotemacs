@@ -634,6 +634,23 @@ font-locking and indentation."
    "https://yhetil.org/emacs"
    query include-all))
 
+;;;; bangs
+
+(setq bangs-user-bangs
+      '(("Mailing lists mirrored at yhetil.org" "yhetil"
+         "https://yhetil.org/$1/?q=$2"
+         :regex "(\\w+)\\s+(.*)" :fmt (url_encode_placeholder))
+        ("Boss 直聘" "zhipin"
+         "https://www.zhipin.com/web/geek/jobs?query={{{s}}}"
+         :triggers ("boss"))
+        ("知乎直达" "zhida" "https://zhida.zhihu.com/search?q={{{s}}}")
+        ("Emacs China" "emacs-china"
+         "https://emacs-china.org/search?q={{{s}}}"
+         :triggers ("emacsc" "ec"))
+        ("小红书" "xhs"
+         "https://www.xiaohongshu.com/search_result_ai?keyword={{{s}}}"
+         :triggers ("rednote" "redn"))))
+
 ;;;; breadcrumb
 
 ;; Enable breadcrumb-local-mode in various major modes
