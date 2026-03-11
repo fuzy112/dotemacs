@@ -2562,6 +2562,10 @@ not used, but is required by the hook."
 ;;;; email and gnus
 
 (setq message-mail-alias-type 'ecomplete)
+(defun +message-ecompletion-capf-setup ()
+  (add-hook 'completion-at-point-functions #'message-ecomplete-capf nil t))
+(add-hook 'message-mode-hook #'+message-ecompletion-capf-setup)
+
 (setq mm-discouraged-alternatives '("text/html" "text/richtext"))
 
 (after-load! gnus-art
