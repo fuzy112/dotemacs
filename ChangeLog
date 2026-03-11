@@ -1,5 +1,9 @@
 2026-03-11  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (comint-terminfo-terminal): Set to "dumb-emacs-ansi".
+
+2026-03-11  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (bangs-user-bangs): Add user defined bangs.
 
 2026-03-10  Zhengyi Fu  <i@fuzy.me>
