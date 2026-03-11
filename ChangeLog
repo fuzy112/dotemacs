@@ -1,5 +1,9 @@
 2026-03-11  Zhengyi Fu  <i@fuzy.me>
 
+	* README.md: New file.
+
+2026-03-11  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (tramp-verbose): Set to 2 (warnings).
 
 2026-03-11  Zhengyi Fu  <i@fuzy.me>
