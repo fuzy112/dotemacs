@@ -1,5 +1,9 @@
 2026-03-11  Zhengyi Fu  <i@fuzy.me>
 
+	* rnc-schemas/busconfig.rnc: Rename from rng-schemas.rng.
+
+2026-03-11  Zhengyi Fu  <i@fuzy.me>
+
 	* README.md: New file.
 
 2026-03-11  Zhengyi Fu  <i@fuzy.me>
