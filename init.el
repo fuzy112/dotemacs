@@ -650,6 +650,7 @@ font-locking and indentation."
         ("小红书" "xhs"
          "https://www.xiaohongshu.com/search_result_ai?keyword={{{s}}}"
          :triggers ("rednote" "redn"))))
+(setq bangs-pretty-print-json t)
 
 ;;;; breadcrumb
 

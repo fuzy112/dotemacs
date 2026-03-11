@@ -1,5 +1,12 @@
 2026-03-11  Zhengyi Fu  <i@fuzy.me>
 
+	Pretty print cached bangs.json
+
+	* user-lisp/bangs.el (bangs-pretty-print-json): New user option.
+	* init.el (bangs-pretty-print-json): Set to t.
+
+2026-03-11  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (comint-terminfo-terminal): Set to "dumb-emacs-ansi".
 
 2026-03-11  Zhengyi Fu  <i@fuzy.me>

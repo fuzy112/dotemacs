@@ -64,6 +64,14 @@ Each URL should point to a JSON file containing bang definitions."
   "Path to the local cache file for Kagi bangs JSON data."
   :type 'file)
 
+(defcustom bangs-pretty-print-json
+  nil
+  "Whether to pretty-print the saved bangs.json file.
+When non-nil, the JSON cache file will be formatted with indentation
+and line breaks for human readability.  When nil (the default), the
+file is saved in compact format to save space."
+  :type 'boolean)
+
 (defcustom bangs-fallback-base-url
   "https://www.kagi.com"
   "Base URL to use for bang templates without a scheme.
@@ -185,6 +193,8 @@ Data from multiple sources is merged into a single list."
           (make-directory cache-dir t)))
       (with-temp-buffer
         (insert (json-encode all-bangs))
+        (when bangs-pretty-print-json
+          (json-pretty-print-buffer))
         (let ((coding-system-for-write 'utf-8))
           (write-region (point-min) (point-max) bangs-cache-file nil 'quiet)))
       (bangs-clear-cache)
