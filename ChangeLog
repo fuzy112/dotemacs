@@ -1,5 +1,12 @@
 2026-03-11  Zhengyi Fu  <i@fuzy.me>
 
+	Set up completion for message-mode
+
+	* init.el (+message-ecompletion-capf-setup): New defun. Add to
+	`message-mode-hook'.
+
+2026-03-11  Zhengyi Fu  <i@fuzy.me>
+
 	Pretty print cached bangs.json
 
 	* user-lisp/bangs.el (bangs-pretty-print-json): New user option.
