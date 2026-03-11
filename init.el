@@ -2124,6 +2124,7 @@ confirmed."
 
 ;;;; tramp
 
+(setq tramp-verbose 2)
 (setq tramp-persistency-file-name
       (locate-user-emacs-file "tramp.eld"))
 
