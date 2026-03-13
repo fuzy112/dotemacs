@@ -2812,14 +2812,7 @@ of feed configurations without modifying init files."
   (define-keymap :keymap org-mode-map
     "C-c o M" #'+org/toggle-emphasis-markers
     "C-c o m" #'org-modern-mode
-    "M-g o"   #'consult-org-heading)
-  (setopt org-export-backends '(html latex texinfo))
-  (setq org-agenda-hide-tags-regexp ".")
-  (setq org-agenda-prefix-format
-        '((agenda . " %i %-12:c%?-12t% s")
-          (todo   . " ")
-          (tags   . " %i %-12:c")
-          (search . " %i %-12:c"))))
+    "M-g o"   #'consult-org-heading))
 
 (after-load! ox-latex
   (alist-setq! org-latex-classes
@@ -2837,9 +2830,13 @@ of feed configurations without modifying init files."
                           "/Entered on/ %U")))
 
   (add-to-list 'org-capture-templates
-               `("m" "Meeting" entry (file+headline "agenda.org" "Future")
+               `("m" "Meeting" entry (file+headline "agenda.org" "Meetings")
                  ,(concat "* %? :meeting:\n"
                           "<%<%Y-%m-%d %a %H:00>>")))
+
+  (add-to-list 'org-capture-templates
+               '("j" "Journal" entry (file+datetree "journal.org")
+                 "* %U - %^{Heading} %^g\n%?\n"))
 
   (add-to-list 'org-capture-templates
                `("n" "Note" entry (file "notes.org")
@@ -3153,6 +3150,7 @@ Otherwise disable it."
 
 (defalias 'window-prefix-map window-prefix-map)
 (defalias 'project-prefix-map project-prefix-map)
+
 
 (define-keymap :keymap project-prefix-map
   "m" #'magit-project-status)
