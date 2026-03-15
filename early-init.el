@@ -59,8 +59,10 @@
 
 (setq native-comp-async-on-battery-power nil)
 
-(setq use-file-dialog                        nil)
-(setq system-time-locale                     "C")
+(setq use-file-dialog    nil
+      use-dialog-box     nil
+      use-short-answers  t)
+(setq system-time-locale "C")
 
 (setq undo-limit        (* 16 1024 1024)
       undo-strong-limit (* 64 1024 1024))

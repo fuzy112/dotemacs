@@ -2977,8 +2977,10 @@ of feed configurations without modifying init files."
 
 ;;;; mode-line
 
-(setopt doom-modeline-gnus t
-        doom-modeline-irc t)
+(after-load! doom-modeline
+  (setopt doom-modeline-gnus t
+          doom-modeline-irc t
+          doom-modeline-modal-icon doom-modeline-icon))
 (add-hook 'emacs-startup-hook #'doom-modeline-mode)
 
 ;;;; uptime
