@@ -1376,9 +1376,7 @@ value for USE-OVERLAYS."
                    (mode . magit-status-mode)
                    (mode . magit-stash-mode)))
          ("Apps" (or
-                  (mode . elfeed-search-mode)
-                  (mode . elfeed-show-mode)
-                  (mode . eww-mode)
+                   (mode . eww-mode)
                   (mode . telega-chat-mode)
                   (mode . telega-root-mode)
                   (mode . telega-webpage-mode)
@@ -2572,142 +2570,6 @@ not used, but is required by the hook."
 (after-load! gnus-art
   (require 'gnus-diff))
 
-;;;; elfeed
-
-(setq elfeed-search-remain-on-entry t)
-(setq elfeed-show-entry-switch #'+elfeed-display-buffer)
-
-(defun +elfeed-display-buffer (buf)
-  (pop-to-buffer buf '((display-buffer-at-bottom)))
-  (set-window-text-height (get-buffer-window) (round (* 0.7 (frame-height)))))
-
-(defun +elfeed-search-show-entry-pre (&optional lines)
-  "Returns a function to scroll forward or back in the Elfeed
-  search results, displaying entries without switching to them."
-  (lambda (times)
-    (interactive "p")
-    (forward-line (* times (or lines 0)))
-    (recenter)
-    (call-interactively #'elfeed-search-show-entry)
-    (select-window (previous-window))
-    (unless elfeed-search-remain-on-entry (forward-line -1))))
-
-(defun +elfeed-update-search-buffer (&rest _)
-  (when-let* ((buf (elfeed-search-buffer))
-              (window (get-buffer-window buf nil)))
-    (with-selected-window window
-      (hl-line-highlight))))
-
-(advice-add #'elfeed-show-next :after #'+elfeed-update-search-buffer)
-(advice-add #'elfeed-show-prev :after #'+elfeed-update-search-buffer)
-
-(setq elfeed-show-entry-delete
-      (lambda ()
-        (when (derived-mode-p 'elfeed-show-mode)
-          (elfeed-kill-buffer))))
-
-(defvar +elfeed-tag-history nil
-  "History variable for tags used in `elfeed-show-tag'.")
-
-(define-advice elfeed-show-tag (:before (&rest args) completing-read)
-  "Replace default prompting with a completing-read interface for tags.
-This advice enhances `elfeed-show-tag' to use `completing-read-multiple'
-for selecting multiple tags from available tags in the database, with
-history support."
-  (interactive
-   (mapcar #'intern
-           (completing-read-multiple
-            "Tags: "
-            (elfeed-db-get-all-tags)
-            nil nil nil '+elfeed-tag-history)))
-  args)
-
-(defun +elfeed-browse-eww ()
-  "Open the current Elfeed entry in EWW browser.
-This temporarily sets `browse-url-browser-function' to use EWW
-and then calls `elfeed-show-visit' to open the entry URL."
-  (interactive)
-  (let ((browse-url-browser-function #'eww-browse-url))
-    (elfeed-show-visit)))
-
-(defvar +elfeed-search-live-filter-history nil)
-
-(defun +elfeed-search-live-filter-with-history ()
-  (interactive)
-  (unwind-protect
-      (let ((elfeed-search-filter-active :live))
-        (setq elfeed-search-filter
-              (read-from-minibuffer "Filter: " elfeed-search-filter
-                                    nil nil '+elfeed-search-live-filter-history)))
-    (elfeed-search-update :force)))
-
-(defun +elfeed-scroll-up-command (&optional arg)
-  "Scroll up or go to next feed item in Elfeed"
-  (interactive "^P")
-  (let ((scroll-error-top-bottom nil))
-    (condition-case-unless-debug nil
-        (scroll-up-command arg)
-      (error (elfeed-show-next)))))
-
-(defun +elfeed-scroll-down-command (&optional arg)
-  "Scroll up or go to next feed item in Elfeed"
-  (interactive "^P")
-  (let ((scroll-error-top-bottom nil))
-    (condition-case-unless-debug nil
-        (scroll-down-command arg)
-      (error (elfeed-show-prev)))))
-
-(after-load! elfeed
-  (keymap-set elfeed-search-mode-map "q" #'elfeed-db-unload)
-  (keymap-set elfeed-search-mode-map "n" (+elfeed-search-show-entry-pre +1))
-  (keymap-set elfeed-search-mode-map "p" (+elfeed-search-show-entry-pre -1))
-  (keymap-set elfeed-search-mode-map "M-RET" (+elfeed-search-show-entry-pre))
-  (keymap-substitute elfeed-search-mode-map
-                     #'elfeed-search-live-filter
-                     #'+elfeed-search-live-filter-with-history)
-  (keymap-set elfeed-show-mode-map "e" #'+elfeed-browse-eww)
-  (keymap-set elfeed-show-mode-map "SPC" '+elfeed-scroll-up-command)
-  (keymap-set elfeed-show-mode-map "S-SPC" '+elfeed-scroll-down-command))
-
-(defvar +feeds-file-watch-descriptor nil)
-
-(defun +elfeed-load-feeds ()
-  "Load feeds from the feeds.eld file in `elfeed-db-directory'.
-If the feeds.eld file exists, it will be loaded and its contents
-will be set as `elfeed-feeds'. This allows for dynamic loading
-of feed configurations without modifying init files."
-  (let ((default-directory elfeed-db-directory))
-    (when (file-exists-p "feeds.eld")
-      (with-temp-buffer
-        (insert-file-contents "feeds.eld")
-        (setq elfeed-feeds (read (current-buffer)))
-        (message "Updated elfeed feeds from %s"
-                 (expand-file-name "feeds.eld" elfeed-db-directory))))))
-
-(after-load! elfeed-db
-  ;; Load feeds from the feeds.eld file when elfeed-db is loaded
-  (+elfeed-load-feeds)
-
-  ;; Set up a file watcher on the feeds.eld file if we haven't already
-  (when (null +feeds-file-watch-descriptor)
-    ;; Make sure we have the filenotify library available
-    (require 'filenotify)
-
-    ;; Create and store a file watcher that will reload feeds when the file changes
-    (setq +feeds-file-watch-descriptor
-          (file-notify-add-watch
-           ;; Watch the feeds.eld file in the elfeed database directory
-           (expand-file-name "feeds.eld" elfeed-db-directory)
-           ;; Only watch for change events
-           '(change)
-           ;; Callback function that runs when a change is detected
-           (pcase-lambda (`(,descriptor ,action . ,files))
-             ;; Check the type of notification
-             (pcase action
-               ;; When the file has changed, reload the feeds
-               ('changed
-                (+elfeed-load-feeds))))))))
-
 ;;;; emacs-server
 
 ;; Workaround windows encoding issue
@@ -3227,7 +3089,6 @@ Otherwise disable it."
   "A"   #'org-agenda
   "C"   #'org-capture
   "D"   debug-map
-  "E"   #'elfeed
   "L"   #'org-store-link
   "T"   #'telega
   "G"   #'gnus
