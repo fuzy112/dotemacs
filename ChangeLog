@@ -1,3 +1,19 @@
+2026-03-17  Zhengyi Fu  <i@fuzy.me>
+
+	Remove elfeed configuration
+
+	* init.el (+elfeed-display-buffer, +elfeed-search-show-entry-pre)
+	(+elfeed-update-search-buffer, +elfeed-tag-history)
+	(+elfeed-browse-eww, +elfeed-search-live-filter-history)
+	(+elfeed-search-live-filter-with-history, +elfeed-scroll-up-command)
+	(+elfeed-scroll-down-command, +elfeed-load-feeds): Remove functions.
+	(elfeed-search-remain-on-entry, elfeed-show-entry-switch)
+	(elfeed-show-entry-delete): Don't set.
+	(elfeed-search-mode-map, elfeed-show-mode-map): Don't bind.
+	(+feeds-file-watch-descriptor): Remove variable.
+	("Apps"): Remove elfeed modes from the group.
+	(mode-specific-map): Remove "E" binding for elfeed.
+
 2026-03-15  Zhengyi Fu  <i@fuzy.me>
 
 	Tune some settings
