@@ -70,3 +70,5 @@ tramp.eld
 /.envrc
 /bangs.json
 /bookmarks.eld
+/.agent-shell/
+/agent/
