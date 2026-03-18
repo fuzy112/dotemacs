@@ -5,5 +5,4 @@
   "--extras=*" "--fields=*" "--kinds-all=*" "--roles-all=*")
  (gptel-menu)
  (magit-fetch "--prune" "--tags")
- (magit-log:magit-log-mode "-n256" "--decorate" "--show-signature")
  (magit-pull "--autostash"))

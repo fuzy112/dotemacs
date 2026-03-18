@@ -2207,6 +2207,12 @@ confirmed."
   (setopt magit-wip-mode-lighter "")
   (magit-wip-mode))
 
+(after-load! magit-status
+  (cl-pushnew "--show-signature" (get 'magit-status-mode 'magit-log-default-arguments)))
+
+(after-load! magit-log
+  (cl-pushnew "--show-signature" (get 'magit-log-mode 'magit-log-default-arguments)))
+
 (setq git-commit-major-mode #'log-edit-mode)
 
 (defun +git-commit--log-edit-h ()
