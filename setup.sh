@@ -26,26 +26,40 @@ git config commit.gpgSign true
 GIT_DIR=$(git rev-parse --git-dir)
 
 cat >"$GIT_DIR/hooks/pre-push" <<-"EOF"
-#!/bin/sh
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Exit immediately if a command exits with a non-zero status.
-set -e
-
+# Block pushes with future-dated commits
 while read local_ref local_sha remote_ref remote_sha; do
-  # Skip if this is a delete operation (newrev is 0)
-  if [[ "$remote_sha" == "0000000000000000000000000000000000000000" ]]; then
+  # Skip if this is a delete operation
+  if [[ "$local_sha" == "0000000000000000000000000000000000000000" ]]; then
     continue
   fi
 
-  # Find all commits that are in the local ref but not in the remote ref
-  for sha in $(git rev-list $remote_sha..$local_sha); do
-    # Get the signature status of the commit
-    sig_status=$(git verify-commit $sha 2>&1 || true)
+  # Get current timestamp
+  now=$(date +%s)
 
-    # Check if the commit is signed and verified
+  # Check each commit being pushed
+  for sha in $(git rev-list "$remote_sha".."$local_sha"); do
+    # Check signature
+    sig_status=$(git verify-commit "$sha" 2>&1 || true)
     if ! echo "$sig_status" | grep -q "Good signature"; then
       echo "Error: Commit $sha is not properly signed."
       echo "$sig_status"
+      exit 1
+    fi
+
+    # Get commit and author dates
+    commit_date=$(git log -1 --format=%ct "$sha")
+    author_date=$(git log -1 --format=%at "$sha")
+
+    if [[ "$commit_date" -gt "$now" ]]; then
+      echo "Error: Commit $sha has future commit date ($(git log -1 --format=%ci "$sha"))"
+      exit 1
+    fi
+
+    if [[ "$author_date" -gt "$now" ]]; then
+      echo "Error: Commit $sha has future author date ($(git log -1 --format=%ai "$sha"))"
       exit 1
     fi
   done
@@ -54,7 +68,8 @@ EOF
 chmod +x "$GIT_DIR/hooks/pre-push"
 
 cat >"$GIT_DIR/hooks/post-receive" <<-"EOF"
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
 while read old_sha new_sha ref_name; do
   # Skip if this is a delete operation (new_sha is 0)
@@ -64,16 +79,16 @@ while read old_sha new_sha ref_name; do
 
   # If old_sha is 0 (creating a new branch), check all commits in the new branch
   if [[ "$old_sha" == "0000000000000000000000000000000000000000" ]]; then
-    commits=$(git rev-list $new_sha)
+    commits=$(git rev-list "$new_sha")
   else
     # Otherwise, only check the commits being added
-    commits=$(git rev-list $old_sha..$new_sha)
+    commits=$(git rev-list "$old_sha".."$new_sha")
   fi
 
   for sha in $commits; do
     # Use git verify-commit to check the signature
     # The || true prevents the script from exiting on the first non-signed commit
-    output=$(git verify-commit $sha 2>&1 || true)
+    output=$(git verify-commit "$sha" 2>&1 || true)
 
     # Check if the output contains "Good signature"
     if ! echo "$output" | grep -q "Good signature"; then
