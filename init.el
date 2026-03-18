@@ -2630,12 +2630,6 @@ not used, but is required by the hook."
 (after-load! gptel-aibo
   (keymap-set gptel-aibo-mode-map "C-j" #'gptel-aibo-send))
 
-;;;; Claude Code IDE
-
-(setq claude-code-ide-terminal-backend 'eat)
-(setq claude-code-ide-cli-path
-      (expand-file-name "scripts/claude" user-emacs-directory))
-
 ;;;; bookmark
 
 (defvar pp-default-function)
