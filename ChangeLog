@@ -1,5 +1,14 @@
 2026-03-18  Zhengyi Fu  <i@fuzy.me>
 
+	Show signature in magit status and log buffer
+
+	* init.el (magit-status-mode, magit-log-mode): Add
+	"--show-signature" to `magit-log-default-arguments' property.
+	* transient/value.el: Remove saved values for
+	magit-log:magit-log-mode.
+
+2026-03-18  Zhengyi Fu  <i@fuzy.me>
+
 	* transient/levels.el (magit-commit:--date): Set level to 4.
 
 2026-03-18  Zhengyi Fu  <i@fuzy.me>
