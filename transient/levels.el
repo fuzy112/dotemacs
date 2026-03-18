@@ -1,4 +1,5 @@
 ((magit-commit
+  (magit-commit:--date . 4)
   (t . 5))
  (magit-log
   (transient:magit-log-infix-arguments:--first-parent . 1)

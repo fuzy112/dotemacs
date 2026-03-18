@@ -1,5 +1,9 @@
 2026-03-18  Zhengyi Fu  <i@fuzy.me>
 
+	* transient/levels.el (magit-commit:--date): Set level to 4.
+
+2026-03-18  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (gnus-verbose, gnus-verbose-backends): Both set to 5.
 
 2026-03-18  Zhengyi Fu  <i@fuzy.me>
