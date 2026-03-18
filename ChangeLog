@@ -1,6 +1,10 @@
 2026-03-18  Zhengyi Fu  <i@fuzy.me>
 
-	Show signature in magit status and log buffer
+	* transient/values.el (ctags-menu): Remove.
+
+2026-03-18  Zhengyi Fu  <i@fuzy.me>
+
+	Show signature in magit status buffer
 
 	* init.el (magit-status-mode, magit-log-mode): Add
 	"--show-signature" to `magit-log-default-arguments' property.
