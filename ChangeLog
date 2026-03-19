@@ -1,5 +1,12 @@
 2026-03-19  Zhengyi Fu  <i@fuzy.me>
 
+	Add convenient key bindings for `consult-history' in comint
+
+	* init.el (comint): Bind "M-s" and "M-r" in `comint-mode-map' to
+	`consult-history'.
+
+2026-03-19  Zhengyi Fu  <i@fuzy.me>
+
 	Disable rime when in `completion-in-region-mode'
 
 	* init.el (+rime-completion-in-region-p): New defun.
