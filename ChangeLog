@@ -1,5 +1,14 @@
 2026-03-19  Zhengyi Fu  <i@fuzy.me>
 
+	Temporarily disable `corfu-auto' when using input methods
+
+	* init.el (+corfu-auto-saved): Renamed from `+pyim--corfu'.
+	(+corfu-auto-suspend): Renamed from `+pyim--activate'.
+	(+corfu-auto-restore): Renamed from `+pyim--deactivate'.  Added to
+	`input-method-activate-hook' and `input-method-deactivate-hook'.
+
+2026-03-19  Zhengyi Fu  <i@fuzy.me>
+
 	Add convenient key bindings for `consult-history' in comint
 
 	* init.el (comint): Bind "M-s" and "M-r" in `comint-mode-map' to

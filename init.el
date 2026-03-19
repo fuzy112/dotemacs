@@ -998,7 +998,6 @@ ARGS: see `completion-read-multiple'."
 (after-load! corfu-popupinfo
   (keymap-unset corfu-popupinfo-map "M-t"))
 
-
 (defun corfu-move-to-minibuffer ()
   (interactive)
   (pcase completion-in-region--data
@@ -1006,6 +1005,20 @@ ARGS: see `completion-read-multiple'."
      (let ((completion-extra-properties extras)
            completion-cycle-threshold completion-cycling)
        (consult-completion-in-region beg end table pred)))))
+
+;;;;; Disable corfu-auto when using input methods
+
+(defvar +corfu-auto-saved nil)
+(defun +corfu-auto-suspend ()
+  (when (boundp 'corfu-auto)
+    (set (make-local-variable '+corfu-auto-saved) corfu-auto)
+    (set (make-local-variable 'corfu-auto) nil)))
+(defun +corfu-auto-restore ()
+  (if (boundp 'corfu-auto)
+      (set (make-local-variable 'corfu-auto)
+           +corfu-auto-saved)))
+(add-hook 'input-method-activate-hook '+corfu-auto-suspend)
+(add-hook 'input-method-deactivate-hook '+corfu-auto-restore)
 
 ;;;; cape
 
@@ -2375,19 +2388,6 @@ Then refresh all windows displaying the current buffer."
 (defun +orderless-pinyin (component)
   (require 'pyim)
   (pyim-cregexp-build component 3 t))
-
-(defvar +pyim--corfu nil)
-(defun +pyim--activate ()
-  (when (boundp 'corfu-auto)
-    (set (make-local-variable '+pyim--corfu) corfu-auto)
-    (set (make-local-variable 'corfu-auto) nil)))
-(defun +pyim--deactivate ()
-  (if (boundp 'corfu-auto)
-      (set (make-local-variable 'corfu-auto)
-           +pyim--corfu)))
-(after-load! corfu
-  (add-hook 'pyim-activate-hook '+pyim--activate)
-  (add-hook 'pyim-deactivate-hook '+pyim--deactivate))
 
 (after-load! orderless
   ;; 通过拼音搜索中文
