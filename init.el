@@ -2554,7 +2554,8 @@ not used, but is required by the hook."
 ;;;; email and gnus
 
 (setq gnus-verbose 5
-      gnus-verbose-backends 5)
+      gnus-verbose-backends 5
+      mail-user-agent 'gnus-user-agent)
 
 (setq message-mail-alias-type 'ecomplete)
 (defun +message-ecompletion-capf-setup ()

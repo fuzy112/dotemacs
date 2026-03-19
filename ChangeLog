@@ -1,5 +1,9 @@
 2026-03-19  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (mail-user-agent): Set to `gnus-user-agent'.
+
+2026-03-19  Zhengyi Fu  <i@fuzy.me>
+
 	Temporarily disable `corfu-auto' when using input methods
 
 	* init.el (+corfu-auto-saved): Renamed from `+pyim--corfu'.
