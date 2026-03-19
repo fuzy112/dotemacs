@@ -2018,6 +2018,17 @@ With no active region, operate on the whole buffer."
   (let ((compilation-buffer-name-function #'project-prefixed-buffer-name))
     (apply args)))
 
+;;;; nix-mode
+
+(defun +nix-repl-setup ()
+  (setq-local comint-indirect-setup-function #'nix-mode)
+  (comint-fontify-input-mode)
+
+  (setq-local indent-line-function #'comint-indent-input-line-default)
+  (setq-local indent-region-function #'comint-indent-input-region-default))
+
+(add-hook 'nix-repl-mode-hook #'+nix-repl-setup)
+
 ;;;; ruby
 
 ;;;; sh-script

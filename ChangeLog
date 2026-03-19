@@ -1,5 +1,12 @@
 2026-03-19  Zhengyi Fu  <i@fuzy.me>
 
+	Enable fontification and indentation of Nix REPL input
+
+	* init.el (+nix-repl-setup): New defun.  Add to
+	`nix-repl-mode-hook'.
+
+2026-03-19  Zhengyi Fu  <i@fuzy.me>
+
 	Remove integration of vc-dwim
 
 	* init.el (vc-dwim-post-commit-hook, add-log/vc-dwim-commit):
