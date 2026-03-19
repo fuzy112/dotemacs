@@ -1180,6 +1180,11 @@ value for USE-OVERLAYS."
   "M-s" #'consult-history
   "M-r" #'consult-history)
 
+(after-load! comint
+  (define-keymap :keymap comint-mode-map
+    "M-s" #'consult-history
+    "M-r" #'consult-history))
+
 (after-load! consult
   (setq consult-after-jump-hook
         (cl-nsubstitute #'reposition-window #'recenter
