@@ -2394,12 +2394,18 @@ Then refresh all windows displaying the current buffer."
 ;;;; rime
 
 (after-load! (:and rime meow)
-  (setopt rime-disable-predicates '(meow-normal-mode-p
-                                    meow-keypad-mode-p
-                                    meow-motion-mode-p
-                                    meow-beacon-mode-p)))
+  (setopt rime-disable-predicates
+          (seq-union rime-disable-predicates
+                     '(meow-normal-mode-p
+                       meow-keypad-mode-p
+                       meow-motion-mode-p
+                       meow-beacon-mode-p))))
 (define-advice toggle-input-method (:before (&rest _) rime)
   (setq default-input-method "rime"))
+
+(defun +rime-completion-in-region-p ()
+  (bound-and-true-p completion-in-region-mode))
+(add-hook 'rime-disable-predicates #'+rime-completion-in-region-p)
 
 ;;;; kinsoku
 

@@ -1,5 +1,12 @@
 2026-03-19  Zhengyi Fu  <i@fuzy.me>
 
+	Disable rime when in `completion-in-region-mode'
+
+	* init.el (+rime-completion-in-region-p): New defun.
+	(rime-disable-predicates): Add `+rime-completion-in-region-p'.
+
+2026-03-19  Zhengyi Fu  <i@fuzy.me>
+
 	Enable fontification and indentation of Nix REPL input
 
 	* init.el (+nix-repl-setup): New defun.  Add to
