@@ -2235,31 +2235,6 @@ confirmed."
 
 ;;;; Add-Log
 
-(defvar vc-dwim-post-commit-hook nil)
-
-(defun add-log/vc-dwim-commit ()
-  "Invoke vc-dwim --commit with the current file.
-
-Run hook `vc-dwim-post-commit-hook'."
-  (interactive)
-  (let ((default-directory (vc-root-dir))
-        exitcode)
-    (with-output-to-temp-buffer "*vc-dwim*"
-      (setq exitcode
-            (process-file "vc-dwim" nil standard-output nil
-                          "--commit"
-                          (file-relative-name (buffer-file-name))))
-      (with-current-buffer "*vc-dwim*"
-        (delay-mode-hooks
-          (diff-mode))
-        (font-lock-ensure)
-        (unless (zerop exitcode)
-          (goto-char (point-min))
-          (user-error "%s" (buffer-substring-no-properties (point) (line-end-position)))
-          (add-face-text-property (point) (line-end-position) 'error 'append))))
-    (when (zerop exitcode)
-      (run-hooks 'vc-dwim-post-commit-hook))))
-
 (defvar add-log-always-start-new-record)
 (defvar add-log-buffer-file-name-function)
 
@@ -2298,16 +2273,6 @@ new record is started."
             (setq add-log-always-start-new-record t))
         (setq add-log-always-start-new-record t)))
     (apply fun whoami changelog-file-name rest)))
-
-(after-load! add-log
-  (keymap-set change-log-mode-map "C-c RET" #'add-log/vc-dwim-commit))
-
-(after-load! vc
-  (add-hook 'vc-dwim-post-commit-hook #'vc-refresh-state))
-(after-load! magit
-  (add-hook 'vc-dwim-post-commit-hook #'magit-refresh))
-(after-load! diff-hl
-  (add-hook 'vc-dwim-post-commit-hook #'diff-hl-update))
 
 ;;;; diff-hl
 
