@@ -639,7 +639,7 @@ font-locking and indentation."
 (setq bangs-user-bangs
       '(("Mailing lists mirrored at yhetil.org" "yhetil"
          "https://yhetil.org/$1/?q=$2"
-         :regex "(\\w+)\\s+(.*)" :fmt (url_encode_placeholder))
+         :regex "(\\S+)\\s+(.*)" :fmt (url_encode_placeholder))
         ("Boss 直聘" "zhipin"
          "https://www.zhipin.com/web/geek/jobs?query={{{s}}}"
          :triggers ("boss"))

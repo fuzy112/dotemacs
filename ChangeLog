@@ -1,3 +1,7 @@
+2026-03-20  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (bangs-user-bangs): Fix the regex for yhetil.org.
+
 2026-03-19  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (mail-user-agent): Set to `gnus-user-agent'.
