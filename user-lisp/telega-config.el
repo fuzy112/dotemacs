@@ -39,7 +39,8 @@
 (add-hook 'telega-chat-mode-hook #'telega-chat-auto-fill-mode)
 
 (after-load! telega
-  (telega-notifications-mode))
+  (when (dbus-get-name-owner :session "org.freedesktop.Notifications")
+    (telega-notifications-mode)))
 
 (after-load! consult
   (add-to-list 'consult-buffer-filter (concat "\\`" (regexp-quote (telega-symbol 'telegram))))
