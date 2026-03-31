@@ -1,3 +1,12 @@
+2026-03-31  Zhengyi Fu  <i@fuzy.me>
+
+	Add new keybindings for `nix-mode'
+
+	* init.el (+nix-get-repl, +nix-send-string-to-repl)
+	(+nix-send-region-to-repl, +nix-load-file)
+	(+nix-load-flake)
+	(+nix-repl-show-other-window): New.
+
 2026-03-20  Zhengyi Fu  <i@fuzy.me>
 
 	Fix Emacs hang when there is no notification service
