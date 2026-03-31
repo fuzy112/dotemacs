@@ -2047,6 +2047,64 @@ With no active region, operate on the whole buffer."
 
 (add-hook 'nix-repl-mode-hook #'+nix-repl-setup)
 
+(defun +nix-get-repl ()
+  "Get or create the Nix REPL process.
+Returns the process object for the *Nix-REPL* buffer."
+  (with-current-buffer (get-buffer-create "*Nix-REPL*")
+    (unless (comint-check-proc (current-buffer))
+      (nix--make-repl-in-buffer (current-buffer))
+      (nix-repl-mode))
+    (get-buffer-process (current-buffer))))
+
+(defun +nix-send-string-to-repl (str &optional proc)
+  "Send STR to the Nix REPL.
+If PROC is not provided, uses the default Nix REPL process."
+  (interactive (list (read-string "Nix expr: ") nil))
+  (unless proc
+    (setq proc (+nix-get-repl)))
+  (comint-send-string proc str))
+
+(defun +nix-send-region-to-repl (start end &optional proc)
+  "Send the region from START to END to the Nix REPL.
+If PROC is not provided, uses the default Nix REPL process."
+  (interactive (list (use-region-beginning)
+                     (use-region-end)
+                     nil))
+  (+nix-send-string-to-repl (buffer-substring start end) proc))
+
+(defun +nix-load-file ()
+  "Load the current file or a selected file into the Nix REPL.
+With prefix argument, prompt for a file to load."
+  (interactive)
+  (let ((file (if (or current-prefix-arg (not (buffer-file-name)))
+                  (read-file-name "Nix file: ")
+                (buffer-file-name))))
+    (+nix-send-string-to-repl (concat ":l " file "\n"))))
+
+(defun +nix-load-flake ()
+  "Load the current file or a selected file as a flake into the Nix REPL.
+With prefix argument, prompt for a file to load."
+  (interactive)
+  (let ((file (if (or current-prefix-arg (not (buffer-file-name)))
+                  (read-file-name "Nix file: ")
+                (buffer-file-name))))
+    (+nix-send-string-to-repl (concat ":lf " file "\n"))))
+
+(defun +nix-repl-show-other-window ()
+  (interactive)
+  (switch-to-buffer-other-window (get-buffer-create "*Nix-REPL*"))
+  (unless (comint-check-proc (current-buffer))
+    (nix--make-repl-in-buffer (current-buffer))
+    (nix-repl-mode))
+  (get-buffer-process (current-buffer)))
+
+(after-load! nix-mode
+  (keymap-set nix-mode-map "C-c C-l" #'+nix-load-file)
+  (keymap-set nix-mode-map "C-c C-f" #'+nix-load-flake)
+  (keymap-set nix-mode-map "C-c C-z" #'+nix-repl-show-other-window)
+  (keymap-set nix-mode-map "C-c C-r" #'+nix-send-region-to-repl)
+  (keymap-set nix-mode-map "C-c C-s" #'+nix-send-string-to-repl))
+
 ;;;; ruby
 
 ;;;; sh-script
