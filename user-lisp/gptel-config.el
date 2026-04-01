@@ -613,7 +613,6 @@ in the git editor for final editing before committing."
       (unless (zerop (magit-process-git t "log" "-n10" "--stat"))
 	(error "Failed to run git log"))
       (insert "</git-log>\n")
-      (message "context: %S" (buffer-string))
       (gptel-request
 	  (buffer-string)
 	:system (alist-get 'commit gptel-directives)
