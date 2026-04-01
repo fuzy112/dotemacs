@@ -1,3 +1,16 @@
+2026-04-01  Zhengyi Fu  <i@fuzy.me>
+
+	Refine keybindings for `nix-mode'
+
+	* init.el (nix-repl-setup): Rename from `+nix-repl-setup'.
+	(nix-get-repl): Rename from `+nix-get-repl'.
+	(nix-send-region-to-repl): Rename from `+nix-send-region-to-repl'.
+	(nix-send-string-to-repl): Rename from `+nix-send-string-to-repl'.
+	(nix-send-line-to-repl, nix-send-buffer-to-repl): New defun.
+	(nix-load-file): Rename from `+nix-load-file'.
+	(nix-load-flake): Rename from `+nix-load-flake'.
+	(nix-switch-to-repl): Rename from `+nix-switch-to-repl'.
+
 2026-03-31  Zhengyi Fu  <i@fuzy.me>
 
 	Add new keybindings for `nix-mode'
