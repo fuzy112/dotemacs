@@ -2317,13 +2317,14 @@ confirmed."
 (setq git-commit-major-mode #'log-edit-mode)
 
 (defun +git-commit--log-edit-h ()
-  (let ((params
-         `((log-edit-listfun . ,#'magit-staged-files)
-           (log-edit-diff-function . ,#'magit-diff-while-committing))))
-    (dolist (crt params)
-      (set (make-local-variable (car crt)) (cdr crt)))
-    (run-hooks 'log-edit-hook)
-    (save-buffer)))
+  (when (string-empty-p (buffer-substring-no-properties (point-min) (line-end-position 1)))
+    (let ((params
+           `((log-edit-listfun . ,#'magit-staged-files)
+             (log-edit-diff-function . ,#'magit-diff-while-committing))))
+      (dolist (crt params)
+        (set (make-local-variable (car crt)) (cdr crt)))
+      (run-hooks 'log-edit-hook)
+      (save-buffer))))
 
 (after-load! git-commit
   (add-hook 'git-commit-post-finish-hook #'log-edit-hide-buf)
