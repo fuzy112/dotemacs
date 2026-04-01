@@ -1,5 +1,14 @@
 2026-04-01  Zhengyi Fu  <i@fuzy.me>
 
+	Refine keybindings for paredit-mode
+
+	* init.el (paredit-mode-map): Add ergonomic keybindings for
+	killing expressions forward and backward, unbind some conflicting
+	keys.
+
+
+2026-04-01  Zhengyi Fu  <i@fuzy.me>
+
 	Add new command for committing with AI-generated messages
 
 	* init.el (+git-commit--log-edit-h): Only setup when the first
