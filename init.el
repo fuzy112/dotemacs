@@ -1966,7 +1966,15 @@ With no active region, operate on the whole buffer."
 (add-hook 'scheme-mode-hook #'paredit-mode)
 
 (after-load! paredit
-  (keymap-set paredit-mode-map "C-c DEL" #'delete-char))
+  (define-keymap :keymap paredit-mode-map
+    "C-c DEL" #'delete-char
+    "M-s" nil
+    "M-D" #'paredit-splice-sexp
+    "M-?" nil
+    "C-<right>" nil
+    "C-<left>" nil
+    "M-<up>" "C-M-<backspace>"
+    "M-<down>" "C-M-<delete>"))
 
 ;;;; elec-pair
 
