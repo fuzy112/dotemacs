@@ -626,20 +626,31 @@ in the git editor for final editing before committing."
   (transient-append-suffix 'magit-commit "c"
     '("L" "Commit with AI-generated message" +gptel-commit-staged)))
 
-(defun gptel-context-at-point ()
-  (cl-loop with context-lines = 10
-	 with point = (copy-marker (point))
-	 with line-num = (line-number-at-pos)
-	 with beg = (line-beginning-position (- context-lines))
-	 with end = (line-end-position context-lines)
-	 with text = (buffer-substring-no-properties beg end)
-	 with lines = (string-lines text)
-	 for line in lines
-	 for i = (- line-num context-lines) then (1+ i)
-	 concat (format "%s%d: %s\n"
-			(if (= i line-num) "Current line -> " "")
-			i
-			line)))
+(defun gptel-context-at-point (&optional context-lines)
+  "Return context around point with line numbers, marking the current line.
+Optional CONTEXT-LINES (default 10) specifies how many lines to include
+above and below the current line."
+  (interactive "p")
+  (setq context-lines (if (numberp context-lines)
+			  (max 1 context-lines)
+			10))
+  (let* ((line-num (line-number-at-pos (point)))
+	 (start-line (max 1 (- line-num context-lines)))
+	 (end-line (+ line-num context-lines))
+	 (beg (save-excursion (goto-line start-line) (line-beginning-position)))
+	 (end (save-excursion (goto-line end-line) (line-end-position)))
+	 (text (buffer-substring-no-properties beg end))
+	 (lines (string-lines text)))
+    (cl-loop for line in lines
+	     for i from start-line to end-line
+	     concat (format "%s%d: %s\n"
+			    (if (= i line-num) "=> " "")
+			    i
+			    line)
+	     into result
+	     finally return (if (called-interactively-p 'any)
+				(message "%s" (setq result (string-trim result)))
+			      result))))
 
 (defun gptel-set-bookmark ()
   "Set a bookmark at point with an LLM-suggested name."
@@ -648,18 +659,21 @@ in the git editor for final editing before committing."
 	(point (point))
 	(file-name (buffer-file-name))
 	(buffer-name (buffer-name))
-	(context (gptel-context-at-point)))
+	(context (gptel-context-at-point))
+	(defun-name (which-function)))
     (message "Querying LLM...")
     (gptel-request
 	(format "<input>
 <file_path>%s</file_path>
 <buffer_name>%s</buffer_name>
+<scope>%s</scope>
 <context_around_point>
 %s
 </context_around_point>
 </input>"
 		file-name
 		buffer-name
+		defun-name
 		context)
       :system "You are helping the user create a clear, descriptive bookmark name for their current position in a code/text file.
 
@@ -678,6 +692,9 @@ Example output: \"auth-service password validation function\""
 			(goto-char point)
 			(bookmark-set (read-string "Set bookmark: " (string-trim response))))
 		    (message "Failed to query LLM for bookmark name"))))))
+
+;;;###autoload
+(keymap-global-set "C-x r M" #'gptel-set-bookmark)
 
 (provide 'gptel-config)
 ;;; gptel-config.el ends here
