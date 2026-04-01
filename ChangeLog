@@ -1,5 +1,14 @@
 2026-04-01  Zhengyi Fu  <i@fuzy.me>
 
+	Add new command for committing with AI-generated messages
+
+	* init.el (+git-commit--log-edit-h): Only setup when the first
+	line is empty.
+	* user-lisp/gptel-config.el (+gptel-commit-staged): New command.
+	Add to magit-commit transient menu.
+
+2026-04-01  Zhengyi Fu  <i@fuzy.me>
+
 	Refine keybindings for `nix-mode'
 
 	* init.el (nix-repl-setup): Rename from `+nix-repl-setup'.

@@ -587,5 +587,45 @@ Output **only** the commit message, with any explanation or markdown code fences
       (newline)
       (gptel-send))))
 
+(defun +gptel-commit-staged (&optional args)
+  "Generate a commit message for staged changes using LLM, then open for editing.
+
+Queries LLM with the current git status, staged diff, and recent git log
+to generate an appropriate commit message. Then opens the generated message
+in the git editor for final editing before committing."
+  (interactive (list (magit-commit-arguments)))
+  (require 'magit)
+  (with-temp-buffer
+    (let ((gptel-backend (gptel-get-backend "Volcengine Coding"))
+	  (gptel-model 'ark-code-latest)
+	  (dir default-directory)
+	  gptel-use-context
+	  gptel-use-tools)
+      (insert "<git-status>")
+      (unless (zerop (magit-process-git t "status"))
+	(error "Failed to run git status"))
+      (insert "</git-status>\n")
+      (insert "<git-diff-staged>")
+      (unless (zerop (magit-process-git t "diff" "--cached"))
+	(error "Failed to run git diff --cached"))
+      (insert "</git-diff-staged>\n")
+      (insert "<git-log>")
+      (unless (zerop (magit-process-git t "log" "-n10" "--stat"))
+	(error "Failed to run git log"))
+      (insert "</git-log>\n")
+      (message "context: %S" (buffer-string))
+      (gptel-request
+	  (buffer-string)
+	:system (alist-get 'commit gptel-directives)
+	:callback (lambda (response _info)
+		    (if (stringp response)
+			(let ((default-directory dir))
+			  (apply #'magit-run-git-with-editor "commit" "-m" response "--edit" args))
+		      (message "Failed to query LLM")))))))
+
+(with-eval-after-load 'magit-commit
+  (transient-append-suffix 'magit-commit "c"
+    '("L" "Commit with AI-generated message" +gptel-commit-staged)))
+
 (provide 'gptel-config)
 ;;; gptel-config.el ends here
