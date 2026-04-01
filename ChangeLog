@@ -1,3 +1,10 @@
+2026-04-02  Zhengyi Fu  <i@fuzy.me>
+
+	Bind "C-x r M" to `gptel-set-bookmark'
+
+	* user-lisp/gptel-config.el (gptel-context-at-point): Fix.
+	(gptel-set-bookmark): Add function name. Bind to "C-x r M".
+
 2026-04-01  Zhengyi Fu  <i@fuzy.me>
 
 	* user-lisp/gptel-config.el (gptel-set-bookmark): New command.
