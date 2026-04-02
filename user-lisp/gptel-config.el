@@ -716,7 +716,7 @@ Follow these rules when creating the bookmark name:
 Example output: \"auth-service password validation function\""
       :callback (lambda (response _)
 		  (if (stringp response)
-		      (progn
+		      (with-local-quit
 			(switch-to-buffer buffer)
 			(goto-char point)
 			(bookmark-set (read-string "Set bookmark: " (string-trim response))))
