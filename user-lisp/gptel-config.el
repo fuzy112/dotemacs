@@ -626,6 +626,32 @@ in the git editor for final editing before committing."
   (transient-append-suffix 'magit-commit "c"
     '("L" "Commit with AI-generated message" +gptel-commit-staged)))
 
+(defun gptel-log-edit-generate-commit-message ()
+  (interactive)
+  (let* ((commitmsg (buffer-string))
+	 (staged-files (funcall log-edit-listfun))
+	 (diff-buffer (save-window-excursion
+			(funcall log-edit-diff-function)
+			(current-buffer)))
+	 (context (format "<staged-files>%s</staged-files>
+<git-diff>%s</git-diff>
+<original-commit-message>%s</original-commit-message>
+"
+			  (string-join staged-files "\n")
+			  (with-current-buffer diff-buffer
+			    (buffer-string))
+			  commitmsg))
+	 gptel-use-tools
+	 gptel-use-context)
+    (erase-buffer)
+    (gptel-request
+	context
+      :system (alist-get 'commit gptel-directives)
+      :stream t)))
+
+(with-eval-after-load 'log-edit
+  (keymap-set log-edit-mode-map "C-c C-S-m" #'gptel-log-edit-generate-commit-message))
+
 (defun gptel-context-at-point (&optional context-lines)
   "Return context around point with line numbers, marking the current line.
 Optional CONTEXT-LINES (default 10) specifies how many lines to include
