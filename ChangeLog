@@ -1,5 +1,12 @@
 2026-04-02  Zhengyi Fu  <i@fuzy.me>
 
+	New command for generating commit message in log-edit buffers
+
+	* user-lisp/gptel-config.el
+	(gptel-log-edit-generate-commit-message): New defun.
+
+2026-04-02  Zhengyi Fu  <i@fuzy.me>
+
 	Bind "C-x r M" to `gptel-set-bookmark'
 
 	* user-lisp/gptel-config.el (gptel-context-at-point): Fix.
