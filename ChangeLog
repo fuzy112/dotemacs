@@ -1,5 +1,12 @@
 2026-04-02  Zhengyi Fu  <i@fuzy.me>
 
+	Disable context and tools for commit and bookmark name generation
+
+	* user-lisp/gptel-config.el (gptel-log-edit-generate-commit-message)
+	(gptel-set-bookmark): Disable context and tools.
+
+2026-04-02  Zhengyi Fu  <i@fuzy.me>
+
 	New command for generating commit message in log-edit buffers
 
 	* user-lisp/gptel-config.el
