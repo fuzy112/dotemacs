@@ -637,16 +637,17 @@ in the git editor for final editing before committing."
 	    (system-prompt (alist-get 'commit gptel-directives)))
       (progn
 	(erase-buffer)
-	(gptel-request
-	 (format "<staged-files>%s</staged-files>
+	(let (gptel-use-tools gptel-use-context)
+	  (gptel-request
+	      (format "<staged-files>%s</staged-files>
 <git-diff>%s</git-diff>
 <original-commit-message>%s</original-commit-message>
 "
-		 (string-join staged-files "\n")
-		 diff-content
-		 original-commit)
-	 :system system-prompt
-	 :stream t))
+		      (string-join staged-files "\n")
+		      diff-content
+		      original-commit)
+	    :system system-prompt
+	    :stream t)))
     (user-error "Failed to prepare diff context for commit message generation")))
 
 (with-eval-after-load 'log-edit
@@ -686,7 +687,9 @@ above and below the current line."
 	(file-name (buffer-file-name))
 	(buffer-name (buffer-name))
 	(context (gptel-context-at-point))
-	(defun-name (which-function)))
+	(defun-name (which-function))
+	gptel-use-context
+	gptel-use-tools)
     (message "Querying LLM...")
     (gptel-request
 	(format "<input>
