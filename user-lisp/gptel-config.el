@@ -627,27 +627,27 @@ in the git editor for final editing before committing."
     '("L" "Commit with AI-generated message" +gptel-commit-staged)))
 
 (defun gptel-log-edit-generate-commit-message ()
+  "Use GPTel to generate a commit message based on the current diff."
   (interactive)
-  (let* ((commitmsg (buffer-string))
-	 (staged-files (funcall log-edit-listfun))
-	 (diff-buffer (save-window-excursion
-			(funcall log-edit-diff-function)
-			(current-buffer)))
-	 (context (format "<staged-files>%s</staged-files>
+  (if-let* ((staged-files (funcall log-edit-listfun))
+	    (diff-content (save-window-excursion
+			   (funcall log-edit-diff-function)
+			   (buffer-string)))
+	    (original-commit (buffer-string))
+	    (system-prompt (alist-get 'commit gptel-directives)))
+      (progn
+	(erase-buffer)
+	(gptel-request
+	 (format "<staged-files>%s</staged-files>
 <git-diff>%s</git-diff>
 <original-commit-message>%s</original-commit-message>
 "
-			  (string-join staged-files "\n")
-			  (with-current-buffer diff-buffer
-			    (buffer-string))
-			  commitmsg))
-	 gptel-use-tools
-	 gptel-use-context)
-    (erase-buffer)
-    (gptel-request
-	context
-      :system (alist-get 'commit gptel-directives)
-      :stream t)))
+		 (string-join staged-files "\n")
+		 diff-content
+		 original-commit)
+	 :system system-prompt
+	 :stream t))
+    (user-error "Failed to prepare diff context for commit message generation")))
 
 (with-eval-after-load 'log-edit
   (keymap-set log-edit-mode-map "C-c C-S-m" #'gptel-log-edit-generate-commit-message))
