@@ -1,5 +1,15 @@
 2026-04-03  Zhengyi Fu  <i@fuzy.me>
 
+	Tweak `gptel-set-bookmark'
+
+	* user-lisp/gptel-config.el (gptel-context-at-point): Enlarge
+	extra contexts.
+	(gptel-request-minibuffer-input): Mark state as `stopped' after
+	receiving eof.
+	(gptel-set-bookmark): Clean up unused vars.
+
+2026-04-03  Zhengyi Fu  <i@fuzy.me>
+
 	Add customizable styles and faces for `gptel-minibuffer-spinner'
 
 	* user-lisp/gptel-config.el (gptel-minibuffer-spinner-style-alist)

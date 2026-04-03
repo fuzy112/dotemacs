@@ -660,7 +660,7 @@ above and below the current line."
   (interactive "p")
   (setq context-lines (if (numberp context-lines)
 			  (max 1 context-lines)
-			10))
+			25))
   (let* ((current-lines (if (use-region-p)
 			    (let ((first (save-excursion
 						(goto-char (use-region-beginning))
@@ -757,6 +757,7 @@ callback that inserts the response into the minibuffer."
 		      :callback
 		      (lambda (response _info)
 			(cond ((eq response t)
+			       (setq state 'stopped)
 			       (gptel-minibuffer-spinner-stop spinner))
 			      ((stringp response)
 			       (with-current-buffer buffer
@@ -772,18 +773,19 @@ If the region is active, use the selected text as context for generating
 a more relevant bookmark name, and set the bookmark at the beginning of
 the region."
   (interactive)
-  (let* ((buffer (current-buffer))
-	 (bookmark-point (if use-region (region-beginning) (point)))
+  (let* ((bookmark-point (if (use-region-p) (use-region-beginning) (point)))
 	 (file-name (buffer-file-name))
 	 (buffer-name (buffer-name))
 	 (context (gptel-context-at-point))
 	 (defun-name (which-function))
 	 gptel-use-context
 	 gptel-use-tools)
-    (message "Querying LLM...")
-    (minibuffer-with-setup-hook
-	(gptel-request-minibuffer-input
-	 (format "<input>
+    (save-excursion
+      (goto-char bookmark-point)
+      (message "Querying LLM...")
+      (minibuffer-with-setup-hook
+	  (gptel-request-minibuffer-input
+	   (format "<input>
 <file_path>%s</file_path>
 <buffer_name>%s</buffer_name>
 <scope>%s</scope>
@@ -791,11 +793,13 @@ the region."
 %s
 </context>
 </input>"
-		 file-name
-		 buffer-name
-		 defun-name
-		 context)
-	 :system "You are helping the user create a clear, descriptive bookmark name for their current position in a code/text file.
+		   file-name
+		   buffer-name
+		   defun-name
+		   context)
+	   :system "You are helping the user create a clear, descriptive bookmark name for their current position in a code/text file.
+
+The selected lines are marked with \"=>\".
 
 Follow these rules when creating the bookmark name:
 1. Keep it 3 to 8 words long, concise but informative
@@ -805,7 +809,7 @@ Follow these rules when creating the bookmark name:
 5. Only output the bookmark name itself, nothing else
 
 Example output: \"auth-service password validation function\"")
-      (call-interactively 'bookmark-set))))
+	(call-interactively 'bookmark-set)))))
 
 ;;;###autoload
 (keymap-substitute global-map #'bookmark-set #'gptel-set-bookmark)
