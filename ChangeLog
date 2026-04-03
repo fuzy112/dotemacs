@@ -1,5 +1,17 @@
 2026-04-03  Zhengyi Fu  <i@fuzy.me>
 
+	gptel-set-bookmark: Stream response directly to minibuffer
+
+	* user-lisp/gptel-config.el (gptel-minibuffer-spinner): New struct.
+	(gptel-minibuffer-spinner-start, gptel-minibuffer-spinner-stop):
+	New functions.
+	(gptel-request-minibuffer-input): New function.
+	(gptel-set-bookmark): Use it to stream response directly into the
+	minibuffer prompt, add loading spinner. Remove the intermediate
+	callback, directly use `call-interactively' on `bookmark-set'.
+
+2026-04-03  Zhengyi Fu  <i@fuzy.me>
+
 	`gptel-set-bookmark': Add region support
 
 	* user-lisp/gptel-config.el (gptel-set-bookmark): Add the active
