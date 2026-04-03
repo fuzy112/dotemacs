@@ -679,6 +679,58 @@ above and below the current line."
 				(message "%s" (setq result (string-trim result)))
 			      result))))
 
+(cl-defstruct gptel-minibuffer-spinner
+  timer overlay)
+
+(defun gptel-minibuffer-spinner-start ()
+  (let* ((overlay (make-overlay (point) (point)))
+	 (count 0)
+	 (data ["/" "-" "\\" "|"])
+	 (update (lambda ()
+		   (move-overlay overlay
+				 (1- (minibuffer-prompt-end))
+				 (minibuffer-prompt-end))
+		   (overlay-put overlay 'display
+				(propertize (format "%s" (aref data count))
+					    'face '((:foreground "red"))))
+		   (setq count (mod (1+ count) (length data)))))
+	 (timer (run-at-time 0.5 0.5 update)))
+    (make-gptel-minibuffer-spinner
+     :timer timer
+     :overlay overlay)))
+
+(defun gptel-minibuffer-spinner-stop (spinner)
+  (when-let* ((timer (gptel-minibuffer-spinner-timer spinner))
+	      ((timerp timer)))
+    (cancel-timer timer))
+  (delete-overlay (gptel-minibuffer-spinner-overlay spinner)))
+
+(defun gptel-request-minibuffer-input (&rest args)
+  (lambda ()
+    (let ((buffer (current-buffer))
+	  (state 'stopped)
+	  (spinner (gptel-minibuffer-spinner-start))
+	  (cleanup-function (lambda ()
+			      (when (eq state 'running)
+				(gptel-minibuffer-spinner-stop spinner)
+				(gptel-abort buffer)
+				(setq state 'stopped)))))
+      (add-hook 'post-self-insert-hook cleanup-function nil t)
+      (add-hook 'minibuffer-exit-hook cleanup-function nil t)
+      (apply #'gptel-request
+	     (append args
+		     (list
+		      :stream t
+		      :callback
+		      (lambda (response _info)
+			(cond ((eq response t)
+			       (gptel-minibuffer-spinner-stop spinner))
+			      ((stringp response)
+			       (with-current-buffer buffer
+				 (insert response))))))))
+      (setq state 'running))))
+
+
 (defun gptel-set-bookmark ()
   "Set a bookmark at point with an LLM-suggested name.
 
@@ -698,8 +750,9 @@ the region."
 	 gptel-use-context
 	 gptel-use-tools)
     (message "Querying LLM...")
-    (gptel-request
-	(format "<input>
+    (minibuffer-with-setup-hook
+	(gptel-request-minibuffer-input
+	 (format "<input>
 <file_path>%s</file_path>
 <buffer_name>%s</buffer_name>
 <scope>%s</scope>
@@ -707,17 +760,17 @@ the region."
 %s
 </context_around_point>%s
 </input>"
-		file-name
-		buffer-name
-		defun-name
-		context
-		(if region-content
-		    (format "
+		 file-name
+		 buffer-name
+		 defun-name
+		 context
+		 (if region-content
+		     (format "
 <selected_text>
 %s
 </selected_text>" region-content)
-		  ""))
-      :system "You are helping the user create a clear, descriptive bookmark name for their current position in a code/text file.
+		   ""))
+	 :system "You are helping the user create a clear, descriptive bookmark name for their current position in a code/text file.
 
 Follow these rules when creating the bookmark name:
 1. Keep it 3 to 8 words long, concise but informative
@@ -726,14 +779,8 @@ Follow these rules when creating the bookmark name:
 4. Use plain text with spaces, no quotes, no extra punctuation or explanations
 5. Only output the bookmark name itself, nothing else
 
-Example output: \"auth-service password validation function\""
-      :callback (lambda (response _)
-		  (if (stringp response)
-		      (with-local-quit
-			(switch-to-buffer buffer)
-			(goto-char bookmark-point)
-			(bookmark-set (read-string "Set bookmark: " (string-trim response))))
-		    (message "Failed to query LLM for bookmark name"))))))
+Example output: \"auth-service password validation function\"")
+      (call-interactively 'bookmark-set))))
 
 ;;;###autoload
 (keymap-global-set "C-x r M" #'gptel-set-bookmark)
