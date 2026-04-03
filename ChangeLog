@@ -1,5 +1,12 @@
 2026-04-03  Zhengyi Fu  <i@fuzy.me>
 
+	Fix "Symbol’s function definition is void: which-function"
+
+	* user-lisp/gptel-config.el (gptel-set-bookmark): Require
+	`which-func'.
+
+2026-04-03  Zhengyi Fu  <i@fuzy.me>
+
 	* user-lisp/gptel-config.el: Add missing autoload cookie.
 
 2026-04-03  Zhengyi Fu  <i@fuzy.me>

@@ -773,6 +773,7 @@ If the region is active, use the selected text as context for generating
 a more relevant bookmark name, and set the bookmark at the beginning of
 the region."
   (interactive)
+  (require 'which-func)
   (let* ((bookmark-point (if (use-region-p) (use-region-beginning) (point)))
 	 (file-name (buffer-file-name))
 	 (buffer-name (buffer-name))
