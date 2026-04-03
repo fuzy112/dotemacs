@@ -1,5 +1,12 @@
 2026-04-03  Zhengyi Fu  <i@fuzy.me>
 
+	Update rime configuration
+
+	* init.el (rime-disable-predicates, rime-inline-predicates): Update.
+	(default-input-method): Set to "rime".
+
+2026-04-03  Zhengyi Fu  <i@fuzy.me>
+
 	Tweak `gptel-set-bookmark'
 
 	* user-lisp/gptel-config.el (gptel-context-at-point): Enlarge

@@ -2479,19 +2479,19 @@ Then refresh all windows displaying the current buffer."
 
 ;;;; rime
 
-(after-load! (:and rime meow)
-  (setopt rime-disable-predicates
-          (seq-union rime-disable-predicates
-                     '(meow-normal-mode-p
-                       meow-keypad-mode-p
-                       meow-motion-mode-p
-                       meow-beacon-mode-p))))
-(define-advice toggle-input-method (:before (&rest _) rime)
-  (setq default-input-method "rime"))
+(setopt rime-disable-predicates
+        '(meow-normal-mode-p
+          ;; meow-keypad-mode-p
+          ;; meow-motion-mode-p
+          ;; meow-beacon-mode-p
+          rime-predicate-prog-in-code-p
+          rime-predicate-after-ascii-char-p))
 
-(defun +rime-completion-in-region-p ()
-  (bound-and-true-p completion-in-region-mode))
-(add-hook 'rime-disable-predicates #'+rime-completion-in-region-p)
+;; 自动中英文
+(setopt rime-inline-predicates
+        '(rime-predicate-space-after-cc-p))
+
+(setq default-input-method "rime")
 
 ;;;; kinsoku
 
