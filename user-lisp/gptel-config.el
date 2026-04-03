@@ -765,7 +765,7 @@ callback that inserts the response into the minibuffer."
 				 (insert response))))))))
       (setq state 'running))))
 
-
+;;;###autoload
 (defun gptel-set-bookmark ()
   "Set a bookmark at point with an LLM-suggested name.
 
