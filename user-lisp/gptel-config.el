@@ -760,6 +760,7 @@ callback that inserts the response into the minibuffer."
 			       (gptel-minibuffer-spinner-stop spinner))
 			      ((stringp response)
 			       (with-current-buffer buffer
+				 (goto-char (point-max))
 				 (insert response))))))))
       (setq state 'running))))
 
@@ -772,7 +773,6 @@ a more relevant bookmark name, and set the bookmark at the beginning of
 the region."
   (interactive)
   (let* ((buffer (current-buffer))
-	 (use-region (use-region-p))
 	 (bookmark-point (if use-region (region-beginning) (point)))
 	 (file-name (buffer-file-name))
 	 (buffer-name (buffer-name))
