@@ -1,3 +1,10 @@
+2026-04-03  Zhengyi Fu  <i@fuzy.me>
+
+	`gptel-set-bookmark': Add region support
+
+	* user-lisp/gptel-config.el (gptel-set-bookmark): Add the active
+	region to the context.
+
 2026-04-02  Zhengyi Fu  <i@fuzy.me>
 
 	Disable context and tools for commit and bookmark name generation
