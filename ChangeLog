@@ -1,5 +1,9 @@
 2026-04-03  Zhengyi Fu  <i@fuzy.me>
 
+	* setup.sh: Remove file.
+
+2026-04-03  Zhengyi Fu  <i@fuzy.me>
+
 	Update rime configuration
 
 	* init.el (rime-disable-predicates, rime-inline-predicates): Update.
