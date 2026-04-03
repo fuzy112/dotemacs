@@ -791,7 +791,7 @@ Example output: \"auth-service password validation function\"")
       (call-interactively 'bookmark-set))))
 
 ;;;###autoload
-(keymap-global-set "C-x r M" #'gptel-set-bookmark)
+(keymap-substitute global-map #'bookmark-set #'gptel-set-bookmark)
 
 (provide 'gptel-config)
 ;;; gptel-config.el ends here

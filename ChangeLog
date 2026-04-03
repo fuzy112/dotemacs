@@ -1,5 +1,11 @@
 2026-04-03  Zhengyi Fu  <i@fuzy.me>
 
+	Substitute keybinding of bookmark-set with gptel-set-bookmark
+
+	* user-lisp/gptel-config.el:
+
+2026-04-03  Zhengyi Fu  <i@fuzy.me>
+
 	gptel-set-bookmark: Stream response directly to minibuffer
 
 	* user-lisp/gptel-config.el (gptel-minibuffer-spinner): New struct.
