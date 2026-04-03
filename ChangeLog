@@ -1,5 +1,14 @@
 2026-04-03  Zhengyi Fu  <i@fuzy.me>
 
+	Add customizable styles and faces for `gptel-minibuffer-spinner'
+
+	* user-lisp/gptel-config.el (gptel-minibuffer-spinner-style-alist)
+	(gptel-minibuffer-spinner-style): New variables.
+	(gptel-minibuffer-spinner): New face.
+	(gptel-minibuffer-spinner-start): Use them.
+
+2026-04-03  Zhengyi Fu  <i@fuzy.me>
+
 	`gptel-set-bookmark': Handle regions better
 
 	* user-lisp/gptel-config.el (gptel-context-at-point): Properly

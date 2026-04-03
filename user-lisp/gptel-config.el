@@ -691,20 +691,37 @@ above and below the current line."
   "A spinning indicator in the minibuffer prompt."
   timer overlay)
 
-(defun gptel-minibuffer-spinner-start ()
+(defvar gptel-minibuffer-spinner-style-alist
+  '((dots . ["." ".." "..."])
+    (slashes . [ "/" "-" "\\" "|"])
+    (braille . ["⡀" "⡄" "⡆" "⡇" "⣇" "⣧" "⣷" "⣿" "⣿" "⣾" "⣽" "⣻" "⢿" "⡿" "⣟" "⣯" "⣷"])
+    (line . ["▁" "▂" "▃" "▄" "▅" "▆" "▇" "█" "▇" "▆" "▅" "▄" "▃" "▂"])
+    (pulse . ["●" "◐" "○" "◔"])
+    (arrow . ["←" "↖" "↑" "↗" "→" "↘" "↓" "↙"])
+    (bounce . ["▪▪▪" "■▪▪" "▪■▪" "▪▪■" "▪■▪" "■▪▪"])
+    (wave . ["▹▹▹▹▹" "▸▹▹▹▹" "▹▸▹▹▹" "▹▹▸▹▹" "▹▹▹▸▹"])
+    (moon . ["🌑" "🌒" "🌓" "🌔" "🌕" "🌖" "🌗" "🌘"])))
+
+(defvar gptel-minibuffer-spinner-style 'braille)
+(defface gptel-minibuffer-spinner
+  '((t :foreground "cyan"))
+  "Face for gptel-minibuffer-spinner.")
+
+(defun gptel-minibuffer-spinner-start (&optional style)
   "Start a spinning indicator in the current minibuffer.
 Return a `gptel-minibuffer-spinner' structure.  Stop it with
 `gptel-minibuffer-spinner-stop'."
-  (let* ((overlay (make-overlay (point) (point)))
+  (let* ((overlay (make-overlay (point) (point) nil nil t))
 	 (count 0)
-	 (data ["/" "-" "\\" "|"])
+	 (data (alist-get (or style gptel-minibuffer-spinner-style)
+			  gptel-minibuffer-spinner-style-alist))
 	 (update (lambda ()
 		   (move-overlay overlay
 				 (1- (minibuffer-prompt-end))
 				 (minibuffer-prompt-end))
+		   (overlay-put overlay 'face 'gptel-minibuffer-spinner)
 		   (overlay-put overlay 'display
-				(propertize (format "%s" (aref data count))
-					    'face '((:foreground "red"))))
+				(propertize (format "%s" (aref data count))))
 		   (setq count (mod (1+ count) (length data)))))
 	 (timer (run-at-time 0.5 0.5 update)))
     (make-gptel-minibuffer-spinner
