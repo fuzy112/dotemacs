@@ -680,9 +680,13 @@ above and below the current line."
 			      result))))
 
 (cl-defstruct gptel-minibuffer-spinner
+  "A spinning indicator in the minibuffer prompt."
   timer overlay)
 
 (defun gptel-minibuffer-spinner-start ()
+  "Start a spinning indicator in the current minibuffer.
+Return a `gptel-minibuffer-spinner' structure.  Stop it with
+`gptel-minibuffer-spinner-stop'."
   (let* ((overlay (make-overlay (point) (point)))
 	 (count 0)
 	 (data ["/" "-" "\\" "|"])
@@ -700,12 +704,16 @@ above and below the current line."
      :overlay overlay)))
 
 (defun gptel-minibuffer-spinner-stop (spinner)
+  "Stop and clean up SPINNER, a `gptel-minibuffer-spinner'."
   (when-let* ((timer (gptel-minibuffer-spinner-timer spinner))
 	      ((timerp timer)))
     (cancel-timer timer))
   (delete-overlay (gptel-minibuffer-spinner-overlay spinner)))
 
 (defun gptel-request-minibuffer-input (&rest args)
+  "Return a lambda that starts a streaming gptel request for minibuffer input.
+ARGS are passed to `gptel-request', with an updated streaming
+callback that inserts the response into the minibuffer."
   (lambda ()
     (let* ((buffer (current-buffer))
 	   (state 'stopped)
