@@ -661,9 +661,17 @@ above and below the current line."
   (setq context-lines (if (numberp context-lines)
 			  (max 1 context-lines)
 			10))
-  (let* ((line-num (line-number-at-pos (point)))
-	 (start-line (max 1 (- line-num context-lines)))
-	 (end-line (+ line-num context-lines))
+  (let* ((current-lines (if (use-region-p)
+			    (let ((first (save-excursion
+						(goto-char (use-region-beginning))
+						(line-number-at-pos)))
+				  (last (save-excursion
+					      (goto-char (use-region-end))
+					      (line-number-at-pos))))
+			      (cl-loop for i from first to last collect i))
+			  (list (line-number-at-pos))))
+	 (start-line (max 1 (- (car current-lines) context-lines)))
+	 (end-line (+ (car (last current-lines)) context-lines))
 	 (beg (save-excursion (goto-line start-line) (line-beginning-position)))
 	 (end (save-excursion (goto-line end-line) (line-end-position)))
 	 (text (buffer-substring-no-properties beg end))
@@ -671,7 +679,7 @@ above and below the current line."
     (cl-loop for line in lines
 	     for i from start-line to end-line
 	     concat (format "%s%d: %s\n"
-			    (if (= i line-num) "=> " "")
+			    (if (memql i current-lines) "=> " "")
 			    i
 			    line)
 	     into result
@@ -749,8 +757,6 @@ the region."
   (let* ((buffer (current-buffer))
 	 (use-region (use-region-p))
 	 (bookmark-point (if use-region (region-beginning) (point)))
-	 (region-content (when use-region
-			   (buffer-substring-no-properties (region-beginning) (region-end))))
 	 (file-name (buffer-file-name))
 	 (buffer-name (buffer-name))
 	 (context (gptel-context-at-point))
@@ -764,20 +770,14 @@ the region."
 <file_path>%s</file_path>
 <buffer_name>%s</buffer_name>
 <scope>%s</scope>
-<context_around_point>
+<context>
 %s
-</context_around_point>%s
+</context>
 </input>"
 		 file-name
 		 buffer-name
 		 defun-name
-		 context
-		 (if region-content
-		     (format "
-<selected_text>
-%s
-</selected_text>" region-content)
-		   ""))
+		 context)
 	 :system "You are helping the user create a clear, descriptive bookmark name for their current position in a code/text file.
 
 Follow these rules when creating the bookmark name:
