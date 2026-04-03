@@ -680,16 +680,23 @@ above and below the current line."
 			      result))))
 
 (defun gptel-set-bookmark ()
-  "Set a bookmark at point with an LLM-suggested name."
+  "Set a bookmark at point with an LLM-suggested name.
+
+If the region is active, use the selected text as context for generating
+a more relevant bookmark name, and set the bookmark at the beginning of
+the region."
   (interactive)
-  (let ((buffer (current-buffer))
-	(point (point))
-	(file-name (buffer-file-name))
-	(buffer-name (buffer-name))
-	(context (gptel-context-at-point))
-	(defun-name (which-function))
-	gptel-use-context
-	gptel-use-tools)
+  (let* ((buffer (current-buffer))
+	 (use-region (use-region-p))
+	 (bookmark-point (if use-region (region-beginning) (point)))
+	 (region-content (when use-region
+			   (buffer-substring-no-properties (region-beginning) (region-end))))
+	 (file-name (buffer-file-name))
+	 (buffer-name (buffer-name))
+	 (context (gptel-context-at-point))
+	 (defun-name (which-function))
+	 gptel-use-context
+	 gptel-use-tools)
     (message "Querying LLM...")
     (gptel-request
 	(format "<input>
@@ -698,12 +705,18 @@ above and below the current line."
 <scope>%s</scope>
 <context_around_point>
 %s
-</context_around_point>
+</context_around_point>%s
 </input>"
 		file-name
 		buffer-name
 		defun-name
-		context)
+		context
+		(if region-content
+		    (format "
+<selected_text>
+%s
+</selected_text>" region-content)
+		  ""))
       :system "You are helping the user create a clear, descriptive bookmark name for their current position in a code/text file.
 
 Follow these rules when creating the bookmark name:
@@ -718,7 +731,7 @@ Example output: \"auth-service password validation function\""
 		  (if (stringp response)
 		      (with-local-quit
 			(switch-to-buffer buffer)
-			(goto-char point)
+			(goto-char bookmark-point)
 			(bookmark-set (read-string "Set bookmark: " (string-trim response))))
 		    (message "Failed to query LLM for bookmark name"))))))
 
