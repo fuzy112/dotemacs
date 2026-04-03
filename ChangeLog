@@ -1,5 +1,14 @@
 2026-04-03  Zhengyi Fu  <i@fuzy.me>
 
+	`gptel-set-bookmark': Handle regions better
+
+	* user-lisp/gptel-config.el (gptel-context-at-point): Properly
+	handle the active region.  marking all lines in the region with
+	"=>".
+	(gptel-set-bookmark): Remove region-content.
+
+2026-04-03  Zhengyi Fu  <i@fuzy.me>
+
 	Substitute keybinding of bookmark-set with gptel-set-bookmark
 
 	* user-lisp/gptel-config.el:
