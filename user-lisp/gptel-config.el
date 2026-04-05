@@ -587,6 +587,7 @@ Output **only** the commit message, without any explanation or markdown code fen
       (newline)
       (gptel-send))))
 
+;;;###autoload
 (defun +gptel-commit-staged (&optional args)
   "Generate a commit message for staged changes using LLM, then open for editing.
 
@@ -622,17 +623,19 @@ in the git editor for final editing before committing."
 			  (apply #'magit-run-git-with-editor "commit" "-m" response "--edit" args))
 		      (message "Failed to query LLM")))))))
 
+;;;###autoload
 (with-eval-after-load 'magit-commit
   (transient-append-suffix 'magit-commit "c"
     '("L" "Commit with AI-generated message" +gptel-commit-staged)))
 
+;;;###autoload
 (defun gptel-log-edit-generate-commit-message ()
   "Use GPTel to generate a commit message based on the current diff."
   (interactive)
   (if-let* ((staged-files (funcall log-edit-listfun))
 	    (diff-content (save-window-excursion
-			   (funcall log-edit-diff-function)
-			   (buffer-string)))
+			    (funcall log-edit-diff-function)
+			    (buffer-string)))
 	    (original-commit (buffer-string))
 	    (system-prompt (alist-get 'commit gptel-directives)))
       (progn
@@ -650,6 +653,7 @@ in the git editor for final editing before committing."
 	    :stream t)))
     (user-error "Failed to prepare diff context for commit message generation")))
 
+;;;###autoload
 (with-eval-after-load 'log-edit
   (keymap-set log-edit-mode-map "C-c C-S-m" #'gptel-log-edit-generate-commit-message))
 
