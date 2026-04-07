@@ -1,3 +1,10 @@
+2026-04-07  Zhengyi Fu  <i@fuzy.me>
+
+	Save search queries with savehist
+
+	* init.el (savehist-additional-variables): Add search-ring and
+	`regexp-search-ring'.
+
 2026-04-03  Zhengyi Fu  <i@fuzy.me>
 
 	Fix "Symbol’s function definition is void: which-function"
