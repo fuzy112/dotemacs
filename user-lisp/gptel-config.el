@@ -740,74 +740,67 @@ Return a `gptel-minibuffer-spinner' structure.  Stop it with
   (delete-overlay (gptel-minibuffer-spinner-overlay spinner)))
 
 (defun gptel-request-minibuffer-input (&rest args)
-  "Return a lambda that starts a streaming gptel request for minibuffer input.
+  "Start a streaming gptel request for minibuffer input.
 ARGS are passed to `gptel-request', with an updated streaming
 callback that inserts the response into the minibuffer."
-  (lambda ()
-    (let* ((buffer (current-buffer))
-	   (state 'stopped)
-	   (spinner (gptel-minibuffer-spinner-start))
-	   (cleanup-function (lambda ()
-			       (when (eq state 'running)
-				 (gptel-minibuffer-spinner-stop spinner)
-				 (gptel-abort buffer)
-				 (setq state 'stopped)))))
-      (add-hook 'post-self-insert-hook cleanup-function nil t)
-      (add-hook 'minibuffer-exit-hook cleanup-function nil t)
-      (condition-case err
-	  (progn
-	    (apply #'gptel-request
-		   (append args
-			   (list
-			    :stream t
-			    :callback
-			    (lambda (response _info)
-			      (cond ((eq response t)
-				     (setq state 'stopped)
-				     (gptel-minibuffer-spinner-stop spinner))
-				    ((stringp response)
-				     (with-current-buffer buffer
-				       (goto-char (point-max))
-				       (insert response))))))))
-	    (setq state 'running))
-	(error
-	 (funcall cleanup-function)
-	 (signal (car err) (cdr err)))))))
+  (let* ((buffer (current-buffer))
+	 (state 'stopped)
+	 (spinner (gptel-minibuffer-spinner-start))
+	 (cleanup-function (lambda ()
+			     (when (eq state 'running)
+			       (gptel-minibuffer-spinner-stop spinner)
+			       (gptel-abort buffer)
+			       (setq state 'stopped)))))
+    (add-hook 'post-self-insert-hook cleanup-function nil t)
+    (add-hook 'minibuffer-exit-hook cleanup-function nil t)
+    (condition-case err
+	(progn
+	  (apply #'gptel-request
+		 (append args
+			 (list
+			  :stream t
+			  :callback
+			  (lambda (response _info)
+			    (cond ((eq response t)
+				   (setq state 'stopped)
+				   (gptel-minibuffer-spinner-stop spinner))
+				  ((stringp response)
+				   (with-current-buffer buffer
+				     (goto-char (point-max))
+				     (insert response))))))))
+	  (setq state 'running))
+      (error
+       (funcall cleanup-function)
+       (signal (car err) (cdr err))))))
 
-;;;###autoload
-(defun gptel-set-bookmark ()
-  "Set a bookmark at point with an LLM-suggested name.
+(cl-defun gptel-autosuggest-define (command &key system context match-prompt)
+  "Add GPTel-based auto-suggestion functionality to COMMAND.
+COMMAND is an interactive function symbol.
+SYSTEM is the system prompt string.
+CONTEXT can be a string or a function of no arguments that returns a context string.
+MATCH-PROMPT is an optional regexp: if provided, suggestions are only
+enabled when the minibuffer prompt matches it.
+This function uses advice to modify COMMAND."
+  (declare (indent 1))
+  (let ((advice-symbol (intern (concat (symbol-name command) "@autosuggest"))))
+    (fset advice-symbol (lambda (orig-fn &rest args)
+			  (let* ((computed-context
+				  (cond
+				   ((functionp context) (funcall context))
+				   ((stringp context) context)
+				   (t (error "Invalid context: expected string or function"))))
+				 (computed-system system))
+			    (minibuffer-with-setup-hook
+				(lambda ()
+				  (when (or (not match-prompt)
+					    (string-match-p match-prompt (minibuffer-prompt)))
+				    (gptel-request-minibuffer-input computed-context :system computed-system)))
+			      (apply orig-fn args)))))
+    (advice-add command :around advice-symbol)))
 
-If the region is active, use the selected text as context for generating
-a more relevant bookmark name, and set the bookmark at the beginning of
-the region."
-  (interactive)
-  (require 'which-func)
-  (let* ((bookmark-point (if (use-region-p) (use-region-beginning) (point)))
-	 (file-name (buffer-file-name))
-	 (buffer-name (buffer-name))
-	 (context (gptel-context-at-point))
-	 (defun-name (which-function))
-	 gptel-use-context
-	 gptel-use-tools)
-    (save-excursion
-      (goto-char bookmark-point)
-      (message "Querying LLM...")
-      (minibuffer-with-setup-hook
-	  (gptel-request-minibuffer-input
-	   (format "<input>
-<file_path>%s</file_path>
-<buffer_name>%s</buffer_name>
-<scope>%s</scope>
-<context>
-%s
-</context>
-</input>"
-		   file-name
-		   buffer-name
-		   defun-name
-		   context)
-	   :system "You are helping the user create a clear, descriptive bookmark name for their current position in a code/text file.
+(gptel-autosuggest-define 'bookmark-set
+  :system
+  "You are helping the user create a clear, descriptive bookmark name for their current position in a code/text file.
 
 The selected lines are marked with \"=>\".
 
@@ -818,11 +811,27 @@ Follow these rules when creating the bookmark name:
 4. Use plain text with spaces, no quotes, no extra punctuation or explanations
 5. Only output the bookmark name itself, nothing else
 
-Example output: \"auth-service password validation function\"")
-	(call-interactively 'bookmark-set)))))
-
-;;;###autoload
-(keymap-substitute global-map #'bookmark-set #'gptel-set-bookmark)
+Example output: auth-service password validation function"
+  :context (lambda ()
+	     (require 'which-func)
+	     (let* ((bookmark-point (if (use-region-p) (region-beginning) (point)))
+		    (file-name (buffer-file-name))
+		    (buffer-name (buffer-name))
+		    (context (gptel-context-at-point))
+		    (defun-name (which-function)))
+	       (format "<input>
+<file_path>%s</file_path>
+<buffer_name>%s</buffer_name>
+<scope>%s</scope>
+<context>
+%s
+</context>
+</input>"
+		       file-name
+		       buffer-name
+		       defun-name
+		       context)))
+  :match-prompt "Set bookmark named")
 
 (provide 'gptel-config)
 ;;; gptel-config.el ends here

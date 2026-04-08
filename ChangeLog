@@ -1,5 +1,15 @@
 2026-04-08  Zhengyi Fu  <i@fuzy.me>
 
+	Add reusable helper function for defining gptel auto-suggestions
+
+	* user-lisp/gptel-config.el (gptel-request-minibuffer-input):
+	Start the request directly instead of returning a lambda.
+	(gptel-set-bookmark): Remove.
+	(gptel-autosuggest-define): New defun.
+	(bookmark-set): Use it.
+
+2026-04-08  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (smart-kill-buffer): New command. Bound to C-x k.
 
 2026-04-08  Zhengyi Fu  <i@fuzy.me>
