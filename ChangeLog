@@ -1,5 +1,17 @@
 2026-04-08  Zhengyi Fu  <i@fuzy.me>
 
+	Move message-ring to a file
+
+	* init.el (message-ring, message-ring-insert)
+	(message-ring-inhibit-regexps, message-ring-insert-functions)
+	(message-ring-ignore-keystroke, message-ring-inhibit)
+	(message-ring-insert, message-insert-ring, message-ring-read)
+	(copy-message): Move to new file.
+	* user-lisp/message-ring.el: New file.
+	(message-ring-mode): New global minor mode.
+
+2026-04-08  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (copy-message): Strip properties.
 
 2026-04-08  Zhengyi Fu  <i@fuzy.me>
