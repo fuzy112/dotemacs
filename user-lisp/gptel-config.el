@@ -773,16 +773,17 @@ callback that inserts the response into the minibuffer."
        (funcall cleanup-function)
        (signal (car err) (cdr err))))))
 
-(cl-defun gptel-autosuggest-define (command &key system context match-prompt)
+(cl-defun gptel-autosuggest-define
+    (command &key system context match-prompt (name 'autosuggest))
   "Add GPTel-based auto-suggestion functionality to COMMAND.
-COMMAND is an interactive function symbol.
-SYSTEM is the system prompt string.
-CONTEXT can be a string or a function of no arguments that returns a context string.
-MATCH-PROMPT is an optional regexp: if provided, suggestions are only
-enabled when the minibuffer prompt matches it.
-This function uses advice to modify COMMAND."
+COMMAND is an interactive function symbol.  SYSTEM is the system prompt
+string.  CONTEXT can be a string or a function of no arguments that
+returns a context string.  MATCH-PROMPT is an optional regexp: if
+provided, suggestions are only enabled when the minibuffer prompt
+matches it.  This function uses advice to modify COMMAND.  If NAME is
+non-nil, the advice is named `COMMAND@NAME'."
   (declare (indent 1))
-  (let ((advice-symbol (intern (concat (symbol-name command) "@autosuggest"))))
+  (let ((advice-symbol (intern (format "%s@%s" command name))))
     (fset advice-symbol (lambda (orig-fn &rest args)
 			  (let* ((computed-context
 				  (cond
