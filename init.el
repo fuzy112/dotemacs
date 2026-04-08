@@ -2822,6 +2822,10 @@ not used, but is required by the hook."
           doom-modeline-modal-icon doom-modeline-icon))
 (add-hook 'emacs-startup-hook #'doom-modeline-mode)
 
+;;; message-ring
+
+(message-ring-mode)
+
 ;;;; uptime
 
 ;; Set up a timer to display emacs uptime every 30 min.
@@ -3132,7 +3136,6 @@ Otherwise disable it."
   "M-l"    #'downcase-dwim
   "M-u"    #'upcase-dwim
   "<f5>"   #'project-recompile
-  "C-M-S-w" #'copy-message
   "<remap> <dabbrev-expand>" #'hippie-expand)
 
 ;;;; Enabling some disabled commands
