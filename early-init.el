@@ -76,6 +76,12 @@
 (setq menu-bar-mode nil)
 (setq tool-bar-mode nil)
 
+
+(setq bidi-display-reordering 'left-to-right
+      bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)
+
+
 (setq inhibit-default-init  t
       inhibit-splash-screen t)
 
