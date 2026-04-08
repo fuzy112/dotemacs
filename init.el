@@ -927,8 +927,10 @@ Otherwise copy the most recent message (index 0)."
          ;; Prevent this operation from adding to message history
          (message-ring-insert nil)
          (message-log-max nil))
+    (setq msg (substring-no-properties msg))
     (kill-new msg)
-    (message "Message copied to kill-ring: %s" msg)))
+    (message "Message copied to kill-ring: %s"
+             (propertize msg 'face 'font-lock-string-face))))
 
 ;;;; crm
 

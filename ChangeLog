@@ -1,5 +1,9 @@
 2026-04-08  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (copy-message): Strip properties.
+
+2026-04-08  Zhengyi Fu  <i@fuzy.me>
+
 	* user-lisp/gptel-config.el (gptel-autosuggest-define): Add NAME arg.
 
 2026-04-08  Zhengyi Fu  <i@fuzy.me>
