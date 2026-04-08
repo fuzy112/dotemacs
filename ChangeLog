@@ -1,5 +1,12 @@
 2026-04-08  Zhengyi Fu  <i@fuzy.me>
 
+	Handle error in gptel-request-minibuffer-input
+
+	* user-lisp/gptel-config.el (gptel-request-minibuffer-input):
+	Cleanup if failed to initiate gptel request.
+
+2026-04-08  Zhengyi Fu  <i@fuzy.me>
+
 	Add some optimizations borrowed from other frameworks
 
 	* init.el (reb-re-syntax): Set to `string'.

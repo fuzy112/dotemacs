@@ -754,20 +754,25 @@ callback that inserts the response into the minibuffer."
 				 (setq state 'stopped)))))
       (add-hook 'post-self-insert-hook cleanup-function nil t)
       (add-hook 'minibuffer-exit-hook cleanup-function nil t)
-      (apply #'gptel-request
-	     (append args
-		     (list
-		      :stream t
-		      :callback
-		      (lambda (response _info)
-			(cond ((eq response t)
-			       (setq state 'stopped)
-			       (gptel-minibuffer-spinner-stop spinner))
-			      ((stringp response)
-			       (with-current-buffer buffer
-				 (goto-char (point-max))
-				 (insert response))))))))
-      (setq state 'running))))
+      (condition-case err
+	  (progn
+	    (apply #'gptel-request
+		   (append args
+			   (list
+			    :stream t
+			    :callback
+			    (lambda (response _info)
+			      (cond ((eq response t)
+				     (setq state 'stopped)
+				     (gptel-minibuffer-spinner-stop spinner))
+				    ((stringp response)
+				     (with-current-buffer buffer
+				       (goto-char (point-max))
+				       (insert response))))))))
+	    (setq state 'running))
+	(error
+	 (funcall cleanup-function)
+	 (signal (car err) (cdr err)))))))
 
 ;;;###autoload
 (defun gptel-set-bookmark ()
