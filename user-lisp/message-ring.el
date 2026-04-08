@@ -43,7 +43,10 @@ When nil, messages are not stored in the ring buffer.")
 (defvar message-ring-inhibit-regexps
   (list "Keypad: "
 	" is undefined\\'"
-	"\\.\\{3\\}\\(?:done\\)?\\'")
+	"\\.\\{3\\}\\(?:done\\)?\\'"
+	"\\`Wrote /.*"
+	"(No changes need to be saved)"
+	"Saving bookmarks ")
   "List of regexps matching messages that should not be stored.
 Messages matching any regexp in this list will be excluded from the ring.")
 
@@ -148,6 +151,14 @@ Otherwise copy the most recent message (index 0)."
 	     (propertize msg 'face 'font-lock-string-face))))
 
 (defalias 'copy-message #'message-ring-copy-message)
+
+(defun message-ring-wrap-inhibit (&rest funargs)
+  "Advice for `message' to inhibit insertion into `message-ring' during FUNARGS execution."
+  (let (message-ring-insert)
+    (apply funargs)))
+
+(with-eval-after-load 'eldoc
+  (advice-add 'eldoc--message :around #'message-ring-wrap-inhibit))
 
 (provide 'message-ring)
 ;;; message-ring.el ends here

@@ -1,5 +1,12 @@
 2026-04-08  Zhengyi Fu  <i@fuzy.me>
 
+	message-ring.el: Inhibit insertion of some messages
+
+	* user-lisp/message-ring.el (message-ring-inhibit-regexps): Add more regexps.
+	(message-ring-wrap-inhibit): New defun.  Inhibit insertion of eldoc message.
+
+2026-04-08  Zhengyi Fu  <i@fuzy.me>
+
 	Enable `message-ring-mode'
 
 	* init.el (global-map): Unbind `copy-message'.
