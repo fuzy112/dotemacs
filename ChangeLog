@@ -1,5 +1,9 @@
 2026-04-08  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (smart-kill-buffer): New command. Bound to C-x k.
+
+2026-04-08  Zhengyi Fu  <i@fuzy.me>
+
 	Handle error in gptel-request-minibuffer-input
 
 	* user-lisp/gptel-config.el (gptel-request-minibuffer-input):
