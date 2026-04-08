@@ -3084,6 +3084,12 @@ Otherwise disable it."
            (modify-frame-parameters nil `((alpha-background . ,+toggle-transparent-alpha))))
           (t
            (modify-frame-parameters nil `((alpha-background . nil)))))))
+
+(defun smart-kill-buffer ()
+  (interactive)
+  (if current-prefix-arg
+      (call-interactively #'kill-buffer)
+    (call-interactively #'kill-current-buffer)))
 
 
 ;;;; keybindings
@@ -3214,7 +3220,7 @@ Otherwise disable it."
   "5 V" #'find-variable-other-frame
   "5 K" #'find-function-on-key-other-frame
   "5 L" #'find-library-other-frame
-  "k"   #'kill-current-buffer
+  "k"   #'smart-kill-buffer
   "g"   #'magit-status-quick
   "M-g" #'magit-dispatch)
 
