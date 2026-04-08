@@ -90,6 +90,17 @@
 
 (setq auto-save-no-message t)
 
+(setq window-combination-resize t)
+
+(setq set-mark-command-repeat-pop t)
+
+(setq cursor-in-non-selected-windows nil)
+(setq highlight-nonselected-windows nil)
+
+(setq redisplay-skip-fontification-on-input t)
+
+(setq read-process-output-max (* 4 1024 1024))
+
 ;;;; jkr
 
 (setopt jka-compr-load-suffixes (seq-union '(".zst") jka-compr-load-suffixes))
@@ -112,7 +123,7 @@
   "The file to load after `early-init'.")
 
 (when (file-exists-p post-early-init-file)
-    (load post-early-init-file nil t))
+  (load post-early-init-file nil t))
 
 
 (provide 'early-init)

@@ -2794,6 +2794,10 @@ not used, but is required by the hook."
 (add-hook 'LaTeX-mode-hook #'turn-on-reftex) ; AUCTeX
 (add-hook 'latex-mode-hook #'turn-on-reftex) ; Emacs latex mode
 
+;;;; Re-builder
+
+(setopt reb-re-syntax 'string)
+
 ;;;; telega
 
 (after-load! telega
@@ -2851,14 +2855,6 @@ not used, but is required by the hook."
     (setopt erc-track-faces-priority-list (remq 'erc-notice-face
                                                 erc-track-faces-priority-list)))
   (setq erc-track-priority-faces-only 'all))
-
-;;;; copilot
-
-;; (after-load! copilot
-;;   ;; TODO choose better keybindings
-;;   (define-keymap :keymap copilot-mode-map
-;;     "<tab>"   #'copilot-accept-completion
-;;     "C-<tab>" #'copilot-accept-completion-by-word))
 
 ;;;; consult-browser-hist
 
