@@ -1,5 +1,13 @@
 2026-04-08  Zhengyi Fu  <i@fuzy.me>
 
+	Disable RTL support
+
+	* early-init.el (bidi-display-reordering)
+	(bidi-paragraph-direction): Set to `left-to-right'.
+	(bidi-inhibit-bpa): Set to t.
+
+2026-04-08  Zhengyi Fu  <i@fuzy.me>
+
 	Recenter the window after restoring position
 
 	* init.el (save-place-find-file-hook): New advice.
