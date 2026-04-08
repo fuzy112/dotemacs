@@ -1,5 +1,15 @@
 2026-04-08  Zhengyi Fu  <i@fuzy.me>
 
+	Add some optimizations borrowed from other frameworks
+
+	* init.el (reb-re-syntax): Set to `string'.
+	* early-init.el (window-combination-resize)
+	(set-mark-command-repeat-pop, cursor-in-non-selected-windows)
+	(highlight-nonselected-windows)
+	(redisplay-skip-fontification-on-input, read-process-output-max):
+
+2026-04-08  Zhengyi Fu  <i@fuzy.me>
+
 	Disable RTL support
 
 	* early-init.el (bidi-display-reordering)
