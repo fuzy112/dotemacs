@@ -1504,6 +1504,11 @@ value for USE-OVERLAYS."
 (after-load! saveplace
   (save-place-mode))
 
+(define-advice save-place-find-file-hook (:after (&rest _) recenter)
+  (when buffer-file-name
+    (ignore-errors
+      (reposition-window))))
+
 ;;;; autorevert
 
 (autoload 'auto-revert--global-adopt-current-buffer "autorevert")
