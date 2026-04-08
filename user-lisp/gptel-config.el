@@ -708,7 +708,8 @@ above and below the current line."
 
 (defvar gptel-minibuffer-spinner-style 'braille)
 (defface gptel-minibuffer-spinner
-  '((t :foreground "cyan"))
+  '((((class color) (min-colors 8) (background dark)) :foreground "orange")
+    (((class color) (min-colors 8) (background light) :foreground "red")))
   "Face for gptel-minibuffer-spinner.")
 
 (defun gptel-minibuffer-spinner-start (&optional style)
@@ -745,7 +746,7 @@ ARGS are passed to `gptel-request', with an updated streaming
 callback that inserts the response into the minibuffer."
   (lambda ()
     (let* ((buffer (current-buffer))
-	   (state 'stopped)
+	   (state 'initial)
 	   (spinner (gptel-minibuffer-spinner-start))
 	   (cleanup-function (lambda ()
 			       (when (eq state 'running)
@@ -773,6 +774,96 @@ callback that inserts the response into the minibuffer."
 	(error
 	 (funcall cleanup-function)
 	 (signal (car err) (cdr err)))))))
+
+(defun gptel-minibuffer-prepare-context ()
+  (let* ((documentation (save-window-excursion
+			  (let ((inhibit-message t))
+			    (describe-function this-command))))
+	 (prompt (minibuffer-prompt))
+	 (buffer (window-buffer (minibuffer-selected-window)))
+	 (mode (with-current-buffer buffer major-mode))
+	 (minibuffer-contents (minibuffer-contents))
+	 (minibuffer-candidates (take 20 (cdr (embark-minibuffer-candidates))))
+	 (context (with-current-buffer buffer
+		    (gptel-context-at-point))))
+    (format "Your task is to help complete the user's input in the Emacs minibuffer.
+
+%s
+
+Use the provided context about the current prompt and the original buffer to generate the most relevant completion candidate.
+- Output ONLY the completion candidate as plain text on a single line
+- Do not add explanations, quotes, markdown, or any extra text
+- Match the expected input type for the current prompt
+- The line at point in the original buffer is marked with \"=>\"
+
+<context>
+<command>%s</command>
+<command-documentation>%s</command-documentation>
+<minibuffer-prompt>%s</minibuffer-prompt>
+<current-minibuffer-input>%s</current-minibuffer-input>
+<minibuffer-candidates>%s</minibuffer-candidates>
+<current-project>%s</current-project>
+<original-buffer-name>%s</original-buffer-name>
+<original-buffer-major-mode>%s</original-buffer-major-mode>
+<original-buffer-context-at-point>%s</original-buffer-context-at-point>
+</context>"
+	    (if (string-empty-p (string-trim minibuffer-contents))
+		"The user hasn't entered any input yet, suggest the most appropriate default completion."
+	      "The user has partially entered input, complete it to the most relevant full candidate.")
+	    this-command
+	    documentation
+	    (replace-regexp-in-string "(default .*)" "" prompt)
+	    minibuffer-contents
+	    (mapconcat (lambda (cand)
+			 (concat "<li>" cand "</li>"))
+		       minibuffer-candidates
+		     )
+	    (project-current)
+	    (buffer-name buffer)
+	    mode
+	    context)))
+
+(defun gptel-minibuffer-setup ()
+  (let* ((context (gptel-minibuffer-prepare-context))
+	 (state 'initial)
+	 (buffer (current-buffer))
+	 (spinner (gptel-minibuffer-spinner-start))
+	 (timer nil)
+	 (cleanup-function (lambda ()
+			     (when (eq state 'running)
+			       (gptel-abort buffer))
+			     (unless (eq state 'stopped)
+			       (gptel-minibuffer-spinner-stop spinner))
+			     (when (timerp timer)
+			       (cancel-timer timer))
+			     (setq state 'stopped))))
+    (add-hook 'post-self-insert-hook cleanup-function nil t)
+    (add-hook 'minibuffer-exit-hook cleanup-function nil t)
+    (with-current-buffer (get-buffer-create " *gptel-minibuffer-context*")
+      (erase-buffer)
+      (insert context))
+    (setq timer (run-at-time
+		 0 1
+		 (lambda ()
+		   (when (eq state 'initial)
+		     (gptel-request context
+		       :stream t
+		       :callback (lambda (response _info)
+				   (cond ((eq response t)
+					  (setq state 'stopped)
+					  (gptel-minibuffer-spinner-stop spinner))
+					 ((stringp response)
+					  (with-current-buffer buffer
+					    (goto-char (point-max))
+					    (insert response))))))
+		     (setq state 'running)))))))
+
+(define-minor-mode gptel-minibuffer-global-mode
+  "A global minor mode for automatically suggesting minibuffer inputs via LLM."
+  :global t
+  (remove-hook 'minibuffer-setup-hook #'gptel-minibuffer-setup)
+  (when gptel-minibuffer-global-mode
+    (add-hook 'minibuffer-setup-hook #'gptel-minibuffer-setup)))
 
 ;;;###autoload
 (defun gptel-set-bookmark ()
@@ -807,7 +898,8 @@ the region."
 		   buffer-name
 		   defun-name
 		   context)
-	   :system "You are helping the user create a clear, descriptive bookmark name for their current position in a code/text file.
+	   :system "You are helping the user create a clear, \
+descriptive bookmark name for their current position in a code/text file.
 
 The selected lines are marked with \"=>\".
 
