@@ -641,7 +641,9 @@ callback that inserts the response into the minibuffer."
 			     (when (eq state 'running)
 			       (gptel-minibuffer-spinner-stop spinner)
 			       (gptel-abort buffer)
-			       (setq state 'stopped)))))
+			       (setq state 'stopped))))
+	 gptel-use-context
+	 gptel-use-tools)
     (add-hook 'post-self-insert-hook cleanup-function nil t)
     (add-hook 'minibuffer-exit-hook cleanup-function nil t)
     (condition-case err
