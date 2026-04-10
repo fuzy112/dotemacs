@@ -1,5 +1,12 @@
 2026-04-10  Zhengyi Fu  <i@fuzy.me>
 
+	Don't use tools and context for auto-suggestion
+
+	* user-lisp/gptel-config.el (gptel-request-minibuffer-input):
+	Don't use tools and context.
+
+2026-04-10  Zhengyi Fu  <i@fuzy.me>
+
 	* user-lisp/gptel-config.el: Remove old presets.
 
 2026-04-10  Zhengyi Fu  <i@fuzy.me>
