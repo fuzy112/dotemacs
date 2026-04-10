@@ -109,6 +109,11 @@
 (gptel-make-openai "Kimi Code"
   :host "api.kimi.com"
   :endpoint "/coding/v1/chat/completions"
+  :header (lambda () (when-let* ((key (gptel--get-api-key)))
+		  `(("Authorization" . ,(concat "Bearer " key))
+		    ;; https://www.reddit.com/r/kimi/comments/1p9b6mc/accessing_the_kimi_for_coding_api/
+		    ("User-Agent" . "claude-code/1.0")
+		    ("X-Client-Name" . "claude-code"))))
   :stream t
   :key #'gptel-api-key-from-auth-source
   :models '((kimi-for-coding
