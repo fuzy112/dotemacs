@@ -1,5 +1,13 @@
 2026-04-10  Zhengyi Fu  <i@fuzy.me>
 
+	Extend gptel-autosuggest-define to allow specifying backend and model
+
+	* user-lisp/gptel-config.el (gptel-autosuggest-define): Add :backend
+	and :model arguments.  Allow backend as string or object.
+	(bookmark-set): Use deepseek-chat on DeepSeek backend.
+
+2026-04-10  Zhengyi Fu  <i@fuzy.me>
+
 	* user-lisp/gptel-config.el ("Kimi Code"): Add required headers.
 
 2026-04-08  Zhengyi Fu  <i@fuzy.me>
