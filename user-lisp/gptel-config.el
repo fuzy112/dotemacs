@@ -743,6 +743,7 @@ Return a `gptel-minibuffer-spinner' structure.  Stop it with
   "Start a streaming gptel request for minibuffer input.
 ARGS are passed to `gptel-request', with an updated streaming
 callback that inserts the response into the minibuffer."
+  (cl-assert (minibufferp))
   (let* ((buffer (current-buffer))
 	 (state 'stopped)
 	 (spinner (gptel-minibuffer-spinner-start))
