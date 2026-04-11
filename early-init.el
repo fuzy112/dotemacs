@@ -88,6 +88,9 @@
 (setq default-frame-alist `((vertical-scroll-bars   . nil)
                             (horizontal-scroll-bars . nil)))
 
+(setq frame-resize-pixelwise t
+      window-resize-pixelwise t)
+
 (setq auto-save-no-message t)
 
 (setq window-combination-resize t)
