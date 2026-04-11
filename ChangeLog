@@ -1,5 +1,25 @@
 2026-04-11  Zhengyi Fu  <i@fuzy.me>
 
+	Borrow some settings from newcomers-presets
+
+	* init.el (context-menu-mode, mouse-yank-at-point)
+	(mouse-drag-and-drop-region)
+	(mouse-drag-and-drop-region-cross-program, mouse-drag-mode-line-buffer)
+	(global-xref-mouse-mode): Set to t.
+	(tab-bar-mode-hook): Add `tab-bar-history-mode'.
+	(dired-auto-revert-buffer, dired-mouse-drag-files)
+	(shell-command-prompt-show-cwd): Set to t.
+	(electric-pair-mode): Enable it.
+	(vc-find-revision-no-save, vc-deduce-backend-nonvc-modes)
+	(vc-use-incoming-outgoing-prefixes, vc-auto-revert-mode): Set to
+	t.
+	<xref>: Remove mouse bindings for xref.
+
+	* early-init.el (frame-resize-pixelwise, window-resize-pixelwise):
+	Set to t.
+
+2026-04-11  Zhengyi Fu  <i@fuzy.me>
+
 	Switch auto-suggestion for bookmark-set to Volcengine Coding model
 
 	* user-lisp/gptel-config.el (bookmark-set): Change backend and

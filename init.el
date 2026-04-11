@@ -196,6 +196,15 @@
 (after-load! treesit
   (require 'treesit-config))
 
+;;;; mouse
+
+(setopt context-menu-mode t
+        mouse-yank-at-point t
+        mouse-drag-and-drop-region t
+        mouse-drag-and-drop-region-cross-program t
+        mouse-drag-mode-line-buffer t
+        global-xref-mouse-mode t)
+
 
 ;;;; fonts
 
@@ -534,6 +543,7 @@ attributes."
                  (alist-get 'name tab)
                  " ")
          tab i)))
+(add-hook 'tab-bar-mode-hook #'tab-bar-history-mode)
 
 ;;;; quick-window
 
@@ -1421,11 +1431,13 @@ value for USE-OVERLAYS."
 ;;;; dired
 
 (add-hook 'dired-mode-hook #'dired-omit-mode)
-(after-load! dired
-  (setq dired-listing-switches "-lah"
+(setopt dired-listing-switches "-lah"
         dired-hide-details-hide-absolute-location t
         dired-do-revert-buffer t
-        dired-x-hands-off-my-keys nil))
+        dired-x-hands-off-my-keys nil
+        dired-auto-revert-buffer t
+        dired-mouse-drag-files t
+        shell-command-prompt-show-cwd t)
 
 (defun +dired-side-noselect ()
   "Open a dired buffer in a side window. "
@@ -1465,10 +1477,9 @@ value for USE-OVERLAYS."
 
 ;;;; compile
 
-(after-load! compile
-  (setq compilation-always-kill t
-        compilation-ask-about-save t
-        compilation-scroll-output 'first-error))
+(setq compilation-always-kill t
+      compilation-ask-about-save t
+      compilation-scroll-output 'first-error)
 
 (defun process-use-pipe ()
   (setq-local process-connection-type nil))
@@ -1780,13 +1791,6 @@ highlighted according to the orderless matching style."
 
 ;;;; xref
 
-;; Use Ctrl and mouse click to jump to definitions, and Ctrl+Alt+mouse
-;; click to jump to references.
-(keymap-global-unset "C-<down-mouse-1>")
-(keymap-global-unset "C-M-<down-mouse-1>")
-(keymap-global-set "C-<mouse-1>" #'embark-dwim)
-(keymap-global-set "C-M-<mouse-1>" #'xref-find-references-at-mouse)
-
 (defvar +xref--max-definitions-in-buffer 5)
 (defvar xref-buffer-name)
 
@@ -1884,6 +1888,7 @@ With no active region, operate on the whole buffer."
 
 ;;;; elec-pair
 
+(electric-pair-mode)
 (after-load! elec-pair
   (keymap-set electric-pair-mode-map "]" #'up-list))
 
@@ -2179,8 +2184,13 @@ confirmed."
 
 ;;;; vc
 
-(setq vc-follow-symlinks t)
-(setq vc-svn-diff-switches '("-x" "-u -p"))
+(setopt vc-follow-symlinks t
+        vc-svn-diff-switches '("-x" "-u -p")
+        vc-find-revision-no-save t
+        vc-deduce-backend-nonvc-modes t;; Deduce VC backend for all buffers
+        vc-use-incoming-outgoing-prefixes t
+        vc-auto-revert-mode t)
+
 (keymap-set vc-prefix-map "." '+vc/dir-here)
 
 (defun +vc/dir-here (&optional backend)
