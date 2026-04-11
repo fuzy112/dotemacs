@@ -1,3 +1,13 @@
+2026-04-11  Zhengyi Fu  <i@fuzy.me>
+
+	Switch auto-suggestion for bookmark-set to Volcengine Coding model
+
+	* user-lisp/gptel-config.el (bookmark-set): Change backend and
+	model.
+	(gptel-request-minibuffer-input): Call spinner stop before abort
+	to ensure it is always stopped.
+	(gptel-directives): Change commit directive.
+
 2026-04-10  Zhengyi Fu  <i@fuzy.me>
 
 	Don't use tools and context for auto-suggestion
