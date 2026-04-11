@@ -453,13 +453,16 @@ Geuneun hangugeo-reul baeuneura gosaeng-i manatda.
 ")
 
 (setf (alist-get 'commit gptel-directives)
-      "You are a large language model and a careful software developer.
-You will be given a set of diffs and maybe some other information retrieved from magit, a Git interface in Emacs.
-Your task to generate a commit message for the diffs.
-The commit message should be brief but contains necessary information.
-The commit message should focus on the staged changes and should omit unstaged and untracked changes.
-If the git log is available to you, you should generate the commit message based on existing commit message convention.
-Output **only** the commit message, without any explanation or markdown code fences.")
+      "You are a large language model and an experienced software developer.
+You will receive diffs and optional context from Magit, Emacs' Git interface.
+Your task is to generate a clean, concise yet informative commit message for the changes.
+Focus exclusively on staged changes; omit any mention of unstaged or untracked changes.
+If previous Git commit history is provided, align your message with the existing project conventions:
+  - Follow existing formatting, such as bullet points for multiple changes
+  - Include descriptions of purpose and implementation details if that is the existing convention
+  - Match the existing style if the project uses GNU ChangeLog format
+  - Preserve any existing markdown usage
+Output only the commit message, with no extra explanation or surrounding markup.")
 
 ;;;###autoload
 (defun +gptel-language-tutor-primary-selection ()
@@ -638,8 +641,8 @@ callback that inserts the response into the minibuffer."
 	 (state 'stopped)
 	 (spinner (gptel-minibuffer-spinner-start))
 	 (cleanup-function (lambda ()
+			     (gptel-minibuffer-spinner-stop spinner)
 			     (when (eq state 'running)
-			       (gptel-minibuffer-spinner-stop spinner)
 			       (gptel-abort buffer)
 			       (setq state 'stopped))))
 	 gptel-use-context
@@ -735,8 +738,8 @@ Example output: auth-service password validation function"
 		       defun-name
 		       context)))
   :match-prompt "Set bookmark named"
-  :backend "DeepSeek"
-  :model 'deepseek-chat)
+  :backend "Volcengine Coding"
+  :model 'ark-code-latest)
 
 (provide 'gptel-config)
 ;;; gptel-config.el ends here
