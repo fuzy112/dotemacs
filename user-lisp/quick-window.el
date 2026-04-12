@@ -1,5 +1,5 @@
 ;;; quick-window.el --- Quickly jump to a window -*- lexical-binding: t -*-
-;; Copyright © 2024, 2025 Zhengyi Fu <i@fuzy.me>
+;; Copyright © 2024, 2025, 2026 Zhengyi Fu <i@fuzy.me>
 
 ;; Author:  Zhengyi Fu
 ;; Package-Requires: ((emacs "29.4") (posframe "1.4.4"))
@@ -112,6 +112,8 @@ all existing frames."
 		 (win (plist-get window-map key #'eql)))
 	    (when (eql key ?\C-g)
 	      (keyboard-quit))
+	    (when (equal (list key) (listify-key-sequence (this-command-keys-vector)))
+	      (other-window 1 all-frames))
 	    (unless win
 	      (user-error "No such window: `%s'" (key-description (list key))))
 	    (run-hooks 'quick-window-pre-jump-hook)
