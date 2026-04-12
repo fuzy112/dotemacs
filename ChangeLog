@@ -1,3 +1,10 @@
+2026-04-13  Zhengyi Fu  <i@fuzy.me>
+
+	quick-window-jump: Select next window by repeating the same key
+
+	* user-lisp/quick-window.el: Update copyright year.
+	(quick-window-jump):
+
 2026-04-12  Zhengyi Fu  <i@fuzy.me>
 
 	Improve Nix flake and REPL integration
