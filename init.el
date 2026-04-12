@@ -1980,7 +1980,8 @@ If PROC is not provided, uses the default Nix REPL process."
   (interactive (list (read-string "Nix expr: ") nil))
   (unless proc
     (setq proc (nix-get-repl)))
-  (comint-send-string proc str))
+  (comint-send-string proc str)
+  (comint-send-string proc "\n"))
 
 (defun nix-send-region-to-repl (start end &optional proc)
   "Send the region from START to END to the Nix REPL.
@@ -2009,7 +2010,7 @@ With prefix argument, prompt for a file to load."
   (let ((file (if (or current-prefix-arg (not (buffer-file-name)))
                   (read-file-name "Nix file: ")
                 (buffer-file-name))))
-    (nix-send-string-to-repl (concat ":l " file "\n"))))
+    (nix-send-string-to-repl (concat ":l " (expand-file-name file) "\n"))))
 
 (defun nix-load-flake ()
   "Load the current flake into the Nix REPL.
