@@ -2012,13 +2012,13 @@ With prefix argument, prompt for a file to load."
     (nix-send-string-to-repl (concat ":l " file "\n"))))
 
 (defun nix-load-flake ()
-  "Load the current file or a selected file as a flake into the Nix REPL.
-With prefix argument, prompt for a file to load."
+  "Load the current flake into the Nix REPL.
+With prefix argument, prompt for a file to find the flake from."
   (interactive)
-  (let ((file (if (or current-prefix-arg (not (buffer-file-name)))
-                  (read-file-name "Nix file: ")
-                (buffer-file-name))))
-    (nix-send-string-to-repl (concat ":lf " file "\n"))))
+  (let ((flake (if current-prefix-arg
+                   (read-directory-name "Starting directory: ")
+                 (locate-dominating-file default-directory "flake.nix"))))
+    (nix-send-string-to-repl (concat ":lf " (expand-file-name flake) "\n"))))
 
 (defun nix-switch-to-repl ()
   "Switch to the Nix REPL buffer in another window, creating it if necessary.
@@ -2038,6 +2038,7 @@ Returns the REPL process."
   (keymap-set nix-mode-map "C-c C-s" #'nix-send-string-to-repl)
   (keymap-set nix-mode-map "C-c C-b" #'nix-send-buffer-to-repl)
   (keymap-set nix-mode-map "C-c C-e" #'nix-send-line-to-repl))
+
 ;;;; ruby
 
 ;;;; sh-script
