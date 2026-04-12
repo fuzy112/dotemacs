@@ -1,3 +1,7 @@
+2026-04-12  Zhengyi Fu  <i@fuzy.me>
+
+	* init.el (nix-load-flake): Use `locate-dominating-file'.
+
 2026-04-11  Zhengyi Fu  <i@fuzy.me>
 
 	Borrow some settings from newcomers-presets
