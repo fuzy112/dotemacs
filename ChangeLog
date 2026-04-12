@@ -1,6 +1,10 @@
 2026-04-12  Zhengyi Fu  <i@fuzy.me>
 
-	* init.el (nix-load-flake): Use `locate-dominating-file'.
+	Improve Nix flake and REPL integration
+
+	* init.el(nix-load-flake): Use `locate-dominating-file'.
+	(nix-load-file): Expand the filename.
+	(nix-send-string-to-repl): Send newline.
 
 2026-04-11  Zhengyi Fu  <i@fuzy.me>
 
