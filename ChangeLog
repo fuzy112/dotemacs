@@ -1,5 +1,13 @@
 2026-04-13  Zhengyi Fu  <i@fuzy.me>
 
+	Fix copyright-update on save in certain buffers
+
+	* init.el (+copyright-update): New function.
+	(after-save-hook): Add it.
+	(before-save-hook): Remove the built-in `copyright-update'.
+
+2026-04-13  Zhengyi Fu  <i@fuzy.me>
+
 	quick-window-jump: Select next window by repeating the same key
 
 	* user-lisp/quick-window.el: Update copyright year.

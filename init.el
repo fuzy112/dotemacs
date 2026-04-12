@@ -2824,7 +2824,16 @@ not used, but is required by the hook."
 ;;;; copyright
 
 (setopt copyright-year-ranges t)
-(add-hook 'before-save-hook #'copyright-update)
+
+(defun +copyright-update ()
+  "Update copyright year in the current buffer and save it.
+This function calls `copyright-update' to update the copyright notice,
+then saves the buffer.  It skips processing in `diff-mode' and `log-edit-mode'."
+  (unless (derived-mode-p '(diff-mode log-edit-mode))
+    (copyright-update)
+    (save-buffer)))
+
+(add-hook 'after-save-hook #'+copyright-update)
 
 ;;;; mode-line
 
