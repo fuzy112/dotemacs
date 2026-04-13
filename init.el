@@ -669,10 +669,6 @@ font-locking and indentation."
 (add-hook 'conf-mode-hook #'breadcrumb-local-mode)    ; Enable for configuration files
 (add-hook 'prog-mode-hook #'breadcrumb-local-mode)    ; Enable for programming modes
 
-;;;; ctrlf
-
-(ctrlf-mode)
-
 ;;;; orderless
 
 (eval-when-compile (require 'orderless))
@@ -1575,10 +1571,6 @@ value for USE-OVERLAYS."
 
 (alist-setq! auto-mode-alist "\\.pdf\\'" #'pdf-view-mode)
 (alist-setq! magic-mode-alist "%PDF" #'pdf-view-mode)
-
-(defun +pdf-isearch-minor-mode-disable-ctrlf ()
-  (ctrlf-local-mode -1))
-(add-hook 'pdf-isearch-minor-mode #'+pdf-isearch-minor-mode-disable-ctrlf)
 
 ;;;; outline
 

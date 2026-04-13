@@ -1,5 +1,11 @@
 2026-04-13  Zhengyi Fu  <i@fuzy.me>
 
+	Remove ctrlf
+
+	* init.el (+pdf-isearch-minor-mode-disable-ctrlf): Remove.
+
+2026-04-13  Zhengyi Fu  <i@fuzy.me>
+
 	Fix copyright-update on save in certain buffers
 
 	* init.el (+copyright-update): New function.
