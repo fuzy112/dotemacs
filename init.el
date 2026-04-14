@@ -139,7 +139,17 @@
    '(")" . meow-forward-slurp)
    '("{" . meow-backward-barf)
    '("}" . meow-forward-barf)
-   '("`" . meow-universal-argument)))
+   '("`" . meow-universal-argument)
+   '("<tab>" . meow-indent-or-other-window)))
+
+(defun meow-indent-or-other-window ()
+  "Indent region if active, otherwise switch to other window."
+  (interactive)
+  (if (use-region-p)
+      (meow-indent)
+    (other-window 1)))
+
+(put 'meow-indent-or-other-window 'repeat-map other-window-repeat-map)
 
 (define-advice meow--set-cursor-type (:override (type) terminal)
   ;; On terminals meow tries to set cursor type with escape sequences
@@ -531,6 +541,9 @@ attributes."
         (seq-union quit-window-kill-buffer
                    (list 'magit-diff-mode 'magit-revision-mode
                          'xref--xref-buffer-mode 'ediff-mode))))
+
+(keymap-set other-window-repeat-map "<tab>" #'other-window)
+(keymap-set other-window-repeat-map "<backtab>" #'other-window-backward)
 
 ;;;; tab-bar
 

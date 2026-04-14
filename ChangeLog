@@ -1,5 +1,13 @@
 2026-04-14  Zhengyi Fu  <i@fuzy.me>
 
+	Use <tab> to switch window
+
+	* init.el (meow-setup): Use <tab> to switch window.
+	(other-window-repeat-map): Bind <tab> to `other-window'.
+	Bind <backtab> to `other-window-backward'.
+
+2026-04-14  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (dired-dwim-target): Set to t.
 
 2026-04-14  Zhengyi Fu  <i@fuzy.me>
