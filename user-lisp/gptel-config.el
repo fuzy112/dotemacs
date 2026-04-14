@@ -119,11 +119,11 @@
   :models '((kimi-for-coding
 	     :description "Kimi Code - specialized coding model"
 	     :capabilities (tool-use json)
-	     :context-window 262144)
+	     :context-window 256)
 	    (kimi-k2-thinking
 	     :description "Kimi K2 Thinking - reasoning model (undocumented)"
 	     :capabilities (reasoning tool-use json)
-	     :context-window 262144)))
+	     :context-window 256)))
 
 (gptel-make-openai "Volcengine Coding"
   :host "ark.cn-beijing.volces.com"
