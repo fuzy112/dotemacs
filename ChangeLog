@@ -1,5 +1,9 @@
 2026-04-14  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (minibuffer-local-map, comint-mode-map): Do not bind M-s.
+
+2026-04-14  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (nix-send-string-to-repl): Use repl history.
 
 2026-04-14  Zhengyi Fu  <i@fuzy.me>
