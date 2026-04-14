@@ -1110,12 +1110,12 @@ value for USE-OVERLAYS."
   "M-s L" #'consult-line-multi)
 
 (define-keymap :keymap minibuffer-local-map
-  "M-s" #'consult-history
+  ;; "M-s" #'consult-history
   "M-r" #'consult-history)
 
 (after-load! comint
   (define-keymap :keymap comint-mode-map
-    "M-s" #'consult-history
+    ;; "M-s" #'consult-history
     "M-r" #'consult-history))
 
 (after-load! consult
