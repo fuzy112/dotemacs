@@ -1816,7 +1816,12 @@ See `xref-show-xrefs' for FETCHER and ALIST."
         xref-show-definitions-function #'+xref--show-definition
         xref-auto-jump-to-first-definition t)
   (setq xref-after-jump-hook
-        (cl-nsubstitute #'reposition-window #'recenter xref-after-jump-hook)))
+        (cl-nsubstitute #'reposition-window #'recenter xref-after-jump-hook))
+
+  (define-keymap :keymap xref-mouse-mode-map
+    "<remap> <xref-find-definitions-at-mouse>" #'embark-dwim
+    "C-M-<down-mouse-1>" #'ignore
+    "C-M-<mouse-1>" #'xref-find-references-at-mouse))
 
 ;;;; javascript
 

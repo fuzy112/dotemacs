@@ -1,3 +1,11 @@
+2026-04-14  Zhengyi Fu  <i@fuzy.me>
+
+	Restore old mouse support for xref
+
+	* init.el (xref-mouse-mode-map): Substitute
+	`xref-find-definitions-at-mouse' with `embark-dwim'.
+	Add binding for `xref-find-references-at-mouse'.
+
 2026-04-13  Zhengyi Fu  <i@fuzy.me>
 
 	Remove ctrlf
