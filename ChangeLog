@@ -1,5 +1,9 @@
 2026-04-14  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (hl-todo-mode-map): Bind "M-g C-t g" to `hl-todo-rgrep'.
+
+2026-04-14  Zhengyi Fu  <i@fuzy.me>
+
 	Use <tab> to switch window
 
 	* init.el (meow-setup): Use <tab> to switch window.

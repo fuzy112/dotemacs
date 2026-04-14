@@ -1612,6 +1612,7 @@ value for USE-OVERLAYS."
     "M-g C-t [" #'hl-todo-previous
     "M-g C-t ]" #'hl-todo-next
     "M-g C-t o" #'hl-todo-occur
+    "M-g C-t g" #'hl-todo-rgrep
     "M-g C-t i" #'hl-todo-insert)
   (defvar-keymap +hl-todo-repeat-map
     "[" #'hl-todo-previous
