@@ -1989,7 +1989,14 @@ Returns the process object for the *Nix-REPL* buffer."
 (defun nix-send-string-to-repl (str &optional proc)
   "Send STR to the Nix REPL.
 If PROC is not provided, uses the default Nix REPL process."
-  (interactive (list (read-string "Nix expr: ") nil))
+  (interactive
+   (list
+    (let (minibuffer-history histpos)
+      (with-current-buffer (process-buffer (nix-get-repl))
+        (setq minibuffer-history (ring-elements comint-input-ring))
+        (setq histpos comint-input-ring-index))
+      (read-string "Nix expr: " nil `(minibuffer-history . ,histpos)))
+    nil))
   (unless proc
     (setq proc (nix-get-repl)))
   (comint-send-string proc str)
