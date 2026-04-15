@@ -2784,6 +2784,49 @@ not used, but is required by the hook."
                  ,(concat "* Note (%a)\n"
                           "/Entered on/ %U\n" "\n" "%?"))))
 
+;;;; Denote
+
+;; Core paths and file naming
+(setopt denote-directory (expand-file-name "~/OneDrive/notes/"))
+;; Known keywoards
+(setopt denote-known-keywords '("blog" "emacs" "linux" "lisp" "life" "work" "coding" "tutorial" "review"))
+;; Automatically rename denote buffers
+(setopt denote-rename-buffer-mode t)
+
+;; Denote key bindings
+(define-keymap :keymap mode-specific-map
+  "n n" #'denote
+  "n r" #'denote-rename-file
+  "n R" #'denote-rename-file-using-front-matter
+  "n l" #'denote-link
+  "n L" #'denote-add-links
+  "n b" #'denote-backlinks
+  "n q c" #'denote-query-contents-link
+  "n q f" #'denote-query-filenames-link
+  "n d" #'denote-dired
+  "n g" #'denote-grep)
+
+(after-load! dired
+  (define-keymap :keymap dired-mode-map
+    "C-c C-d C-i" #'denote-dired-link-marked-notes
+    "C-c C-d C-r" #'denote-dired-rename-files
+    "C-c C-d C-k" #'denote-dired-rename-marked-files-with-keywords
+    "C-c C-d C-R" #'denote-dired-rename-marked-files-using-front-matter))
+
+;; Integrations
+(add-hook 'text-mode-hook #'denote-fontify-links-mode)
+(add-hook 'dired-mode-hook #'denote-dired-mode)
+
+(after-load! org-capture
+  (add-to-list 'org-capture-templates
+               '("n" "New note (with Denote)" plain
+                 (file denote-last-path)
+                 #'denote-org-capture
+                 :no-save t
+                 :immediate-finish nil
+                 :kill-buffer t
+                 :jump-to-captured t)))
+
 ;;;; TeX
 
 (setq TeX-auto-save t)
