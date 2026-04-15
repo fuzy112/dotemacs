@@ -1983,6 +1983,8 @@ With no active region, operate on the whole buffer."
 Returns the process object for the *Nix-REPL* buffer."
   (with-current-buffer (get-buffer-create "*Nix-REPL*")
     (unless (comint-check-proc (current-buffer))
+      (when-let* ((proj (project-current)))
+        (setq default-directory (project-root proj)))
       (nix--make-repl-in-buffer (current-buffer))
       (nix-repl-mode))
     (get-buffer-process (current-buffer))))
@@ -2023,23 +2025,31 @@ If PROC is provided, send input to that process instead of using comint."
   (interactive)
   (nix-send-region-to-repl (point-min) (point-max) proc))
 
-(defun nix-load-file ()
+(defun nix-load-file (&optional proc)
   "Load the current file or a selected file into the Nix REPL.
-With prefix argument, prompt for a file to load."
+With prefix argument, prompt for a file to load.
+If PROC is provided, load file to that process instead of using comint."
   (interactive)
   (let ((file (if (or current-prefix-arg (not (buffer-file-name)))
                   (read-file-name "Nix file: ")
                 (buffer-file-name))))
-    (nix-send-string-to-repl (concat ":l " (expand-file-name file) "\n"))))
+    (nix-send-string-to-repl (concat ":l " (expand-file-name file) "\n") proc)))
 
-(defun nix-load-flake ()
+(defun nix-load-flake (&optional proc)
   "Load the current flake into the Nix REPL.
-With prefix argument, prompt for a file to find the flake from."
+With prefix argument, prompt for a file to find the flake from.
+If PROC is provided, load file to that process instead of using comint."
   (interactive)
   (let ((flake (if current-prefix-arg
                    (read-directory-name "Starting directory: ")
                  (locate-dominating-file default-directory "flake.nix"))))
-    (nix-send-string-to-repl (concat ":lf " (expand-file-name flake) "\n"))))
+    (nix-send-string-to-repl (concat ":lf " (expand-file-name flake) "\n") proc)))
+
+(defun nix-repl-reload (&optional proc)
+  "Reload files loaded in the REPL.
+If PROC is provided, use that process instead of comint."
+  (interactive)
+  (nix-send-string-to-repl (concat ":r\n") proc))
 
 (defun nix-switch-to-repl ()
   "Switch to the Nix REPL buffer in another window, creating it if necessary.
@@ -2052,13 +2062,15 @@ Returns the REPL process."
   (get-buffer-process (current-buffer)))
 
 (after-load! nix-mode
-  (keymap-set nix-mode-map "C-c C-l" #'nix-load-file)
-  (keymap-set nix-mode-map "C-c C-f" #'nix-load-flake)
-  (keymap-set nix-mode-map "C-c C-z" #'nix-switch-to-repl)
-  (keymap-set nix-mode-map "C-c C-r" #'nix-send-region-to-repl)
-  (keymap-set nix-mode-map "C-c C-s" #'nix-send-string-to-repl)
-  (keymap-set nix-mode-map "C-c C-b" #'nix-send-buffer-to-repl)
-  (keymap-set nix-mode-map "C-c C-e" #'nix-send-line-to-repl))
+  (define-keymap :keymap nix-mode-map
+    "C-c C-l" #'nix-load-file
+    "C-c C-f" #'nix-load-flake
+    "C-c C-r" #'nix-repl-reload
+    "C-c C-z" #'nix-switch-to-repl
+    "C-c C-n" #'nix-send-region-to-repl
+    "C-c C-s" #'nix-send-string-to-repl
+    "C-c C-b" #'nix-send-buffer-to-repl
+    "C-c C-e" #'nix-send-line-to-repl))
 
 ;;;; ruby
 

@@ -1,3 +1,13 @@
+2026-04-15  Zhengyi Fu  <i@fuzy.me>
+
+	Update nix-mode keybindings
+
+	* init.el (nix-get-repl): Start REPL in project root.
+	(nix-load-file, nix-load-flake): Add optional PROC argument.
+	(nix-repl-reload): New command.
+	(nix-mode-map): Rebind keys, add nix-repl-reload on C-c C-r.
+	Use define-keymap instead of multiple keymap-set.
+
 2026-04-14  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (minibuffer-local-map, comint-mode-map): Do not bind M-s.
