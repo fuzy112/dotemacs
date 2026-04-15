@@ -1,3 +1,10 @@
+2026-04-16  Zhengyi Fu  <i@fuzy.me>
+
+	Restore the keybinding for org-cycle
+
+	* init.el (meow-indent-or-other-window): Respect local keybinding.
+	(meow-setup): Bind TAB instead of <tab> to it.
+
 2026-04-15  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Add denote configuration.
