@@ -1,5 +1,9 @@
 2026-04-15  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Add denote configuration.
+
+2026-04-15  Zhengyi Fu  <i@fuzy.me>
+
 	Update gptel configuration
 
 	* user-lisp/gptel-config.el (gptel--known-backends)
