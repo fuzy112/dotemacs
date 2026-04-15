@@ -40,12 +40,9 @@
 (require 'flymake)
 (require 'dom)
 
-;;; Reset backends, tools, and presets
-
-(setq gptel--known-backends nil
-      gptel--known-presets nil)
-
 ;;; Models
+
+(setopt gptel-default-mode 'org-mode)
 
 (gptel-make-openai "Moonshot"
   :host "api.moonshot.cn"

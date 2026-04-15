@@ -1,5 +1,13 @@
 2026-04-15  Zhengyi Fu  <i@fuzy.me>
 
+	Update gptel configuration
+
+	* user-lisp/gptel-config.el (gptel--known-backends)
+	(gptel--known-tools): Do not reset anymore.
+	(gptel-default-mode): Set to `org-mode'.
+
+2026-04-15  Zhengyi Fu  <i@fuzy.me>
+
 	New command: `smart-recompile'
 
 	* init.el (smart-recompile): New command for selecting compilation
