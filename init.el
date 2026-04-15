@@ -1496,6 +1496,60 @@ value for USE-OVERLAYS."
   (setq-local process-connection-type nil))
 (add-hook 'compilation-mode-hook #'process-use-pipe)
 
+(defvar consult-source-compilation-buffer
+  `( :name     "Compilation Buffer"
+     :narrow   ?b
+     :category buffer
+     :face     consult-buffer
+     :history  buffer-name-history
+     :state    ,#'consult--buffer-state
+     :default  t
+     :items
+     ,(lambda ()
+        (consult--buffer-query :predicate #'compilation-buffer-p
+                               :sort 'visibility
+                               :as #'consult--buffer-pair)))
+  "Compilation buffer source for `consult-buffer'.")
+
+(defvar consult-source-project-compilation-buffer
+  `( :name     "Project Compilation Buffer"
+     :narrow   ?p
+     :category buffer
+     :face     consult-buffer
+     :history  buffer-name-history
+     :state    ,#'consult--buffer-state
+     :enabled  ,(lambda () consult-project-function)
+     :items
+     ,(lambda ()
+        (when-let* ((root (consult--project-root)))
+          (consult--buffer-query :predicate #'compilation-buffer-p
+                                 :sort 'visibility
+                                 :directory root
+                                 :as #'consult--buffer-pair))))
+  "Project compilation buffer source for `consult-buffer'.")
+
+(defvar consult-compilation-buffer-sources
+  '(consult-source-compilation-buffer
+    consult-source-project-compilation-buffer))
+
+(defvar smart-recompile-buffer-history nil)
+
+(defun smart-recompile ()
+  "Prompt for a compilation buffer and re-run its last compilation command.
+
+Uses `consult--multi' to select from available compilation buffers,
+then switches to the selected buffer and invokes `recompile'."
+  (interactive)
+  (let* ((selected (consult--multi consult-compilation-buffer-sources
+                                   :prompt "Compilation buffer: "
+                                   :require-match t
+                                   :history 'smart-recompile-buffer-history
+                                   :sort nil))
+         (buffer (car selected)))
+    (with-current-buffer buffer
+      (let ((compilation-buffer-name-function (lambda (_) (buffer-name buffer))))
+        (recompile)))))
+
 ;;;; comint
 
 (after-load! comint
@@ -3188,7 +3242,7 @@ Otherwise disable it."
   "M-c"    #'capitalize-dwim
   "M-l"    #'downcase-dwim
   "M-u"    #'upcase-dwim
-  "<f5>"   #'project-recompile
+  "<f5>"   #'smart-recompile
   "<remap> <dabbrev-expand>" #'hippie-expand)
 
 ;;;; Enabling some disabled commands

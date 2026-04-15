@@ -1,5 +1,18 @@
 2026-04-15  Zhengyi Fu  <i@fuzy.me>
 
+	New command: `smart-recompile'
+
+	* init.el (smart-recompile): New command for selecting compilation
+	buffer to recompile.  Bind <f5> to `smart-recompile` instead of
+	`project-recompile`.
+	(consult-source-compilation-buffer)
+	(consult-source-project-compilation-buffer)
+	(consult-compilation-buffer-sources): Add Consult sources for
+	compilation buffers.
+	(smart-recompile-buffer-history): History variable.
+
+2026-04-15  Zhengyi Fu  <i@fuzy.me>
+
 	Update nix-mode keybindings
 
 	* init.el (nix-get-repl): Start REPL in project root.
