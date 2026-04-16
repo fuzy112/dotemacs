@@ -1,5 +1,14 @@
 2026-04-16  Zhengyi Fu  <i@fuzy.me>
 
+	Use smart-recompile-buffer-history for compilation buffer sources
+
+	* init.el (consult-source-compilation-buffer)
+	(consult-source-project-compilation-buffer): Update :history to use
+	smart-recompile-buffer-history instead of buffer-name-history.
+	This keeps history separate for compilation buffer selections.
+
+2026-04-16  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (denote-directory): Set to ~/org/notes/.
 
 2026-04-16  Zhengyi Fu  <i@fuzy.me>

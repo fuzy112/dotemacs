@@ -1540,7 +1540,7 @@ value for USE-OVERLAYS."
      :narrow   ?b
      :category buffer
      :face     consult-buffer
-     :history  buffer-name-history
+     :history  smart-recompile-buffer-history
      :state    ,#'consult--buffer-preview
      :default  t
      :items
@@ -1555,7 +1555,7 @@ value for USE-OVERLAYS."
      :narrow   ?p
      :category buffer
      :face     consult-buffer
-     :history  buffer-name-history
+     :history  smart-recompile-buffer-history
      :state    ,#'consult--buffer-preview
      :enabled  ,(lambda () consult-project-function)
      :items
