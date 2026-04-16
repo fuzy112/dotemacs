@@ -1,5 +1,15 @@
 2026-04-16  Zhengyi Fu  <i@fuzy.me>
 
+	Increase debounce time for consult search previews
+
+	* init.el (after-load! consult): Set 0.4s debounce for
+	consult-xref, grep commands, consult-theme and
+	consult-source-file-register.  Keep 0.2s for faster commands like
+	consult-line.
+
+
+2026-04-16  Zhengyi Fu  <i@fuzy.me>
+
 	Add consult preview for project file name completion
 
 	* init.el (+consult--read-project-file-name-function): New custom

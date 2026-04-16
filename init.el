@@ -1235,18 +1235,19 @@ value for USE-OVERLAYS."
   ;; consult-customize is a macro and is not autoloaded
   (with-no-compile!
     (consult-customize
-     consult-xref
-     consult-ripgrep consult-grep consult-git-grep consult-ugrep
      consult-line
      consult-focus-lines consult-keep-lines
      consult-imenu
-     consult-theme
      consult-source-buffer
      consult-source-project-buffer
-     consult-source-file-register
      consult-source-buffer-register
-     :preview-key '(:debounce 0.2 any))
-
+     :preview-key '(:debounce 0.2 any)
+     consult-xref
+     consult-ripgrep consult-grep consult-git-grep consult-ugrep
+     consult-theme
+     :preview-key '(:debounce 0.4 any)
+     consult-source-file-register
+     :preview-key '(:debounce 0.4 any))
     (consult-customize
      consult-source-recent-file
      :enabled (lambda () (require 'recentf) (default-toplevel-value 'recentf-mode))))
