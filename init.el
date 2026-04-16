@@ -1816,8 +1816,9 @@ original function FN."
 When RESULT contains a contact list and its command is not in PATH, look
 up the command in `lsp-server-nix-packages'.  If found, wrap the contact
 list to run via 'nix shell' with the associated packages."
-  (when-let
-      ((contact (nth 3 result)) ((listp contact))
+  (when-let*
+      ((contact (nth 3 result))
+       ((listp contact))
        (command (car (ensure-list contact)))
        ((not (executable-find command)))
        (pkgs (cdr (assoc-string command lsp-server-nix-packages))))
