@@ -1,5 +1,9 @@
 2026-04-16  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (denote-directory): Set to ~/org/notes/.
+
+2026-04-16  Zhengyi Fu  <i@fuzy.me>
+
 	Prevent smart-compile from jumping to the compilation buffer
 
 	* init.el (consult-source-compilation-buffer)
