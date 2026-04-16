@@ -2845,6 +2845,17 @@ not used, but is required by the hook."
   "n d" #'denote-dired
   "n g" #'denote-grep)
 
+(after-load! denote
+  ;; Add encrypted variants of all configured denote file types to `denote-file-types'
+  (cl-loop for (name . props) in (cl-copy-list denote-file-types)
+           for name-string = (symbol-name name)
+           unless (string-suffix-p "-gpg" name-string)
+           for new-name = (intern (concat name-string "-gpg"))
+           for extension = (plist-get props :extension)
+           for new-extension = (concat extension ".gpg")
+           for new-props = (plist-put (copy-sequence props) :extension new-extension)
+           do (setf (alist-get new-name denote-file-types) new-props)))
+
 (after-load! dired
   (define-keymap :keymap dired-mode-map
     "C-c C-d C-i" #'denote-dired-link-marked-notes

@@ -1,5 +1,9 @@
 2026-04-16  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (denote-file-types): Add encrypted variants of all preset types.
+
+2026-04-16  Zhengyi Fu  <i@fuzy.me>
+
 	Use smart-recompile-buffer-history for compilation buffer sources
 
 	* init.el (consult-source-compilation-buffer)
