@@ -2826,7 +2826,7 @@ not used, but is required by the hook."
 ;;;; Denote
 
 ;; Core paths and file naming
-(setopt denote-directory (expand-file-name "~/OneDrive/notes/"))
+(setopt denote-directory (expand-file-name "~/org/notes/"))
 ;; Known keywoards
 (setopt denote-known-keywords '("blog" "emacs" "linux" "lisp" "life" "work" "coding" "tutorial" "review"))
 ;; Automatically rename denote buffers
