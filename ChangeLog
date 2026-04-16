@@ -1,5 +1,9 @@
 2026-04-16  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (calendar-mode): Add `denote-journal-calendar-mode'.
+
+2026-04-16  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (denote-file-types): Add encrypted variants of all preset types.
 
 2026-04-16  Zhengyi Fu  <i@fuzy.me>
