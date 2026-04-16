@@ -2832,6 +2832,9 @@ not used, but is required by the hook."
 (setopt denote-known-keywords '("blog" "emacs" "linux" "lisp" "life" "work" "coding" "tutorial" "review"))
 ;; Automatically rename denote buffers
 (setopt denote-rename-buffer-mode t)
+;; Since I will add new denote file types to the beginning of the list,
+;; org will no longer be the default.
+(setopt denote-file-type 'org)
 
 ;; Denote key bindings
 (define-keymap :keymap mode-specific-map
@@ -2844,7 +2847,15 @@ not used, but is required by the hook."
   "n q c" #'denote-query-contents-link
   "n q f" #'denote-query-filenames-link
   "n d" #'denote-dired
-  "n g" #'denote-grep)
+  "n g" #'consult-denote-grep
+  "n f" #'consult-denote-find
+  "n m" #'denote-menu-list-notes
+  "n j n" #'denote-journal-new-entry
+  "n j j" #'denote-journal-new-or-existing-entry
+  "n j l" #'denote-journal-link-or-create-entry)
+
+(after-load! (:and denote consult)
+  (consult-denote-mode))
 
 (after-load! denote
   ;; Add encrypted variants of all configured denote file types to `denote-file-types'

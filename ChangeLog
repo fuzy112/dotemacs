@@ -1,5 +1,13 @@
 2026-04-16  Zhengyi Fu  <i@fuzy.me>
 
+	Update denote configuration
+	
+	* init.el (denote-file-type): Set to `org'.
+	(<denote>): Add bindings for denote-journal, consult-denote, and
+	denote-menu.  Enable consult-denote-mode.
+
+2026-04-16  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (calendar-mode): Add `denote-journal-calendar-mode'.
 
 2026-04-16  Zhengyi Fu  <i@fuzy.me>
