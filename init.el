@@ -1186,6 +1186,29 @@ value for USE-OVERLAYS."
 
 (setq read-buffer-function #'+consult--read-buffer-function)
 
+;; Add preview for `project-read-file-name-function'
+(defun +consult--read-project-file-name-function (prompt all-files &optional pred hist _mb)
+  (require 'consult)
+  (let ((prompt (if (and all-files
+                         (file-name-absolute-p (car all-files)))
+                    prompt
+                  (concat prompt
+                          (format " in %s"
+                                  (consult--fast-abbreviate-file-name default-directory)))))
+        (minibuffer-completing-file-name t))
+    (consult--read-1 (mapcar #'file-relative-name all-files)
+                     :state (consult--file-preview)
+                     :prompt (concat prompt ": ")
+                     :require-match t
+                     :history hist
+                     :category 'file
+                     :sort t
+                     :predicate pred
+                     :preview-key consult-preview-key
+                     :lookup (lambda (selected &rest _) selected))))
+
+(setq project-read-file-name-function #'+consult--read-project-file-name-function)
+
 
 ;; Use `orderless-compile' as the `consult''s default regexp compiler.
 
@@ -1205,16 +1228,28 @@ value for USE-OVERLAYS."
 
 (after-load! consult
   (setq consult-preview-key "M-.")
-  (setq consult-narrow-key "<") ;; "C-+"
+  (setq consult-narrow-key "<")
+  (setq consult-widen-key ">")
   (setq-default consult--regexp-compiler #'+consult--orderless-regexp-compiler)
 
   ;; consult-customize is a macro and is not autoloaded
   (with-no-compile!
     (consult-customize
-     consult-xref consult-ripgrep consult-grep consult-git-grep
-     consult-line consult-focus-lines consult-keep-lines
+     consult-xref
+     consult-ripgrep consult-grep consult-git-grep consult-ugrep
+     consult-line
+     consult-focus-lines consult-keep-lines
      consult-imenu
-     :preview-key '(:debounce 0.2 any)))
+     consult-theme
+     consult-source-buffer
+     consult-source-project-buffer
+     consult-source-file-register
+     consult-source-buffer-register
+     :preview-key '(:debounce 0.2 any))
+
+    (consult-customize
+     consult-source-recent-file
+     :enabled (lambda () (require 'recentf) (default-toplevel-value 'recentf-mode))))
 
   ;; url-only bookmark type
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow))))
@@ -1415,10 +1450,6 @@ value for USE-OVERLAYS."
 (after-load! recentf
   (let ((inhibit-message t))
     (recentf-mode)))
-(after-load! consult
-  ;; enable recentf when accessing the recentf-file source from consult.
-  (setf (plist-get consult-source-recent-file :enabled)
-        (lambda () (require 'recentf) (symbol-value 'recentf-mode))))
 
 ;;;; saveplace
 

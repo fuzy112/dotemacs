@@ -1,5 +1,17 @@
 2026-04-16  Zhengyi Fu  <i@fuzy.me>
 
+	Add consult preview for project file name completion
+
+	* init.el (+consult--read-project-file-name-function): New custom
+	function that enables file preview when project reads file name.
+	Set `project-read-file-name-function' to it.
+	(after-load! consult): Set `consult-widen-key'.  Add more commands
+	to enable debounced preview.  Enable recentf source for consult
+	only when recentf mode is enabled with `default-toplevel-value'.
+	Move recentf enabled check to here from after-load! recentf.
+
+2026-04-16  Zhengyi Fu  <i@fuzy.me>
+
 	Restore the keybinding for org-cycle
 
 	* init.el (meow-indent-or-other-window): Respect local keybinding.
