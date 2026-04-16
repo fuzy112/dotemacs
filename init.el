@@ -1541,7 +1541,7 @@ value for USE-OVERLAYS."
      :category buffer
      :face     consult-buffer
      :history  buffer-name-history
-     :state    ,#'consult--buffer-state
+     :state    ,#'consult--buffer-preview
      :default  t
      :items
      ,(lambda ()
@@ -1556,7 +1556,7 @@ value for USE-OVERLAYS."
      :category buffer
      :face     consult-buffer
      :history  buffer-name-history
-     :state    ,#'consult--buffer-state
+     :state    ,#'consult--buffer-preview
      :enabled  ,(lambda () consult-project-function)
      :items
      ,(lambda ()
