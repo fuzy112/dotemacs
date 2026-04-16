@@ -1,5 +1,14 @@
 2026-04-16  Zhengyi Fu  <i@fuzy.me>
 
+	Prevent smart-compile from jumping to the compilation buffer
+
+	* init.el (consult-source-compilation-buffer)
+	(consult-source-project-compilation-buffer): Set :state to
+	consult--buffer-preview to not automatically jump to the selected
+	buffer.
+
+2026-04-16  Zhengyi Fu  <i@fuzy.me>
+
 	Increase debounce time for consult search previews
 
 	* init.el (after-load! consult): Set 0.4s debounce for
