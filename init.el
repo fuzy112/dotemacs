@@ -68,9 +68,8 @@
    '("9" . meow-digit-argument)
    '("0" . meow-digit-argument)
    '("/" . meow-keypad-describe-key)
-   '("?" . meow-cheatsheet)
-   '("h" . "<help>"))
-  ;; (meow-motion-define-key '("<escape>" . ignore))
+   '("?" . meow-cheatsheet))
+  (meow-motion-define-key '("<escape>" . ignore))
   (meow-normal-define-key
    '("0" . meow-expand-0)
    '("9" . meow-expand-9)
@@ -132,22 +131,20 @@
    '("y" . meow-yank)
    '("z" . meow-pop-selection)
    '("'" . repeat)
-   ;; I used to follow the example.  But binding escape to ignore prevents
-   ;; me from quitting vim.
-   ;; '("<escape>" . ignore)
+   '("<escape>" . ignore)
    '("(" . meow-backward-slurp)
    '(")" . meow-forward-slurp)
    '("{" . meow-backward-barf)
    '("}" . meow-forward-barf)
    '("`" . meow-universal-argument)
-   '("TAB" . meow-indent-or-other-window)))
+   '("<tab>" . meow-tab)))
 
-(defun meow-indent-or-other-window ()
+(defun meow-tab ()
   "If the current key has a local binding, execute that.
 If the region is active, indent it.
 Otherwise, switch to the other window."
   (interactive)
-  (let* ((key (key-description (this-command-keys-vector)))
+  (let* ((key "TAB")
          (cmd (keymap-local-lookup key)))
     (cond ((commandp cmd)
            (call-interactively cmd))
@@ -156,7 +153,7 @@ Otherwise, switch to the other window."
           (t
            (call-interactively 'other-window)))))
 
-;; (put 'meow-indent-or-other-window 'repeat-map other-window-repeat-map)
+;; (put 'meow-tab 'repeat-map other-window-repeat-map)
 
 (define-advice meow--set-cursor-type (:override (type) terminal)
   ;; On terminals meow tries to set cursor type with escape sequences
@@ -3301,6 +3298,7 @@ Otherwise disable it."
   "f"   file-map
   "!"   #'bangs
   "o"   toggle-map
+  "h"   #'help-command
   "M-g" #'magit-file-dispatch
   "p"   #'project-prefix-map
   "q"   quilt-prefix-map
