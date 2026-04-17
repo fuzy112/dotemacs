@@ -1,5 +1,12 @@
 2026-04-17  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Hide common internal buffers from consult-buffer.
+
+	Add Async-native-compile-log, envrc, Warnings, and Message buffers to
+	consult-buffer-filter to keep them out of the buffer list.
+
+2026-04-17  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (global-map): Bind "C-S-d" to `duplicate-dwim'.
 
 2026-04-16  Zhengyi Fu  <i@fuzy.me>
