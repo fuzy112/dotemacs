@@ -1250,7 +1250,12 @@ value for USE-OVERLAYS."
      :enabled (lambda () (require 'recentf) (default-toplevel-value 'recentf-mode))))
 
   ;; url-only bookmark type
-  (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow))))
+  (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow)))
+
+  (add-to-list 'consult-buffer-filter "\\*Async-native-compile-log\\*")
+  (add-to-list 'consult-buffer-filter "\\*envrc\\*")
+  (add-to-list 'consult-buffer-filter "\\*Warnings\\*")
+  (add-to-list 'consult-buffer-filter "\\*Message\\*"))
 
 
 (defun +recenter-top-30% ()
