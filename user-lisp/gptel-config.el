@@ -497,7 +497,7 @@ in the git editor for final editing before committing."
 	(error "Failed to run git status"))
       (insert "</git-status>\n")
       (insert "<git-diff-staged>")
-      (unless (zerop (magit-process-git t "diff" "--cached"))
+      (unless (zerop (magit-process-git t "diff" "--cached" "--no-textconv"))
 	(error "Failed to run git diff --cached"))
       (insert "</git-diff-staged>\n")
       (insert "<git-log>")
