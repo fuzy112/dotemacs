@@ -3343,6 +3343,7 @@ Otherwise disable it."
 (define-keymap :keymap global-map
   "C-h"    "DEL"
   "C-M-h"  "M-DEL"
+  "C-S-d"  #'duplicate-dwim
   "M-c"    #'capitalize-dwim
   "M-l"    #'downcase-dwim
   "M-u"    #'upcase-dwim
