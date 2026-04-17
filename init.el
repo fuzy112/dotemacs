@@ -2835,21 +2835,21 @@ not used, but is required by the hook."
 
 ;; Denote key bindings
 (define-keymap :keymap mode-specific-map
-  "n n" #'denote
-  "n r" #'denote-rename-file
-  "n R" #'denote-rename-file-using-front-matter
-  "n l" #'denote-link
-  "n L" #'denote-add-links
-  "n b" #'denote-backlinks
-  "n q c" #'denote-query-contents-link
-  "n q f" #'denote-query-filenames-link
-  "n d" #'denote-dired
-  "n g" #'consult-denote-grep
-  "n f" #'consult-denote-find
-  "n m" #'denote-menu-list-notes
-  "n j n" #'denote-journal-new-entry
-  "n j j" #'denote-journal-new-or-existing-entry
-  "n j l" #'denote-journal-link-or-create-entry)
+  "n n"    #'denote
+  "n r"    #'denote-rename-file
+  "n R"    #'denote-rename-file-using-front-matter
+  "n l"    #'denote-link
+  "n L"    #'denote-add-links
+  "n b"    #'denote-backlinks
+  "n q c"  #'denote-query-contents-link
+  "n q f"  #'denote-query-filenames-link
+  "n d"    #'denote-dired
+  "n g"    #'consult-denote-grep
+  "n f"    #'consult-denote-find
+  "n m"    #'denote-menu-list-notes
+  "n j n"  #'denote-journal-new-entry
+  "n j j"  #'denote-journal-new-or-existing-entry
+  "n j l"  #'denote-journal-link-or-create-entry)
 
 (after-load! (:and denote consult)
   (consult-denote-mode))
@@ -2857,12 +2857,12 @@ not used, but is required by the hook."
 (after-load! denote
   ;; Add encrypted variants of all configured denote file types to `denote-file-types'
   (cl-loop for (name . props) in (cl-copy-list denote-file-types)
-           for name-string = (symbol-name name)
+           for name-string   = (symbol-name name)
            unless (string-suffix-p "-gpg" name-string)
-           for new-name = (intern (concat name-string "-gpg"))
-           for extension = (plist-get props :extension)
+           for new-name      = (intern (concat name-string "-gpg"))
+           for extension     = (plist-get props :extension)
            for new-extension = (concat extension ".gpg")
-           for new-props = (plist-put (copy-sequence props) :extension new-extension)
+           for new-props     = (plist-put (copy-sequence props) :extension new-extension)
            do (setf (alist-get new-name denote-file-types) new-props)))
 
 (after-load! dired
