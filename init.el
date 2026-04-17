@@ -1413,12 +1413,14 @@ value for USE-OVERLAYS."
 
 ;;;; whitespace
 
+(defun turn-on-whitespace-mode-for-prog-mode ()
+  (setq-local whitespace-style '( face trailing empty indentation
+                                  space-before-tab space-after-tab
+                                  missing-newline-at-eof))
+  (whitespace-mode))
+
 (dolist (hook '(prog-mode-hook conf-mode-hook yaml-mode-hook))
-  (add-hook hook #'whitespace-mode))
-(setopt whitespace-style '(face
-                           trailing empty indentation
-                           space-before-tab space-after-tab
-                           missing-newline-at-eof))
+  (add-hook hook #'turn-on-whitespace-mode-for-prog-mode))
 
 ;;;; indent-tabs-mode
 

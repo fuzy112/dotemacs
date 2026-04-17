@@ -1,5 +1,13 @@
 2026-04-17  Zhengyi Fu  <i@fuzy.me>
 
+	Use buffer-local whitespace-style for prog-mode hooks.
+
+	* init.el (turn-on-whitespace-mode-for-prog-mode): New function.
+	(whitespace-style): Move setting from global to inside the
+	function.  Add it only to prog-mode-hook, keep other modes global.
+
+2026-04-17  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Hide common internal buffers from consult-buffer.
 
 	Add Async-native-compile-log, envrc, Warnings, and Message buffers to
