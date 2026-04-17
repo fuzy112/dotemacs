@@ -1255,7 +1255,7 @@ value for USE-OVERLAYS."
   (add-to-list 'consult-buffer-filter "\\*Async-native-compile-log\\*")
   (add-to-list 'consult-buffer-filter "\\*envrc\\*")
   (add-to-list 'consult-buffer-filter "\\*Warnings\\*")
-  (add-to-list 'consult-buffer-filter "\\*Message\\*"))
+  (add-to-list 'consult-buffer-filter "\\*Messages\\*"))
 
 
 (defun +recenter-top-30% ()
