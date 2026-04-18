@@ -193,11 +193,12 @@ available at compile time."
   "Call registered functions for HOOK in the current project with ARGS.
 
 See `project-add-hook!'."
+  (require 'project)
   (when-let* ((project (project-current))
               (hooks (alist-get project dotemacs--project-hooks nil t #'equal))
               (functions (alist-get hook hooks)))
     (if (functionp functions)
- (apply functions args)
+        (apply functions args)
       (dolist (fun functions)
         (apply fun args)))))
 
@@ -235,6 +236,7 @@ PROJECT defaults to the current project."
 (defvar emmip--major-modes-history nil)
 
 (defun dotemacs--major-mode-completion-table ()
+  (require 'map)
   (let ((modes (seq-filter
                 (lambda (x)
                   (and (symbolp x)
