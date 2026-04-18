@@ -487,8 +487,8 @@ in the git editor for final editing before committing."
   (interactive (list (magit-commit-arguments)))
   (require 'magit)
   (with-temp-buffer
-    (let ((gptel-backend (gptel-get-backend "Volcengine Coding"))
-	  (gptel-model 'ark-code-latest)
+    (let ((gptel-backend gptel-backend)
+	  (gptel-model gptel-model)
 	  (dir default-directory)
 	  gptel-use-context
 	  gptel-use-tools)
