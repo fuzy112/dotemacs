@@ -37,7 +37,7 @@
   "The file to load before the init file.")
 
 (when (file-exists-p pre-init-file)
-                (load pre-init-file nil t))
+  (load pre-init-file nil t))
 
 ;;;; custom
 
@@ -1360,7 +1360,7 @@ value for USE-OVERLAYS."
                    (mode . magit-status-mode)
                    (mode . magit-stash-mode)))
          ("Apps" (or
-                   (mode . eww-mode)
+                  (mode . eww-mode)
                   (mode . telega-chat-mode)
                   (mode . telega-root-mode)
                   (mode . telega-webpage-mode)
@@ -1633,10 +1633,10 @@ then switches to the selected buffer and invokes `recompile'."
     (when (fboundp 'consult-history)
       (keymap-set eshell-hist-mode-map "M-r" #'consult-history)))
   (after-load! em-term
-   (cl-pushnew "journalctl" eshell-visual-commands :test #'equal)
-   (alist-setq! eshell-visual-subcommands
-     "git" '("log" "diff" "show" "grep")
-     "systemctl" '("status" "cat" "show")))
+    (cl-pushnew "journalctl" eshell-visual-commands :test #'equal)
+    (alist-setq! eshell-visual-subcommands
+      "git" '("log" "diff" "show" "grep")
+      "systemctl" '("status" "cat" "show")))
   (require 'eshell-extras))
 
 ;;;; text-mode
@@ -2240,10 +2240,10 @@ confirmed."
              (project-root-file (expand-file-name ".project-root" root))
              ((file-exists-p project-root-file)))
     (with-temp-buffer
-     (insert-file-contents project-root-file)
-     (let ((default-directory root))
-       (mapcar #'expand-file-name
-               (string-lines (buffer-string) t nil))))))
+      (insert-file-contents project-root-file)
+      (let ((default-directory root))
+        (mapcar #'expand-file-name
+                (string-lines (buffer-string) t nil))))))
 
 (after-load! project
   (when (commandp 'project-prefix-or-any-command)
@@ -3368,8 +3368,7 @@ Otherwise disable it."
 (defvar post-init-file (locate-user-emacs-file "post-init.el"))
 
 (when (file-exists-p post-init-file)
-
-    (load post-init-file nil t))
+  (load post-init-file nil t))
 
 ;;;; _
 
