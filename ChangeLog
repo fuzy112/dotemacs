@@ -1,5 +1,9 @@
 2026-04-18  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (compilation-error-regexp-alist): Remove unneeded rules.
+
+2026-04-18  Zhengyi Fu  <i@fuzy.me>
+
 	Add configuration for nix-ts-mode
 
 	* init.el (major-mode-remap-alist): Add (nix-mode . nix-ts-mode).
