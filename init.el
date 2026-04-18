@@ -2070,6 +2070,9 @@ With no active region, operate on the whole buffer."
     (apply args)))
 
 ;;;; nix-mode
+
+(add-to-list 'major-mode-remap-alist '(nix-mode . nix-ts-mode))
+
 (defun nix-repl-setup ()
   (setq-local comint-indirect-setup-function #'nix-mode)
   (comint-fontify-input-mode)
@@ -2094,13 +2097,13 @@ Returns the process object for the *Nix-REPL* buffer."
   "Send STR to the Nix REPL.
 If PROC is not provided, uses the default Nix REPL process."
   (interactive
-   (list
-    (let (minibuffer-history histpos)
-      (with-current-buffer (process-buffer (nix-get-repl))
-        (setq minibuffer-history (ring-elements comint-input-ring))
-        (setq histpos comint-input-ring-index))
-      (read-string "Nix expr: " nil `(minibuffer-history . ,histpos)))
-    nil))
+   (list (let (minibuffer-history histpos)
+           (with-current-buffer (process-buffer (nix-get-repl))
+             (setq minibuffer-history (ring-elements comint-input-ring))
+             (setq histpos comint-input-ring-index))
+           (read-string "Nix expr: " nil `(minibuffer-history . ,histpos)))
+         nil)
+   nix-mode)
   (unless proc
     (setq proc (nix-get-repl)))
   (comint-send-string proc str)
@@ -2111,26 +2114,27 @@ If PROC is not provided, uses the default Nix REPL process."
 If PROC is not provided, uses the default Nix REPL process."
   (interactive (list (use-region-beginning)
                      (use-region-end)
-                     nil))
+                     nil)
+               nix-mode)
   (nix-send-string-to-repl (buffer-substring start end) proc))
 
 (defun nix-send-line-to-repl (&optional proc)
   "Send the current line to the Nix REPL.
 If PROC is provided, send input to that process instead of using comint."
-  (interactive)
+  (interactive nil nix-mode)
   (nix-send-region-to-repl (line-beginning-position) (line-end-position) proc))
 
 (defun nix-send-buffer-to-repl (&optional proc)
   "Send the entire current buffer to the Nix REPL.
 If PROC is provided, send input to that process instead of using comint."
-  (interactive)
+  (interactive nil nix-mode)
   (nix-send-region-to-repl (point-min) (point-max) proc))
 
 (defun nix-load-file (&optional proc)
   "Load the current file or a selected file into the Nix REPL.
 With prefix argument, prompt for a file to load.
 If PROC is provided, load file to that process instead of using comint."
-  (interactive)
+  (interactive nil nix-mode)
   (let ((file (if (or current-prefix-arg (not (buffer-file-name)))
                   (read-file-name "Nix file: ")
                 (buffer-file-name))))
@@ -2140,7 +2144,7 @@ If PROC is provided, load file to that process instead of using comint."
   "Load the current flake into the Nix REPL.
 With prefix argument, prompt for a file to find the flake from.
 If PROC is provided, load file to that process instead of using comint."
-  (interactive)
+  (interactive nil nix-mode)
   (let ((flake (if current-prefix-arg
                    (read-directory-name "Starting directory: ")
                  (locate-dominating-file default-directory "flake.nix"))))
@@ -2149,13 +2153,13 @@ If PROC is provided, load file to that process instead of using comint."
 (defun nix-repl-reload (&optional proc)
   "Reload files loaded in the REPL.
 If PROC is provided, use that process instead of comint."
-  (interactive)
+  (interactive nil nix-mode)
   (nix-send-string-to-repl (concat ":r\n") proc))
 
 (defun nix-switch-to-repl ()
   "Switch to the Nix REPL buffer in another window, creating it if necessary.
 Returns the REPL process."
-  (interactive)
+  (interactive nil nix-mode)
   (switch-to-buffer-other-window (get-buffer-create "*Nix-REPL*"))
   (unless (comint-check-proc (current-buffer))
     (nix--make-repl-in-buffer (current-buffer))
@@ -2164,6 +2168,18 @@ Returns the REPL process."
 
 (after-load! nix-mode
   (define-keymap :keymap nix-mode-map
+    "C-c C-l" #'nix-load-file
+    "C-c C-f" #'nix-load-flake
+    "C-c C-r" #'nix-repl-reload
+    "C-c C-z" #'nix-switch-to-repl
+    "C-c C-n" #'nix-send-region-to-repl
+    "C-c C-s" #'nix-send-string-to-repl
+    "C-c C-b" #'nix-send-buffer-to-repl
+    "C-c C-e" #'nix-send-line-to-repl))
+
+(after-load! nix-ts-mode
+  (require 'nix-mode)                   ; for REPL
+  (define-keymap :keymap nix-ts-mode-map
     "C-c C-l" #'nix-load-file
     "C-c C-f" #'nix-load-flake
     "C-c C-r" #'nix-repl-reload
