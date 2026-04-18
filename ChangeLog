@@ -1,3 +1,10 @@
+2026-04-18  Zhengyi Fu  <i@fuzy.me>
+
+	+gptel-commit-staged: Don't force to use ark-code-latest.
+
+	* user-lisp/gptel-config.el (+gptel-commit-staged): Use current
+	gptel-backend and gptel-model.
+
 2026-04-17  Zhengyi Fu  <i@fuzy.me>
 
 	Use buffer-local whitespace-style for prog-mode hooks.
