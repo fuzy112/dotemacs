@@ -1536,7 +1536,7 @@ value for USE-OVERLAYS."
 (setopt compilation-always-kill t
         compilation-ask-about-save t
         compilation-scroll-output 'first-error
-        compilation-auto-jump-to-first-error 'if-location-known)
+        compilation-auto-jump-to-first-error nil)
 
 (defun process-use-pipe ()
   (setq-local process-connection-type nil))
@@ -2172,6 +2172,11 @@ Returns the REPL process."
     "C-c C-s" #'nix-send-string-to-repl
     "C-c C-b" #'nix-send-buffer-to-repl
     "C-c C-e" #'nix-send-line-to-repl))
+
+(after-load! (:and (:or nix-mode nix-ts-mode) compile)
+  (alist-setq! compilation-error-regexp-alist-alist
+    nix '("^ *at \\([^:]+\\):\\([0-9]+\\):\\([0-9]+\\):" 1 2 3))
+  (add-to-list 'compilation-error-regexp-alist 'nix))
 
 ;;;; ruby
 

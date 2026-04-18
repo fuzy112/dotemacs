@@ -1,5 +1,13 @@
 2026-04-18  Zhengyi Fu  <i@fuzy.me>
 
+	Add Nix error regexp to compilation.
+
+	* init.el: (compilation-auto-jump-to-first-error): Set to nil.
+	(compilation-error-regexp-alist-alist)
+	(compilation-error-regexp-alist): Add regexp for Nix.
+
+2026-04-18  Zhengyi Fu  <i@fuzy.me>
+
 	Update compilation configuration
 
 	* init.el: Enable auto-jump to first error in compilation.
