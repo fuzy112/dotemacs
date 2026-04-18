@@ -1538,6 +1538,15 @@ value for USE-OVERLAYS."
         compilation-scroll-output 'first-error
         compilation-auto-jump-to-first-error nil)
 
+(after-load! compile
+  (setq compilation-error-regexp-alist
+        (seq-difference compilation-error-regexp-alist
+                        '( absoft ada aix ant borland comma msft
+                           edg-1 edg-2 epc ftnchek jikes-file jikes-line
+                           cucumber lcc makepp mips-1 mips-2 oracle rxp
+                           sparc-pascal-file sparc-pascal-line
+                           sparc-pascal-example sun sun-ada watcom 4bsd))))
+
 (defun process-use-pipe ()
   (setq-local process-connection-type nil))
 (add-hook 'compilation-mode-hook #'process-use-pipe)
