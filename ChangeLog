@@ -1,5 +1,16 @@
 2026-04-18  Zhengyi Fu  <i@fuzy.me>
 
+	Add configuration for nix-ts-mode
+
+	* init.el (major-mode-remap-alist): Add (nix-mode . nix-ts-mode).
+	(nix-ts-mode-map): Add custom commands.
+	(nix-send-string-to-repl, nix-send-region-to-repl)
+	(nix-send-line-to-repl, nix-send-buffer-to-repl, nix-load-file)
+	(nix-load-flake, nix-repl-reload, nix-switch-to-repl): Mark as
+	commands for nix-mode.
+
+2026-04-18  Zhengyi Fu  <i@fuzy.me>
+
 	Add Nix error regexp to compilation.
 
 	* init.el: (compilation-auto-jump-to-first-error): Set to nil.
