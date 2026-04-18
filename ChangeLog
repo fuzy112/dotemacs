@@ -1,5 +1,9 @@
 2026-04-18  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (consult-buffer-filter): Add *Compile-Log* and Pp Eval Output.
+
+2026-04-18  Zhengyi Fu  <i@fuzy.me>
+
 	+gptel-commit-staged: Don't force to use ark-code-latest.
 
 	* user-lisp/gptel-config.el (+gptel-commit-staged): Use current
