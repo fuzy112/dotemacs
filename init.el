@@ -1254,6 +1254,8 @@ value for USE-OVERLAYS."
 
   (add-to-list 'consult-buffer-filter "\\*Async-native-compile-log\\*")
   (add-to-list 'consult-buffer-filter "\\*envrc\\*")
+  (add-to-list 'consult-buffer-filter "\\*Compile-Log\\*")
+  (add-to-list 'consult-buffer-filter "\\*Pp Eval Output\\*")
   (add-to-list 'consult-buffer-filter "\\*Warnings\\*")
   (add-to-list 'consult-buffer-filter "\\*Messages\\*"))
 
