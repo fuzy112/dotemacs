@@ -1,5 +1,15 @@
 2026-04-18  Zhengyi Fu  <i@fuzy.me>
 
+	Update compilation configuration
+
+	* init.el: Enable auto-jump to first error in compilation.
+	Make project compilation buffers the default in consult.
+	(compilation-auto-jump-to-first-error): Set to if-location-known.
+	Move :default from compilation-buffer source to project-compilation-buffer.
+	Convert setq to setopt.
+
+2026-04-18  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (consult-buffer-filter): Add *Compile-Log* and Pp Eval Output.
 
 2026-04-18  Zhengyi Fu  <i@fuzy.me>

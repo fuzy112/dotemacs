@@ -1533,9 +1533,10 @@ value for USE-OVERLAYS."
 
 ;;;; compile
 
-(setq compilation-always-kill t
-      compilation-ask-about-save t
-      compilation-scroll-output 'first-error)
+(setopt compilation-always-kill t
+        compilation-ask-about-save t
+        compilation-scroll-output 'first-error
+        compilation-auto-jump-to-first-error 'if-location-known)
 
 (defun process-use-pipe ()
   (setq-local process-connection-type nil))
@@ -1548,7 +1549,6 @@ value for USE-OVERLAYS."
      :face     consult-buffer
      :history  smart-recompile-buffer-history
      :state    ,#'consult--buffer-preview
-     :default  t
      :items
      ,(lambda ()
         (consult--buffer-query :predicate #'compilation-buffer-p
@@ -1564,6 +1564,7 @@ value for USE-OVERLAYS."
      :history  smart-recompile-buffer-history
      :state    ,#'consult--buffer-preview
      :enabled  ,(lambda () consult-project-function)
+     :default  t
      :items
      ,(lambda ()
         (when-let* ((root (consult--project-root)))
