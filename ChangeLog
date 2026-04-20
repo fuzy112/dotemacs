@@ -1,5 +1,9 @@
 2026-04-20  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (consult-buffer-filter): Update `consult-buffer-filter'.
+
+2026-04-20  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (meow-tab): Use `cond-let*'.
 
 2026-04-18  Zhengyi Fu  <i@fuzy.me>
