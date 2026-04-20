@@ -29,7 +29,8 @@
   (load early-init-file nil t))
 (require 'dotemacs-core)
 (eval-when-compile
-  (require 'compat))
+  (require 'compat)
+  (require 'cond-let))
 
 ;;;; pre-init.el
 
@@ -144,14 +145,15 @@
 If the region is active, indent it.
 Otherwise, switch to the other window."
   (interactive)
-  (let* ((key "TAB")
-         (cmd (keymap-local-lookup key)))
-    (cond ((commandp cmd)
-           (call-interactively cmd))
-          ((use-region-p)
-           (meow-indent))
-          (t
-           (call-interactively 'other-window)))))
+  (cond-let*
+    [[key "TAB"]
+     [cmd (keymap-local-lookup key)]]
+    ((use-region-p)
+     (meow-indent))
+    ((commandp cmd)
+     (call-interactively cmd))
+    (t
+     (call-interactively 'other-window))))
 
 ;; (put 'meow-tab 'repeat-map other-window-repeat-map)
 
