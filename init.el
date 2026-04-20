@@ -1254,6 +1254,8 @@ value for USE-OVERLAYS."
   ;; filter internal buffers
   (add-to-list 'consult-buffer-filter "\\`\\*EGLOT .* \\(?:stderr\\|output\\|events\\)\\*\\'")
   (add-to-list 'consult-buffer-filter "\\`magit-process: .*\\'")
+  (add-to-list 'consult-buffer-filter "\\`.*\\.~\\(?:{.+}\\|[0-9a-f]\\{7\\}\\)~\\'")
+  (add-to-list 'consult-buffer-filter "\\`log-edit-files\\'")
   (add-to-list 'consult-buffer-filter "\\`\\*Async-native-compile-log\\*\\'")
   (add-to-list 'consult-buffer-filter "\\`nix-edit\\'")
   (add-to-list 'consult-buffer-filter "\\`\\*envrc\\*\\'")
