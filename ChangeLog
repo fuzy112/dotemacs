@@ -1,5 +1,12 @@
 2026-04-20  Zhengyi Fu  <i@fuzy.me>
 
+	Update consult-buffer-filter
+
+	* init.el (consult-buffer-list): Add magit blob buffers and
+	`log-edit-files'.
+
+2026-04-20  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (org-capture-templates): Remove template for Note.
 
 2026-04-20  Zhengyi Fu  <i@fuzy.me>
