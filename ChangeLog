@@ -1,5 +1,9 @@
 2026-04-20  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (org-capture-templates): Remove template for Note.
+
+2026-04-20  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (consult-buffer-filter): Update `consult-buffer-filter'.
 
 2026-04-20  Zhengyi Fu  <i@fuzy.me>
