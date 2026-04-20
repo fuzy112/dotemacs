@@ -43,8 +43,8 @@
     (telega-notifications-mode)))
 
 (after-load! consult
-  (add-to-list 'consult-buffer-filter (concat "\\`" (regexp-quote (telega-symbol 'telegram))))
-  (add-to-list 'consult-buffer-filter "\\`\\*Telega"))
+  (add-to-list 'consult-buffer-filter (concat "\\`" (substring-no-properties (telega-symbol 'telegram))) 'append)
+  (add-to-list 'consult-buffer-filter "\\`\\*Telega" 'append))
 
 (defvar telega-cache-dir)
 (define-advice telega (:around (&rest args) default-directory)
