@@ -2565,19 +2565,18 @@ Then refresh all windows displaying the current buffer."
 
 ;;;; rime
 
-(setopt rime-disable-predicates
-        '(meow-normal-mode-p
-          ;; meow-keypad-mode-p
-          ;; meow-motion-mode-p
-          ;; meow-beacon-mode-p
-          rime-predicate-prog-in-code-p
-          rime-predicate-after-ascii-char-p))
+(after-load! rime
+  (setopt rime-disable-predicates
+          '(meow-normal-mode-p
+            ;; meow-keypad-mode-p
+            ;; meow-motion-mode-p
+            ;; meow-beacon-mode-p
+            rime-predicate-prog-in-code-p
+            rime-predicate-after-ascii-char-p))
+  (setopt rime-inline-predicates
+          '(rime-predicate-space-after-cc-p)))
 
-;; 自动中英文
-(setopt rime-inline-predicates
-        '(rime-predicate-space-after-cc-p))
-
-(setq default-input-method "rime")
+(setq-default default-input-method "rime")
 
 ;;;; kinsoku
 

@@ -1,5 +1,14 @@
 2026-04-20  Zhengyi Fu  <i@fuzy.me>
 
+	Fix rime configuration
+
+	* init.el (rime-disable-predicates, rime-inline-predicates): Set
+	the values after rime is loaded, because the functions are defined
+	in rime.el.
+	(default-input-method): Set by setq-default.
+
+2026-04-20  Zhengyi Fu  <i@fuzy.me>
+
 	Update consult-buffer-filter
 
 	* init.el (consult-buffer-list): Add magit blob buffers and
