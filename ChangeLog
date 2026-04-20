@@ -1,5 +1,15 @@
 2026-04-20  Zhengyi Fu  <i@fuzy.me>
 
+	Replace startup hooks with `after-init!'
+
+	* init.el (dotemacs-theme-refresh): Run on startup
+	unconditionally.
+	(envrc-global-mode, doom-modeline-mode): Use `after-init!' instead
+	of `emacs-startup-hook'.
+	(savehist-mode): Use `after-init!'.
+
+2026-04-20  Zhengyi Fu  <i@fuzy.me>
+
 	EWW: remove unneeded headers from miniflux
 
 	* init.el (eww+miniflux-trim): Restored from commit
