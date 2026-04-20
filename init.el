@@ -361,6 +361,7 @@ Otherwise, switch to the other window."
 (deftheme dotemacs
   "Central theme for customizing fonts and face properties in this configuration.")
 
+;; Force face settings in this theme to take immediate effect.
 (put 'dotemacs 'theme-immediate t)
 
 ;; Activate the custom theme immediately after definition
@@ -492,11 +493,12 @@ attributes."
   (remove-hook 'server-after-make-frame-hook #'dotemacs-theme-refresh)
   (remove-hook 'enable-theme-functions #'dotemacs-theme-refresh))
 
-(if (daemonp)
-    ;; Refresh theme for new frames in server mode
-    (add-hook 'server-after-make-frame-hook #'dotemacs-theme-refresh t)
-  ;; Refresh on startup
-  (add-hook 'emacs-startup-hook #'dotemacs-theme-refresh))
+(when (daemonp)
+  ;; Refresh theme for new frames in server mode
+  (add-hook 'server-after-make-frame-hook #'dotemacs-theme-refresh t))
+
+(after-init!
+  (dotemacs-theme-refresh))
 
 ;; Refresh theme when themes are enabled
 (add-hook 'enable-theme-functions #'dotemacs-theme-refresh)
@@ -2632,7 +2634,8 @@ Then refresh all windows displaying the current buffer."
                                       per-project-compile-history
                                       corfu-history))
 
-(add-hook 'after-init-hook #'savehist-mode)
+(after-init!
+  (savehist-mode))
 
 ;;;; auth-sources
 (after-load! auth-sources
@@ -3055,7 +3058,8 @@ not used, but is required by the hook."
 
 ;;;; envrc
 
-(add-hook 'emacs-startup-hook #'envrc-global-mode)
+(after-init!
+ (envrc-global-mode))
 
 ;;;; p-search
 
@@ -3083,7 +3087,8 @@ then saves the buffer.  It skips processing in `diff-mode' and `log-edit-mode'."
   (setopt doom-modeline-gnus t
           doom-modeline-irc t
           doom-modeline-modal-icon doom-modeline-icon))
-(add-hook 'emacs-startup-hook #'doom-modeline-mode)
+(after-init!
+ (doom-modeline-mode))
 
 ;;; message-ring
 
