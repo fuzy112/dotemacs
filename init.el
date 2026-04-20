@@ -2857,12 +2857,7 @@ not used, but is required by the hook."
 
   (add-to-list 'org-capture-templates
                '("j" "Journal" entry (file+datetree "journal.org")
-                 "* %U - %^{Heading} %^g\n%?\n"))
-
-  (add-to-list 'org-capture-templates
-               `("n" "Note" entry (file "notes.org")
-                 ,(concat "* Note (%a)\n"
-                          "/Entered on/ %U\n" "\n" "%?"))))
+                 "* %U - %^{Heading} %^g\n%?\n")))
 
 ;;;; Denote
 
