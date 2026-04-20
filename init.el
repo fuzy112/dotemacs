@@ -3013,6 +3013,20 @@ not used, but is required by the hook."
        " ")
     args))
 
+;;;; EWW
+
+(declare-function eww-current-url "eww.el")
+
+(defun eww+miniflux-trim ()
+  (when (string-match-p "^https://miniflux\\." (eww-current-url))
+    (let ((inhibit-read-only t))
+      (save-excursion
+        (goto-char (point-min))
+        (when-let* ((match (text-property-search-forward 'shr-target-id "page-header-title" 'member)))
+          (delete-region (point-min) (prop-match-beginning match)))))))
+
+(add-hook 'eww-after-render-hook 'eww+miniflux-trim)
+
 ;;;; undo-fu-session
 
 (setq undo-fu-session-compression 'zst)

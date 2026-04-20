@@ -1,5 +1,12 @@
 2026-04-20  Zhengyi Fu  <i@fuzy.me>
 
+	EWW: remove unneeded headers from miniflux
+
+	* init.el (eww+miniflux-trim): Restored from commit
+	ca6c1831e75d62d43c4e38b798b06053b9ae90a2.
+
+2026-04-20  Zhengyi Fu  <i@fuzy.me>
+
 	Fix rime configuration
 
 	* init.el (rime-disable-predicates, rime-inline-predicates): Set
