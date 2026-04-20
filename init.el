@@ -1128,9 +1128,7 @@ value for USE-OVERLAYS."
 (after-load! consult
   (setq consult-after-jump-hook
         (cl-nsubstitute #'reposition-window #'recenter
-                        consult-after-jump-hook))
-
-  (add-to-list 'consult-buffer-filter "\\`\\*EGLOT"))
+                        consult-after-jump-hook)))
 
 (setq register-preview-delay 0.5
       register-preview-function #'consult-register-format)
@@ -1246,20 +1244,23 @@ value for USE-OVERLAYS."
      consult-theme
      :preview-key '(:debounce 0.4 any)
      consult-source-file-register
-     :preview-key '(:debounce 0.4 any))
-    (consult-customize
+     :preview-key '(:debounce 0.4 any)
      consult-source-recent-file
      :enabled (lambda () (require 'recentf) (default-toplevel-value 'recentf-mode))))
 
   ;; url-only bookmark type
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow)))
 
-  (add-to-list 'consult-buffer-filter "\\*Async-native-compile-log\\*")
-  (add-to-list 'consult-buffer-filter "\\*envrc\\*")
-  (add-to-list 'consult-buffer-filter "\\*Compile-Log\\*")
-  (add-to-list 'consult-buffer-filter "\\*Pp Eval Output\\*")
-  (add-to-list 'consult-buffer-filter "\\*Warnings\\*")
-  (add-to-list 'consult-buffer-filter "\\*Messages\\*"))
+  ;; filter internal buffers
+  (add-to-list 'consult-buffer-filter "\\`\\*EGLOT .* \\(?:stderr\\|output\\|events\\)\\*\\'")
+  (add-to-list 'consult-buffer-filter "\\`magit-process: .*\\'")
+  (add-to-list 'consult-buffer-filter "\\`\\*Async-native-compile-log\\*\\'")
+  (add-to-list 'consult-buffer-filter "\\`nix-edit\\'")
+  (add-to-list 'consult-buffer-filter "\\`\\*envrc\\*\\'")
+  (add-to-list 'consult-buffer-filter "\\`\\*Compile-Log\\*\\'")
+  (add-to-list 'consult-buffer-filter "\\`\\*Pp Eval Output\\*\\'")
+  (add-to-list 'consult-buffer-filter "\\`\\*Warnings\\*\\'")
+  (add-to-list 'consult-buffer-filter "\\`\\*Messages\\*\\'"))
 
 
 (defun +recenter-top-30% ()
