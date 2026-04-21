@@ -2903,6 +2903,14 @@ not used, but is required by the hook."
 (after-load! (:and denote consult)
   (consult-denote-mode))
 
+(after-load! consult-denote
+  (when (executable-find "fd")
+    (setopt consult-denote-find-command #'consult-fd))
+  (cond ((executable-find "rg")
+         (setopt consult-denote-grep-command #'consult-ripgrep))
+        ((executable-find "ug")
+         (setopt consult-denote-grep-command #'consult-ugrep))))
+
 (after-load! denote
   ;; Add encrypted variants of all configured denote file types to `denote-file-types'
   (cl-loop for (name . props) in (cl-copy-list denote-file-types)

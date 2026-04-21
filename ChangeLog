@@ -1,5 +1,13 @@
 2026-04-21  Zhengyi Fu  <i@fuzy.me>
 
+	consult-denote: Use fd, ripgrep, or ugrep when available
+
+	* init.el (consult-denote-find-command)
+	(consult-denote-grep-command): Configure to use fd, ripgrep, or
+	ugrep when available.
+
+2026-04-21  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (org-agenda-files): Set to "~/org/.agenda-files.txt".
 
 2026-04-21  Zhengyi Fu  <i@fuzy.me>
