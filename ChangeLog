@@ -1,5 +1,12 @@
 2026-04-21  Zhengyi Fu  <i@fuzy.me>
 
+	Fix `xref-show-definitions-function'
+
+	* init.el (+xref-window-quit): Fix.
+	(+xref--show-definition): Simplify.
+
+2026-04-21  Zhengyi Fu  <i@fuzy.me>
+
 	gptel: Add Jira tools and async HTTP helper, remove obsolete commands
 
 	* user-lisp/gptel-config.el (gptel-tools--url-retrieve): New function for
