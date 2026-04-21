@@ -1,5 +1,13 @@
 2026-04-21  Zhengyi Fu  <i@fuzy.me>
 
+	casual: Add configuration
+
+	* user-lisp/casual-config.el: New file.  Set up Casual menus and
+	keybindings for org-agenda, bookmark, calc, dired, ibuffer, info,
+	isearch, re-builder, eshell, eww, and editkit.
+
+2026-04-21  Zhengyi Fu  <i@fuzy.me>
+
 	consult-denote: Use fd, ripgrep, or ugrep when available
 
 	* init.el (consult-denote-find-command)
