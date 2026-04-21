@@ -1920,7 +1920,7 @@ highlighted according to the orderless matching style."
 (defvar xref-buffer-name)
 
 (defun +xref-window-quit ()
-  (when (bufferp xref-buffer-name)
+  (when (buffer-live-p (get-buffer xref-buffer-name))
     (quit-windows-on xref-buffer-name)))
 
 (declare-function xref-show-definitions-buffer-at-bottom "xref.el")
@@ -1930,16 +1930,14 @@ highlighted according to the orderless matching style."
 Otherwise use `consult-xref'.
 
 See `xref-show-xrefs' for FETCHER and ALIST."
-  (let ((xrefs (funcall fetcher)))      ; retrieve candidate xrefs list
-    (cond ((length= xrefs 1)            ; exactly one result: jump directly
-           (+xref-window-quit)          ; close any temporary xref window
-           (xref-show-definitions-buffer-at-bottom fetcher alist))
-          ((length< xrefs +xref--max-definitions-in-buffer)
-                                        ; few results: use a small dedicated buffer
-           (xref-show-definitions-buffer-at-bottom fetcher alist))
-          (t                            ; many results: let consult show them
-           (+xref-window-quit)
-           (consult-xref fetcher alist)))))
+  (+xref-window-quit)
+  (cond-let*
+    [[xrefs (funcall fetcher)]]        ; retrieve candidate xrefs list
+    ((length< xrefs +xref--max-definitions-in-buffer)
+     ;; few results: use a small dedicated buffer
+     (xref-show-definitions-buffer-at-bottom fetcher alist))
+    (t                           ; many results: let consult show them
+     (consult-xref fetcher alist))))
 
 (after-load! xref
   (setq xref-search-program
