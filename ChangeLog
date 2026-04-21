@@ -1,3 +1,21 @@
+2026-04-21  Zhengyi Fu  <i@fuzy.me>
+
+	gptel: Add Jira tools and async HTTP helper, remove obsolete commands
+
+	* user-lisp/gptel-config.el (gptel-tools--url-retrieve): New function for
+	asynchronous URL retrieval with configurable timeout.
+	(gptel-tools-default-timeout): New variable.
+	(gptel-tools--jira-request-async, gptel-tools--search-jira-issues-async)
+	(gptel-tools--get-jira-issue-async): New functions for Jira REST API access.
+	(gptel-tools-jira-host, gptel-tools--get-jira-token): New variable and
+	function for Jira authentication.
+	(search_jira_issues, get_jira_issue): New gptel tools for Jira integration.
+	(+gptel-review-pullreq, +gptel-shellcheck, +gptel-shellcheck-fix): Remove
+	obsolete commands and tools.
+	(+gptel-commit-staged): Use declare-function instead of require for
+	magit-commit-argument.  Add defvar declarations for log-edit-listfun and
+	log-edit-diff-function.
+
 2026-04-20  Zhengyi Fu  <i@fuzy.me>
 
 	Replace startup hooks with `after-init!'
