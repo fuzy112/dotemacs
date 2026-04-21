@@ -2837,6 +2837,13 @@ not used, but is required by the hook."
     "C-c o m" #'org-modern-mode
     "M-g o"   #'consult-org-heading))
 
+;; Removing filenames by removing %-12:c from the default prefixes
+(setopt org-agenda-prefix-format
+        '((agenda . " %i %?-12t% s")
+          (todo . " %i ")
+          (tags . " %i ")
+          (search . " %i ")))
+
 (after-load! ox-latex
   (alist-setq! org-latex-classes
     "ctexart" '("\\documentclass[11pt]{ctexart}"

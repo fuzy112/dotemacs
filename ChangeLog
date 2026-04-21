@@ -1,5 +1,9 @@
 2026-04-21  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (org-agenda-prefix-format): Removing %c specifiers.
+
+2026-04-21  Zhengyi Fu  <i@fuzy.me>
+
 	Fix `xref-show-definitions-function'
 
 	* init.el (+xref-window-quit): Fix.
