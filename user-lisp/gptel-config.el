@@ -39,6 +39,7 @@
 (require 'with-editor)
 (require 'flymake)
 (require 'dom)
+(require 'json)
 
 ;;; Models
 
@@ -230,137 +231,6 @@ BEG and END define the region to process."
   :system "You are a search assistant powered by Kagi. Provide accurate, concise
 answers based on search results. Always cite sources when possible.")
 
-;;; Commands
-
-(defun +gptel-review-pullreq (pullreq)
-  "Initiate a review session for a pull request using GPEL.
-
-PULLREQ can be a forge pull request object or nil, in which case the
-function will prompt the user to select a pull request to review.
-
-The review session will open in a dedicated buffer where the user can
-compose their review comments. The session is configured with a specific
-backend, model, and tools to assist with the review process. The system
-message sets the context for the review, emphasizing thoroughness and high
-standards.
-
-The function inserts a prompt for the user to review the pull request,
-guiding them to consider code quality, commit quality, and JIRA compliance.
-It then sends the prompt to the GPT backend for processing."
-  (interactive (list (or (forge-current-pullreq)
-			 (forge-get-pullreq (forge-read-pullreq "Pull-request: ")))))
-  (let* ((session-buffer (gptel (format "*Review on PR #%s*" (oref pullreq number)))))
-    (pop-to-buffer session-buffer)
-    (with-current-buffer session-buffer
-      (setq-local gptel-backend (gptel-get-backend "Copilot")
-		  gptel-model 'claude-3.7-sonnet
-		  gptel-tools (append (gptel-get-tool "filesystem")
-				      (gptel-get-tool "github")
-				      (gptel-get-tool "jira")
-				      (gptel-get-tool "command"))
-		  gptel--system-message "You are an experienced senior developer and a strict code reviewer with high standards.
-Your role is to thoroughly review pull requests focusing on:
-1. Code Quality:
-   - Clean code principles
-   - Performance implications
-   - Security considerations
-   - Design patterns and architecture
-   - Test coverage
-2. Commit Quality:
-   - Clear and descriptive commit messages
-   - Logical commit history
-   - Appropriate commit size
-3. JIRA Compliance:
-   - Ticket description matches implementation
-   - All acceptance criteria met
-   - Proper ticket status and linking
-
-Provide specific, actionable feedback and don't hesitate to request changes if standards aren't met.
-Remember to be thorough, constructive, and maintain high quality standards!")
-      (insert (format "Please review pull request #%s thoroughly.\n\n" (oref pullreq number)))
-      (insert "Consider:
-
-1. Is the code implementation clean, efficient, and secure?
-2. Are commit messages clear and history well-structured?
-3. Does the implementation fully satisfy the JIRA ticket requirements?
-
-Provide your detailed review with specific recommendations for improvement if needed.")
-      (gptel-send))))
-
-;;;###autoload
-(defun +gptel-shellcheck (filename)
-  "Run shellcheck to analyze shell scripts for errors, bugs, and potential pitfalls.
-
-FILENAME is the path to the shell script file to be analyzed.
-Excludes specific checks for source files (SC1091) and unused variables (SC2034).
-
-Returns the shellcheck output as a string."
-  (with-temp-buffer
-    (process-file "shellcheck" nil t nil
-		  (file-local-name (expand-file-name filename)) "--exclude=SC1091,SC2034")
-    (buffer-string)))
-
-(gptel-make-tool
- :name "shellcheck"
- :function #'+gptel-shellcheck
- :description "Run shellcheck to analyze shell scripts for errors, bugs, and potential pitfalls. Excludes specific checks for source files (SC1091) and unused variables (SC2034)."
- :args (list '(:name "filename"
-		     :type string
-		     :description "Path to the shell script file to be analyzed."))
- :category "command"
- :include t)
-
-(defun +gptel-shellcheck-fix (file)
-  (interactive
-   (list (or (and current-prefix-arg (read-file-name "File: "))
-	     (buffer-file-name))))
-  (with-current-buffer (find-buffer-visiting file)
-    (setq-local flymake-show-diagnostics-at-end-of-line 'fancy)
-    (flymake-mode 1))
-  (let* ((short-name (file-name-nondirectory file))
-	 (gpt-buf (gptel (format "*ShellCheck/%s*" short-name))))
-    (pop-to-buffer gpt-buf)
-    (with-current-buffer gpt-buf
-      (setq-local gptel-backend (gptel-get-backend "Copilot"))
-      (setq-local gptel-model 'claude-3.7-sonnet)
-      (setq-local gptel-tools
-		  (append (gptel-get-tool "filesystem")
-			  (ensure-list (gptel-get-tool "search_web"))
-			  (ensure-list (gptel-get-tool "read_url"))
-			  (ensure-list (gptel-get-tool "shellcheck"))))
-      (setq-local gptel-confirm-tool-calls nil)
-      (setq-local gptel-use-tools t)
-      (setq-local gptel--system-message
-		  "You are an expert shell script developer focusing on robustness and security.
-Your role is to analyze and improve shell scripts by:
-
-1. Interpreting shellcheck output with expert judgment
-2. Fixing identified issues while preserving script functionality
-3. Using directive comments (#shellcheck disable=RULES) judiciously when:
-   - The rule produces false positives
-   - The fix would significantly impair readability or maintainability
-   - The current implementation is intentional and secure
-
-For directive comments:
-- Place them at file start (after headers/modelines but before commands)
-  OR immediately before affected commands/blocks
-- Always include clear explanations for why rules are disabled
-- Consider long-term maintenance implications
-
-Provide your analysis with security-focused improvements while maintaining
-script readability and reliability.")
-      (insert (format "Please analyze and improve the shell script '%s':
-
-1. Run shellcheck and examine its output
-2. Provide fixes for legitimate issues
-3. Where shellcheck rules need to be disabled, explain the rationale
-4. Ensure all changes preserve the script's original functionality
-5. Use the `str_replace' tool to edit the script
-"
-		      file))
-      (let ((gptel-use-tools 'force))
-	(gptel-send)))))
-
 ;;;; Custom Directives
 
 (setf (alist-get 'language-learning gptel-directives)
@@ -477,6 +347,8 @@ Output only the commit message, with no extra explanation or surrounding markup.
       (newline)
       (gptel-send))))
 
+(declare-function magit-commit-argument "magit-commit.el")
+
 ;;;###autoload
 (defun +gptel-commit-staged (&optional args)
   "Generate a commit message for staged changes using LLM, then open for editing.
@@ -485,7 +357,6 @@ Queries LLM with the current git status, staged diff, and recent git log
 to generate an appropriate commit message. Then opens the generated message
 in the git editor for final editing before committing."
   (interactive (list (magit-commit-arguments)))
-  (require 'magit)
   (with-temp-buffer
     (let ((gptel-backend gptel-backend)
 	  (gptel-model gptel-model)
@@ -517,6 +388,9 @@ in the git editor for final editing before committing."
 (with-eval-after-load 'magit-commit
   (transient-append-suffix 'magit-commit "c"
     '("L" "Commit with AI-generated message" +gptel-commit-staged)))
+
+(defvar log-edit-listfun)
+(defvar log-edit-diff-function)
 
 ;;;###autoload
 (defun gptel-log-edit-generate-commit-message ()
@@ -741,6 +615,144 @@ Example output: auth-service password validation function"
   :match-prompt "Set bookmark named"
   :backend "Volcengine Coding"
   :model 'ark-code-latest)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Helper for async HTTP requests
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar url-http-response-status)
+
+(defvar gptel-tools-default-timeout 30)
+
+(defun gptel-tools--url-retrieve (callback url &optional timeout)
+  "Retrieve URL asynchronously and call CALLBACK with the result.
+
+CALLBACK is a function that takes one argument, which is either:
+- A list (:error MESSAGE [KEY VALUE]...) if an error occurred
+- The buffer containing the retrieved content on success
+
+URL is the URL to retrieve.
+
+Optional TIMEOUT is the maximum time in seconds to wait for a response.
+If the request takes longer than TIMEOUT seconds, it will be canceled
+and CALLBACK will be called with a timeout error.  If TIMEOUT is nil,
+`gptel-tools-default-timeout' will be used.
+
+Returns the process object for the URL retrieval."
+  (let* ((timer nil)
+	 (process nil)
+         (cb (lambda (result)
+               (when callback
+                 (unwind-protect
+                     (funcall callback result)
+                   (when (timerp timer)
+                     (cancel-timer timer)
+                     (setq timer nil))
+                   (when (processp process)
+                     (delete-process process)
+                     (setq process nil))
+                   (setq callback nil))))))
+    (when (null timeout) (setq timeout gptel-tools-default-timeout))
+    (when (numberp timeout)
+      (setq timer (run-at-time timeout nil
+			       (lambda ()
+				 (when (processp process)
+				   (delete-process process))
+				 (funcall cb (list :error "Timed out"))))))
+    (condition-case err
+	(setq process (get-buffer-process (url-retrieve url cb)))
+      (error (funcall cb (list :error "Failed to retrieve URL"
+			       :internal-error (gptel--to-string err)))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Jira tools
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defvar gptel-tools-jira-host nil)
+
+(defun gptel-tools--get-jira-token ()
+  (cl-assert gptel-tools-jira-host)
+  (auth-info-password
+   (car
+    (or (auth-source-search
+	 :max 1
+	 :host gptel-tools-jira-host)
+	(error "No authinfo for %s" gptel-tools-jira-host)))) )
+
+(defun gptel-tools--jira-request-async (callback url error-label)
+  "Make an authenticated Jira API request asynchronously.
+CALLBACK is called with the parsed JSON result or an error plist.
+URL is the full API endpoint.
+ERROR-LABEL is used in error messages."
+  (condition-case err
+      (let* ((token (gptel-tools--get-jira-token))
+	     (url-request-method "GET")
+	     (url-request-extra-headers
+	      `(("authorization" . ,(format "Bearer %s" token))
+		("accept" . "application/json"))))
+	(gptel-tools--url-retrieve
+	 (lambda (status)
+	   (if (eq (car-safe status) :error)
+	       (funcall callback status)
+	     (condition-case err1
+		 (let* ((json-object-type 'plist)
+			(result (progn
+				  (goto-char (point-min))
+				  (search-forward "\n\n" nil t)
+				  (json-parse-buffer))))
+		   (kill-buffer (current-buffer))
+		   (funcall callback result))
+	       (error
+		(kill-buffer (current-buffer))
+		(funcall callback (list :error error-label
+					      :internal-error (gptel--to-string err1)))))))
+	 url))
+    (error (funcall callback (list :error error-label
+				   :internal-error (gptel--to-string err))))))
+
+(defun gptel-tools--search-jira-issues-async (callback jql max-results)
+  (gptel-tools--jira-request-async
+   callback
+   (format "https://%s/rest/api/2/search?jql=%s&maxResults=%s"
+	   gptel-tools-jira-host
+	   (url-hexify-string jql)
+	   max-results)
+   "Failed to search issues"))
+
+(defun gptel-tools--get-jira-issue-async (callback issue-id)
+  (gptel-tools--jira-request-async
+   callback
+   (format "https://%s/rest/api/2/issue/%s"
+	   gptel-tools-jira-host
+	   issue-id)
+   "Failed to get issue"))
+
+(gptel-make-tool
+ :name "search_jira_issues"
+ :function #'gptel-tools--search-jira-issues-async
+ :async t
+ :description "Search jira for issues"
+ :args (list '(:name "jql"
+		     :type string
+		     :description "JQL query string to search issues")
+	     '(:name "max_results"
+		     :type integer
+		     :description "Maximum number of results to return. \
+The maximum allowed value is 20."))
+ :category "jira")
+
+(gptel-make-tool
+ :name "get_jira_issue"
+ :function #'gptel-tools--get-jira-issue-async
+ :async t
+ :description "Retrieve comprehensive information about a JIRA issue, \
+including its summary, description, status, assignee and related details."
+ :args (list '(:name "issue_id"
+		     :type string
+		     :description "The JIRA issue identifier (e.g., 'TPBUG-1007')"))
+ :category "jira")
 
 (provide 'gptel-config)
 ;;; gptel-config.el ends here
