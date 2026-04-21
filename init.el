@@ -2844,6 +2844,8 @@ not used, but is required by the hook."
           (tags . " %i ")
           (search . " %i ")))
 
+(setopt org-agenda-files (expand-file-name ".agenda-files.txt" org-directory))
+
 (after-load! ox-latex
   (alist-setq! org-latex-classes
     "ctexart" '("\\documentclass[11pt]{ctexart}"
