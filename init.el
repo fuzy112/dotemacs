@@ -2953,7 +2953,7 @@ not used, but is required by the hook."
 ;; Integrations
 (add-hook 'text-mode-hook #'denote-fontify-links-mode)
 (add-hook 'dired-mode-hook #'denote-dired-mode)
-(add-hook #'calendar-mode #'denote-journal-calendar-mode)
+(add-hook 'calendar-mode-hook #'denote-journal-calendar-mode)
 
 (after-load! org-capture
   (add-to-list 'org-capture-templates
