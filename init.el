@@ -3173,10 +3173,10 @@ then saves the buffer.  It skips processing in `diff-mode' and `log-edit-mode'."
 
 
 ;;;; Custom commands
-(defun find-early-init-file ()
+(defun find-user-emacs-file ()
   "Find `early-init-file'."
   (interactive)
-  (find-file early-init-file))
+  (consult-find user-emacs-directory))
 
 (defun find-user-init-file ()
   "Find `user-init-file'."
@@ -3321,7 +3321,7 @@ Otherwise disable it."
 (defvar-keymap file-map
   :doc    "Open file commands."
   :prefix 'file-map
-  "e"     #'find-early-init-file
+  "e"     #'find-user-emacs-file
   "f"     #'find-file
   "i"     #'find-user-init-file
   "a"     #'ffap
