@@ -1,3 +1,13 @@
+2026-04-22  Zhengyi Fu  <i@fuzy.me>
+
+	Replace find-early-init-file with find-user-emacs-file.
+
+	* init.el (find-user-emacs-file): New defun.
+	Use `consult-find' on `user-emacs-directory'.
+	(find-early-init-file): Remove.
+	(file-map): Update "e" binding.
+
+
 2026-04-21  Zhengyi Fu  <i@fuzy.me>
 
 	casual: Add configuration
