@@ -1,5 +1,12 @@
 2026-04-22  Zhengyi Fu  <i@fuzy.me>
 
+	Allow users to override models used by autosuggest commands
+
+	* user-lisp/gptel-config.el (gptel-autosuggest-alist): New variable.
+	(gptel-autosuggest-define): Use it.
+
+2026-04-22  Zhengyi Fu  <i@fuzy.me>
+
 	* user-lisp/gptel-config.el ("Moonshot"): Add kimi-k2.6 model.
 
 2026-04-22  Zhengyi Fu  <i@fuzy.me>

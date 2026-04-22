@@ -548,6 +548,8 @@ callback that inserts the response into the minibuffer."
        (funcall cleanup-function)
        (signal (car err) (cdr err))))))
 
+(defvar gptel-autosuggest-alist nil)
+
 ;;;###autoload
 (progn
   (cl-defun gptel-autosuggest-define
@@ -571,6 +573,9 @@ modify COMMAND.  If NAME is non-nil, the advice is named
 				     ((stringp context) context)
 				     (t (error "Invalid context: expected string or function"))))
 				   (computed-system system)
+				   (params (alist-get command gptel-autosuggest-alist))
+				   (backend (or (alist-get 'backend params) backend))
+				   (model (or (alist-get 'model params) model))
 				   (gptel-backend (cond
 						   ((stringp backend)
 						    (gptel-get-backend backend))
