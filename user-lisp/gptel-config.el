@@ -49,7 +49,14 @@
   :host "api.moonshot.cn"
   :stream t
   :key #'gptel-api-key-from-auth-source
-  :models '((kimi-k2.5
+  :models '((kimi-k2.6
+	     :description "Kimi's most versatile model to date"
+	     :capabilities (media tool-use json)
+	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
+	     :context-window 262144
+	     :input-cost 0.15		; Converted from ¥1.10 (CNY) to USD
+	     :output-cost 3.99)        ; Converted from ¥27.00 (CNY) to USD
+	    (kimi-k2.5
 	     :description "Kimi's most versatile model to date"
 	     :capabilities (media tool-use json)
 	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
