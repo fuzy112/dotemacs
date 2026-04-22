@@ -1,5 +1,11 @@
 2026-04-22  Zhengyi Fu  <i@fuzy.me>
 
+	Avoid org-remove-file unless the file is in agenda file
+
+	* init.el (+org-update-agenda):
+
+2026-04-22  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (consult-denote-grep-command): Use `consult-git-grep' if available.
 
 2026-04-22  Zhengyi Fu  <i@fuzy.me>
