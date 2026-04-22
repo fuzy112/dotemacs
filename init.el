@@ -2870,7 +2870,8 @@ not used, but is required by the hook."
     (if (and (file-in-directory-p (buffer-file-name) org-directory)
              (+org-has-todo-p))
         (org-agenda-file-to-front)
-      (org-remove-file))))
+      (when (org-agenda-file-p)
+        (org-remove-file)))))
 
 (defun +org-setup-auto-agenda ()
   (add-hook 'after-save-hook #'+org-update-agenda nil t))
