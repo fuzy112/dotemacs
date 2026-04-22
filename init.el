@@ -2835,27 +2835,27 @@ not used, but is required by the hook."
   (define-keymap :keymap org-mode-map
     "C-c o M" #'+org/toggle-emphasis-markers
     "C-c o m" #'org-modern-mode
-    "M-g o"   #'consult-org-heading))
+    "M-g o"   #'consult-org-heading)
 
-;; Removing filenames by removing %-12:c from the default prefixes
-(setopt org-agenda-prefix-format
-        '((agenda . " %i %?-12t% s")
-          (todo . " %i ")
-          (tags . " %i ")
-          (search . " %i ")))
+  ;; Removing filenames by removing %-12:c from the default prefixes
+  (setopt org-agenda-prefix-format
+          '((agenda . " %i %?-12t% s")
+            (todo . " %i ")
+            (tags . " %i ")
+            (search . " %i ")))
 
-;; Configure org TODO state workflow:
-;; Sequence of states with keybindings and state change hooks:
-;; - TODO: Incomplete active task, accessible via 't' key
-;; - WAIT: Blocked/pending task, accessible via 'w' key; automatically records timestamp and note when entering this state
-;; - |: Separator marks transition from open to closed states
-;; - DONE: Completed task, accessible via 'd' key
-;; - CANCEL: Abandoned task, accessible via 'c' key; automatically records note when entering this state
-(setopt org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d)" "CANCEL(c@)")))
+  ;; Configure org TODO state workflow:
+  ;; Sequence of states with keybindings and state change hooks:
+  ;; - TODO: Incomplete active task, accessible via 't' key
+  ;; - WAIT: Blocked/pending task, accessible via 'w' key; automatically records timestamp and note when entering this state
+  ;; - |: Separator marks transition from open to closed states
+  ;; - DONE: Completed task, accessible via 'd' key
+  ;; - CANCEL: Abandoned task, accessible via 'c' key; automatically records note when entering this state
+  (setopt org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d)" "CANCEL(c@)")))
 
-;; Set persistent agenda file registry: store list of agenda-enabled files in a dedicated
-;; plaintext file in the org root directory, for easy manual editing and persistence across sessions
-(setopt org-agenda-files (expand-file-name ".agenda-files.txt" org-directory))
+  ;; Set persistent agenda file registry: store list of agenda-enabled files in a dedicated
+  ;; plaintext file in the org root directory, for easy manual editing and persistence across sessions
+  (setopt org-agenda-files (expand-file-name ".agenda-files.txt" org-directory)))
 
 (defun +org-has-todo-p ()
   "Return non-nil if the current buffer contains any active TODO headlines."
