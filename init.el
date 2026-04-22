@@ -2925,7 +2925,9 @@ not used, but is required by the hook."
 (after-load! consult-denote
   (when (executable-find "fd")
     (setopt consult-denote-find-command #'consult-fd))
-  (cond ((executable-find "rg")
+  (cond ((executable-find "git")
+         (setopt consult-denote-grep-command #'consult-git-grep))
+        ((executable-find "rg")
          (setopt consult-denote-grep-command #'consult-ripgrep))
         ((executable-find "ug")
          (setopt consult-denote-grep-command #'consult-ugrep))))
