@@ -1,5 +1,9 @@
 2026-04-22  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (consult-denote-grep-command): Use `consult-git-grep' if available.
+
+2026-04-22  Zhengyi Fu  <i@fuzy.me>
+
 	Dynamically update agenda files
 
 	* init.el (+org-has-todo-p, +org-update-agenda): New helper function.
