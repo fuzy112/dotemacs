@@ -1,5 +1,9 @@
 2026-04-22  Zhengyi Fu  <i@fuzy.me>
 
+	* user-lisp/gptel-config.el ("Moonshot"): Add kimi-k2.6 model.
+
+2026-04-22  Zhengyi Fu  <i@fuzy.me>
+
 	Avoid org-remove-file unless the file is in agenda file
 
 	* init.el (+org-update-agenda):
