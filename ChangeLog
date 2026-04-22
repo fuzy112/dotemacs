@@ -1,5 +1,9 @@
 2026-04-22  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Run `+maybe-init-fontset' in every frame.
+
+2026-04-22  Zhengyi Fu  <i@fuzy.me>
+
 	Allow users to override models used by autosuggest commands
 
 	* user-lisp/gptel-config.el (gptel-autosuggest-alist): New variable.

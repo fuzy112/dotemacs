@@ -315,9 +315,14 @@ Otherwise, switch to the other window."
          (+init-fontsets)
          (setq +fontsets-initialized t))))
 
-(+maybe-init-fontset)
-(unless +fontsets-initialized
-  (add-hook 'server-after-make-frame-hook #'+maybe-init-fontset))
+(after-init!
+  (catch 'quit
+    (dolist (frame (frame-list))
+      (with-selected-frame frame
+        (and (+maybe-init-fontset)
+             (throw 'quit t))))))
+
+(add-hook 'server-after-make-frame-hook #'+maybe-init-fontset)
 
 (setq xft-ignore-color-fonts nil
       face-ignored-fonts nil)
