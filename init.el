@@ -2848,6 +2848,23 @@ not used, but is required by the hook."
 
 (setopt org-agenda-files (expand-file-name ".agenda-files.txt" org-directory))
 
+(defun +org-has-todo-p ()
+  (org-element-map (org-element-parse-buffer 'headline) 'headline
+    (lambda (h) (eq (org-element-property :todo-type h) 'todo))
+    nil 'first-match))
+
+(defun +org-update-agenda ()
+  (when (buffer-file-name)
+    (if (and (file-in-directory-p (buffer-file-name) org-directory)
+             (+org-has-todo-p))
+        (org-agenda-file-to-front)
+      (org-remove-file))))
+
+(defun +org-setup-auto-agenda ()
+  (add-hook 'after-save-hook #'+org-update-agenda nil t))
+
+(add-hook 'org-mode-hook #'+org-setup-auto-agenda)
+
 (after-load! ox-latex
   (alist-setq! org-latex-classes
     "ctexart" '("\\documentclass[11pt]{ctexart}"
