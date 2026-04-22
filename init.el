@@ -2844,6 +2844,8 @@ not used, but is required by the hook."
           (tags . " %i ")
           (search . " %i ")))
 
+(setopt org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d)" "CANCEL(c@)")))
+
 (setopt org-agenda-files (expand-file-name ".agenda-files.txt" org-directory))
 
 (after-load! ox-latex
