@@ -1,5 +1,12 @@
 2026-04-22  Zhengyi Fu  <i@fuzy.me>
 
+	Exclude some variables from `savehist'
+
+	* init.el (savehist-ignored-variables): Add `buffer-name-history'.
+	(savehist-additional-variables): Remove `compile-command'.
+
+2026-04-22  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (org-todo-keywords): Add more keywords.
 
 2026-04-22  Zhengyi Fu  <i@fuzy.me>

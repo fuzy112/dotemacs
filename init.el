@@ -2628,9 +2628,9 @@ Then refresh all windows displaying the current buffer."
 (setq savehist-additional-variables '((kill-ring . 5)
                                       search-ring
                                       regexp-search-ring
-                                      compile-command
                                       per-project-compile-history
                                       corfu-history))
+(setopt savehist-ignored-variables '(buffer-name-history))
 
 (after-init!
   (savehist-mode))
