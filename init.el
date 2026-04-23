@@ -2010,7 +2010,8 @@ With no active region, operate on the whole buffer."
 
 (after-load! paredit
   (define-keymap :keymap paredit-mode-map
-    "C-c DEL" #'delete-char
+    "C-c DEL" #'backward-delete-char
+    "C-c <delete>" #'delete-char
     "M-s" nil
     "M-D" #'paredit-splice-sexp
     "M-?" nil
