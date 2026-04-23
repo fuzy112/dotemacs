@@ -977,8 +977,8 @@ ARGS: see `completion-read-multiple'."
 (keymap-global-set "M-*" #'tempel-insert)
 (defun tempel-setup-capf ()
   (setopt-local completion-at-point-functions
-              (cons #'tempel-expand
-                    completion-at-point-functions)))
+                (cons #'tempel-expand
+                      completion-at-point-functions)))
 (add-hook 'conf-mode-hook 'tempel-setup-capf)
 (add-hook 'prog-mode-hook 'tempel-setup-capf)
 (add-hook 'text-mode-hook 'tempel-setup-capf)
@@ -1429,8 +1429,8 @@ value for USE-OVERLAYS."
 
 (defun turn-on-whitespace-mode-for-prog-mode ()
   (setopt-local whitespace-style '( face trailing empty indentation
-                                  space-before-tab space-after-tab
-                                  missing-newline-at-eof))
+                                    space-before-tab space-after-tab
+                                    missing-newline-at-eof))
   (whitespace-mode))
 
 (dolist (hook '(prog-mode-hook conf-mode-hook yaml-mode-hook))
@@ -3141,7 +3141,7 @@ not used, but is required by the hook."
 ;;;; envrc
 
 (after-init!
- (envrc-global-mode))
+  (envrc-global-mode))
 
 ;;;; p-search
 
@@ -3170,7 +3170,7 @@ then saves the buffer.  It skips processing in `diff-mode' and `log-edit-mode'."
           doom-modeline-irc t
           doom-modeline-modal-icon doom-modeline-icon))
 (after-init!
- (doom-modeline-mode))
+  (doom-modeline-mode))
 
 ;;; message-ring
 
