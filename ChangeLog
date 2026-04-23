@@ -1,5 +1,17 @@
 2026-04-23  Zhengyi Fu  <i@fuzy.me>
 
+	Some VC and `with-editor' related settings
+
+	* init.el (vc-dir-auto-hide-up-to-date): Set to t.
+	("<remap> <async-shell-command>")
+	("<remap> <shell-command>"): Remove keybinding for
+	`with-editor-shell-command' and `with-editor-async-shell-command'.
+	Because they don't obey `shell-command-prompt-show-cwd'.
+	(shell-command-with-editor-mode): Instead, set this to t.
+	And implement autoload of `with-editor' locally.
+
+2026-04-23  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el: Reenable lin-mode.
 
 2026-04-23  Zhengyi Fu  <i@fuzy.me>
