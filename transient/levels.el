@@ -1,4 +1,6 @@
 ((magit-commit
+  (magit-commit-absorb-modules . 5)
+  (magit-commit-autofixup . 5)
   (magit-commit:--date . 4)
   (t . 5))
  (magit-log
