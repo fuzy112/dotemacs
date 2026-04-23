@@ -30,17 +30,6 @@
 (when (fboundp 'igc-start-idle-timer)
   (add-hook 'emacs-startup-hook #'igc-start-idle-timer))
 
-
-;;;; nixos hack
-
-(defconst emacs-is-installed-by-nix
-  (string-prefix-p "/nix/store/" invocation-directory))
-
-(when emacs-is-installed-by-nix
-  (setenv "PATH" (concat (string-join exec-path ":")
-                         (and (getenv "PATH")
-                              (concat ":" (getenv "PATH"))))))
-
 ;;;; File loading
 
 (setq load-prefer-newer t)
