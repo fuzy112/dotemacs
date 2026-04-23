@@ -2365,7 +2365,8 @@ confirmed."
         vc-find-revision-no-save t
         vc-deduce-backend-nonvc-modes t;; Deduce VC backend for all buffers
         vc-use-incoming-outgoing-prefixes t
-        vc-auto-revert-mode t)
+        vc-auto-revert-mode t
+        vc-dir-auto-hide-up-to-date t)
 
 (keymap-set vc-prefix-map "." '+vc/dir-here)
 
@@ -2548,8 +2549,8 @@ Then refresh all windows displaying the current buffer."
 
 ;;;; with-editor
 
-(keymap-global-set "<remap> <async-shell-command>" #'with-editor-async-shell-command)
-(keymap-global-set "<remap> <shell-command>" #'with-editor-shell-command)
+(setopt shell-command-with-editor-mode t)
+
 (add-hook 'eshell-mode-hook #'with-editor-export-editor)
 (add-hook 'shell-mode-hook #'with-editor-export-editor)
 (add-hook 'term-exec-hook #'with-editor-export-editor)
