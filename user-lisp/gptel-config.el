@@ -53,7 +53,7 @@
 	     :description "Kimi's most versatile model to date"
 	     :capabilities (media tool-use json)
 	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
-	     :context-window 262144
+	     :context-window 256
 	     :input-cost 0.15		; Converted from ¥1.10 (CNY) to USD
 	     :output-cost 3.99)        ; Converted from ¥27.00 (CNY) to USD
 	    (kimi-k2.5
@@ -114,11 +114,11 @@
 (gptel-make-openai "Kimi Code"
   :host "api.kimi.com"
   :endpoint "/coding/v1/chat/completions"
-  :header (lambda () (when-let* ((key (gptel--get-api-key)))
-		  `(("Authorization" . ,(concat "Bearer " key))
-		    ;; https://www.reddit.com/r/kimi/comments/1p9b6mc/accessing_the_kimi_for_coding_api/
-		    ("User-Agent" . "claude-code/1.0")
-		    ("X-Client-Name" . "claude-code"))))
+  :header (lambda (&optional info) (when-let* ((key (gptel--get-api-key)))
+				`(("Authorization" . ,(concat "Bearer " key))
+				  ;; https://www.reddit.com/r/kimi/comments/1p9b6mc/accessing_the_kimi_for_coding_api/
+				  ("User-Agent" . "claude-code/1.0")
+				  ("X-Client-Name" . "claude-code"))))
   :stream t
   :key #'gptel-api-key-from-auth-source
   :models '((kimi-for-coding

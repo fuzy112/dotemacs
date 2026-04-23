@@ -1,5 +1,14 @@
 2026-04-23  Zhengyi Fu  <i@fuzy.me>
 
+	Update gptel configuration
+
+	* user-lisp/gptel-config.el ("Kimi Code"): Add an argument to the
+	header lambda.  This is to adapt to the upstream break change in
+	0.9.9.5.
+	("Moonshot"): Fix the :context-window of kimi-k2.6.
+
+2026-04-23  Zhengyi Fu  <i@fuzy.me>
+
 	Lower levels of magit commands that depends on git-autofixup
 
 	* transient/levels.el (magit-commit): Add
