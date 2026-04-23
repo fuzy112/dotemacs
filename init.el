@@ -3482,6 +3482,7 @@ Otherwise disable it."
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
+;; eval: (aggressive-indent-mode)
 ;; End:
 
 ;;; init.el ends here
