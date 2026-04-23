@@ -1,3 +1,10 @@
+2026-04-23  Zhengyi Fu  <i@fuzy.me>
+
+	Fix commands for force deleting chars in paredit-mode
+
+	* init.el (paredit-mode-map): Bind "C-c DEL" to `backward-delete-char'.
+	Bind "C-c <delete>" to `delete-char'.
+
 2026-04-22  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Run `+maybe-init-fontset' in every frame.
