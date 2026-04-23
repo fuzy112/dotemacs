@@ -1,5 +1,11 @@
 2026-04-23  Zhengyi Fu  <i@fuzy.me>
 
+	* early-init.el: Remove workaround for nix.
+
+	The workaround has been causing duplicate entries in exec-path.
+
+2026-04-23  Zhengyi Fu  <i@fuzy.me>
+
 	Fix commands for force deleting chars in paredit-mode
 
 	* init.el (paredit-mode-map): Bind "C-c DEL" to `backward-delete-char'.
