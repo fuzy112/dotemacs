@@ -25,10 +25,6 @@
 (setopt telega-emoji-use-images nil)
 (setopt telega-language "zh")
 
-(unless emacs-is-installed-by-nix
-  (setq telega-server-command (expand-file-name "telega-server"
-                                                (file-name-directory (locate-library "telega")))))
-
 ;; (defun telega-config-workaround-gaps-on-graphic-display ()
 ;;   "Enable avatar gap workaround when running on a graphic display."
 ;;   (when (display-graphic-p)
