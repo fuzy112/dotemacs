@@ -2665,6 +2665,32 @@ Then refresh all windows displaying the current buffer."
 (after-load! hl-line
   (add-hook 'next-error-hook '+lin-line--next-error-h))
 
+;;;; lin
+
+;; Stylistic enhancement for hl-line for selection based UI.
+
+(dolist (hook '(archive-mode-hook
+                dired-mode-hook
+                dired-mode-hook
+                ement-room-list-mode-hook
+                ement-notifications-mode-hook
+                git-rebase-mode-hook
+                gnus-group-mode-hook
+                grep-mode-hook
+                ibuffer-mode-hook
+                log-view-mode-hook
+                logview-mode-hook
+                magit-log-mode-hook
+                occur-mode-hook
+                org-agenda-mode-hook
+                proced-mode-hook
+                tabulated-list-mode-hook
+                tar-mode-hook
+                vc-dir-mode-hook
+                world-clock-mode-hook
+                xref--xref-buffer-mode-hook))
+  (add-hook hook #'lin-mode))
+
 ;;;; prism
 
 (defun +prism--set-colors ()
@@ -2696,7 +2722,7 @@ comments and strings."
                   (ef-themes--list-enabled-themes))
              (with-no-compile!
                (ef-themes-with-colors
-                (list red green magenta cyan))))
+                 (list red green magenta cyan))))
 
             ;; For other themes, blend generic colors with foreground
             (t
