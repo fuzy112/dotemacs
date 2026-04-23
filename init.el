@@ -2958,12 +2958,42 @@ not used, but is required by the hook."
   "n q c"  #'denote-query-contents-link
   "n q f"  #'denote-query-filenames-link
   "n d"    #'denote-dired
+  ;; consult-denote
   "n g"    #'consult-denote-grep
   "n f"    #'consult-denote-find
+  ;; denote-menu
   "n m"    #'denote-menu-list-notes
+  ;; denote-journal
   "n j n"  #'denote-journal-new-entry
   "n j j"  #'denote-journal-new-or-existing-entry
-  "n j l"  #'denote-journal-link-or-create-entry)
+  "n j l"  #'denote-journal-link-or-create-entry
+  ;; denote-explore
+  ;; Statistics
+  "n c n"  #'denote-explore-count-notes
+  "n c k"  #'denote-explore-count-keywords
+  "n c e"  #'denote-explore-barchart-filetypes
+  "n c w"  #'denote-explore-barchart-keywords
+  "n c t"  #'denote-explore-barchart-timeline
+  ;; random walk
+  "n w n"  #'denote-explore-random-note
+  "n w r"  #'denote-explore-random-regex
+  "n w l"  #'denote-explore-random-link
+  "n w k"  #'denote-explore-random-keyword
+  ;; denote janitor
+  "n j d"  #'denote-explore-duplicate-notes
+  "n j D"  #'denote-explore-duplicate-notes-dired
+  "n j m"  #'denote-explore-missing-links
+  "n j z"  #'denote-explore-zero-keywords
+  "n j s"  #'denote-explore-single-keywords
+  "n j r"  #'denote-explore-rename-keyword
+  "n j y"  #'denote-explore-sync-metadata
+  "n j i"  #'denote-explore-isolated-files
+  ;; visualise denote
+  "n x n"  #'denote-explore-network
+  "n x r"  #'denote-explore-network-regenerate
+  "n x d"  #'denote-explore-barchart-degree
+  "n x b"  #'denote-explore-barchart-backlinks
+  )
 
 (after-load! (:and denote consult)
   (consult-denote-mode))

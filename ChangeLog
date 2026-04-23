@@ -1,5 +1,9 @@
 2026-04-23  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Add denote-explore.
+
+2026-04-23  Zhengyi Fu  <i@fuzy.me>
+
 	Some VC and `with-editor' related settings
 
 	* init.el (vc-dir-auto-hide-up-to-date): Set to t.
