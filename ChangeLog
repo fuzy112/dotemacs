@@ -1,5 +1,12 @@
 2026-04-23  Zhengyi Fu  <i@fuzy.me>
 
+	Lower levels of magit commands that depends on git-autofixup
+
+	* transient/levels.el (magit-commit): Add
+	magit-commit-absorb-modules and magit-commit-autofixup at level 5.
+
+2026-04-23  Zhengyi Fu  <i@fuzy.me>
+
 	* early-init.el: Remove workaround for nix.
 
 	The workaround has been causing duplicate entries in exec-path.
