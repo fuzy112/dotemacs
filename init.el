@@ -941,10 +941,10 @@ ARGS: see `completion-read-multiple'."
 (defun +corfu-auto-suspend ()
   (when (boundp 'corfu-auto)
     (setq-local +corfu-auto-saved corfu-auto)
-    (setq-local corfu-auto nil)))
+    (setopt-local corfu-auto nil)))
 (defun +corfu-auto-restore ()
   (if (boundp 'corfu-auto)
-      (setq-local corfu-auto +corfu-auto-saved)))
+      (setopt-local corfu-auto +corfu-auto-saved)))
 
 (add-hook 'input-method-activate-hook '+corfu-auto-suspend)
 (add-hook 'input-method-deactivate-hook '+corfu-auto-restore)
@@ -971,9 +971,9 @@ ARGS: see `completion-read-multiple'."
 (keymap-global-set "M-+" #'tempel-complete)
 (keymap-global-set "M-*" #'tempel-insert)
 (defun tempel-setup-capf ()
-  (setq-local completion-at-point-functions
-              (cons #'tempel-expand
-                    completion-at-point-functions)))
+  (setopt-local completion-at-point-functions
+                (cons #'tempel-expand
+                      completion-at-point-functions)))
 (add-hook 'conf-mode-hook 'tempel-setup-capf)
 (add-hook 'prog-mode-hook 'tempel-setup-capf)
 (add-hook 'text-mode-hook 'tempel-setup-capf)
@@ -1423,9 +1423,9 @@ value for USE-OVERLAYS."
 ;;;; whitespace
 
 (defun turn-on-whitespace-mode-for-prog-mode ()
-  (setq-local whitespace-style '( face trailing empty indentation
-                                  space-before-tab space-after-tab
-                                  missing-newline-at-eof))
+  (setopt-local whitespace-style '( face trailing empty indentation
+                                    space-before-tab space-after-tab
+                                    missing-newline-at-eof))
   (whitespace-mode))
 
 (dolist (hook '(prog-mode-hook conf-mode-hook yaml-mode-hook))
@@ -1957,7 +1957,7 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 
 (define-advice js-jsx-enable (:after () comments)
   "Enable JSX comments."
-  (setq-local comment-region-function #'js-jsx--comment-region))
+  (setopt-local comment-region-function #'js-jsx--comment-region))
 
 (define-advice js-jsx-enable (:after () sgml)
   "Enable sgml commands in JSX buffers."
@@ -2085,11 +2085,11 @@ With no active region, operate on the whole buffer."
 (add-to-list 'major-mode-remap-alist '(nix-mode . nix-ts-mode))
 
 (defun nix-repl-setup ()
-  (setq-local comint-indirect-setup-function #'nix-mode)
+  (setopt-local comint-indirect-setup-function #'nix-mode)
   (comint-fontify-input-mode)
 
-  (setq-local indent-line-function #'comint-indent-input-line-default)
-  (setq-local indent-region-function #'comint-indent-input-region-default))
+  (setopt-local indent-line-function #'comint-indent-input-line-default)
+  (setopt-local indent-region-function #'comint-indent-input-region-default))
 
 (add-hook 'nix-repl-mode-hook #'nix-repl-setup)
 
@@ -2823,7 +2823,7 @@ not used, but is required by the hook."
 
 (defun +gptel-mode-h ()
   (when (derived-mode-p 'org-mode)
-    (setq-local org-hide-emphasis-markers t)))
+    (setopt-local org-hide-emphasis-markers t)))
 (add-hook 'gptel-mode-hook #'+gptel-mode-h)
 
 (after-load! gptel
