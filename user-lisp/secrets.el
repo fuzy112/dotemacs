@@ -1,6 +1,6 @@
 ;;; secrets.el --- Client interface to gnome-keyring and kwallet. -*- lexical-binding: t -*-
 
-;; Copyright (C) 2010-2025 Free Software Foundation, Inc.
+;; Copyright (C) 2010-2026 Free Software Foundation, Inc.
 
 ;; Author: Michael Albinus <michael.albinus@gmx.de>
 ;; Keywords: comm password passphrase
@@ -486,7 +486,7 @@ ENDIAN is `big' or `little'."
     (dbus-error
      (if (string= (cadr err) "org.freedesktop.DBus.Error.NotSupported")
          nil
-       (signal 'dbus-error (cdr err))))))
+       (signal err)))))
 
 (defun secrets-open-session (&optional reopen)
   "Open a new session with \"plain\" algorithm.

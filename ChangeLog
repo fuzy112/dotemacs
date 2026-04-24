@@ -1,5 +1,14 @@
 2026-04-24  Zhengyi Fu  <i@fuzy.me>
 
+	Use single-arg form of `signal` to re-throw an error
+
+	* user-lisp/gptel-config.el (gptel-request-minibuffer-input):
+	* user-lisp/secrets.el
+	(secrets-open-session-dh-ietf1024-sha256-aes128-cbc-pkcs7): Use
+	`(signal err)` instead of `(signal (car err) (cdr err))`.
+
+2026-04-24  Zhengyi Fu  <i@fuzy.me>
+
 	Add models to DeepSeek configuration
 
 	* user-lisp/gptel-config.el ("DeepSeek"): Add deepseek-v4-flash,

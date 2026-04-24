@@ -566,7 +566,7 @@ callback that inserts the response into the minibuffer."
 	  (setq state 'running))
       (error
        (funcall cleanup-function)
-       (signal (car err) (cdr err))))))
+       (signal err)))))
 
 (defvar gptel-autosuggest-alist nil)
 
