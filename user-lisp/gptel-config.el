@@ -114,11 +114,12 @@
 (gptel-make-openai "Kimi Code"
   :host "api.kimi.com"
   :endpoint "/coding/v1/chat/completions"
-  :header (lambda (&optional info) (when-let* ((key (gptel--get-api-key)))
-				`(("Authorization" . ,(concat "Bearer " key))
-				  ;; https://www.reddit.com/r/kimi/comments/1p9b6mc/accessing_the_kimi_for_coding_api/
-				  ("User-Agent" . "claude-code/1.0")
-				  ("X-Client-Name" . "claude-code"))))
+  :header (lambda (&optional _info)
+	    (when-let* ((key (gptel--get-api-key)))
+	      `(("Authorization" . ,(concat "Bearer " key))
+		;; https://www.reddit.com/r/kimi/comments/1p9b6mc/accessing_the_kimi_for_coding_api/
+		("User-Agent" . "claude-code/1.0")
+		("X-Client-Name" . "claude-code"))))
   :stream t
   :key #'gptel-api-key-from-auth-source
   :models '((kimi-for-coding
@@ -360,7 +361,7 @@ Output only the commit message, with no extra explanation or surrounding markup.
 
 ;;;###autoload
 (defun +gptel-language-tutor-primary-selection ()
-  "Send the X primary selection to a full-frame GPT buffer configured for language tutoring."
+  "Send the X primary selection for language tutoring."
   (interactive)
   (let ((buffer (gptel " *tutor*")))
     (pop-to-buffer buffer '((display-buffer-full-frame)))
@@ -374,7 +375,9 @@ Output only the commit message, with no extra explanation or surrounding markup.
       (newline)
       (gptel-send))))
 
-(declare-function magit-commit-argument "magit-commit.el")
+(declare-function magit-commit-arguments "magit-commit.el")
+(declare-function magit-process-git "magit-process.el")
+(declare-function magit-run-git-with-editor "magit-process.el")
 
 ;;;###autoload
 (defun +gptel-commit-staged (&optional args)
@@ -446,6 +449,7 @@ in the git editor for final editing before committing."
 
 ;;;###autoload
 (with-eval-after-load 'log-edit
+  (defvar log-edit-mode-map)
   (keymap-set log-edit-mode-map "C-c C-S-m" #'gptel-log-edit-generate-commit-message))
 
 (defun gptel-context-at-point (&optional context-lines)
@@ -500,7 +504,8 @@ above and below the current line."
 (defvar gptel-minibuffer-spinner-style 'braille)
 (defface gptel-minibuffer-spinner
   '((t :foreground "cyan"))
-  "Face for gptel-minibuffer-spinner.")
+  "Face for gptel-minibuffer-spinner."
+  :group 'gptel)
 
 (defun gptel-minibuffer-spinner-start (&optional style)
   "Start a spinning indicator in the current minibuffer.
@@ -610,6 +615,8 @@ modify COMMAND.  If NAME is non-nil, the advice is named
 				(apply orig-fn args)))))
       (advice-add command :around advice-symbol))))
 
+(declare-function which-function "which-func.el")
+
 ;;;###autoload
 (gptel-autosuggest-define 'bookmark-set
   :system
@@ -627,8 +634,7 @@ Follow these rules when creating the bookmark name:
 Example output: auth-service password validation function"
   :context (lambda ()
 	     (require 'which-func)
-	     (let* ((bookmark-point (if (use-region-p) (region-beginning) (point)))
-		    (file-name (buffer-file-name))
+	     (let* ((file-name (buffer-file-name))
 		    (buffer-name (buffer-name))
 		    (context (gptel-context-at-point))
 		    (defun-name (which-function)))
