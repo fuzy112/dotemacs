@@ -1,5 +1,12 @@
 2026-04-24  Zhengyi Fu  <i@fuzy.me>
 
+	Faster consult-git-log-grep-open-function
+
+	* init.el (+consult-git-log-grep-show-commit): New defun.
+	(consult-git-log-grep-open-function): Use it.
+
+2026-04-24  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (process-use-pipe): Remove.
 
 	Compilation mode is a major mode designed to enable easy interaction

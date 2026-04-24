@@ -2506,7 +2506,17 @@ Then refresh all windows displaying the current buffer."
 
 ;;;; consult-git-log-grep
 
-(setopt consult-git-log-grep-open-function #'magit-show-commit
+(defun +consult-git-log-grep-show-commit (sha)
+  "Displays the result of 'git show SHA' in a new buffer."
+  (let* ((short-sha (truncate-string-to-width sha 8))
+         (default-directory (vc-git-root (or (buffer-file-name) default-directory)))
+         (buf (get-buffer-create (format "consult-git-log-grep-commit-%s" short-sha))))
+    (shell-command (format "git --no-pager show %s" sha) buf)
+    (with-current-buffer buf
+      (setq buffer-read-only t)
+      (diff-mode))))
+
+(setopt consult-git-log-grep-open-function #'+consult-git-log-grep-show-commit
         consult-git-log-grep-preview t)
 
 ;;;; eat
