@@ -1559,10 +1559,6 @@ value for USE-OVERLAYS."
                            sparc-pascal-file sparc-pascal-line
                            sparc-pascal-example sun sun-ada watcom 4bsd))))
 
-(defun process-use-pipe ()
-  (setopt-local process-connection-type nil))
-(add-hook 'compilation-mode-hook #'process-use-pipe)
-
 (defvar consult-source-compilation-buffer
   `( :name     "Compilation Buffer"
      :narrow   ?b
