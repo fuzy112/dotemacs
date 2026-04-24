@@ -162,7 +162,27 @@
 
 (gptel-make-deepseek "DeepSeek"
   :stream t
-  :key #'gptel-api-key-from-auth-source)
+  :key #'gptel-api-key-from-auth-source
+  :models '((deepseek-v4-flash
+	     :capabilities (tool reasoning)
+	     :context-window 1024
+	     :input-cost 0.14; 0.145 when cache hit
+	     :output-cost 0.28)
+	    (deepseek-v4-pro
+	     :capabilities (tool reasoning)
+	     :context-window 1024
+	     :input-cost 1.74; 0.028 when cache hit ;
+	     :output-cost 0.28)
+	    (deepseek-reasoner
+	     :capabilities (tool reasoning)
+	     :context-window 128
+	     :input-cost 0.28
+	     :output-cost 0.42)
+	    (deepseek-chat
+	     :capabilities (tool)
+	     :context-window 128
+	     :input-cost 0.28
+	     :output-cost 0.42)))
 
 (gptel-make-kagi "Kagi"
   :key #'gptel-api-key-from-auth-source)
