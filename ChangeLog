@@ -1,5 +1,26 @@
 2026-04-24  Zhengyi Fu  <i@fuzy.me>
 
+	Use `after-load!' for lazy loading; modernize coding style
+
+	* init.el (modus-themes): Remove workaround advice.  Load themes
+	with explicit `load-theme' calls inside `after-load!`.
+	(global-xref-mouse-mode): Move from initial `setq' to xref block.
+	(eglot-nix-mode): Add `:group`.
+	(+toggle-side-window): Fix indentation.
+	(+org-update-agenda): Check `derived-mode-p'.
+	(standard-display-unicode-special-glyphs): Use `after-init-1!'.
+	(setq-local): Replace `set (make-local-variable …)`.
+	(setopt): Replace `setq' for user options.
+	(tool-map): Remove telega and claude‑code keybindings.
+	(savehist, cc-mode, compile, dired, diff-hl, consult-git-log-grep)
+	(xterm, gnus, epa, grep, display-line-numbers, vc, tramp, bookmark):
+	Move settings into `after-load!' blocks.
+	(magit-tramp-pipe-stty-settings, elisp-fontify-semantically)
+	(copyright-year-ranges): Use `setq-default'.
+	Docstring quoting fixes.
+
+2026-04-24  Zhengyi Fu  <i@fuzy.me>
+
 	Use single-arg form of `signal` to re-throw an error
 
 	* user-lisp/gptel-config.el (gptel-request-minibuffer-input):

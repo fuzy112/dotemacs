@@ -218,8 +218,7 @@ Otherwise, switch to the other window."
         mouse-yank-at-point t
         mouse-drag-and-drop-region t
         mouse-drag-and-drop-region-cross-program t
-        mouse-drag-mode-line-buffer t
-        global-xref-mouse-mode t)
+        mouse-drag-mode-line-buffer t)
 
 
 ;;;; fonts
@@ -339,26 +338,20 @@ Otherwise, switch to the other window."
 
 ;;;; modus-theme
 
-;; temporary workaround for bug, see bug#79504
-(define-advice modus-themes-with-colors (:around (&rest args) with-enabled-themes)
-  (let ((custom-enabled-themes (append custom-enabled-themes '(modus-vivendi))))
-    (apply args)))
-
-(setq modus-themes-mixed-fonts        t
-      modus-themes-bold-constructs    t
-      modus-themes-slanted-constructs t
-      modus-themes-variable-pitch-ui  nil
-      modus-themes-to-toggle          '(modus-vivendi modus-operandi))
-(or (require 'modus-themes nil t)
-    (require-theme 'modus-themes))
-(setopt modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
+(after-load! modus-themes
+  (setopt modus-themes-mixed-fonts        t
+          modus-themes-bold-constructs    t
+          modus-themes-slanted-constructs t
+          modus-themes-variable-pitch-ui  nil
+          modus-themes-to-toggle          '(modus-vivendi modus-operandi))
+  (setopt modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
+  (load-theme 'modus-operandi t t)
+  (load-theme 'modus-vivendi t t))
 
 (after-init!
   (when (not custom-enabled-themes)
-    (modus-themes-load-theme 'modus-operandi)))
-
-(eval-when-compile
-  (load-theme 'modus-vivendi t t))
+    (require 'modus-themes)
+    (load-theme 'modus-operandi t)))
 
 ;; Define a dedicated theme `dotemacs' instead of using the default
 ;; `user' theme to prevent the Emacs customization system from
@@ -515,6 +508,9 @@ attributes."
   (dash-register-info-lookup))
 (after-load! (:and anaphora elisp-mode)
   (anaphora-install-font-lock-keywords))
+(after-load! cond-let
+  (font-lock-add-keywords 'emacs-lisp-mode
+                          cond-let-font-lock-keywords t))
 
 ;;;; nerd-icons
 
@@ -535,7 +531,6 @@ attributes."
 (setq-default mode-line-buffer-identification
               (seq-union '((:eval (nerd-icons-icon-for-buffer)) " ")
                          mode-line-buffer-identification))
-
 
 ;;;; ultra-scroll
 
@@ -561,15 +556,15 @@ attributes."
 
 ;;;; tab-bar
 
-(setq tab-bar-tab-name-format-function
-      (lambda (tab i)
-        (tab-bar-tab-name-format-face
-         (concat " "
-                 (propertize (number-to-string i) 'face '(:weight ultra-bold :underline t))
-                 " "
-                 (alist-get 'name tab)
-                 " ")
-         tab i)))
+(setopt tab-bar-tab-name-format-function
+        (lambda (tab i)
+          (tab-bar-tab-name-format-face
+           (concat " "
+                   (propertize (number-to-string i) 'face '(:weight ultra-bold :underline t))
+                   " "
+                   (alist-get 'name tab)
+                   " ")
+           tab i)))
 (add-hook 'tab-bar-mode-hook #'tab-bar-history-mode)
 
 ;;;; quick-window
@@ -945,12 +940,12 @@ ARGS: see `completion-read-multiple'."
 (defvar +corfu-auto-saved nil)
 (defun +corfu-auto-suspend ()
   (when (boundp 'corfu-auto)
-    (set (make-local-variable '+corfu-auto-saved) corfu-auto)
-    (set (make-local-variable 'corfu-auto) nil)))
+    (setq-local +corfu-auto-saved corfu-auto)
+    (setq-local corfu-auto nil)))
 (defun +corfu-auto-restore ()
   (if (boundp 'corfu-auto)
-      (set (make-local-variable 'corfu-auto)
-           +corfu-auto-saved)))
+      (setq-local corfu-auto +corfu-auto-saved)))
+
 (add-hook 'input-method-activate-hook '+corfu-auto-suspend)
 (add-hook 'input-method-deactivate-hook '+corfu-auto-restore)
 
@@ -976,9 +971,9 @@ ARGS: see `completion-read-multiple'."
 (keymap-global-set "M-+" #'tempel-complete)
 (keymap-global-set "M-*" #'tempel-insert)
 (defun tempel-setup-capf ()
-  (setopt-local completion-at-point-functions
-                (cons #'tempel-expand
-                      completion-at-point-functions)))
+  (setq-local completion-at-point-functions
+              (cons #'tempel-expand
+                    completion-at-point-functions)))
 (add-hook 'conf-mode-hook 'tempel-setup-capf)
 (add-hook 'prog-mode-hook 'tempel-setup-capf)
 (add-hook 'text-mode-hook 'tempel-setup-capf)
@@ -1231,9 +1226,9 @@ value for USE-OVERLAYS."
        (orderless--highlight input t str)))))
 
 (after-load! consult
-  (setq consult-preview-key "M-.")
-  (setq consult-narrow-key "<")
-  (setq consult-widen-key ">")
+  (setopt consult-preview-key "M-.")
+  (setopt consult-narrow-key "<")
+  (setopt consult-widen-key ">")
   (setq-default consult--regexp-compiler #'+consult--orderless-regexp-compiler)
 
   ;; consult-customize is a macro and is not autoloaded
@@ -1428,9 +1423,9 @@ value for USE-OVERLAYS."
 ;;;; whitespace
 
 (defun turn-on-whitespace-mode-for-prog-mode ()
-  (setopt-local whitespace-style '( face trailing empty indentation
-                                    space-before-tab space-after-tab
-                                    missing-newline-at-eof))
+  (setq-local whitespace-style '( face trailing empty indentation
+                                  space-before-tab space-after-tab
+                                  missing-newline-at-eof))
   (whitespace-mode))
 
 (dolist (hook '(prog-mode-hook conf-mode-hook yaml-mode-hook))
@@ -1498,14 +1493,15 @@ value for USE-OVERLAYS."
 ;;;; dired
 
 (add-hook 'dired-mode-hook #'dired-omit-mode)
-(setopt dired-listing-switches "-lah"
-        dired-hide-details-hide-absolute-location t
-        dired-do-revert-buffer t
-        dired-dwim-target t
-        dired-x-hands-off-my-keys nil
-        dired-auto-revert-buffer t
-        dired-mouse-drag-files t
-        shell-command-prompt-show-cwd t)
+(after-load! dired
+  (setopt dired-listing-switches "-lah"
+          dired-hide-details-hide-absolute-location t
+          dired-do-revert-buffer t
+          dired-dwim-target t
+          dired-x-hands-off-my-keys nil
+          dired-auto-revert-buffer t
+          dired-mouse-drag-files t
+          shell-command-prompt-show-cwd t))
 
 (defun +dired-side-noselect ()
   "Open a dired buffer in a side window. "
@@ -1545,19 +1541,18 @@ value for USE-OVERLAYS."
 
 ;;;; compile
 
-(setopt compilation-always-kill t
-        compilation-ask-about-save t
-        compilation-scroll-output 'first-error
-        compilation-auto-jump-to-first-error nil)
-
 (after-load! compile
-  (setq compilation-error-regexp-alist
-        (seq-difference compilation-error-regexp-alist
-                        '( absoft ada aix ant borland comma msft
-                           edg-1 edg-2 epc ftnchek jikes-file jikes-line
-                           cucumber lcc makepp mips-1 mips-2 oracle rxp
-                           sparc-pascal-file sparc-pascal-line
-                           sparc-pascal-example sun sun-ada watcom 4bsd))))
+  (setopt compilation-always-kill t
+          compilation-ask-about-save t
+          compilation-scroll-output 'first-error
+          compilation-auto-jump-to-first-error nil)
+  (setopt compilation-error-regexp-alist
+          (seq-difference compilation-error-regexp-alist
+                          '( absoft ada aix ant borland comma msft
+                             edg-1 edg-2 epc ftnchek jikes-file jikes-line
+                             cucumber lcc makepp mips-1 mips-2 oracle rxp
+                             sparc-pascal-file sparc-pascal-line
+                             sparc-pascal-example sun sun-ada watcom 4bsd))))
 
 (defvar consult-source-compilation-buffer
   `( :name     "Compilation Buffer"
@@ -1617,13 +1612,14 @@ then switches to the selected buffer and invokes `recompile'."
 
 (after-load! comint
   (add-hook 'comint-output-filter-functions #'comint-osc-process-output)
-  (setq comint-prompt-read-only t
-        comint-buffer-maximum-size 2048
-        comint-terminfo-terminal "dumb-emacs-ansi"))
+  (setopt comint-prompt-read-only t
+          comint-buffer-maximum-size 2048
+          comint-terminfo-terminal "dumb-emacs-ansi"))
 
 ;;;; grep
 
-(setq grep-use-headings t)
+(after-load! grep
+  (setopt grep-use-headings t))
 
 ;;;; eshell
 
@@ -1718,7 +1714,7 @@ then switches to the selected buffer and invokes `recompile'."
 (defun +visual-fill-column/toggle-visual-fill-and-center ()
   (interactive)
   (visual-fill-column-mode 'toggle)
-  (setopt-local visual-fill-column-center-text (symbol-value 'visual-fill-column-mode)))
+  (setopt visual-fill-column-center-text (symbol-value 'visual-fill-column-mode)))
 
 ;;;; hl-todo
 
@@ -1743,7 +1739,8 @@ then switches to the selected buffer and invokes `recompile'."
 
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'conf-mode-hook #'display-line-numbers-mode)
-(setopt display-line-numbers-type 'relative)
+(after-load! display-line-numbers
+  (setopt display-line-numbers-type 'relative))
 
 ;;;; display-fill-column-indicator-mode
 
@@ -1751,13 +1748,11 @@ then switches to the selected buffer and invokes `recompile'."
 
 ;;;; eglot
 
-(define-advice eglot-completion-at-point (:around (fn &rest _args) tempel)
-  (cape-wrap-super fn :with #'tempel-complete))
-
-(advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
-
-(setopt eglot-autoshutdown t
-        eglot-extend-to-xref t)
+(after-load! eglot
+  (define-advice eglot-completion-at-point (:around (fn &rest _args) tempel)
+    (cape-wrap-super fn :with #'tempel-complete))
+  (setopt eglot-autoshutdown t
+          eglot-extend-to-xref t))
 
 (defvar-keymap +eglot-prefix-map
   :prefix '+eglot-prefix-map
@@ -1818,7 +1813,7 @@ then switches to the selected buffer and invokes `recompile'."
 (defun eglot--executable-find@nix (fn command &optional remote)
   "Find executable COMMAND, possibly via Nix.
 If COMMAND is not found in PATH and we are not in a remote buffer, look
-up COMMAND in `lsp-server-nix-packages'.  If found, run 'nix shell' with
+up COMMAND in `lsp-server-nix-packages'.  If found, run `nix shell' with
 the associated packages to locate the command.  If that succeeds and the
 resulting program exists, return its path.  Otherwise, fall back to the
 original function FN."
@@ -1839,7 +1834,7 @@ original function FN."
   "Adjust Eglot server contact to run via Nix if needed.
 When RESULT contains a contact list and its command is not in PATH, look
 up the command in `lsp-server-nix-packages'.  If found, wrap the contact
-list to run via 'nix shell' with the associated packages."
+list to run via `nix shell' with the associated packages."
   (when-let*
       ((contact (nth 3 result))
        ((listp contact))
@@ -1857,6 +1852,7 @@ When enabled, this mode integrates Nix-managed language servers with Eglot,
 handling server discovery and environment setup automatically.
 Disabling the mode restores the default Eglot behavior."
   :global t
+  :group 'nix
   (advice-remove 'eglot--executable-find #'eglot--executable-find@nix)
   (advice-remove 'eglot--guess-contact #'eglot--guess-contact@nix)
   (when eglot-nix-mode
@@ -1871,16 +1867,15 @@ Disabling the mode restores the default Eglot behavior."
   ;; where the first component is the input to the LSP.
   (add-to-list 'consult-async-split-styles-alist `(space :separator ?\s :function ,#'consult--split-separator)))
 
-(keymap-set search-map "s" #'consult-eglot-symbols)
-(keymap-set search-map "M-s" #'consult-eglot-symbols)
-
 (after-load! eglot
+  (keymap-set search-map "s" #'consult-eglot-symbols)
+  (keymap-set search-map "M-s" #'consult-eglot-symbols)
   (keymap-set eglot-mode-map "<remap> <xref-find-apropos>" 'consult-eglot-symbols))
 
 (defun +consult--async-wrap--split-space (async)
   "Wrap ASYNC function with a pipeline that splits input on spaces.
 This is a modified version of `consult--async-wrap' that uses
-`consult--async-split' with the 'space argument to split the
+`consult--async-split' with the `space' argument to split the
 input stream on spaces instead of the default newline character."
   (consult--async-pipeline
    (consult--async-split 'space)
@@ -1941,15 +1936,16 @@ See `xref-show-xrefs' for FETCHER and ALIST."
      (consult-xref fetcher alist))))
 
 (after-load! xref
-  (setq xref-search-program
-        (cond ((executable-find "rg") 'ripgrep)
-              ((executable-find "ugrep") 'ugrep)
-              (t 'grep))
-        xref-show-definitions-function #'+xref--show-definition
-        xref-auto-jump-to-first-definition t)
-  (setq xref-after-jump-hook
-        (cl-nsubstitute #'reposition-window #'recenter xref-after-jump-hook))
+  (setopt xref-search-program
+          (cond ((executable-find "rg") 'ripgrep)
+                ((executable-find "ugrep") 'ugrep)
+                (t 'grep))
+          xref-show-definitions-function #'+xref--show-definition
+          xref-auto-jump-to-first-definition t)
+  (setopt xref-after-jump-hook
+          (cl-nsubstitute #'reposition-window #'recenter xref-after-jump-hook))
 
+  (global-xref-mouse-mode)
   (define-keymap :keymap xref-mouse-mode-map
     "<remap> <xref-find-definitions-at-mouse>" #'embark-dwim
     "C-M-<down-mouse-1>" #'ignore
@@ -1961,7 +1957,7 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 
 (define-advice js-jsx-enable (:after () comments)
   "Enable JSX comments."
-  (setopt-local comment-region-function #'js-jsx--comment-region))
+  (setq-local comment-region-function #'js-jsx--comment-region))
 
 (define-advice js-jsx-enable (:after () sgml)
   "Enable sgml commands in JSX buffers."
@@ -2029,7 +2025,7 @@ With no active region, operate on the whole buffer."
 
 ;;;; elisp-mode
 
-(setopt elisp-fontify-semantically t)
+(setq-default elisp-fontify-semantically t)
 (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
 (after-load! elisp-mode
   (when (boundp 'trusted-content)
@@ -2054,23 +2050,22 @@ With no active region, operate on the whole buffer."
 
 ;; Show results of `eval-last-sexp' in posframes.
 (keymap-global-set "C-x C-e" #'pp-posframe-eval-last-sexp)
-(after-load! elisp-mode
-  (keymap-set emacs-lisp-mode-map "C-M-x" #'pp-posframe-compile-defun)
-  (keymap-set emacs-lisp-mode-map "C-c M-e" #'pp-posframe-macroexpand-last-sexp))
+(keymap-set emacs-lisp-mode-map "C-M-x" #'pp-posframe-compile-defun)
+(keymap-set emacs-lisp-mode-map "C-c M-e" #'pp-posframe-macroexpand-last-sexp)
 
 ;;;; eldoc
 
-(after-load! eldoc
-  (eldoc-add-command                    ; for eldoc-diffstat
-   'magit-next-line 'magit-previous-line
-   'magit-section-forward 'magit-section-backward
-   'magit-section-forward-sibling 'magit-section-backward-sibling
-   'magit-blame-next-chunk 'magit-blame-previous-chunk))
+(eldoc-add-command                    ; for eldoc-diffstat
+ 'magit-next-line 'magit-previous-line
+ 'magit-section-forward 'magit-section-backward
+ 'magit-section-forward-sibling 'magit-section-backward-sibling
+ 'magit-blame-next-chunk 'magit-blame-previous-chunk)
 
 ;;;; cc-mode
 
-(setq c-tab-always-indent nil
-      c-insert-tab-function #'completion-at-point)
+(after-load! cc-vars
+  (setopt c-tab-always-indent nil
+          c-insert-tab-function #'completion-at-point))
 (defun +cc-mode--hook ()
   (add-hook 'flymake-diagnostic-functions #'flymake-clang-tidy nil t))
 (add-hook 'c-mode-common-hook '+cc-mode--hook)
@@ -2090,11 +2085,11 @@ With no active region, operate on the whole buffer."
 (add-to-list 'major-mode-remap-alist '(nix-mode . nix-ts-mode))
 
 (defun nix-repl-setup ()
-  (setopt-local comint-indirect-setup-function #'nix-mode)
+  (setq-local comint-indirect-setup-function #'nix-mode)
   (comint-fontify-input-mode)
 
-  (setopt-local indent-line-function #'comint-indent-input-line-default)
-  (setopt-local indent-region-function #'comint-indent-input-region-default))
+  (setq-local indent-line-function #'comint-indent-input-line-default)
+  (setq-local indent-region-function #'comint-indent-input-region-default))
 
 (add-hook 'nix-repl-mode-hook #'nix-repl-setup)
 
@@ -2286,19 +2281,14 @@ confirmed."
                 (string-lines (buffer-string) t nil))))))
 
 (after-load! project
-  (when (commandp 'project-prefix-or-any-command)
-    (setopt project-switch-commands 'project-prefix-or-any-command))
-
+  (setopt project-switch-commands 'project-prefix-or-any-command)
   (setq-default project-vc-external-roots-function #'+project--external-roots)
-  (setq project-compilation-buffer-name-function #'project-prefixed-buffer-name)
+  (setopt project-compilation-buffer-name-function #'project-prefixed-buffer-name)
 
   (setopt project-vc-ignores (seq-union project-vc-ignores '(".pc")))
   (setopt project-vc-extra-root-markers
           (seq-union project-vc-extra-root-markers
-                     '(".project-root" "configure.ac" "Cargo.toml" "package.json")))
-  (when (and (not (functionp project-switch-commands))
-             (consp project-switch-commands))
-    (add-to-list 'project-switch-commands '(project-compile "Compile") t)))
+                     '(".project-root" "configure.ac" "Cargo.toml" "package.json"))))
 
 (defvar per-project-compile-history nil)
 
@@ -2314,9 +2304,8 @@ confirmed."
 
 ;;;; tramp
 
-(setq tramp-verbose 2)
-(setq tramp-persistency-file-name
-      (locate-user-emacs-file "tramp.eld"))
+(after-load! tramp
+  (setopt tramp-verbose 2))
 
 (define-advice tramp-dump-connection-properties (:after () chmod)
   "Change permission of `tramp-persistency-file-name' to 0600."
@@ -2340,29 +2329,34 @@ confirmed."
       (mkdir tramp-compat-temporary-file-directory t))
     (chmod tramp-compat-temporary-file-directory #o700)))
 
-(connection-local-set-profile-variables
- 'remote-direct-async-process
- '((tramp-direct-async-process . t)))
+(after-load! tramp
+  (connection-local-set-profile-variables
+   'remote-direct-async-process
+   '((tramp-direct-async-process . t)))
 
-(connection-local-set-profile-variables
- 'remote-explicit-shell-file-name
- '((explicit-shell-file-name . "/bin/sh")))
-
-(dolist (protocol '("ssh" "sshx" "scp" "scpx"))
-  (connection-local-set-profiles
-   `(:application tramp :protocol ,protocol)
+  (connection-local-set-profile-variables
    'remote-explicit-shell-file-name
-   'remote-direct-async-process))
+   '((explicit-shell-file-name . "/bin/sh")))
+
+  (dolist (protocol '("ssh" "sshx" "scp" "scpx"))
+    (connection-local-set-profiles
+     `(:application tramp :protocol ,protocol)
+     'remote-explicit-shell-file-name
+     'remote-direct-async-process)))
 
 ;;;; vc
 
+;; vc-hooks
 (setopt vc-follow-symlinks t
-        vc-svn-diff-switches '("-x" "-u -p")
-        vc-find-revision-no-save t
-        vc-deduce-backend-nonvc-modes t;; Deduce VC backend for all buffers
         vc-use-incoming-outgoing-prefixes t
-        vc-auto-revert-mode t
-        vc-dir-auto-hide-up-to-date t)
+        vc-auto-revert-mode t)
+
+(after-load! vc
+  (setopt
+   vc-svn-diff-switches '("-x" "-u -p")
+   vc-find-revision-no-save t
+   vc-deduce-backend-nonvc-modes t ;; Deduce VC backend for all buffers
+   vc-dir-auto-hide-up-to-date t))
 
 (keymap-set vc-prefix-map "." '+vc/dir-here)
 
@@ -2399,7 +2393,7 @@ confirmed."
 (after-load! magit
   (transient-set-default-level 'magit:--gpg-sign 1)
   (transient-set-default-level 'magit:--signoff 1)
-  (setopt magit-tramp-pipe-stty-settings 'pty)
+  (setq-default magit-tramp-pipe-stty-settings 'pty)
   (setopt magit-format-file-function #'magit-format-file-nerd-icons)
   (advice-add #'magit-maybe-start-credential-cache-daemon :after '+magit--ccdp-no-query)
   (setopt magit-wip-mode-lighter "")
@@ -2410,8 +2404,6 @@ confirmed."
 
 (after-load! magit-log
   (cl-pushnew "--show-signature" (get 'magit-log-mode 'magit-log-default-arguments)))
-
-(setq git-commit-major-mode #'log-edit-mode)
 
 (defun +git-commit--log-edit-h ()
   (when (string-empty-p (buffer-substring-no-properties (point-min) (line-end-position 1)))
@@ -2424,6 +2416,7 @@ confirmed."
       (save-buffer))))
 
 (after-load! git-commit
+  (setopt git-commit-major-mode #'log-edit-mode)
   (add-hook 'git-commit-post-finish-hook #'log-edit-hide-buf)
   (add-hook 'git-commit-setup-hook #'+git-commit--log-edit-h 90))
 
@@ -2480,13 +2473,14 @@ new record is started."
 (after-load! magit-mode
   (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh))
 
-(setq diff-hl-margin-symbols-alist '((insert  . "增")
-                                     (delete  . "刪")
-                                     (change  . "改")
-                                     (unknown . "疑")
-                                     (ignored . "略")))
+(after-load! diff-hl
+  (setopt diff-hl-margin-symbols-alist '((insert  . "增")
+                                         (delete  . "刪")
+                                         (change  . "改")
+                                         (unknown . "疑")
+                                         (ignored . "略")))
 
-(setq diff-hl-update-async (fboundp 'make-thread))
+  (setopt diff-hl-update-async (fboundp 'make-thread)))
 
 (define-advice diff-hl-margin-ensure-visible (:override () auto-width)
   "Ensure that diff-hl margin is wide enough to display all symbols.
@@ -2507,27 +2501,29 @@ Then refresh all windows displaying the current buffer."
 ;;;; consult-git-log-grep
 
 (defun +consult-git-log-grep-show-commit (sha)
-  "Displays the result of 'git show SHA' in a new buffer."
+  "Displays the result of `git show SHA' in a new buffer."
   (let* ((short-sha (truncate-string-to-width sha 8))
          (default-directory (vc-git-root (or (buffer-file-name) default-directory)))
          (buf (get-buffer-create (format "consult-git-log-grep-commit-%s" short-sha))))
     (shell-command (format "git --no-pager show %s" sha) buf)
     (with-current-buffer buf
-      (setq buffer-read-only t)
+      (setq-local buffer-read-only t)
       (diff-mode))))
 
-(setopt consult-git-log-grep-open-function #'+consult-git-log-grep-show-commit
-        consult-git-log-grep-preview t)
+(after-load! consult-git-log-grep
+  (setopt consult-git-log-grep-open-function #'+consult-git-log-grep-show-commit
+          consult-git-log-grep-preview t))
 
 ;;;; eat
 
 (after-load! eat
+  (setopt eat-kill-buffer-on-exit t)
   (setopt eat-semi-char-non-bound-keys
           (seq-union '([?\e ?o])
                      eat-semi-char-non-bound-keys)))
 
 (unless (memq system-type '(ms-dos windows-nt))
-  (setq eshell-visual-commands nil)
+  (setopt eshell-visual-commands nil)
   (add-hook 'eshell-load-hook #'eat-eshell-mode))
 
 (after-load! project
@@ -2540,8 +2536,8 @@ Then refresh all windows displaying the current buffer."
 (declare-function eat-term-send-string "eat.el" (terminal string))
 (declare-function eat-self-input "eat.el" (n &optional e))
 
-(setopt eat-kill-buffer-on-exit t)
-
+(defvar eat-term-terminfo-directory)
+(defvar eat-term-shell-integration-directory)
 (defun +eat-install-helpers ()
   (interactive)
   (unless (file-remote-p default-directory)
@@ -2589,16 +2585,17 @@ Then refresh all windows displaying the current buffer."
   (setopt rime-inline-predicates
           '(rime-predicate-space-after-cc-p)))
 
-(setq-default default-input-method "rime")
+(setopt default-input-method "rime")
 
 ;;;; kinsoku
 
-(setq word-wrap-by-category t)
+(setopt word-wrap-by-category t)
 
 ;;;; xterm
 
-(setopt xterm-set-window-title t
-        xterm-update-cursor t)
+(after-load! term/xterm
+  (setopt xterm-set-window-title t
+          xterm-update-cursor t))
 
 ;;;; xt-mouse
 
@@ -2620,7 +2617,7 @@ Then refresh all windows displaying the current buffer."
 ;; Set up display table to use unicode chars to display frame borders
 ;; in terminal
 
-(add-hook 'emacs-startup-hook #'standard-display-unicode-special-glyphs)
+(after-init-1! #'standard-display-unicode-special-glyphs)
 
 ;;;; repeat
 
@@ -2637,15 +2634,13 @@ Then refresh all windows displaying the current buffer."
 
 ;;;; savehist
 
-;; (setq savehist-file (locate-user-emacs-file '("savehist.eld.zst")))
-(setq savehist-additional-variables '((kill-ring . 5)
-                                      search-ring
-                                      regexp-search-ring
-                                      per-project-compile-history
-                                      corfu-history))
-(setopt savehist-ignored-variables '(buffer-name-history))
-
 (after-init!
+  (setopt savehist-additional-variables '((kill-ring . 5)
+                                          search-ring
+                                          regexp-search-ring
+                                          per-project-compile-history
+                                          corfu-history))
+  (setopt savehist-ignored-variables '(buffer-name-history))
   (savehist-mode))
 
 ;;;; auth-sources
@@ -2762,16 +2757,19 @@ not used, but is required by the hook."
 
 ;;;; email and gnus
 
-(setq gnus-verbose 5
-      gnus-verbose-backends 5
-      mail-user-agent 'gnus-user-agent)
+(after-load! gnus
+  (setopt gnus-verbose 5
+          gnus-verbose-backends 5))
+(setopt mail-user-agent 'gnus-user-agent)
 
-(setq message-mail-alias-type 'ecomplete)
+(after-load! message
+  (setopt message-mail-alias-type 'ecomplete))
 (defun +message-ecompletion-capf-setup ()
   (add-hook 'completion-at-point-functions #'message-ecomplete-capf nil t))
 (add-hook 'message-mode-hook #'+message-ecompletion-capf-setup)
 
-(setq mm-discouraged-alternatives '("text/html" "text/richtext"))
+(after-load! mm-decode
+  (setopt mm-discouraged-alternatives '("text/html" "text/richtext")))
 
 (after-load! gnus-art
   (require 'gnus-diff))
@@ -2813,8 +2811,8 @@ not used, but is required by the hook."
 
 ;;;; epg
 
-;; (setopt epg-pinentry-mode 'loopback)
-(setopt epa-keys-select-method 'minibuffer)
+(after-load! epa
+  (setopt epa-keys-select-method 'minibuffer))
 
 ;;;; tui
 
@@ -2823,10 +2821,9 @@ not used, but is required by the hook."
 
 ;;;; gptel
 
-(setq gptel-default-mode #'markdown-mode)
 (defun +gptel-mode-h ()
   (when (derived-mode-p 'org-mode)
-    (setopt-local org-hide-emphasis-markers t)))
+    (setq-local org-hide-emphasis-markers t)))
 (add-hook 'gptel-mode-hook #'+gptel-mode-h)
 
 (after-load! gptel
@@ -2847,9 +2844,9 @@ not used, but is required by the hook."
 (after-load! bookmark
   (advice-add #'bookmark-write-file :around '+bookmark--pp-28)
 
-  (setq bookmark-save-flag 1
-        bookmark-watch-bookmark-file 'silent
-        bookmark-version-control t)
+  (setopt bookmark-save-flag 1
+          bookmark-watch-bookmark-file 'silent
+          bookmark-version-control t)
 
   (require 'bookmark-extras))
 
@@ -2860,13 +2857,13 @@ not used, but is required by the hook."
 (defun +org/toggle-emphasis-markers ()
   "Toggle the display of emphasis markers."
   (interactive)
-  (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
+  (setopt org-hide-emphasis-markers (not org-hide-emphasis-markers))
   (font-lock-flush))
 
 (after-load! org
-  (setq org-modern-table nil)
+  (setopt org-modern-table nil)
   (add-hook 'org-mode-hook #'org-modern-mode)
-  (setq valign-fancy-bar t)
+  (setopt valign-fancy-bar t)
   (add-hook 'org-mode-hook #'valign-mode)
   (add-hook 'org-mode-hook #'visual-line-mode)
   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
@@ -2896,16 +2893,19 @@ not used, but is required by the hook."
   ;; plaintext file in the org root directory, for easy manual editing and persistence across sessions
   (setopt org-agenda-files (expand-file-name ".agenda-files.txt" org-directory)))
 
+(declare-function org-element-parse-buffer "org-element.el")
+(declare-function org-element-map "org-element.el")
+
 (defun +org-has-todo-p ()
   "Return non-nil if the current buffer contains any active TODO headlines."
   (org-element-map (org-element-parse-buffer 'headline) 'headline
-    (lambda (h) (eq (org-element-property :todo-type h) 'todo))
-    nil 'first-match))
+                   (lambda (h) (eq (org-element-property :todo-type h) 'todo))
+                   nil 'first-match))
 
 ;; TODO: handle file rename and deletion.
 (defun +org-update-agenda ()
   "Automatically update the org agenda file list for the current buffer. "
-  (when (buffer-file-name)
+  (when (and (buffer-file-name) (derived-mode-p 'org-mode))
     (if (and (file-in-directory-p (buffer-file-name) org-directory)
              (+org-has-todo-p))
         (org-agenda-file-to-front)
@@ -3058,7 +3058,7 @@ not used, but is required by the hook."
 
 ;;;; Re-builder
 
-(setopt reb-re-syntax 'string)
+(setq reb-re-syntax 'string)
 
 ;;;; telega
 
@@ -3067,7 +3067,7 @@ not used, but is required by the hook."
 
 ;;;; ement
 
-(setopt ement-save-sessions t)
+(setq ement-save-sessions t)
 
 ;;;; rcirc
 
@@ -3091,23 +3091,23 @@ not used, but is required by the hook."
   (keymap-set erc-mode-map "C-c C-c" #'erc-send-current-line)
 
   ;; protect me from accidentally sending excess lines.
-  (setq erc-inhibit-multiline-input t
-        erc-send-whitespace-lines t
-        erc-ask-about-multiline-input t)
+  (setopt erc-inhibit-multiline-input t
+          erc-send-whitespace-lines t
+          erc-ask-about-multiline-input t)
   ;; scroll all windows to prompt when submitting input.
-  (setq erc-scrolltobottom-all t)
+  (setopt erc-scrolltobottom-all t)
 
   ;; reconnect automatically using a fancy strategy.
-  (setq erc-server-reconnect-function
-        #'erc-server-delayed-check-reconnect
-        erc-server-reconnect-timeout 30)
+  (setopt erc-server-reconnect-function
+          #'erc-server-delayed-check-reconnect
+          erc-server-reconnect-timeout 30)
 
   ;; show new buffers in the current window instead of a split.
-  (setq erc-interactive-display 'buffer)
+  (setopt erc-interactive-display 'buffer)
 
   ;; prefer one message line without continuation indicators.
-  (setq erc-fill-function #'erc-fill-wrap
-        erc-fill-static-center 18)
+  (setopt erc-fill-function #'erc-fill-wrap
+          erc-fill-static-center 18)
   (after-load! erc-fill
     (require 'erc-fill)
     (keymap-set erc-fill-wrap-mode-map "C-c =" #'erc-fill-wrap-nudge))
@@ -3116,7 +3116,7 @@ not used, but is required by the hook."
   (after-load! erc-track
     (setopt erc-track-faces-priority-list (remq 'erc-notice-face
                                                 erc-track-faces-priority-list)))
-  (setq erc-track-priority-faces-only 'all))
+  (setopt erc-track-priority-faces-only 'all))
 
 ;;;; consult-browser-hist
 
@@ -3187,7 +3187,7 @@ not used, but is required by the hook."
 
 ;;;; copyright
 
-(setopt copyright-year-ranges t)
+(setq-default copyright-year-ranges t)
 
 (defun +copyright-update ()
   "Update copyright year in the current buffer and save it.
@@ -3296,29 +3296,29 @@ BEG and END specify the region boundaries."
       (message "Cleared all text properties in region %d-%d" beg end))))
 
 (defun +toggle-side-window (side &optional frame)
-  "Toggle a side window on SIDE of FRAME.
+"Toggle a side window on SIDE of FRAME.
 When a side window exists on SIDE, close it and remember its state.
 When no side window exists on SIDE, restore the remembered state.
 
-SIDE is one of the symbols 'left, 'right, 'above, or 'below.
+SIDE is one of the symbols `left', `right', `above', or `below'.
 FRAME defaults to the selected frame."
-  (let* ((frame (window-normalize-frame frame))
-         (window--sides-inhibit-check t)
-         (side-win (window-with-parameter 'window-side side frame))
-         state)
-    (cond
-     (side-win
-      (setf (alist-get side (frame-parameter frame 'side-window-states))
-            (window-state-get side-win))
-      (delete-window side-win))
-     ((setq state (alist-get side (frame-parameter frame 'side-window-states)))
-      (let* ((size (if (memq side '(left right))
-                       (alist-get 'total-width state)
-                     (alist-get 'total-height state)))
-             (new-win (split-window (frame-root-window frame) (and size (- size)) side)))
-        (window-state-put state new-win)))
-     (t
-      (user-error "No remembered side window for this frame")))))
+(let* ((frame (window-normalize-frame frame))
+       (window--sides-inhibit-check t)
+       (side-win (window-with-parameter 'window-side side frame))
+       state)
+  (cond
+   (side-win
+    (setf (alist-get side (frame-parameter frame 'side-window-states))
+          (window-state-get side-win))
+    (delete-window side-win))
+   ((setq state (alist-get side (frame-parameter frame 'side-window-states)))
+    (let* ((size (if (memq side '(left right))
+                     (alist-get 'total-width state)
+                   (alist-get 'total-height state)))
+           (new-win (split-window (frame-root-window frame) (and size (- size)) side)))
+      (window-state-put state new-win)))
+   (t
+    (user-error "No remembered side window for this frame")))))
 
 (defun +toggle-side-window-left (&optional frame)
   "Toggle a side window on the left of FRAME.
@@ -3409,8 +3409,7 @@ Otherwise disable it."
   "d"     #'tui-locate
   "p"     #'tui-switch-project
   "e"     #'eshell
-  "s"     #'eat
-  "c"     #'telega-chat-with)
+  "s"     #'eat)
 
 (defvar-keymap doc-map
   :doc    "Documentation commands."
@@ -3482,8 +3481,7 @@ Otherwise disable it."
   "R"   #'rg-menu
   "s"   search-map
   "v"   #'vc-prefix-map
-  "w"   #'window-prefix-map
-  "C-'" #'claude-code-ide-menu)
+  "w"   #'window-prefix-map)
 
 (define-keymap :keymap ctl-x-4-map
   "t" #'eat-other-window
