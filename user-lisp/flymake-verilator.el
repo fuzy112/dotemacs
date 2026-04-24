@@ -25,6 +25,7 @@
 
 (require 'flymake-define)
 
+;;;###autoload
 (flymake-define flymake-verilator
   :documentation "Lint the verlog code."
   :command ("verilator" "--lint-only" :input)

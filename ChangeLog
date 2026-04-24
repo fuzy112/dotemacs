@@ -1,5 +1,21 @@
 2026-04-24  Zhengyi Fu  <i@fuzy.me>
 
+	Modernize coding style: move more options into after-load! blocks
+
+	* init.el: Move user option settings for bangs, ibuffer, embark,
+	eglot, recentf, saveplace, TeX, re-builder, ement, diff-hl into
+	`after-load!' blocks.  Replace `setq' with `setopt'.  Add
+	`declare-function' declarations.  Remove obsolete CRM advice
+	(Emacs 31+).  Define `+eglot-prefix-map` inside `after-load!`.
+	Use async byte-compilation for Elisp files.
+	* user-lisp/flymake-verilator.el: Add `;;;###autoload`.
+	* user-lisp/gptel-config.el (gptel-minibuffer-spinner): Add `:group'.
+	(gptel-make-openai "Kimi Code"): Fix lambda formatting.
+	(+gptel-language-tutor-primary-selection): Fix docstring.
+	Add `declare-function` for magit functions.
+
+2026-04-24  Zhengyi Fu  <i@fuzy.me>
+
 	Use `after-load!' for lazy loading; modernize coding style
 
 	* init.el (modus-themes): Remove workaround advice.  Load themes

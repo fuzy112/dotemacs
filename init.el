@@ -610,7 +610,7 @@ font-locking and indentation."
                              (let ((end (point)))
                                (beginning-of-defun)
                                (font-lock-ensure (point) end)
-                               (setq text (buffer-substring (point) end)))))))
+                               (buffer-substring (point) end))))))
         (add-text-properties 0 (length text)
                              '(line-prefix (space :align-to 2))
                              text)
@@ -630,6 +630,12 @@ font-locking and indentation."
   (keymap-set help-map "M" #'+gnus-read-ephemeral-emacs-search-group))
 
 (defvar url-http-response-status)
+(declare-function mm-url-encode-multipart-form-data "mm-url.el")
+(declare-function gnus-group-read-ephemeral-group "gnus-group.el")
+(declare-function mml-compute-boundary "mml.el")
+(defvar url-request-method)
+(defvar url-request-extra-headers)
+(defvar url-request-data)
 (defun +gnus-read-ephemeral-public-inbox-search-group (url query include-all)
   (interactive "sURL: \nsQuery: \nP")
   (require 'gnus-group)
@@ -668,21 +674,22 @@ font-locking and indentation."
 
 ;;;; bangs
 
-(setq bangs-user-bangs
-      '(("Mailing lists mirrored at yhetil.org" "yhetil"
-         "https://yhetil.org/$1/?q=$2"
-         :regex "(\\S+)\\s+(.*)" :fmt (url_encode_placeholder))
-        ("Boss 直聘" "zhipin"
-         "https://www.zhipin.com/web/geek/jobs?query={{{s}}}"
-         :triggers ("boss"))
-        ("知乎直达" "zhida" "https://zhida.zhihu.com/search?q={{{s}}}")
-        ("Emacs China" "emacs-china"
-         "https://emacs-china.org/search?q={{{s}}}"
-         :triggers ("emacsc" "ec"))
-        ("小红书" "xhs"
-         "https://www.xiaohongshu.com/search_result_ai?keyword={{{s}}}"
-         :triggers ("rednote" "redn"))))
-(setq bangs-pretty-print-json t)
+(after-load! bangs
+  (setopt bangs-user-bangs
+          '(("Mailing lists mirrored at yhetil.org" "yhetil"
+             "https://yhetil.org/$1/?q=$2"
+             :regex "(\\S+)\\s+(.*)" :fmt (url_encode_placeholder))
+            ("Boss 直聘" "zhipin"
+             "https://www.zhipin.com/web/geek/jobs?query={{{s}}}"
+             :triggers ("boss"))
+            ("知乎直达" "zhida" "https://zhida.zhihu.com/search?q={{{s}}}")
+            ("Emacs China" "emacs-china"
+             "https://emacs-china.org/search?q={{{s}}}"
+             :triggers ("emacsc" "ec"))
+            ("小红书" "xhs"
+             "https://www.xiaohongshu.com/search_result_ai?keyword={{{s}}}"
+             :triggers ("rednote" "redn"))))
+  (setopt bangs-pretty-print-json t))
 
 ;;;; breadcrumb
 
@@ -811,13 +818,13 @@ falls back to its default handling."
 
 ;; Allow recursive minibuffers, so commands invoked from within the minibuffer
 ;; (e.g., C-x C-f followed by M-:) can themselves use the minibuffer.
-(setq enable-recursive-minibuffers t)
+(setopt enable-recursive-minibuffers t)
 (minibuffer-depth-indicate-mode)
-(setq minibuffer-depth-indicator-function
-      (lambda (depth)
-        (propertize
-         (concat (make-string depth ?⮐) " ")
-         'face 'minibuffer-depth-indicator)))
+(setopt minibuffer-depth-indicator-function
+        (lambda (depth)
+          (propertize
+           (concat (make-string depth ?⮐) " ")
+           'face 'minibuffer-depth-indicator)))
 
 ;; Autoload Vertico's main advice function and apply it around the two core
 ;; completing-read entry points, ensuring Vertico is used everywhere Emacs
@@ -858,23 +865,6 @@ falls back to its default handling."
     "\\<manual name\\>" 'info-manual
     "\\<Log rev,s\\>" 'magit-rev)
   (marginalia-mode))
-
-;;;; crm
-
-(defvar crm-separator)
-(when (version< emacs-version "31.0")
-  (define-advice completing-read-multiple
-      (:filter-args (args) show-crm-separator)
-    "Add prompt indicator to `completing-read-multiple'.
-ARGS: see `completion-read-multiple'."
-    (cons (format "[`CRM': %s]  %s"
-                  (propertize
-                   (replace-regexp-in-string
-                    "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                    crm-separator)
-                   'face 'error)
-                  (car args))
-          (cdr args))))
 
 ;;;; cursor-sensor
 
@@ -995,8 +985,6 @@ ARGS: see `completion-read-multiple'."
 
 (keymap-global-set "C-." #'embark-act)
 (keymap-global-set "C-c a" #'embark-act)
-(setq embark-help-key "?")
-(setq prefix-help-command #'embark-prefix-help-command)
 
 (define-advice embark-dwim (:before (&rest _args) mouse)
   (when (mouse-event-p last-command-event)
@@ -1052,10 +1040,13 @@ value for USE-OVERLAYS."
       (ansi-color-apply-on-region beg end))))
 
 (after-load! embark
-  (setq embark-cycle-key "C-.")
-  (setq embark-indicators '(embark-minimal-indicator
-                            embark-highlight-indicator
-                            embark-isearch-highlight-indicator))
+  (setopt embark-help-key "?")
+  (setopt prefix-help-command #'embark-prefix-help-command)
+
+  (setopt embark-cycle-key "C-.")
+  (setopt embark-indicators '(embark-minimal-indicator
+                              embark-highlight-indicator
+                              embark-isearch-highlight-indicator))
   (keymap-set embark-file-map "#" '+embark/find-file-as-root)
   (keymap-set embark-bookmark-map "W" '+embark/eww-open-bookmark)
   (keymap-set embark-bookmark-map "u" '+embark/browse-url-open-bookmark)
@@ -1183,7 +1174,7 @@ value for USE-OVERLAYS."
    :sort          t
    :lookup        (lambda (selected &rest _) selected)))
 
-(setq read-buffer-function #'+consult--read-buffer-function)
+(setopt read-buffer-function #'+consult--read-buffer-function)
 
 ;; Add preview for `project-read-file-name-function'
 (defun +consult--read-project-file-name-function (prompt all-files &optional pred hist _mb)
@@ -1206,7 +1197,7 @@ value for USE-OVERLAYS."
                      :preview-key consult-preview-key
                      :lookup (lambda (selected &rest _) selected))))
 
-(setq project-read-file-name-function #'+consult--read-project-file-name-function)
+(setopt project-read-file-name-function #'+consult--read-project-file-name-function)
 
 
 ;; Use `orderless-compile' as the `consult''s default regexp compiler.
@@ -1313,91 +1304,94 @@ value for USE-OVERLAYS."
 ;; Replace `list-buffers' with `ibuffer-jump'.
 (keymap-global-set "<remap> <list-buffers>" #'ibuffer-jump)
 
-(setq ibuffer-expert t
-      ibuffer-show-empty-filter-groups nil
-      ibuffer-default-sorting-mode 'filename/process
-      ibuffer-use-header-line t
-      ibuffer-default-shrink-to-minimum-size nil)
+(after-load! ibuffer
+  (setopt ibuffer-expert t
+          ibuffer-show-empty-filter-groups nil
+          ibuffer-default-sorting-mode 'filename/process
+          ibuffer-use-header-line t
+          ibuffer-default-shrink-to-minimum-size nil)
 
-(setq ibuffer-saved-filter-groups
-      '(("Main"
-         ("Directories" (mode . dired-mode))
-         ("C++" (or
-                 (mode . c++-mode)
-                 (mode . c++-ts-mode)
-                 (mode . c-mode)
-                 (mode . c-ts-mode)
-                 (mode . c-or-c++-ts-mode)))
-         ("Python" (or
-                    (mode . python-mode)
-                    (mode . python-ts-mode)))
-         ("Build" (or
-                   (mode . make-mode)
-                   (mode . amkefile-gmake-mode)
-                   (name . "\\`Makefile\\'")
-                   (mode . change-log-mode)))
-         ("Scripts" (or
-                     (mode . shell-script-mode)
-                     (mode . shell-mode)))
-         ("Config" (or
-                    (mode . conf-mode)
-                    (mode . conf-toml-mode)
-                    (mode . toml-ts-mode)
-                    (mode . toml-mode)
-                    (mode . yaml-mode)
-                    (mode . yaml-ts-mode)
-                    (mode . json-ts-mode)
-                    (mode . js-json-mode)
-                    (mode . gitconfig-mode)))
-         ("Web" (or
-                 (mode . html-mode)
-                 (mode . web-mode)
-                 (mode . nxml-mode)))
-         ("Markup" (or
-                    (mode . markdown-mode)
-                    (mode . markdown-ts-mode)
-                    (mode . adoc-mode)
-                    (mode . rst-mode)))
-         ("Org-mode" (mode . org-mode))
-         ("Magit" (or
-                   (mode . magit-mode)
-                   (mode . magit-log-mode)
-                   (mode . magit-blame-mode)
-                   (mode . magit-cherry-mode)
-                   (mode . magit-diff-mode)
-                   (mode . magit-process-mode)
-                   (mode . magit-status-mode)
-                   (mode . magit-stash-mode)))
-         ("Apps" (or
-                  (mode . eww-mode)
-                  (mode . telega-chat-mode)
-                  (mode . telega-root-mode)
-                  (mode . telega-webpage-mode)
-                  (mode . gnus-group-mode)
-                  (mode . gnus-summary-mode)
-                  (mode . gnus-article-mode)))
-         ("Doc" (or
-                 (mode . Info-mode)
-                 (mode . Man-mode)
-                 (mode . Woman-mode)
-                 (mode . devdocs-mode)
-                 (mode . good-doc-mode)))
-         ("Terminal" (or
-                      (mode . term-mode)
-                      (mode . eat-mode)
-                      (mode . vterm-mode)))
-         ("AI" (or
-                (mode . gptel-mode)
-                (name . "\\`<eca.*:.+>\\'")))
-         ("Emacs" (or
-                   (mode . emacs-lisp-mode)
-                   (mode . help-mode)
-                   (name . "\\*Messages\\*")
-                   (name . "\\`\\.newsrc-dribble\\'")
-                   (name . "\\*Completions\\*")
-                   (mode . lisp-interaction-mode)
-                   (name . "\\*log-edit-files\\*")
-                   (name . "\\*Process List\\*"))))))
+  (setopt ibuffer-saved-filter-groups
+          '(("Main"
+             ("Directories" (mode . dired-mode))
+             ("C++" (or
+                     (mode . c++-mode)
+                     (mode . c++-ts-mode)
+                     (mode . c-mode)
+                     (mode . c-ts-mode)
+                     (mode . c-or-c++-ts-mode)))
+             ("Python" (or
+                        (mode . python-mode)
+                        (mode . python-ts-mode)))
+             ("Build" (or
+                       (mode . make-mode)
+                       (mode . amkefile-gmake-mode)
+                       (name . "\\`Makefile\\'")
+                       (mode . change-log-mode)))
+             ("Scripts" (or
+                         (mode . shell-script-mode)
+                         (mode . shell-mode)))
+             ("Config" (or
+                        (mode . conf-mode)
+                        (mode . conf-toml-mode)
+                        (mode . toml-ts-mode)
+                        (mode . toml-mode)
+                        (mode . yaml-mode)
+                        (mode . yaml-ts-mode)
+                        (mode . json-ts-mode)
+                        (mode . js-json-mode)
+                        (mode . gitconfig-mode)))
+             ("Web" (or
+                     (mode . html-mode)
+                     (mode . web-mode)
+                     (mode . nxml-mode)))
+             ("Markup" (or
+                        (mode . markdown-mode)
+                        (mode . markdown-ts-mode)
+                        (mode . adoc-mode)
+                        (mode . rst-mode)))
+             ("Org-mode" (mode . org-mode))
+             ("Magit" (or
+                       (mode . magit-mode)
+                       (mode . magit-log-mode)
+                       (mode . magit-blame-mode)
+                       (mode . magit-cherry-mode)
+                       (mode . magit-diff-mode)
+                       (mode . magit-process-mode)
+                       (mode . magit-status-mode)
+                       (mode . magit-stash-mode)))
+             ("Apps" (or
+                      (mode . eww-mode)
+                      (mode . telega-chat-mode)
+                      (mode . telega-root-mode)
+                      (mode . telega-webpage-mode)
+                      (mode . gnus-group-mode)
+                      (mode . gnus-summary-mode)
+                      (mode . gnus-article-mode)))
+             ("Doc" (or
+                     (mode . Info-mode)
+                     (mode . Man-mode)
+                     (mode . Woman-mode)
+                     (mode . devdocs-mode)
+                     (mode . good-doc-mode)))
+             ("Terminal" (or
+                          (mode . term-mode)
+                          (mode . eat-mode)
+                          (mode . vterm-mode)))
+             ("AI" (or
+                    (mode . gptel-mode)
+                    (name . "\\`<eca.*:.+>\\'")))
+             ("Emacs" (or
+                       (mode . emacs-lisp-mode)
+                       (mode . help-mode)
+                       (name . "\\*Messages\\*")
+                       (name . "\\`\\.newsrc-dribble\\'")
+                       (name . "\\*Completions\\*")
+                       (mode . lisp-interaction-mode)
+                       (name . "\\*log-edit-files\\*")
+                       (name . "\\*Process List\\*")))))))
+
+(declare-function ibuffer-switch-to-saved-filter-groups "ibuf-ext.el")
 
 (defun ibuffer-config-saved-filter-groups ()
   (ibuffer-switch-to-saved-filter-groups "Main"))
@@ -1460,8 +1454,8 @@ value for USE-OVERLAYS."
   "Insert the name of the file just opened or written into the recent list." )
 (add-hook 'find-file-hook #'recentf-track-opened-file)
 ;; (add-hook 'buffer-list-update-hook #'recentf-track-opened-file)
-(setq recentf-max-saved-items 8192)
 (after-load! recentf
+  (setopt recentf-max-saved-items 8192)
   (let ((inhibit-message t))
     (recentf-mode)))
 
@@ -1469,12 +1463,13 @@ value for USE-OVERLAYS."
 
 ;; (setq save-place-file
 ;;       (locate-user-emacs-file '("places.eld.zst")))
-(setq save-place-limit 65536)
+
 (autoload 'save-place-find-file-hook "saveplace")
 (autoload 'save-place-dired-hook "saveplace")
 (add-hook 'find-file-hook #'save-place-find-file-hook)
 (add-hook 'dired-initial-position-hook #'save-place-dired-hook)
 (after-load! saveplace
+  (setopt save-place-limit 65536)
   (save-place-mode))
 
 (define-advice save-place-find-file-hook (:after (&rest _) recenter)
@@ -1568,6 +1563,7 @@ value for USE-OVERLAYS."
                                :as #'consult--buffer-pair)))
   "Compilation buffer source for `consult-buffer'.")
 
+(defvar consult-project-function)
 (defvar consult-source-project-compilation-buffer
   `( :name     "Project Compilation Buffer"
      :narrow   ?p
@@ -1754,27 +1750,26 @@ then switches to the selected buffer and invokes `recompile'."
   (setopt eglot-autoshutdown t
           eglot-extend-to-xref t))
 
-(defvar-keymap +eglot-prefix-map
-  :prefix '+eglot-prefix-map
-  "d" #'eglot-find-declaration
-  "t" #'eglot-find-typeDefinition
-  "i" #'eglot-find-implementation
-  "s" #'consult-eglot-symbols
-  "a" #'eglot-code-actions
-  "n" #'eglot-code-action-inline
-  "e" #'eglot-code-action-extract
-  "r" #'eglot-code-action-rewrite
-  "f" #'eglot-code-action-quickfix
-  "o" #'eglot-code-action-organize-imports
-  "/" #'eglot-format
-  "c" #'eglot-show-call-hierarchy
-  "T" #'eglot-show-type-hierarchy
-  "w" #'eglot-show-workspace-configuration
-  "C" #'eglot-signal-didChangeConfiguration
-  "u" #'eglot-shutdown
-  "U" #'eglot-shutdown-all)
-
 (after-load! eglot
+  (defvar-keymap +eglot-prefix-map
+    :prefix '+eglot-prefix-map
+    "d" #'eglot-find-declaration
+    "t" #'eglot-find-typeDefinition
+    "i" #'eglot-find-implementation
+    "s" #'consult-eglot-symbols
+    "a" #'eglot-code-actions
+    "n" #'eglot-code-action-inline
+    "e" #'eglot-code-action-extract
+    "r" #'eglot-code-action-rewrite
+    "f" #'eglot-code-action-quickfix
+    "o" #'eglot-code-action-organize-imports
+    "/" #'eglot-format
+    "c" #'eglot-show-call-hierarchy
+    "T" #'eglot-show-type-hierarchy
+    "w" #'eglot-show-workspace-configuration
+    "C" #'eglot-signal-didChangeConfiguration
+    "u" #'eglot-shutdown
+    "U" #'eglot-shutdown-all)
   (keymap-set eglot-mode-map "C-x x /" #'eglot-format)
   (keymap-set eglot-mode-map "C-c C-a" #'eglot-code-actions)
   (keymap-set eglot-mode-map "C-c l" '+eglot-prefix-map)
@@ -2030,6 +2025,11 @@ With no active region, operate on the whole buffer."
 (after-load! elisp-mode
   (when (boundp 'trusted-content)
     (add-to-list 'trusted-content (locate-user-emacs-file "site-lisp/")))
+  (keymap-set emacs-lisp-mode-map
+              "<remap> <elisp-byte-compile-file>"
+              (lambda ()
+                (interactive)
+                (async-byte-compile-file (buffer-file-name))))
   (when (native-comp-available-p)
     (keymap-set emacs-lisp-mode-map "C-c C-l" #'emacs-lisp-native-compile-and-load))
   (keymap-set lisp-interaction-mode-map "C-c C-j" #'eval-print-last-sexp))
@@ -2093,6 +2093,9 @@ With no active region, operate on the whole buffer."
 
 (add-hook 'nix-repl-mode-hook #'nix-repl-setup)
 
+(declare-function nix--make-repl-in-buffer "nix-repl.el")
+(declare-function nix-repl-mode "nix-repl.el")
+
 (defun nix-get-repl ()
   "Get or create the Nix REPL process.
 Returns the process object for the *Nix-REPL* buffer."
@@ -2104,6 +2107,8 @@ Returns the process object for the *Nix-REPL* buffer."
       (nix-repl-mode))
     (get-buffer-process (current-buffer))))
 
+(defvar comint-input-ring)
+(defvar comint-input-ring-index)
 (defun nix-send-string-to-repl (str &optional proc)
   "Send STR to the Nix REPL.
 If PROC is not provided, uses the default Nix REPL process."
@@ -2307,6 +2312,7 @@ confirmed."
 (after-load! tramp
   (setopt tramp-verbose 2))
 
+(defvar tramp-persistency-file-name)
 (define-advice tramp-dump-connection-properties (:after () chmod)
   "Change permission of `tramp-persistency-file-name' to 0600."
   (when (file-readable-p tramp-persistency-file-name)
@@ -2360,6 +2366,7 @@ confirmed."
 
 (keymap-set vc-prefix-map "." '+vc/dir-here)
 
+(declare-function vc-read-backend "vc.el")
 (defun +vc/dir-here (&optional backend)
   (interactive
    (list
@@ -2405,6 +2412,7 @@ confirmed."
 (after-load! magit-log
   (cl-pushnew "--show-signature" (get 'magit-log-mode 'magit-log-default-arguments)))
 
+(declare-function magit-staged-files "magit-commit.el")
 (defun +git-commit--log-edit-h ()
   (when (string-empty-p (buffer-substring-no-properties (point-min) (line-end-position 1)))
     (let ((params
@@ -2429,7 +2437,7 @@ confirmed."
 
 (defvar add-log-always-start-new-record)
 (defvar add-log-buffer-file-name-function)
-
+(declare-function add-log-find-changelog-buffer "log-edit.el")
 (define-advice add-change-log-entry
     (:around (fun whoami changelog-file-name &rest rest) always-start-new-record)
   "Ensure a new change log entry is always started if file is unmodified.
@@ -2473,6 +2481,9 @@ new record is started."
 (after-load! magit-mode
   (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh))
 
+(defvar diff-hl-side)
+(defvar diff-hl-margin-symbols-alist)
+
 (after-load! diff-hl
   (setopt diff-hl-margin-symbols-alist '((insert  . "增")
                                          (delete  . "刪")
@@ -2480,7 +2491,8 @@ new record is started."
                                          (unknown . "疑")
                                          (ignored . "略")))
 
-  (setopt diff-hl-update-async (fboundp 'make-thread)))
+  (setopt diff-hl-update-async (fboundp 'make-thread))
+  (add-hook 'diff-hl-margin-mode-hook #'diff-hl-margin-ensure-visible))
 
 (define-advice diff-hl-margin-ensure-visible (:override () auto-width)
   "Ensure that diff-hl margin is wide enough to display all symbols.
@@ -2492,7 +2504,7 @@ Then refresh all windows displaying the current buffer."
     (set width-var (apply #'max (map-values-apply #'string-width diff-hl-margin-symbols-alist))))
   (dolist (win (get-buffer-window-list))
     (set-window-buffer win (current-buffer))))
-(add-hook 'diff-hl-margin-mode-hook #'diff-hl-margin-ensure-visible)
+
 
 (after-load! (:or diff-hl vc magit)
   (global-diff-hl-mode)
@@ -2695,6 +2707,9 @@ Then refresh all windows displaying the current buffer."
 
 ;;;; prism
 
+(declare-function prism-blend "prism.el")
+(declare-function prism-set-colors "prism.el")
+
 (defun +prism--set-colors ()
   "Configure colors used by prism according to the current theme.
 This function sets up a palette of 16 colors with varying levels
@@ -2724,7 +2739,7 @@ comments and strings."
                   (ef-themes--list-enabled-themes))
              (with-no-compile!
                (ef-themes-with-colors
-                 (list red green magenta cyan))))
+                (list red green magenta cyan))))
 
             ;; For other themes, blend generic colors with foreground
             (t
@@ -2764,6 +2779,7 @@ not used, but is required by the hook."
 
 (after-load! message
   (setopt message-mail-alias-type 'ecomplete))
+(declare-function message-ecomplete-capf "message.el")
 (defun +message-ecompletion-capf-setup ()
   (add-hook 'completion-at-point-functions #'message-ecomplete-capf nil t))
 (add-hook 'message-mode-hook #'+message-ecompletion-capf-setup)
@@ -2899,9 +2915,10 @@ not used, but is required by the hook."
 (defun +org-has-todo-p ()
   "Return non-nil if the current buffer contains any active TODO headlines."
   (org-element-map (org-element-parse-buffer 'headline) 'headline
-                   (lambda (h) (eq (org-element-property :todo-type h) 'todo))
-                   nil 'first-match))
+    (lambda (h) (eq (org-element-property :todo-type h) 'todo))
+    nil 'first-match))
 
+(defvar org-directory)
 ;; TODO: handle file rename and deletion.
 (defun +org-update-agenda ()
   "Automatically update the org agenda file list for the current buffer. "
@@ -3049,16 +3066,18 @@ not used, but is required by the hook."
 
 ;;;; TeX
 
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq-default TeX-master nil)
+(after-load! auctex
+  (setopt TeX-auto-save t)
+  (setopt TeX-parse-self t)
+  (setopt TeX-master nil))
 
 (add-hook 'LaTeX-mode-hook #'turn-on-reftex) ; AUCTeX
 (add-hook 'latex-mode-hook #'turn-on-reftex) ; Emacs latex mode
 
 ;;;; Re-builder
 
-(setq reb-re-syntax 'string)
+(after-load! re-builder
+  (setopt reb-re-syntax 'string))
 
 ;;;; telega
 
@@ -3067,7 +3086,8 @@ not used, but is required by the hook."
 
 ;;;; ement
 
-(setq ement-save-sessions t)
+(after-load! ement
+  (setopt ement-save-sessions t))
 
 ;;;; rcirc
 
@@ -3150,7 +3170,7 @@ not used, but is required by the hook."
 
 ;;;; undo-fu-session
 
-(setq undo-fu-session-compression 'zst)
+(setopt undo-fu-session-compression 'zst)
 (undo-fu-session-global-mode)
 
 ;;;; vundo
