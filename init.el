@@ -556,9 +556,6 @@ attributes."
                    (list 'magit-diff-mode 'magit-revision-mode
                          'xref--xref-buffer-mode 'ediff-mode))))
 
-(keymap-set other-window-repeat-map "<tab>" #'other-window)
-(keymap-set other-window-repeat-map "<backtab>" #'other-window-backward)
-
 ;;;; tab-bar
 
 (setopt tab-bar-tab-name-format-function

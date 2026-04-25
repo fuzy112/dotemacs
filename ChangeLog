@@ -1,5 +1,9 @@
 2026-04-25  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (other-window-repeat-map): Remove <tab> and <backtab>.
+
+2026-04-25  Zhengyi Fu  <i@fuzy.me>
+
 	Add Chinese help messages for Ediff
 
 	* user-lisp/ediff-help-cn.el: New file.
