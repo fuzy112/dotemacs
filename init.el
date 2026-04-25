@@ -20,7 +20,30 @@
 
 ;;; Commentary:
 
+;; This is my personal Emacs configuration file.
 ;;
+;; Key features of this configuration include:
+;;
+;; - Meow modal editing with a Dvorak layout.
+;; - Extensive use of `orderless', `vertico', `consult', `embark',
+;;   `corfu', and `marginalia' for a modern completion and navigation
+;;   experience.
+;; - Integration with `eglot' for LSP support, with automatic discovery
+;;   of language servers via Nix.
+;; - A custom theme setup based on `modus-themes' with a dedicated
+;;   `dotemacs' theme for face customizations.
+;; - Font configuration for Iosevka, Sarasa Gothic, and Nerd Fonts.
+;; - Support for various programming languages, including C/C++, Python,
+;;   Rust, Nix, JavaScript, and more.
+;; - Org-mode setup with `denote' for note-taking and knowledge
+;;   management.
+;; - Magit and version control integration with `diff-hl'.
+;; - Terminal emulation via `eat' and `eshell'.
+;; - Custom keybindings and utility functions for window management,
+;;   side windows, and more.
+;;
+;; The configuration is split into several sections, each prefixed with
+;; a `;;;;' header for easy navigation.
 
 ;;; Code:
 
