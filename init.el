@@ -1549,71 +1549,25 @@ value for USE-OVERLAYS."
                              sparc-pascal-file sparc-pascal-line
                              sparc-pascal-example sun sun-ada watcom 4bsd))))
 
-(defvar consult-source-compilation-buffer
-  `( :name     "Compilation Buffer"
-     :narrow   ?b
-     :category buffer
-     :face     consult-buffer
-     :history  smart-recompile-buffer-history
-     :state    ,#'consult--buffer-preview
-     :items
-     ,(lambda ()
-        (consult--buffer-query :predicate #'compilation-buffer-p
-                               :sort 'visibility
-                               :as #'consult--buffer-pair)))
-  "Compilation buffer source for `consult-buffer'.")
-
-(defvar consult-project-function)
-(defvar consult-source-project-compilation-buffer
-  `( :name     "Project Compilation Buffer"
-     :narrow   ?p
-     :category buffer
-     :face     consult-buffer
-     :history  smart-recompile-buffer-history
-     :state    ,#'consult--buffer-preview
-     :enabled  ,(lambda () consult-project-function)
-     :default  t
-     :items
-     ,(lambda ()
-        (when-let* ((root (consult--project-root)))
-          (consult--buffer-query :predicate #'compilation-buffer-p
-                                 :sort 'visibility
-                                 :directory root
-                                 :as #'consult--buffer-pair))))
-  "Project compilation buffer source for `consult-buffer'.")
-
-(defvar consult-compilation-buffer-sources
-  '(consult-source-compilation-buffer
-    consult-source-project-compilation-buffer))
-
-(defvar smart-recompile-buffer-history nil)
-
-(defun smart-recompile ()
-  "Prompt for a compilation buffer and re-run its last compilation command.
-
-Uses `consult--multi' to select from available compilation buffers,
-then switches to the selected buffer and invokes `recompile'."
-  (interactive)
-  (let* ((selected (consult--multi consult-compilation-buffer-sources
-                                   :prompt "Compilation buffer: "
-                                   :require-match t
-                                   :history 'smart-recompile-buffer-history
-                                   :sort nil))
-         (buffer (car selected)))
-    (with-current-buffer buffer
-      (let ((compilation-buffer-name-function (lambda (_) (buffer-name buffer))))
-        (recompile)))))
-
 ;;;; comint
 
 (after-load! comint
   (add-hook 'comint-output-filter-functions #'comint-osc-process-output)
   (setopt comint-prompt-read-only t
           comint-buffer-maximum-size 2048
-          comint-terminfo-terminal "dumb-emacs-ansi"))
+          comint-terminfo-terminal "dumb-emacs-ansi")
+  (setopt comint-input-ring-size 10000
+          comint-input-ignoredups t
+          comint-history-isearch 'dwim
+          comint-input-autoexpand t
+          comint-insert-previous-argument-from-end t
+          comint-buffer-maximum-size 20000
+          comint-scroll-to-bottom-on-input t
+          comint-move-point-for-output nil
+          comint-scroll-show-maximum-output nil
+          comint-pager "cat"))
 
 ;;;; grep
-
 (after-load! grep
   (setopt grep-use-headings t))
 
@@ -2293,19 +2247,9 @@ confirmed."
   (setopt project-vc-ignores (seq-union project-vc-ignores '(".pc")))
   (setopt project-vc-extra-root-markers
           (seq-union project-vc-extra-root-markers
-                     '(".project-root" "configure.ac" "Cargo.toml" "package.json"))))
+                     '(".project-root" "configure.ac" "Cargo.toml" "package.json")))
 
-(defvar per-project-compile-history nil)
-
-(define-advice project-compile (:around (&rest args) project-local-history)
-  (let* ((root (project-root (project-current t)))
-         (project-hist (alist-get root per-project-compile-history nil nil #'equal))
-         (compile-history project-hist)
-         (compile-command (and project-hist
-                               (car project-hist))))
-    (unwind-protect
-        (apply args)
-      (setf (alist-get root per-project-compile-history nil nil #'equal) compile-history))))
+  (project-compile-history-mode))
 
 ;;;; tramp
 
@@ -2650,7 +2594,6 @@ Then refresh all windows displaying the current buffer."
   (setopt savehist-additional-variables '((kill-ring . 5)
                                           search-ring
                                           regexp-search-ring
-                                          per-project-compile-history
                                           corfu-history))
   (setopt savehist-ignored-variables '(buffer-name-history))
   (savehist-mode))
@@ -3541,7 +3484,7 @@ Otherwise disable it."
   "M-c"    #'capitalize-dwim
   "M-l"    #'downcase-dwim
   "M-u"    #'upcase-dwim
-  "<f5>"   #'smart-recompile
+  "<f5>"   #'compile
   "<remap> <dabbrev-expand>" #'hippie-expand)
 
 ;;;; Enabling some disabled commands
