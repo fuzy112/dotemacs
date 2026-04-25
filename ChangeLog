@@ -1,3 +1,61 @@
+2026-04-25  Zhengyi Fu  <i@fuzy.me>
+
+	Allow extra custom prompt in +gptel-commit-staged via prefix argument
+
+	* user-lisp/gptel-config.el (+gptel-commit-staged): When invoked with a
+	prefix argument, prompt for additional user instructions and include
+	them in the commit generation request wrapped in `<user-prompt>` tags.
+	Use shared `gptel--minibuffer-prompt-history` for minibuffer input
+	history.
+
+2026-04-25  Zhengyi Fu  <i@fuzy.me>
+
+	Modernize: replace `setq' with `setopt' and tidy up settings
+
+	* init.el (meow-setup, +maybe-init-fontset, completion-styles)
+	(completion-category-defaults, completion-category-overrides)
+	(completions-*, vertico-quick*, tempel-path, register-preview-*)
+	(elisp-fontify-semantically, browse-url-browser-function): Use
+	`setopt' instead of `setq' for user options to leverage the
+	customization system.
+	(compilation-after-load): Remove obsolete
+	`compilation-auto-jump-to-first-error' setting.  Add
+	`ansi-color-compilation-filter' to `compilation-filter-hook' to
+	colorize compilation output.
+	(consult-after-jump-hook): Use separate `remove-hook' and
+	`add-hook' calls instead of `cl-nsubstitute' for clarity.
+	(savehist): Drop stale `savehist-additional-variables' block.
+	Indent all multi-line `setopt' forms consistently.
+
+2026-04-25  Zhengyi Fu  <i@fuzy.me>
+
+	Add project-specific compile history package, clean up compile configuration
+
+	* user-lisp/project-compile-history.el: New package implementing
+	`project-compile-history-mode', a global minor mode that maintains
+	separate compile command history for each project.  Persists history
+	to `project-compile-history.eld' in the user Emacs directory, uses an
+	obarray for efficient history storage, and advises `project-compile'
+	to use per-project history instead of the global compile history.
+
+	* init.el (consult-source-compilation-buffer)
+	(consult-source-project-compilation-buffer)
+	(consult-compilation-buffer-sources, smart-recompile-buffer-history)
+	(smart-recompile): Remove custom compilation buffer selection and
+	recompile functionality.
+	(<f5> keybinding): Rebind from `smart-recompile' to `compile'.
+	(comint): Add settings for 10000-entry input ring, duplicate input
+	suppression, dwim history isearch, input autoexpand, previous argument
+	insertion from end, increased maximum buffer size (20000 lines),
+	scroll-to-bottom on input, disabled output auto-scrolling, and set
+	`comint-pager' to "cat".
+	(per-project-compile-history, ad-hoc project-compile advice): Remove
+	manual project compile history implementation, replace with enabling
+	`project-compile-history-mode'.
+	(savehist-additional-variables): Remove `per-project-compile-history',
+	as the new mode handles persistence of project compile histories
+	itself.
+
 2026-04-24  Zhengyi Fu  <i@fuzy.me>
 
 	Modernize coding style: move more options into after-load! blocks
