@@ -1,5 +1,9 @@
 2026-04-25  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (consult-theme): Add advice to persist theme selections.
+
+2026-04-25  Zhengyi Fu  <i@fuzy.me>
+
 	project-compile-history: Add autorevert
 
 	* user-lisp/project-compile-history.el
