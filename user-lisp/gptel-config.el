@@ -391,6 +391,8 @@ in the git editor for final editing before committing."
     (let ((gptel-backend gptel-backend)
 	  (gptel-model gptel-model)
 	  (dir default-directory)
+	  (extra-prompt (and current-prefix-arg
+			     (read-string "Extra prompt: " nil 'gptel--minibuffer-prompt-history)))
 	  gptel-use-context
 	  gptel-use-tools)
       (insert "<git-status>")
@@ -405,6 +407,10 @@ in the git editor for final editing before committing."
       (unless (zerop (magit-process-git t "log" "-n10" "--stat"))
 	(error "Failed to run git log"))
       (insert "</git-log>\n")
+      (when extra-prompt
+	(insert "<user-prompt>")
+	(insert extra-prompt)
+	(insert "\n</user-prompt>\n"))
       (gptel-request
 	  (buffer-string)
 	:system (alist-get 'commit gptel-directives)
