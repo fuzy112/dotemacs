@@ -72,3 +72,6 @@ tramp.eld
 /bookmarks.eld
 /.agent-shell/
 /agent/
+/project-compile-history.eld
+/var/
+/tramp
