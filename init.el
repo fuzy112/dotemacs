@@ -53,9 +53,9 @@
 
 (defun meow-setup ()
   "Setup meow keybindings for Dvorak layout."
-  (setq meow-keypad-leader-dispatch "C-c")
-  (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
-  (setq meow-use-clipboard t)
+  (setopt meow-keypad-leader-dispatch "C-c")
+  (setopt meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
+  (setopt meow-use-clipboard t)
   (alist-delq! meow-keypad-start-keys ?h)
   (meow-leader-define-key
    '("1" . meow-digit-argument)
@@ -323,8 +323,8 @@ Otherwise, switch to the other window."
 
 (add-hook 'server-after-make-frame-hook #'+maybe-init-fontset)
 
-(setq xft-ignore-color-fonts nil
-      face-ignored-fonts nil)
+(setopt xft-ignore-color-fonts nil
+        face-ignored-fonts nil)
 
 ;;;; themes
 
@@ -727,37 +727,37 @@ font-locking and indentation."
 ;; Search for candidates with orderless first, fall back to the “basic”
 ;; style (Emacs standard prefix + substring) when orderless returns no
 ;; matches.
-(setq completion-styles '(orderless basic))
+(setopt completion-styles '(orderless basic))
 
 ;; Let categories decide everything, do not force any extra defaults.
-(setq completion-category-defaults nil)
+(setopt completion-category-defaults nil)
 
 ;; --- Category-specific tweaks ----------------------------------------
 ;; Different kinds of completions benefit from different matching
 ;; behaviour, so override the style on a per-category basis:
-(setq completion-category-overrides
-      '(
-        ;; For file names the default `basic' already deals with partial
-        ;; paths (“~/.e” → “~/.emacs.d/”), keep it.
-        (file        . ((styles . (basic partial-completion))))
+(setopt completion-category-overrides
+        '(
+          ;; For file names the default `basic' already deals with partial
+          ;; paths (“~/.e” → “~/.emacs.d/”), keep it.
+          (file        . ((styles . (basic partial-completion))))
 
-        ;; Make symbols and symbol-help use flexible matching.
-        (symbol      . ((styles . (orderless+flex))))
-        (symbol-help . ((styles . (orderless+flex))))
+          ;; Make symbols and symbol-help use flexible matching.
+          (symbol      . ((styles . (orderless+flex))))
+          (symbol-help . ((styles . (orderless+flex))))
 
-        ;; Commands and variables are represented mostly by their
-        ;; command/variable names – initialism matching shines here.
-        (command     . ((styles . (orderless+initialism))))
-        (variable    . ((styles . (orderless+initialism))))
+          ;; Commands and variables are represented mostly by their
+          ;; command/variable names – initialism matching shines here.
+          (command     . ((styles . (orderless+initialism))))
+          (variable    . ((styles . (orderless+initialism))))
 
-        ;; Eglot completion and its capf backend: just plain orderless,
-        ;; no extra tweaks.
-        (eglot       . ((styles . (orderless))))
-        (eglot-capf  . ((styles . (orderless))))
+          ;; Eglot completion and its capf backend: just plain orderless,
+          ;; no extra tweaks.
+          (eglot       . ((styles . (orderless))))
+          (eglot-capf  . ((styles . (orderless))))
 
-        ;; Git revisions (magit-rev) are often typed by scattered parts
-        ;; (“mwr” → “merge-request-work”), so fall back to flex.
-        (magit-rev   . ((styles . (orderless+flex))))))
+          ;; Git revisions (magit-rev) are often typed by scattered parts
+          ;; (“mwr” → “merge-request-work”), so fall back to flex.
+          (magit-rev   . ((styles . (orderless+flex))))))
 
 (setq completion-pcm-leading-wildcard t)
 
@@ -800,17 +800,17 @@ falls back to its default handling."
 
 ;;;; Default completion UI
 
-(setq completions-format 'one-column
-      completions-detailed t
-      completions-group t
-      completions-sort 'historical
-      completions-max-height 15
-      minibuffer-visible-completions 'up-down
-      completion-eager-update t
-      completion-eager-display t
-      completion-auto-help 'always
-      completion-show-help nil
-      completion-show-inline-help nil)
+(setopt completions-format 'one-column
+        completions-detailed t
+        completions-group t
+        completions-sort 'historical
+        completions-max-height 15
+        minibuffer-visible-completions 'up-down
+        completion-eager-update t
+        completion-eager-display t
+        completion-auto-help 'always
+        completion-show-help nil
+        completion-show-inline-help nil)
 
 (keymap-unset minibuffer-local-completion-map "SPC")
 
@@ -835,8 +835,8 @@ falls back to its default handling."
 
 (after-load! vertico
   (require 'orderless)
-  (setq vertico-quick1 "htnsd"
-        vertico-quick2 "ueoai")
+  (setopt vertico-quick1 "htnsd"
+          vertico-quick2 "ueoai")
   (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
   (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
   (vertico-mode)
@@ -871,7 +871,7 @@ falls back to its default handling."
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
 ;; Prevent typing before the prompt.
-(setq minibuffer-prompt-properties '(read-only t face minibuffer-prompt cursor-intangible t))
+(setopt minibuffer-prompt-properties '(read-only t face minibuffer-prompt cursor-intangible t))
 
 ;;;; goggles
 
@@ -976,7 +976,7 @@ falls back to its default handling."
       (message "Template %s not found" (cadr elt))
       nil)))
 (after-load! tempel
-  (setq tempel-path (concat user-emacs-directory "/templates/*.eld"))
+  (setopt tempel-path (concat user-emacs-directory "/templates/*.eld"))
   (add-to-list 'tempel-user-elements #'tempel-include))
 
 (add-hook 'abbrev-mode-hook #'tempel-abbrev-mode)
@@ -1119,12 +1119,11 @@ value for USE-OVERLAYS."
     "M-r" #'consult-history))
 
 (after-load! consult
-  (setq consult-after-jump-hook
-        (cl-nsubstitute #'reposition-window #'recenter
-                        consult-after-jump-hook)))
+  (remove-hook 'consult-after-jump-hook #'recenter)
+  (add-hook 'consult-after-jump-hook #'reposition-window))
 
-(setq register-preview-delay 0.5
-      register-preview-function #'consult-register-format)
+(setopt register-preview-delay 0.5
+        register-preview-function #'consult-register-format)
 
 (advice-add #'register-preview :override #'consult-register-window)
 
@@ -1539,8 +1538,8 @@ value for USE-OVERLAYS."
 (after-load! compile
   (setopt compilation-always-kill t
           compilation-ask-about-save t
-          compilation-scroll-output 'first-error
-          compilation-auto-jump-to-first-error nil)
+          compilation-scroll-output 'first-error)
+  (add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
   (setopt compilation-error-regexp-alist
           (seq-difference compilation-error-regexp-alist
                           '( absoft ada aix ant borland comma msft
@@ -1974,7 +1973,7 @@ With no active region, operate on the whole buffer."
 
 ;;;; elisp-mode
 
-(setq-default elisp-fontify-semantically t)
+(setopt elisp-fontify-semantically t)
 (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
 (after-load! elisp-mode
   (when (boundp 'trusted-content)
@@ -2591,10 +2590,6 @@ Then refresh all windows displaying the current buffer."
 ;;;; savehist
 
 (after-init!
-  (setopt savehist-additional-variables '((kill-ring . 5)
-                                          search-ring
-                                          regexp-search-ring
-                                          corfu-history))
   (setopt savehist-ignored-variables '(buffer-name-history))
   (savehist-mode))
 
@@ -2766,7 +2761,7 @@ not used, but is required by the hook."
 (function-put '+niri-xdg-open 'browse-url-browser-kind 'external)
 
 (when (getenv "NIRI_SOCKET")
-  (setq browse-url-browser-function #'+niri-xdg-open))
+  (setopt browse-url-browser-function #'+niri-xdg-open))
 
 ;;;; epg
 
