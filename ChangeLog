@@ -71,8 +71,8 @@
 	* init.el: Move user option settings for bangs, ibuffer, embark,
 	eglot, recentf, saveplace, TeX, re-builder, ement, diff-hl into
 	`after-load!' blocks.  Replace `setq' with `setopt'.  Add
-	`declare-function' declarations.  Remove obsolete CRM advice
-	(Emacs 31+).  Define `+eglot-prefix-map` inside `after-load!`.
+	`declare-function' declarations.  Remove obsolete CRM advice (Emacs 31+).
+	Define `+eglot-prefix-map` inside `after-load!`.
 	Use async byte-compilation for Elisp files.
 	* user-lisp/flymake-verilator.el: Add `;;;###autoload`.
 	* user-lisp/gptel-config.el (gptel-minibuffer-spinner): Add `:group'.
