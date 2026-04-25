@@ -1960,11 +1960,6 @@ With no active region, operate on the whole buffer."
 (after-load! elisp-mode
   (when (boundp 'trusted-content)
     (add-to-list 'trusted-content (locate-user-emacs-file "site-lisp/")))
-  (keymap-set emacs-lisp-mode-map
-              "<remap> <elisp-byte-compile-file>"
-              (lambda ()
-                (interactive)
-                (async-byte-compile-file (buffer-file-name))))
   (when (native-comp-available-p)
     (keymap-set emacs-lisp-mode-map "C-c C-l" #'emacs-lisp-native-compile-and-load))
   (keymap-set lisp-interaction-mode-map "C-c C-j" #'eval-print-last-sexp))
