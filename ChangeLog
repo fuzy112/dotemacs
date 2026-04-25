@@ -1,5 +1,13 @@
 2026-04-25  Zhengyi Fu  <i@fuzy.me>
 
+	Remove custom meow Tab binding and implementation
+
+	* init.el (meow-setup): Remove <tab> keybinding mapped to `meow-tab`.
+	(meow-tab): Delete custom function that prioritized local TAB bindings,
+	indented active regions, and fell back to `other-window`.
+
+2026-04-25  Zhengyi Fu  <i@fuzy.me>
+
 	Allow extra custom prompt in +gptel-commit-staged via prefix argument
 
 	* user-lisp/gptel-config.el (+gptel-commit-staged): When invoked with a
