@@ -1,5 +1,22 @@
 2026-04-25  Zhengyi Fu  <i@fuzy.me>
 
+	project-compile-history: Add autorevert
+
+	* user-lisp/project-compile-history.el
+	(project-compile-history-autorevert): New user option.
+	(project-compile-history--schedule-save): New defun.
+	(project-compile-history-read-command): Use it.
+	(project-compile-history--save-timer): New var.
+	(project-compile-history-load): Ensure file exists.
+	(project-compile-history--advice): Let-bind default-directory.
+	(project-compile-history-mode): Set up file watch.
+	(project-compile-history--saving): New variable.
+	(project-compile-history-save): Use it to prevent self-triggered
+	reloads.
+	(project-compile-history--watch-callback): Check it before reloading.
+
+2026-04-25  Zhengyi Fu  <i@fuzy.me>
+
 	Remove custom meow Tab binding and implementation
 
 	* init.el (meow-setup): Remove <tab> keybinding mapped to `meow-tab`.
