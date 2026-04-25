@@ -137,25 +137,7 @@
    '(")" . meow-forward-slurp)
    '("{" . meow-backward-barf)
    '("}" . meow-forward-barf)
-   '("`" . meow-universal-argument)
-   '("<tab>" . meow-tab)))
-
-(defun meow-tab ()
-  "If the current key has a local binding, execute that.
-If the region is active, indent it.
-Otherwise, switch to the other window."
-  (interactive)
-  (cond-let*
-    [[key "TAB"]
-     [cmd (keymap-local-lookup key)]]
-    ((use-region-p)
-     (meow-indent))
-    ((commandp cmd)
-     (call-interactively cmd))
-    (t
-     (call-interactively 'other-window))))
-
-;; (put 'meow-tab 'repeat-map other-window-repeat-map)
+   '("`" . meow-universal-argument)))
 
 (define-advice meow--set-cursor-type (:override (type) terminal)
   ;; On terminals meow tries to set cursor type with escape sequences
