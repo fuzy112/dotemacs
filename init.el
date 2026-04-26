@@ -160,7 +160,8 @@
    '(")" . meow-forward-slurp)
    '("{" . meow-backward-barf)
    '("}" . meow-forward-barf)
-   '("`" . meow-universal-argument)))
+   '("`" . meow-universal-argument)
+   '("?" . help-command)))
 
 (define-advice meow--set-cursor-type (:override (type) terminal)
   ;; On terminals meow tries to set cursor type with escape sequences
@@ -1041,10 +1042,10 @@ value for USE-OVERLAYS."
              #'ansi-color-apply-text-property-face)))
       (ansi-color-apply-on-region beg end))))
 
+(setq prefix-help-command #'embark-prefix-help-command)
+
 (after-load! embark
   (setopt embark-help-key "?")
-  (setopt prefix-help-command #'embark-prefix-help-command)
-
   (setopt embark-cycle-key "C-.")
   (setopt embark-indicators '(embark-minimal-indicator
                               embark-highlight-indicator
@@ -3450,7 +3451,7 @@ Otherwise disable it."
   "f"   file-map
   "!"   #'bangs
   "o"   toggle-map
-  "h"   #'help-command
+  "h"   #'consult-history
   "M-g" #'magit-file-dispatch
   "p"   #'project-prefix-map
   "q"   quilt-prefix-map

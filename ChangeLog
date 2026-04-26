@@ -1,3 +1,13 @@
+2026-04-26  Zhengyi Fu  <i@fuzy.me>
+
+	Use ? instead of C-c h for help
+
+	* init.el (meow-setup): Add binding for `?' to `help-command' in
+	normal state.
+	(prefix-help-command): Set early to avoid embark dependency.
+	(mode-specific-map): Change `h' binding from `help-command' to
+	`consult-history'.
+
 2026-04-25  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (other-window-repeat-map): Remove <tab> and <backtab>.
