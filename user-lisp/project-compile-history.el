@@ -19,44 +19,44 @@
   :group 'project
   :prefix "project-compile-history-")
 
-(defcustom project-compile-history-file
+(defcustom pch:file
   (expand-file-name "project-compile-history.eld" user-emacs-directory)
   "File to save project compilation histroy."
   :type 'file)
 
-(defcustom project-compile-history-autorevert t
-  "Automatically reload the `project-compile-history-file'."
+(defcustom pch:autorevert t
+  "Automatically reload the `pch:file'."
   :type 'boolean)
 
-(defvar project-compile-history-obarray (obarray-make 16)
+(defvar pch:obarray (obarray-make 16)
   "Obarray for project compile history variables.")
 
-(defvar project-compile-history-modified nil)
+(defvar pch:modified nil)
 
-(defun project-compile-history-variable (project)
+(defun pch:variable (project)
   (let* ((root (abbreviate-file-name (project-root project)))
-	 (hist-var (intern root project-compile-history-obarray)))
+	 (hist-var (intern root pch:obarray)))
     (unless (boundp hist-var)
       (set hist-var nil))
     hist-var))
 
-(defun project-compile-history-read-command (command)
-  (let ((hist-var (project-compile-history-variable (project-current))))
+(defun pch:read-command (command)
+  (let ((hist-var (pch:variable (project-current))))
     (prog1
 	(read-shell-command "Compile command: " command
 			    (if (equal (car (symbol-value hist-var)) command)
 				(cons hist-var 1)
 			      hist-var))
-      (setq project-compile-history-modified t)
-      (project-compile-history--schedule-save))))
+      (setq pch:modified t)
+      (pch:-schedule-save))))
 
-(defvar project-compile-history--saving nil)
+(defvar pch:-saving nil)
 
-(defun project-compile-history-save ()
+(defun pch:save ()
   (interactive)
-  (when project-compile-history-modified
-    (let ((project-compile-history--saving t))
-      (with-temp-file project-compile-history-file
+  (when pch:modified
+    (let ((pch:-saving t))
+      (with-temp-file pch:file
         (insert ";; project-compile-history-file -*- coding: utf-8-emacs; -*-\n\n")
         (insert "(\n")
         (obarray-map
@@ -66,67 +66,67 @@
 	   (insert " . ")
 	   (prin1 (symbol-value var) (current-buffer))
 	   (insert ")\n"))
-         project-compile-history-obarray)
+         pch:obarray)
         (insert ")\n"))
-      (setq project-compile-history-modified nil))))
+      (setq pch:modified nil))))
 
-(defvar project-compile-history--save-timer nil)
+(defvar pch:-save-timer nil)
 
-(defun project-compile-history--schedule-save ()
-  (when (timerp project-compile-history--save-timer)
-    (cancel-timer project-compile-history--save-timer))
-  (setq project-compile-history--save-timer
-	(run-with-idle-timer 1.0 nil #'project-compile-history-save)))
+(defun pch:-schedule-save ()
+  (when (timerp pch:-save-timer)
+    (cancel-timer pch:-save-timer))
+  (setq pch:-save-timer
+	(run-with-idle-timer 1.0 nil #'pch:save)))
 
-(defun project-compile-history-load ()
+(defun pch:load ()
   (interactive)
-  (unless (file-exists-p project-compile-history-file)
-    (let ((project-compile-history-modified t))
-      (project-compile-history-save)))
+  (unless (file-exists-p pch:file)
+    (let ((pch:modified t))
+      (pch:save)))
   (with-temp-buffer
-    (insert-file-contents project-compile-history-file)
+    (insert-file-contents pch:file)
     (goto-char (point-min))
     (let* ((alist (read (current-buffer))))
       (pcase-dolist (`(,name . ,hist) alist)
-	(set (intern name project-compile-history-obarray) hist))))
-  (setq project-compile-history-modified nil))
+	(set (intern name pch:obarray) hist))))
+  (setq pch:modified nil))
 
 (declare-function compilation-read-command "compile")
 
-(defun project-compile-history--advice (&rest args)
+(defun pch:-advice (&rest args)
   (cl-letf*
       ((project (project-current t))
        (default-directory (project-root project))
-       (hist-var (project-compile-history-variable project))
+       (hist-var (pch:variable project))
        (compile-command (or (car-safe (symbol-value hist-var)) compile-command))
        ((symbol-function #'compilation-read-command)
-	#'project-compile-history-read-command))
+	#'pch:read-command))
     (apply args)))
 
-(defvar project-compile-history--watch-descriptor nil)
+(defvar pch:-watch-descriptor nil)
 
 ;;;###autoload
-(define-minor-mode project-compile-history-mode
+(define-minor-mode pch:mode
   "Separate project-compile history for each project."
   :global t
-  (when (file-notify-valid-p project-compile-history--watch-descriptor)
-    (file-notify-rm-watch project-compile-history--watch-descriptor))
-  (setq project-compile-history--watch-descriptor nil)
-  (advice-remove #'project-compile #'project-compile-history--advice)
-  (remove-hook 'kill-emacs-hook #'project-compile-history-save)
-  (when (timerp project-compile-history--save-timer)
-    (cancel-timer project-compile-history--save-timer))
-  (setq project-compile-history--save-timer nil)
-  (when project-compile-history-modified
-    (project-compile-history-save))
-  (when project-compile-history-mode
-    (advice-add #'project-compile :around #'project-compile-history--advice)
-    (add-hook 'kill-emacs-hook #'project-compile-history-save)
-    (project-compile-history-load)
-    (when project-compile-history-autorevert
-      (setq project-compile-history--watch-descriptor
+  (when (file-notify-valid-p pch:-watch-descriptor)
+    (file-notify-rm-watch pch:-watch-descriptor))
+  (setq pch:-watch-descriptor nil)
+  (advice-remove #'project-compile #'pch:-advice)
+  (remove-hook 'kill-emacs-hook #'pch:save)
+  (when (timerp pch:-save-timer)
+    (cancel-timer pch:-save-timer))
+  (setq pch:-save-timer nil)
+  (when pch:modified
+    (pch:save))
+  (when pch:mode
+    (advice-add #'project-compile :around #'pch:-advice)
+    (add-hook 'kill-emacs-hook #'pch:save)
+    (pch:load)
+    (when pch:autorevert
+      (setq pch:-watch-descriptor
 	    (file-notify-add-watch
-	     project-compile-history-file
+	     pch:file
 	     '(change attribute-change)
 	     (lambda (event)
 	       (let* ((descriptor (car event))
@@ -135,10 +135,13 @@
 		      (_file1 (nth 3 event)))
 		 (cond ((eq action 'stopped)
 			(file-notify-rm-watch descriptor)
-			(setq project-compile-history--watch-descriptor nil))
+			(setq pch:-watch-descriptor nil))
 		       ((and (memq action '(attribute-changed rename changed created))
-			     (not project-compile-history--saving))
-			(project-compile-history-load))))))))))
+			     (not pch:-saving))
+			(pch:load))))))))))
 
 (provide 'project-compile-history)
+;; Local Variables:
+;; read-symbol-shorthands: (("pch:" . "project-compile-history-"))
+;; End:
 ;;; project-compile-history.el ends here
