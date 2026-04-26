@@ -1,5 +1,9 @@
 2026-04-26  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (org-agenda-prefix-format): Cease from setting it.
+
+2026-04-26  Zhengyi Fu  <i@fuzy.me>
+
 	Use ? instead of C-c h for help
 
 	* init.el (meow-setup): Add binding for `?' to `help-command' in
