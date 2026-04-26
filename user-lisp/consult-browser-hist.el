@@ -1,6 +1,6 @@
 ;;; consult-browser-hist.el --- Consult interface for browser history  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2025  Zhengyi Fu
+;; Copyright (C) 2025, 2026  Zhengyi Fu
 
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Keywords: convenience, tools
@@ -33,46 +33,46 @@
   :group 'consult
   :prefix "consult-browser-hist-")
 
-(defface consult-browser-hist-title
+(defface cbh-title
   '((t :inherit font-lock-function-name-face))
   "Face used to highlight item titles.")
 
-(defface consult-browser-hist-url
+(defface cbh-url
   '((t :inherit font-lock-doc-face))
   "Face used to highlight item urls.")
 
-(defface consult-browser-hist-type
+(defface cbh-type
   '((t :inherit font-lock-type-face))
   "Face used to highlight browser types.")
 
-(defcustom consult-browser-hist-title-max-width .4
+(defcustom cbh-title-max-width .4
   "Maximum width of the entry titles displayed."
   :type '(choice (natnum :tag "Number of columns")
                  (float :tag "Ratio in the window")))
 
-(defun consult-browser-hist--format (item)
+(defun cbh--format (item)
   (let ((cand (concat (truncate-string-to-width
                        (cdr item)
-                       (if (floatp consult-browser-hist-title-max-width)
+                       (if (floatp cbh-title-max-width)
                            (floor (* .4 (window-width (minibuffer-window))))
-                         consult-browser-hist-title-max-width)
+                         cbh-title-max-width)
                        nil nil :truncate :ellipsis-text-property)
                       (propertize (concat "\t" (car item)) 'invisible t))))
     (add-text-properties 0 (length cand)
-                         `( consult-browser-hist-url ,(car item)
-                            consult-browser-hist-title ,(cdr item)
-                            face consult-browser-hist-title)
+                         `( cbh-url ,(car item)
+                            cbh-title ,(cdr item)
+                            face cbh-title)
                          cand)
     cand))
 
-(defun consult-browser-hist--annotate (type cand)
-  (let* ((url (get-text-property 0 'consult-browser-hist-url cand)))
+(defun cbh--annotate (type cand)
+  (let* ((url (get-text-property 0 'cbh-url cand)))
     (consult--annotate-align
      cand
-     (concat (propertize type 'face 'consult-browser-hist-type) "   "
-             (propertize url 'face 'consult-browser-hist-url)))))
+     (concat (propertize type 'face 'cbh-type) "   "
+             (propertize url 'face 'cbh-url)))))
 
-(defun consult-browser-hist--async (browser)
+(defun cbh--async (browser)
   (lambda (async)
     (let (connection)
       (lambda (action)
@@ -89,22 +89,22 @@
               (funcall async action)
             (setq connection browser-hist--db-connection)))))))
 
-(defun consult-browser-hist--send-query (input &optional callback)
+(defun cbh--send-query (input &optional callback)
   (let ((items (browser-hist--send-query input)))
     (when callback
       (funcall callback items)
       items)))
 
-(defun consult-browser-hist--collection (browser)
+(defun cbh--collection (browser)
   (consult--async-pipeline
    (consult--async-min-input)
    (consult--async-throttle)
-   (consult-browser-hist--async browser)
-   (consult--async-dynamic #'consult-browser-hist--send-query)
-   (consult--async-map #'consult-browser-hist--format)
+   (cbh--async browser)
+   (consult--async-dynamic #'cbh--send-query)
+   (consult--async-map #'cbh--format)
    (consult--async-highlight)))
 
-(defun consult-browser-hist-source-make (name browser narrow-key &optional db-path db-fields)
+(defun cbh-source-make (name browser narrow-key &optional db-path db-fields)
   (when db-path
     (setf (alist-get browser browser-hist-db-paths) db-path))
   (when db-fields
@@ -113,42 +113,42 @@
         :narrow narrow-key
         :category 'consult-browser-hist
         :action (lambda (selected)
-                  (browse-url (get-text-property 0 'consult-browser-hist-url selected)))
+                  (browse-url (get-text-property 0 'cbh-url selected)))
         :enabled (lambda ()
                    (and-let* ((path (alist-get browser browser-hist-db-paths)))
                      (file-expand-wildcards (substitute-in-file-name path))))
-        :annotate (apply-partially #'consult-browser-hist--annotate name)
-        :async (consult-browser-hist--collection browser)))
+        :annotate (apply-partially #'cbh--annotate name)
+        :async (cbh--collection browser)))
 
-(defvar consult-firefox-hist-source
-  (consult-browser-hist-source-make "FireFox" 'firefox ?f))
+(defvar cbh-source-firefox
+  (cbh-source-make "FireFox" 'firefox ?f))
 
-(defvar consult-chromium-hist-source
-  (consult-browser-hist-source-make "Chromium" 'chromium ?c))
+(defvar cbh-source-chromium
+  (cbh-source-make "Chromium" 'chromium ?c))
 
-(defvar consult-chrome-hist-source
-  (consult-browser-hist-source-make "Chrome" 'chrome ?C))
+(defvar cbh-source-chrome
+  (cbh-source-make "Chrome" 'chrome ?C))
 
-(defvar consult-brave-hist-source
-  (consult-browser-hist-source-make "Brave" 'brave ?b))
+(defvar cbh-source-brave
+  (cbh-source-make "Brave" 'brave ?b))
 
-(defvar consult-qutebrowser-hist-source
-  (consult-browser-hist-source-make "QuteBrowser" 'qutebrowser ?q))
+(defvar cbh-source-qutebrowser
+  (cbh-source-make "QuteBrowser" 'qutebrowser ?q))
 
-(defvar consult-safari-hist-source
-  (consult-browser-hist-source-make "Safari" 'safari ?s))
+(defvar cbh-source-safari
+  (cbh-source-make "Safari" 'safari ?s))
 
-(defcustom consult-browser-hist-sources
-  '(consult-firefox-hist-source
-    consult-chromium-hist-source
-    consult-chrome-hist-source
-    consult-brave-hist-source
-    consult-qutebrowser-hist-source
-    consult-safari-hist-source)
+(defcustom cbh-sources
+  '(cbh-source-firefox
+    cbh-source-chromium
+    cbh-source-chrome
+    cbh-source-brave
+    cbh-source-qutebrowser
+    cbh-source-safari)
   "Browser history sources to search."
   :type '(repeat symbol))
 
-(defvar consult-browser-hist-history nil
+(defvar cbh-history nil
   "Minibuffer history for `consult-browser-hist'.")
 
 ;;;###autoload
@@ -156,11 +156,16 @@
   "Search through browser history."
   (interactive)
   (consult--multi
-   (or sources  consult-browser-hist-sources)
+   (or sources cbh-sources)
    :prompt "Browser history: "
    :sort nil
    :require-match t
-   :history 'consult-browser-hist-history))
+   :history 'cbh-history))
 
 (provide 'consult-browser-hist)
+
+;; Local Variables:
+;; read-symbol-shorthands: (("cbh-" . "consult-browser-hist-"))
+;; End:
+
 ;;; consult-browser-hist.el ends here
