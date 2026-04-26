@@ -23,7 +23,7 @@
 
 ;;; Code:
 
-(defconst modify-other-keys--modifiers-alist
+(defconst mok--modifiers-alist
   '(("S-" . 2)
     ("M-" . 3)
     ("M-S-" . 4)
@@ -32,8 +32,8 @@
     ("C-M-" . 7)
     ("C-M-S-" . 8)))
 
-(defun modify-other-keys--define-key (base key-string)
-  (cl-loop for (prefix . mod) in modify-other-keys--modifiers-alist
+(defun mok--define-key (base key-string)
+  (cl-loop for (prefix . mod) in mok--modifiers-alist
            for xterm-seq = (format "\e[27;%d;%d~" mod base)
            for csi-u-seq = (format "\e[%d;%du" base mod)
            for emacs-key = (key-parse (concat prefix key-string))
@@ -41,11 +41,11 @@
            (define-key input-decode-map xterm-seq emacs-key)
            (define-key input-decode-map csi-u-seq emacs-key)))
 
-(defun modify-other-keys--setup-input-decode-map ()
+(defun mok--setup-input-decode-map ()
   "Set up `input-decode-map' for the current terminal."
   ;; Printable characters
   (cl-loop for base from 33 upto 126
-           do (modify-other-keys--define-key base (char-to-string base)))
+           do (mok--define-key base (char-to-string base)))
 
   ;; Special whitespace characters
   (cl-loop for (key . base) in '(("DEL" . ?\d)
@@ -53,9 +53,9 @@
                                  ("<tab>" . ?\t)
                                  ("SPC" . ?\s)
                                  ("<escape>" . ?\e))
-           do (modify-other-keys--define-key base key)))
+           do (mok--define-key base key)))
 
-(defun modify-other-keys--translate-shifted-digits ()
+(defun mok--translate-shifted-digits ()
   "Translate S-<digit> combinations to their corresponding punctuation symbols.
 This allows C-S-1 to be interpreted as C-!, M-S-4 as M-$, etc."
   (cl-loop for (unshifted . shifted) in '(("S-0" . ")")
@@ -73,12 +73,12 @@ This allows C-S-1 to be interpreted as C-!, M-S-4 as M-$, etc."
                                       (kbd (concat mod unshifted))
                                       (kbd (concat mod shifted))))))
 
-(defun modify-other-keys--init (&optional terminal)
+(defun mok--init (&optional terminal)
   (when (and (eq t (terminal-live-p terminal))
              (not (string= (terminal-name terminal) "initial_terminal")))
     (with-selected-frame (car (frames-on-display-list terminal))
-      (modify-other-keys--setup-input-decode-map)
-      (modify-other-keys--translate-shifted-digits)
+      (mok--setup-input-decode-map)
+      (mok--translate-shifted-digits)
       ;; TODO: use xterm--query to query whether kkp is support
       (send-string-to-terminal "\e[>4;2m")
       ;; (send-string-to-terminal "\e[>4;1f")
@@ -88,11 +88,16 @@ This allows C-S-1 to be interpreted as C-!, M-S-4 as M-$, etc."
             (delete "\e[>4;1m" (terminal-parameter terminal 'tty-mode-set-strings)))
       ;; (push "\e[>4;1f" (terminal-parameter terminal 'tty-mode-set-strings))
       (push "\e[>4;2m" (terminal-parameter terminal 'tty-mode-set-strings))
-      (set-terminal-parameter terminal 'modify-other-keys-mode t))))
+      (set-terminal-parameter terminal 'mok-mode t))))
 
-(add-hook 'terminal-init-xterm-hook 'modify-other-keys--init)
-(mapc 'modify-other-keys--init (terminal-list))
+(add-hook 'terminal-init-xterm-hook 'mok--init)
+(mapc 'mok--init (terminal-list))
 
 ;; Provide the feature
 (provide 'modify-other-keys)
+
+;; Local Variables:
+;; read-symbol-shorthands: (("mok-" . "modify-other-keys-"))
+;; End:
+
 ;;; modify-other-keys.el ends here
