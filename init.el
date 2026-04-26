@@ -2895,10 +2895,10 @@ not used, but is required by the hook."
                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
 (after-load! org-capture
+
   (add-to-list 'org-capture-templates
                `("i" "Inbox" entry (file "inbox.org")
-                 ,(concat "* TODO %?\n"
-                          "/Entered on/ %U")))
+                 "* TODO %?\n  %i\n  %a"))
 
   (add-to-list 'org-capture-templates
                `("m" "Meeting" entry (file+headline "agenda.org" "Meetings")
