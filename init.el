@@ -1841,8 +1841,8 @@ Disabling the mode restores the default Eglot behavior."
   (add-to-list 'consult-async-split-styles-alist `(space :separator ?\s :function ,#'consult--split-separator)))
 
 (after-load! eglot
-  (keymap-set search-map "s" #'consult-eglot-symbols)
-  (keymap-set search-map "M-s" #'consult-eglot-symbols)
+  (keymap-set eglot-mode-map "M-s s" #'consult-eglot-symbols)
+  (keymap-set eglot-mode-map "M-s M-s" #'consult-eglot-symbols)
   (keymap-set eglot-mode-map "<remap> <xref-find-apropos>" 'consult-eglot-symbols))
 
 (defun +consult--async-wrap--split-space (async)
