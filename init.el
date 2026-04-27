@@ -2648,6 +2648,7 @@ Then refresh all windows displaying the current buffer."
                 ement-notifications-mode-hook
                 git-rebase-mode-hook
                 gnus-group-mode-hook
+                gnus-summary-mode-hook
                 grep-mode-hook
                 ibuffer-mode-hook
                 log-view-mode-hook
