@@ -30,6 +30,12 @@
   (keymap-set org-agenda-mode-map "M-j" #'org-agenda-clock-goto)
   (keymap-set org-agenda-mode-map "J" #'bookmark-jump))
 
+;; Org
+
+(after-load! org
+  (keymap-set org-mode-map "M-m" #'casual-org-tmenu)
+  (keymap-set org-table-fedit-map "M-m" #'casual-org-table-fedit-tmenu))
+
 ;; Bookmarks
 
 (after-load! bookmark
@@ -88,6 +94,14 @@
 
 (after-load! eww
   (keymap-set eww-mode-map "C-o" #'casual-eww-tmenu))
+
+;; Compile
+
+(after-load! compile
+  (keymap-set compilation-mode-map "C-o" #'casual-compile-tmenu))
+
+(after-load! grep
+  (keymap-set grep-mode-map "C-o" #'casual-compile-tmenu))
 
 ;; EditKit (global bindings)
 
