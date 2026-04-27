@@ -3261,29 +3261,29 @@ BEG and END specify the region boundaries."
       (message "Cleared all text properties in region %d-%d" beg end))))
 
 (defun +toggle-side-window (side &optional frame)
-"Toggle a side window on SIDE of FRAME.
+  "Toggle a side window on SIDE of FRAME.
 When a side window exists on SIDE, close it and remember its state.
 When no side window exists on SIDE, restore the remembered state.
 
 SIDE is one of the symbols `left', `right', `above', or `below'.
 FRAME defaults to the selected frame."
-(let* ((frame (window-normalize-frame frame))
-       (window--sides-inhibit-check t)
-       (side-win (window-with-parameter 'window-side side frame))
-       state)
-  (cond
-   (side-win
-    (setf (alist-get side (frame-parameter frame 'side-window-states))
-          (window-state-get side-win))
-    (delete-window side-win))
-   ((setq state (alist-get side (frame-parameter frame 'side-window-states)))
-    (let* ((size (if (memq side '(left right))
-                     (alist-get 'total-width state)
-                   (alist-get 'total-height state)))
-           (new-win (split-window (frame-root-window frame) (and size (- size)) side)))
-      (window-state-put state new-win)))
-   (t
-    (user-error "No remembered side window for this frame")))))
+  (let* ((frame (window-normalize-frame frame))
+         (window--sides-inhibit-check t)
+         (side-win (window-with-parameter 'window-side side frame))
+         state)
+    (cond
+     (side-win
+      (setf (alist-get side (frame-parameter frame 'side-window-states))
+            (window-state-get side-win))
+      (delete-window side-win))
+     ((setq state (alist-get side (frame-parameter frame 'side-window-states)))
+      (let* ((size (if (memq side '(left right))
+                       (alist-get 'total-width state)
+                     (alist-get 'total-height state)))
+             (new-win (split-window (frame-root-window frame) (and size (- size)) side)))
+        (window-state-put state new-win)))
+     (t
+      (user-error "No remembered side window for this frame")))))
 
 (defun +toggle-side-window-left (&optional frame)
   "Toggle a side window on the left of FRAME.
