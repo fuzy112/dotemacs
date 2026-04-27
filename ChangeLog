@@ -1,5 +1,12 @@
 2026-04-27  Zhengyi Fu  <i@fuzy.me>
 
+	Fix prism integration for modus-themes and ef-themes
+
+	* init.el (+prism--set-colors): Fix integration for modus-themes
+	and ef-themes. `ef-themes' is now built on `modus-themes'.
+
+2026-04-27  Zhengyi Fu  <i@fuzy.me>
+
 	* user-lisp/casual-config.el: Enable casual for Org and Compile.
 
 2026-04-26  Zhengyi Fu  <i@fuzy.me>
