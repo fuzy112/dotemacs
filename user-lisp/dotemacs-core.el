@@ -298,4 +298,9 @@ PROJECT defaults to the current project."
         (funcall mode)))))
 
 (provide 'dotemacs-core)
+
+;; Local Variables:
+;; read-symbol-shorthands: (("emmip-" . "enable-minor-mode-in-project-"))
+;; End:
+
 ;;; dotemacs-core.el ends here
