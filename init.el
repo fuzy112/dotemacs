@@ -2592,7 +2592,7 @@ Then refresh all windows displaying the current buffer."
 ;; Set up display table to use unicode chars to display frame borders
 ;; in terminal
 
-(after-init-1! #'standard-display-unicode-special-glyphs)
+(run-after-init #'standard-display-unicode-special-glyphs)
 
 ;;;; repeat
 

@@ -2,15 +2,13 @@
 
 	* init.el (org-agenda-prefix-format): Cease from setting it.
 
-2026-04-26  Zhengyi Fu  <i@fuzy.me>
+2026-04-27  Zhengyi Fu  <i@fuzy.me>
 
-	Use ? instead of C-c h for help
+	Rename after-init-1! to run-after-init
 
-	* init.el (meow-setup): Add binding for `?' to `help-command' in
-	normal state.
-	(prefix-help-command): Set early to avoid embark dependency.
-	(mode-specific-map): Change `h' binding from `help-command' to
-	`consult-history'.
+	* user-lisp/dotemacs-core.el (run-after-init): Rename from
+	after-init-1!.  All call site changed.
+	* init.el:
 
 2026-04-25  Zhengyi Fu  <i@fuzy.me>
 
