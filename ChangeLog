@@ -1,3 +1,7 @@
+2026-04-27  Zhengyi Fu  <i@fuzy.me>
+
+	* user-lisp/casual-config.el: Enable casual for Org and Compile.
+
 2026-04-26  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (org-agenda-prefix-format): Cease from setting it.
