@@ -2976,14 +2976,18 @@ not used, but is required by the hook."
 
 (after-load! denote
   ;; Add encrypted variants of all configured denote file types to `denote-file-types'
-  (cl-loop for (name . props) in (cl-copy-list denote-file-types)
-           for name-string   = (symbol-name name)
-           unless (string-suffix-p "-gpg" name-string)
-           for new-name      = (intern (concat name-string "-gpg"))
-           for extension     = (plist-get props :extension)
-           for new-extension = (concat extension ".gpg")
-           for new-props     = (plist-put (copy-sequence props) :extension new-extension)
-           do (setf (alist-get new-name denote-file-types) new-props)))
+  (dolist (type (copy-sequence denote-file-types))
+    (let* ((name (car type))
+           (props (cdr type))
+           (name-string (symbol-name name)))
+      (unless (string-suffix-p "-gpg" name-string)
+        (let* ((new-name (intern (concat name-string "-gpg"))))
+          (unless (assq new-name denote-file-types)
+            (let* ((extension (plist-get props :extension))
+                   (new-extension (concat extension ".gpg"))
+                   (new-props (plist-put (copy-sequence props)
+                                         :extension new-extension)))
+              (push (cons new-name new-props) denote-file-types))))))))
 
 (after-load! dired
   (define-keymap :keymap dired-mode-map
