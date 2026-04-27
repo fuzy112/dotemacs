@@ -1,5 +1,9 @@
 2026-04-27  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (after-load! lin): Enable in gnus-summary buffers.
+
+2026-04-27  Zhengyi Fu  <i@fuzy.me>
+
 	Fix prism integration for modus-themes and ef-themes
 
 	* init.el (+prism--set-colors): Fix integration for modus-themes
