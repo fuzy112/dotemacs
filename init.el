@@ -2686,19 +2686,11 @@ comments and strings."
    ;; Choose colors based on the active theme
    :colors (cond
             ;; For Modus themes, use theme-specific colors
-            ((and (fboundp 'modus-themes--list-enabled-themes)
-                  (modus-themes--list-enabled-themes))
+            ((and (fboundp 'modus-themes-get-current-theme)
+                  (modus-themes-get-current-theme))
              (with-no-compile!
                (modus-themes-with-colors
                  (list pink fg-alt green indigo))))
-
-            ;; For EF themes, use theme-specific colors
-            ((and (fboundp 'ef-themes--list-enabled-themes)
-                  (ef-themes--list-enabled-themes))
-             (with-no-compile!
-               (ef-themes-with-colors
-                (list red green magenta cyan))))
-
             ;; For other themes, blend generic colors with foreground
             (t
              (let ((foreground (face-attribute 'default :foreground)))
