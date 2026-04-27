@@ -1,5 +1,9 @@
 2026-04-27  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (consult-eglot-symbols): Bind in `eglot-mode-map'.
+
+2026-04-27  Zhengyi Fu  <i@fuzy.me>
+
 	* init.el (after-load! lin): Enable in gnus-summary buffers.
 
 2026-04-27  Zhengyi Fu  <i@fuzy.me>
