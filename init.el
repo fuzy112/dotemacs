@@ -2678,11 +2678,9 @@ comments and strings."
   (prism-set-colors
    :num 16
    ;; Create a series of desaturations from 0 to 37.5 in steps of 2.5
-   :desaturations (cl-loop for i from 0 below 16
-                           collect (* i 2.5))
+   :desaturations (number-sequence 0 37.5 2.5)
    ;; Create a series of lightness values from 0 to 37.5 in steps of 2.5
-   :lightens (cl-loop for i from 0 below 16
-                      collect (* i 2.5))
+   :lightens (number-sequence 0 37.5 2.5)
    ;; Choose colors based on the active theme
    :colors (cond
             ;; For Modus themes, use theme-specific colors
