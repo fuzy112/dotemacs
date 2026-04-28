@@ -1,5 +1,12 @@
 2026-04-28  Zhengyi Fu  <i@fuzy.me>
 
+	Fix autoload of autosuggesting `bookmark-set'
+
+	* user-lisp/gptel-config.el (gptel-bookmark-set-context): New
+	defun extracted from the lambda.
+
+2026-04-28  Zhengyi Fu  <i@fuzy.me>
+
 	Fix support for nil default
 
 	* init.el (+consult--read-file-name-function)
