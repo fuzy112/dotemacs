@@ -1,5 +1,9 @@
 2026-04-28  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el (+consult-git-log-grep-show-commit): Use `magit-show-commit'.
+
+2026-04-28  Zhengyi Fu  <i@fuzy.me>
+
 	Fix autoload of autosuggesting `bookmark-set'
 
 	* user-lisp/gptel-config.el (gptel-bookmark-set-context): New
