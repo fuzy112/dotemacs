@@ -638,13 +638,19 @@ Follow these rules when creating the bookmark name:
 5. Only output the bookmark name itself, nothing else
 
 Example output: auth-service password validation function"
-  :context (lambda ()
-	     (require 'which-func)
-	     (let* ((file-name (buffer-file-name))
-		    (buffer-name (buffer-name))
-		    (context (gptel-context-at-point))
-		    (defun-name (which-function)))
-	       (format "<input>
+  :context #'gptel-bookmark-set-context
+  :match-prompt "Set bookmark named"
+  :backend "Volcengine Coding"
+  :model 'ark-code-latest)
+
+;;;###autoload
+(defun gptel-bookmark-set-context ()
+  (require 'which-func)
+  (let* ((file-name (buffer-file-name))
+	 (buffer-name (buffer-name))
+	 (context (gptel-context-at-point))
+	 (defun-name (which-function)))
+    (format "<input>
 <file_path>%s</file_path>
 <buffer_name>%s</buffer_name>
 <scope>%s</scope>
@@ -652,14 +658,10 @@ Example output: auth-service password validation function"
 %s
 </context>
 </input>"
-		       file-name
-		       buffer-name
-		       defun-name
-		       context)))
-  :match-prompt "Set bookmark named"
-  :backend "Volcengine Coding"
-  :model 'ark-code-latest)
-
+	    file-name
+	    buffer-name
+	    defun-name
+	    context)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Helper for async HTTP requests
