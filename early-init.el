@@ -93,6 +93,8 @@
 
 (setq read-process-output-max (* 4 1024 1024))
 
+(setq load-path-filter-function #'load-path-filter-cache-directory-files)
+
 ;;;; jkr
 
 (setopt jka-compr-load-suffixes (seq-union '(".zst") jka-compr-load-suffixes))
