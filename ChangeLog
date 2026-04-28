@@ -1,5 +1,14 @@
 2026-04-28  Zhengyi Fu  <i@fuzy.me>
 
+	Fix support for nil default
+
+	* init.el (+consult--read-file-name-function)
+	(+consult--read-buffer-function)
+	(project--completing-read-strict): Convert nil default to empty
+	string; otherwise consult will not return empty default.
+
+2026-04-28  Zhengyi Fu  <i@fuzy.me>
+
 	Optimize performance of `project-read-file-name-function'
 
 	* init.el (+consult--read-project-file-name-function): Remove.

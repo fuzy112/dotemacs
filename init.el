@@ -1151,7 +1151,7 @@ value for USE-OVERLAYS."
                 default-directory)
      :require-match mustmatch
      :history 'file-name-history
-     :default default
+     :default (or default "")
      :predicate pred
      :preview-key "M-."
      :sort t
@@ -1167,7 +1167,7 @@ value for USE-OVERLAYS."
   (consult--read-1
    #'internal-complete-buffer
    :state         (consult--buffer-preview)
-   :default       def
+   :default       (or def "")
    :prompt        (format-prompt (replace-regexp-in-string ":[[:space:]]*\\'" "" prompt) def)
    :require-match mustmatch
    :history       'buffer-name-history
@@ -1207,7 +1207,7 @@ value for USE-OVERLAYS."
                      :predicate predicate
                      :require-match 'confirm
                      :history hist
-                     :category 'file
+                     :default (or mb-default "")
                      :sort t
                      :lookup (lambda (selected &rest _) selected)
                      :state (consult--file-state)
