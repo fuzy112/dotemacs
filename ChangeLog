@@ -1,3 +1,10 @@
+2026-04-28  Zhengyi Fu  <i@fuzy.me>
+
+	Optimize performance of `project-read-file-name-function'
+
+	* init.el (+consult--read-project-file-name-function): Remove.
+	(project--compile-read-strict): Add advice to use `consult'.
+
 2026-04-27  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el (consult-eglot-symbols): Bind in `eglot-mode-map'.
