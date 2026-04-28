@@ -1178,28 +1178,40 @@ value for USE-OVERLAYS."
 
 (setopt read-buffer-function #'+consult--read-buffer-function)
 
-;; Add preview for `project-read-file-name-function'
-(defun +consult--read-project-file-name-function (prompt all-files &optional pred hist _mb)
-  (require 'consult)
-  (let ((prompt (if (and all-files
-                         (file-name-absolute-p (car all-files)))
-                    prompt
-                  (concat prompt
-                          (format " in %s"
-                                  (consult--fast-abbreviate-file-name default-directory)))))
-        (minibuffer-completing-file-name t))
-    (consult--read-1 (mapcar #'file-relative-name all-files)
-                     :state (consult--file-preview)
-                     :prompt (concat prompt ": ")
-                     :require-match t
+(define-advice project--completing-read-strict
+    (:override (prompt collection &optional predicate hist mb-default common-parent-directory) consult)
+  (cl-letf* ((mb-default (mapcar (lambda (mb-default)
+                                   (if (and common-parent-directory
+                                            mb-default
+                                            (file-name-absolute-p mb-default))
+                                       (file-relative-name
+                                        mb-default common-parent-directory)
+                                     mb-default))
+                                 (if (listp mb-default) mb-default (list mb-default))))
+             (abs-cpd (expand-file-name (or common-parent-directory "")))
+             (abs-cpd-length (length abs-cpd))
+             (non-essential t)          ;Avoid new Tramp connections.
+             ((symbol-value hist)
+              (if common-parent-directory
+                  (mapcan
+                   (lambda (s)
+                     (setq s (expand-file-name s))
+                     (and (string-prefix-p abs-cpd s)
+                          (not (eq abs-cpd-length (length s)))
+                          (list (substring s abs-cpd-length))))
+                   (symbol-value hist))
+                (symbol-value hist))))
+    (require 'consult)
+    (consult--read-1 collection
+                     :prompt (format "%s: " prompt)
+                     :predicate predicate
+                     :require-match 'confirm
                      :history hist
                      :category 'file
                      :sort t
-                     :predicate pred
-                     :preview-key consult-preview-key
-                     :lookup (lambda (selected &rest _) selected))))
-
-(setopt project-read-file-name-function #'+consult--read-project-file-name-function)
+                     :lookup (lambda (selected &rest _) selected)
+                     :state (consult--file-state)
+                     :preview-key consult-preview-key)))
 
 
 ;; Use `orderless-compile' as the `consult''s default regexp compiler.
