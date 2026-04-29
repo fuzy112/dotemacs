@@ -66,9 +66,8 @@
 (setq menu-bar-mode nil)
 (setq tool-bar-mode nil)
 
-
-(setq bidi-display-reordering 'left-to-right
-      bidi-paragraph-direction 'left-to-right)
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
 (setq bidi-inhibit-bpa t)
 
 
@@ -87,7 +86,7 @@
 
 (setq set-mark-command-repeat-pop t)
 
-(setq cursor-in-non-selected-windows nil)
+(setq-default cursor-in-non-selected-windows nil)
 (setq highlight-nonselected-windows nil)
 
 (setq redisplay-skip-fontification-on-input t)
