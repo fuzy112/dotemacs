@@ -1,5 +1,16 @@
 2026-04-29  Zhengyi Fu  <i@fuzy.me>
 
+	Fix disabling bidi
+
+	* early-init.el (bidi-display-reordering, bidi-paragraph-direction)
+	(cursor-in-non-selected-windows): Use `setq-default'.
+
+	These variables are buffer-local, so setq-default ensures the settings
+	apply globally to all buffers rather than only the initial early-init
+	buffer.
+
+2026-04-29  Zhengyi Fu  <i@fuzy.me>
+
 	Restore default behaviour of C-h
 
 	* init.el (meow-setup): Restore ?h in meow-keypad-start-keys.
