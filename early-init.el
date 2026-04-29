@@ -33,6 +33,7 @@
 ;;;; File loading
 
 (setq load-prefer-newer t)
+(setq load-path-filter-function #'load-path-filter-cache-directory-files)
 
 ;;;; pre-early-init
 
@@ -92,8 +93,6 @@
 (setq redisplay-skip-fontification-on-input t)
 
 (setq read-process-output-max (* 4 1024 1024))
-
-(setq load-path-filter-function #'load-path-filter-cache-directory-files)
 
 ;;;; jkr
 
