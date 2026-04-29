@@ -122,7 +122,6 @@
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
-;; no-byte-compile: t
 ;; End:
 
 ;;; early-init.el ends here
