@@ -1,5 +1,9 @@
 2026-04-29  Zhengyi Fu  <i@fuzy.me>
 
+	* init.el: Enable lin-mode in all magit modes.
+
+2026-04-29  Zhengyi Fu  <i@fuzy.me>
+
 	Fix disabling bidi
 
 	* early-init.el (bidi-display-reordering, bidi-paragraph-direction)

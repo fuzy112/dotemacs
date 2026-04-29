@@ -2658,7 +2658,7 @@ Then refresh all windows displaying the current buffer."
                 ibuffer-mode-hook
                 log-view-mode-hook
                 logview-mode-hook
-                magit-log-mode-hook
+                magit-mode-hook
                 occur-mode-hook
                 org-agenda-mode-hook
                 proced-mode-hook
