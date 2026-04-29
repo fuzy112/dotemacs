@@ -79,7 +79,6 @@
   (setopt meow-keypad-leader-dispatch "C-c")
   (setopt meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
   (setopt meow-use-clipboard t)
-  (alist-delq! meow-keypad-start-keys ?h)
   (meow-leader-define-key
    '("1" . meow-digit-argument)
    '("2" . meow-digit-argument)
@@ -160,8 +159,7 @@
    '(")" . meow-forward-slurp)
    '("{" . meow-backward-barf)
    '("}" . meow-forward-barf)
-   '("`" . meow-universal-argument)
-   '("?" . help-command)))
+   '("`" . meow-universal-argument)))
 
 (define-advice meow--set-cursor-type (:override (type) terminal)
   ;; On terminals meow tries to set cursor type with escape sequences
@@ -3488,8 +3486,6 @@ Otherwise disable it."
   "M-g" #'magit-dispatch)
 
 (define-keymap :keymap global-map
-  "C-h"    "DEL"
-  "C-M-h"  "M-DEL"
   "C-S-d"  #'duplicate-dwim
   "M-c"    #'capitalize-dwim
   "M-l"    #'downcase-dwim
