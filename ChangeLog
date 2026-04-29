@@ -1,3 +1,11 @@
+2026-04-29  Zhengyi Fu  <i@fuzy.me>
+
+	Restore default behaviour of C-h
+
+	* init.el (meow-setup): Restore ?h in meow-keypad-start-keys.
+	Remove ? from normal-mode.
+	(global-map): Ceasing from binding C-h to DEL.
+
 2026-04-28  Zhengyi Fu  <i@fuzy.me>
 
 	Speed up repeated lookup of Lisp files in `load-path'
