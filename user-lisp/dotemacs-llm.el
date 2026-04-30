@@ -603,6 +603,8 @@ modify COMMAND.  If NAME is non-nil, the advice is named
     (declare (indent 1))
     (let ((advice-symbol (intern (format "%s@%s" command name))))
       (fset advice-symbol (lambda (orig-fn &rest args)
+			    (require 'gptel)
+			    (require 'dotemacs-llm)
 			    (let* ((computed-context
 				    (cond
 				     ((functionp context) (funcall context))

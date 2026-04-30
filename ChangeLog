@@ -1,5 +1,13 @@
 2026-04-30  Zhengyi Fu  <i@fuzy.me>
 
+	Fix gptel autosuggest advice runtime dependencies
+
+	* user-lisp/dotemacs-llm.el: Add (require 'gptel) and (require
+	'dotemacs-llm) inside the advice lambda to ensure dependencies are
+	loaded when the advice is executed, preventing void symbol errors.
+
+2026-04-30  Zhengyi Fu  <i@fuzy.me>
+
 	Fix deferred loading, duplicate requires, and declare-function warnings
 
 	* init.el: Load dotemacs-llm only after gptel is loaded.  Remove
