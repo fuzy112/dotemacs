@@ -1,5 +1,22 @@
 2026-04-30  Zhengyi Fu  <i@fuzy.me>
 
+	Fix deferred loading, duplicate requires, and declare-function warnings
+
+	* init.el: Load dotemacs-llm only after gptel is loaded.  Remove
+	duplicate require of dotemacs-core and dotemacs-lisp.
+	* user-lisp/dotemacs-bindings.el: Add declare-function for
+	consult-register.  Remove remapping of list-buffers to ibuffer.
+	* user-lisp/dotemacs-completion.el: Add declare-function for
+	consult--file-state.
+	* user-lisp/dotemacs-core.el: Add declare-function for
+	project-buffers.
+	* user-lisp/dotemacs-editor.el: Fix duplicate repeat-map entry for
+	hl-todo-previous; correct it to hl-todo-next.
+	* user-lisp/dotemacs-nix.el: Fix file header typo (dotemasc ->
+	dotemacs).  Add declare-function for nix-mode.
+
+2026-04-30  Zhengyi Fu  <i@fuzy.me>
+
 	Refactor configuration into modular files
 
 	* init.el: Extract all configuration into separate dotemacs-*.el modules

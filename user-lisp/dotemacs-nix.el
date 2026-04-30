@@ -1,8 +1,10 @@
-;;; dotemasc-nix.el  -*- lexical-binding: t; -*-
+;;; dotemacs-nix.el  -*- lexical-binding: t; -*-
 
 (eval-when-compile (require 'dotemacs-core))
 
 ;;;; nix-mode
+
+(declare-function nix-mode "nix-mode")
 
 (add-to-list 'major-mode-remap-alist '(nix-mode . nix-ts-mode))
 

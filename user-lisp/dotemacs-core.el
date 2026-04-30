@@ -251,6 +251,8 @@ PROJECT defaults to the current project."
         (metadata '((category . command))))
     (completion-table-with-metadata modes metadata)))
 
+(declare-function project-buffers "project")
+
 (defun enable-minor-mode-in-project (mode project major-modes)
   "Enable MODE in all buffers of any MAJOR-MODES in PROJECT."
   (interactive
