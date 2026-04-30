@@ -199,50 +199,53 @@ confirmed."
     (cl-call-next-method)))
 
 ;; Use fd to speed up C-u C-x p f.
-(define-advice project--files-in-directory (:override (dir ignores &optional files) fd)
+(define-advice project--files-in-directory (:around (orig-fn dir ignores &optional files) fd)
   (require 'find-dired)
   (require 'xref)
-  (let* ((dir (file-name-as-directory dir))
-         (default-directory dir)
-         ;; Make sure ~/ etc. in local directory name is
-         ;; expanded and not left for the shell command
-         ;; to interpret.
-         (localdir (file-name-unquote (file-local-name (expand-file-name dir))))
-         (command (format "%s --no-follow %s %s --type file --print0 %s"
-                          (or (executable-find "fd")
-                              (executable-find "fd-find"))
-                          (if dotemacs-prog--project-files-ignore-vcs
-                              "--ignore-vcs"
-                            "--no-ignore-vcs")
-                          (mapconcat (lambda (pat) (shell-quote-argument (concat "--exclude=" pat))) ignores " ")
-                          (if files
-                              (shell-quote-argument (string-join files "|"))
-                            "''")))
-         res)
-    (with-temp-buffer
-      (let ((status
-             (process-file-shell-command command nil t))
-            (pt (point-min)))
-        (unless (zerop status)
-          (goto-char (point-min))
-          (if (and
-               (not (eql status 127))
-               (search-forward "Permission denied\n" nil t))
-              (let ((end (1- (point))))
-                (re-search-backward "\\`\\|\0")
-                (error "File listing failed: %s"
-                       (buffer-substring (1+ (point)) end)))
-            (error "File listing failed: %s" (buffer-string))))
-        (goto-char pt)
-        (while (search-forward "\0" nil t)
-          (push (buffer-substring-no-properties (+ pt 2) (1- (point)))
-                res)
-          (setq pt (point)))))
-    (if project-files-relative-names
-        (sort res #'string<)
-      (project--remote-file-names
-       (mapcar (lambda (s) (concat localdir s))
-               (sort res #'string<))))))
+  (let ((fd-exe (or (executable-find "fd" 'remote)
+                    (executable-find "fd-find" 'remote))))
+    (if (not fd-exe)
+        (funcall orig-fn dir ignores files)
+      (let* ((dir (file-name-as-directory dir))
+             (default-directory dir)
+             ;; Make sure ~/ etc. in local directory name is
+             ;; expanded and not left for the shell command
+             ;; to interpret.
+             (localdir (file-name-unquote (file-local-name (expand-file-name dir))))
+             (command (format "%s --no-follow %s %s --type file --print0 %s ."
+                              fd-exe
+                              (if dotemacs-prog--project-files-ignore-vcs
+                                  "--ignore-vcs"
+                                "--no-ignore-vcs")
+                              (mapconcat (lambda (pat) (shell-quote-argument (concat "--exclude=" pat))) ignores " ")
+                              (if files
+                                  (shell-quote-argument (string-join files "|"))
+                                "''")))
+             res)
+        (with-temp-buffer
+          (let ((status
+                 (process-file-shell-command command nil t))
+                (pt (point-min)))
+            (unless (zerop status)
+              (goto-char (point-min))
+              (if (and
+                   (not (eql status 127))
+                   (search-forward "Permission denied\n" nil t))
+                  (let ((end (1- (point))))
+                    (re-search-backward "\\`\\|\0")
+                    (error "File listing failed: %s"
+                           (buffer-substring (1+ (point)) end)))
+                (error "File listing failed: %s" (buffer-string))))
+            (goto-char pt)
+            (while (search-forward "\0" nil t)
+              (push (buffer-substring-no-properties (+ pt 2) (1- (point)))
+                    res)
+              (setq pt (point)))))
+        (if project-files-relative-names
+            (sort res #'string<)
+          (project--remote-file-names
+           (mapcar (lambda (s) (concat localdir s))
+                   (sort res #'string<))))))))
 
 (provide 'dotemacs-prog)
 ;;; dotemacs-prog.el ends here

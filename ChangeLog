@@ -1,3 +1,15 @@
+2026-05-01  Zhengyi Fu  <i@fuzy.me>
+
+	Improve fd project file listing with fallback and remote support
+
+	* user-lisp/dotemacs-prog.el (project--files-in-directory): Convert
+	advice from :override to :around to support graceful fallback.  Add
+	remote-aware executable check for fd/fd-find using `executable-find`
+	with the 'remote argument, enabling proper Tramp support.  Fall back
+	to the original `project--files-in-directory` implementation when fd
+	is not available.  Precompute fd executable path and add explicit "."
+	search path to the fd command invocation.
+
 2026-04-30  Zhengyi Fu  <i@fuzy.me>
 
 	Add conditional VCS ignore for project file listing via fd
