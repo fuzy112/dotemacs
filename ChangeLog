@@ -1,5 +1,18 @@
 2026-04-30  Zhengyi Fu  <i@fuzy.me>
 
+	Add conditional VCS ignore for project file listing via fd
+
+	* user-lisp/dotemacs-prog.el: Require `cond-let' when compile.
+	(dotemacs-prog--project-files-ignore-vcs): New dynamic variable.
+	(project-files): Add around method to bind variable, enabling
+	VCS-skipped file listing.
+	(project--files-in-directory): Use
+	`dotemacs-prog--project-files-ignore-vcs' to decide fd's
+	--ignore-vcs flag.
+
+
+2026-04-30  Zhengyi Fu  <i@fuzy.me>
+
 	Refactor consult-theme preview guards into a custom state function
 
 	* user-lisp/dotemacs-theme.el (consult-theme--save-variable): New

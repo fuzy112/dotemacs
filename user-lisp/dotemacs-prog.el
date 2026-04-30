@@ -1,6 +1,7 @@
 ;;; dotemacs-prog.el  -*- lexical-binding: t; -*-
 
-(eval-when-compile (require 'dotemacs-core))
+(eval-when-compile (require 'dotemacs-core)
+                   (require 'cond-let))
 
 ;;;; xref
 
@@ -191,6 +192,12 @@ confirmed."
 
   (project-compile-history-mode))
 
+(defvar dotemacs-prog--project-files-ignore-vcs nil)
+
+(cl-defmethod project-files :around (project &optional dirs)
+  (let ((dotemacs-prog--project-files-ignore-vcs t))
+    (cl-call-next-method)))
+
 ;; Use fd to speed up C-u C-x p f.
 (define-advice project--files-in-directory (:override (dir ignores &optional files) fd)
   (require 'find-dired)
@@ -201,9 +208,12 @@ confirmed."
          ;; expanded and not left for the shell command
          ;; to interpret.
          (localdir (file-name-unquote (file-local-name (expand-file-name dir))))
-         (command (format "%s --no-follow %s --no-ignore-vcs --type file --print0 %s"
+         (command (format "%s --no-follow %s %s --type file --print0 %s"
                           (or (executable-find "fd")
                               (executable-find "fd-find"))
+                          (if dotemacs-prog--project-files-ignore-vcs
+                              "--ignore-vcs"
+                            "--no-ignore-vcs")
                           (mapconcat (lambda (pat) (shell-quote-argument (concat "--exclude=" pat))) ignores " ")
                           (if files
                               (shell-quote-argument (string-join files "|"))
