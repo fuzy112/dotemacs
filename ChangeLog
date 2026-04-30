@@ -1,5 +1,14 @@
 2026-05-01  Zhengyi Fu  <i@fuzy.me>
 
+	Fix docstrings in project-compile-history.el
+
+	* user-lisp/project-compile-history.el (project-compile-history-file):
+	Fix typo in docstring, replacing "histroy" with "history".
+	(project-compile-history-autorevert): Fix variable reference in
+	docstring, replacing `pch:file' with `project-compile-history-file'.
+
+2026-05-01  Zhengyi Fu  <i@fuzy.me>
+
 	Move compilation/comint/grep configuration to dotemacs-prog.el
 
 	* user-lisp/dotemacs-compilation.el: Delete file containing compile,
