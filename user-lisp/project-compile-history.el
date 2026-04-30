@@ -21,11 +21,11 @@
 
 (defcustom pch:file
   (expand-file-name "project-compile-history.eld" user-emacs-directory)
-  "File to save project compilation histroy."
+  "File to save project compilation history."
   :type 'file)
 
 (defcustom pch:autorevert t
-  "Automatically reload the `pch:file'."
+  "Automatically reload the `project-compile-history-file'."
   :type 'boolean)
 
 (defvar pch:obarray (obarray-make 16)
