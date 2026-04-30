@@ -1,3 +1,36 @@
+2026-04-30  Zhengyi Fu  <i@fuzy.me>
+
+	Refactor configuration into modular files
+
+	* init.el: Extract all configuration into separate dotemacs-*.el modules
+	under user-lisp/.  Now requires each module individually.
+	* user-lisp/dotemacs-bindings.el: New file with keybinding definitions.
+	* user-lisp/dotemacs-chinese.el: New file for Chinese input (pyim, rime).
+	* user-lisp/dotemacs-compilation.el: New file for compile/comint/grep.
+	* user-lisp/dotemacs-completion.el: New file for orderless/vertico/corfu/consult.
+	* user-lisp/dotemacs-denote.el: New file for denote notes.
+	* user-lisp/dotemacs-dired.el: New file for dired settings.
+	* user-lisp/dotemacs-editor.el: New file for editor features (ws-butler, whitespace, etc.).
+	* user-lisp/dotemacs-email.el: New file for email/gnus/telega/rcirc/erc.
+	* user-lisp/dotemacs-eshell.el: New file for eshell configuration.
+	* user-lisp/dotemacs-help.el: New file for help-mode enhancements.
+	* user-lisp/dotemacs-lisp.el: New file for Lisp programming support.
+	* user-lisp/dotemacs-llm.el: Renamed from gptel-config.el; added keybinding.
+	* user-lisp/dotemacs-lsp.el: New file for eglot and Nix integration.
+	* user-lisp/dotemacs-misc.el: New file for various utilities (pdf, eat, bookmark, etc.).
+	* user-lisp/dotemacs-modal.el: New file for meow modal editing.
+	* user-lisp/dotemacs-nix.el: New file for Nix mode and REPL.
+	* user-lisp/dotemacs-org.el: New file for org-mode configuration.
+	* user-lisp/dotemacs-prog.el: New file for programming modes (xref, C, Rust, etc.).
+	* user-lisp/dotemacs-security.el: New file for auth-sources and EPG.
+	* user-lisp/dotemacs-tex.el: New file for AUCTeX.
+	* user-lisp/dotemacs-text.el: New file for text modes (nxml, yaml, etc.).
+	* user-lisp/dotemacs-theme.el: New file for fonts, themes, and face customization.
+	* user-lisp/dotemacs-tramp.el: New file for Tramp settings.
+	* user-lisp/dotemacs-treesit.el: Renamed from treesit-config.el.
+	* user-lisp/dotemacs-ui.el: New file for UI components (mode-line, ibuffer, etc.).
+	* user-lisp/dotemacs-vc.el: New file for version control (Magit, diff-hl, etc.).
+
 2026-04-29  Zhengyi Fu  <i@fuzy.me>
 
 	* init.el: Enable lin-mode in all magit modes.

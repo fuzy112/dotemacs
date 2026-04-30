@@ -1,4 +1,4 @@
-;;; gptel-config.el --- Configuration for gptel AI assistant -*- lexical-binding: t; -*-
+;;; dotemacs-llm.el --- Configuration for gptel AI assistant -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2025, 2026 Zhengyi Fu <i@fuzy.me>
 
@@ -45,6 +45,11 @@
 
 (setopt gptel-default-mode 'org-mode)
 
+(defun +gptel-mode-h ()
+  (when (derived-mode-p 'org-mode)
+    (setopt-local org-hide-emphasis-markers t)))
+(add-hook 'gptel-mode-hook #'+gptel-mode-h)
+
 (gptel-make-openai "Moonshot"
   :host "api.moonshot.cn"
   :stream t
@@ -54,8 +59,8 @@
 	     :capabilities (media tool-use json)
 	     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
 	     :context-window 256
-	     :input-cost 0.15		; Converted from ¥1.10 (CNY) to USD
-	     :output-cost 3.99)        ; Converted from ¥27.00 (CNY) to USD
+	     :input-cost 0.15	  ; Converted from ¥1.10 (CNY) to USD
+	     :output-cost 3.99)	  ; Converted from ¥27.00 (CNY) to USD
 	    (kimi-k2.5
 	     :description "Kimi's most versatile model to date"
 	     :capabilities (media tool-use json)
@@ -800,5 +805,9 @@ including its summary, description, status, assignee and related details."
 		     :description "The JIRA issue identifier (e.g., 'TPBUG-1007')"))
  :category "jira")
 
-(provide 'gptel-config)
-;;; gptel-config.el ends here
+;;;; keybindng
+
+(keymap-set gptel-mode-map "C-j" #'gptel-send)
+
+(provide 'dotemacs-llm)
+;;; dotemacs-llm.el ends here
