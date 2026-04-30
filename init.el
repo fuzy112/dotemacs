@@ -77,7 +77,6 @@
 (require 'dotemacs-bindings)
 (require 'dotemacs-lsp)
 (require 'dotemacs-completion)
-(require 'dotemacs-compilation)
 (require 'dotemacs-tex)
 (require 'dotemacs-tramp)
 (require 'dotemacs-org)
