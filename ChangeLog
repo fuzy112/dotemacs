@@ -1,5 +1,15 @@
 2026-04-30  Zhengyi Fu  <i@fuzy.me>
 
+	Use fd to speed up `project-files`
+
+	* user-lisp/dotemacs-prog.el (project--files-in-directory): Add
+	advice to override the default `find`-based implementation with
+	`fd` for faster file listing when `C-u C-x p f` is used.  The
+	advice handles error reporting and respects
+	`project-files-relative-names`.
+
+2026-04-30  Zhengyi Fu  <i@fuzy.me>
+
 	Fix gptel autosuggest advice runtime dependencies
 
 	* user-lisp/dotemacs-llm.el: Add (require 'gptel) and (require
