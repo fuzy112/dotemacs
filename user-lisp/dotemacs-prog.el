@@ -194,7 +194,7 @@ confirmed."
 
 (defvar dotemacs-prog--project-files-ignore-vcs nil)
 
-(cl-defmethod project-files :around (project &optional dirs)
+(cl-defmethod project-files :around (_project &optional _dirs)
   (let ((dotemacs-prog--project-files-ignore-vcs t))
     (cl-call-next-method)))
 
