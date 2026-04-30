@@ -1,5 +1,13 @@
 2026-05-01  Zhengyi Fu  <i@fuzy.me>
 
+	project--completing-read-strict: Fix wrong default when switching project
+
+	* user-lisp/dotemacs-completion.el (project--completing-read-strict):
+	Replace :default (or mb-default "") with nil and use :add-history to
+	add the default value.
+
+2026-05-01  Zhengyi Fu  <i@fuzy.me>
+
 	Improve fd project file listing with fallback and remote support
 
 	* user-lisp/dotemacs-prog.el (project--files-in-directory): Convert
