@@ -281,6 +281,29 @@ attributes."
 
 ;; Refresh theme when themes are enabled
 (add-hook 'enable-theme-functions #'dotemacs-theme-refresh)
+
+(define-advice consult-theme (:after (theme) save)
+  "Advice to persist theme selections after using `consult-theme'.
+Saves `custom-enabled-themes' to customize settings permanently, and adds
+the selected theme's SHA256 hash to `custom-safe-themes' if the theme is not
+already marked as safe and is not a built-in default Emacs theme."
+  (unless (minibufferp)
+    (let ((file (locate-file (concat (symbol-name theme) "-theme.el")
+                             (custom-theme--load-path)
+                             '("" "c"))))
+      (unless (or (not file)
+                  (eq custom-safe-themes t)
+                  (and (memq 'default custom-safe-themes)
+                       (equal (file-name-directory file)
+                              (expand-file-name "themes/" data-directory))))
+        (with-temp-buffer
+          (insert-file-contents file)
+          (let ((hash (secure-hash 'sha256 (current-buffer))))
+            (unless (member hash custom-safe-themes)
+              (customize-save-variable 'custom-safe-themes
+                                       (cons hash custom-safe-themes))))))
+      (customize-save-variable 'custom-enabled-themes custom-enabled-themes
+                               "Saved by `consult-theme'."))))
 
 (provide 'dotemacs-theme)
 ;;; dotemacs-theme.el ends here
