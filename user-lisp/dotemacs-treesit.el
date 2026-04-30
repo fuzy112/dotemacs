@@ -1,4 +1,4 @@
-;; treesit-config.el -- Configuration for treesit -*- lexical-binding: t; -*-
+;; dotemacs-treesit.el -- Configuration for treesit -*- lexical-binding: t; -*-
 
 (setq treesit-language-source-alist
       '((awk        "https://github.com/Beaglefoot/tree-sitter-awk")
@@ -56,5 +56,5 @@
         (wgsl       "https://github.com/mehmetoguzderin/tree-sitter-wgsl")
         (yaml       "https://github.com/tree-sitter-grammars/tree-sitter-yaml")))
 
-(provide 'treesit-config)
-;;; treesit-config.el ends here
+(provide 'dotemacs-treesit)
+;;; dotemacs-treesit.el ends here
