@@ -1,5 +1,14 @@
 2026-05-01  Zhengyi Fu  <i@fuzy.me>
 
+	Move compilation/comint/grep configuration to dotemacs-prog.el
+
+	* user-lisp/dotemacs-compilation.el: Delete file containing compile,
+	comint, and grep configuration.
+	* user-lisp/dotemacs-prog.el: Add moved configuration for compile,
+	comint, and grep modes.
+
+2026-05-01  Zhengyi Fu  <i@fuzy.me>
+
 	project--completing-read-strict: Fix wrong default when switching project
 
 	* user-lisp/dotemacs-completion.el (project--completing-read-strict):
