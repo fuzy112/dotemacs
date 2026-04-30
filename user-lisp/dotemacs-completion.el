@@ -441,7 +441,8 @@ value for USE-OVERLAYS."
                      :predicate predicate
                      :require-match 'confirm
                      :history hist
-                     :default (or mb-default "")
+                     :default nil
+                     :add-history mb-default
                      :sort t
                      :lookup (lambda (selected &rest _) selected)
                      :state (consult--file-state)
