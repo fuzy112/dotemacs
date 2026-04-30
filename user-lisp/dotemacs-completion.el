@@ -533,5 +533,21 @@ already marked as safe and is not a built-in default Emacs theme."
 (defun +recenter-bottom-30% ()
   (recenter (ceiling (* (window-height) 0.7))))
 
+;;;; Prescent
+
+(after-load! prescient
+  (prescient-persist-mode))
+
+(after-load! vertico
+  ;; disable prescient's filtering since we use orderless
+  (setopt vertico-prescient-enable-filtering nil)
+  (vertico-prescient-mode))
+
+(after-load! corfu
+  (setopt corfu-prescient-enable-filtering nil)
+  (corfu-prescient-mode))
+
+(setq completion-preview-sort-function #'prescient-completion-sort)
+
 (provide 'dotemacs-completion)
 ;;; dotemacs-completion.el ends here

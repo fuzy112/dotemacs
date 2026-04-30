@@ -1,5 +1,14 @@
 2026-04-30  Zhengyi Fu  <i@fuzy.me>
 
+	completion: Use prescient for sorting
+
+	* user-lisp/dotemacs-completion.el: Add configuration for prescent.
+	Enabling vertico and corfu integration.
+	(completion-preview-sort-function): Set to
+	`prescient-completion-sort'.
+
+2026-04-30  Zhengyi Fu  <i@fuzy.me>
+
 	Use fd to speed up `project-files`
 
 	* user-lisp/dotemacs-prog.el (project--files-in-directory): Add
