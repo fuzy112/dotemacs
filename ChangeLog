@@ -1,5 +1,15 @@
 2026-04-30  Zhengyi Fu  <i@fuzy.me>
 
+	Move consult-theme advice to dotemacs-theme and add minibuffer guard
+
+	* user-lisp/dotemacs-completion.el: Remove `define-advice` for
+	`consult-theme` that persisted theme selections.
+	* user-lisp/dotemacs-theme.el: Add moved advice with an additional
+	`(unless (minibufferp) ...)` guard to prevent execution during
+	preview.
+
+2026-04-30  Zhengyi Fu  <i@fuzy.me>
+
 	completion: Use prescient for sorting
 
 	* user-lisp/dotemacs-completion.el: Add configuration for prescent.
