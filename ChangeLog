@@ -1,5 +1,20 @@
 2026-04-30  Zhengyi Fu  <i@fuzy.me>
 
+	Refactor consult-theme preview guards into a custom state function
+
+	* user-lisp/dotemacs-theme.el (consult-theme--save-variable): New
+	dynamic variable to control execution of the theme-saving advice.
+	(consult-theme--state): New state function for `consult-theme`
+	that binds the variable to nil during preview, preventing the
+	advice from persisting themes on preview actions.
+	(with-eval-after-load 'consult): Customize `consult-theme` to use
+	the new state function.
+	(define-advice consult-theme): Replace `(unless (minibufferp) …)`
+	guard with `(when consult-theme--save-variable …)` to align with
+	the new state-based mechanism.
+
+2026-04-30  Zhengyi Fu  <i@fuzy.me>
+
 	Move consult-theme advice to dotemacs-theme and add minibuffer guard
 
 	* user-lisp/dotemacs-completion.el: Remove `define-advice` for
