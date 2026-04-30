@@ -368,6 +368,7 @@ value for USE-OVERLAYS."
 (declare-function consult--read-1 "consult.el" (arg1 &rest rest))
 (declare-function consult--file-preview "consult.el")
 (declare-function consult--buffer-preview "consult.el")
+(declare-function consult--file-state "consult.el")
 
 ;; Add preview for `read-file-name'.
 (defun +consult--read-file-name-function (prompt &optional dir default mustmatch initial pred)

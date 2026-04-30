@@ -148,7 +148,7 @@
     "]" #'hl-todo-next
     "o" #'hl-todo-occur)
   (put #'hl-todo-previous 'repeat-map +hl-todo-repeat-map)
-  (put #'hl-todo-previous 'repeat-map +hl-todo-repeat-map))
+  (put #'hl-todo-next 'repeat-map +hl-todo-repeat-map))
 
 ;;;; display-line-numbers
 

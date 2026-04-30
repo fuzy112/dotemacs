@@ -154,6 +154,8 @@
   "b" #'consult-bookmark ; orig. bookmark-jump
   )
 
+(declare-function consult-register "consult")
+
 (define-keymap :keymap ctl-x-x-map
   "/" #'apheleia-format-buffer)
 
@@ -242,7 +244,6 @@
   "<f5>"	#'compile
 
   "<remap> <dabbrev-expand>" #'hippie-expand
-  "<remap> <list-buffers>" #'ibuffer
   "<remap> <eval-last-sexp>" #'pp-posframe-eval-last-sexp
   "<remap> <compile-defun>" #'pp-posframe-compile-defun
   "<remap> <eval-expression>" #'pp-eval-expression

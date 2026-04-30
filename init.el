@@ -72,7 +72,8 @@
 
 (require 'dotemacs-ui)
 (require 'dotemacs-editor)
-(require 'dotemacs-llm)
+(after-load! gptel
+  (require 'dotemacs-llm))
 (require 'dotemacs-bindings)
 (require 'dotemacs-lsp)
 (require 'dotemacs-completion)
@@ -87,13 +88,11 @@
 (require 'dotemacs-lisp)
 (require 'dotemacs-misc)
 (require 'dotemacs-prog)
-(require 'dotemacs-core)
 (require 'dotemacs-help)
 (require 'dotemacs-email)
 (require 'dotemacs-text)
 (require 'dotemacs-modal)
 (require 'dotemacs-theme)
-(require 'dotemacs-lisp)
 (require 'dotemacs-denote)
 (require 'dotemacs-chinese)
 (require 'dotemacs-treesit)
