@@ -1,5 +1,14 @@
 2026-05-01  Zhengyi Fu  <i@fuzy.me>
 
+	Update `lin' configuration
+
+	* user-lisp/dotemacs-ui.el: Enable lin in `telega-root-mode'.
+	(+lin--theme-face-alist): New var.
+	(+lin--setup-face-for-theme): New defun.  Run it when `lin' is
+	loaded and when theme changes.
+
+2026-05-01  Zhengyi Fu  <i@fuzy.me>
+
 	Workaround a bug in `modus-themes'
 
 	* user-lisp/dotemacs-theme.el (+modus-themes--fix-overrides): New defun.
