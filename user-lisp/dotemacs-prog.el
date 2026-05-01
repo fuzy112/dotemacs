@@ -285,6 +285,12 @@ confirmed."
 (after-load! grep
   (setopt grep-use-headings t))
 
+;;;; Ediff
+
+(after-load! ediff-wind
+  (ediff-enable-chinese-help)
+  (setopt ediff-window-setup-function #'ediff-setup-windows-plain)
+  (setopt ediff-split-window-function #'split-window-sensibly))
 
 (provide 'dotemacs-prog)
 ;;; dotemacs-prog.el ends here

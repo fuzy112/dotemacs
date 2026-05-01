@@ -1,5 +1,13 @@
 2026-05-01  Zhengyi Fu  <i@fuzy.me>
 
+	Add Ediff configuration
+
+	* user-lisp/dotemacs-prog.el: Install chinese help message.
+	(ediff-window-setup-function): Set to `ediff-setup-windows-plain'.
+	(ediff-split-window-function): Set to `split-window-sensibly'.
+
+2026-05-01  Zhengyi Fu  <i@fuzy.me>
+
 	Update `lin' configuration
 
 	* user-lisp/dotemacs-ui.el: Enable lin in `telega-root-mode'.
