@@ -1,5 +1,17 @@
 2026-05-01  Zhengyi Fu  <i@fuzy.me>
 
+	Improve consult configuration
+
+	* user-lisp/dotemacs-completion.el (consult-recent-file): Add :before
+	advice to automatically require `recentf' and enable `recentf-mode' if
+	it is not already active when invoking the command.
+	(consult-buffer-filter): Replace multiple separate `add-to-list' calls
+	with raw regexps with a single combined pattern using the rx macro,
+	improving readability and maintainability. Consolidate filter patterns
+	and adjust buffer name matching for accuracy.
+
+2026-05-01  Zhengyi Fu  <i@fuzy.me>
+
 	* user-lisp/cmake-capf.el (cmake-capf--candidates): Use `process-lines'.
 
 2026-05-01  Zhengyi Fu  <i@fuzy.me>
