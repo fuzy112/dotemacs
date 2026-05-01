@@ -76,19 +76,15 @@ Equality with KEY is tested by TESTFN, defaulting to `eq'."
   `(setf (alist-get ,key ,alist nil nil ,testfn) ,value))
 
 (defmacro alist-del! (alist key &optional testfn)
-  "Remove the first element of ALIST whose `car' equals KEY.
+  "Remove all elements of ALIST whose `car' equals KEY.
 Equality with KEY is tested by TESTFN, defaulting to `eq'."
-  `(setf (alist-get ,key ,alist :dotemacs-delete t ,testfn) :dotemacs-delete))
+  (macroexp-let2* macroexp-copyable-p
+      ((k key)
+       (test `(or ,testfn #'eq)))
+    (gv-letplace (getter setter) alist
+      (funcall setter `(assoc-delete-all ,k ,getter ,test)))))
 
-(defmacro alist-setq! (alist &rest args)
-  "Associate each of KEY with VALUE in ALIST.
-
-If KEY is a symbol, equality is tested by `eq'.
-If KEY is an integer, equality is tested by `eql'.
-Otherwise, equality is tested by `equal'.
-
-\(fn ALIST &rest [KEY VALUE]...)"
-  (declare (indent 1))
+(defun alist-setq--form (var args)
   (named-let loop
       ((args args)
        (body nil))
@@ -99,12 +95,41 @@ Otherwise, equality is tested by `equal'.
         (when (eq (car-safe key) 'quote)
           (byte-compile-warn-x key "The key should not be quoted"))
         (loop (cddr args)
-              (cons `(alist-set! ,alist ,(macroexp-quote key) ,value
+              (cons `(alist-set! ,var ,(macroexp-quote key) ,value
                                  ,(macroexp-quote
                                    (cond ((symbolp key) #'eq)
                                          ((integerp key) #'eql)
                                          (t #'equal))))
                     body))))))
+
+(defmacro alist-setq! (alist &rest args)
+  "Associate each of KEY with VALUE in ALIST.
+
+If KEY is a symbol, equality is tested by `eq'.
+If KEY is an integer, equality is tested by `eql'.
+Otherwise, equality is tested by `equal'.
+
+\(fn ALIST &rest [KEY VALUE]...)"
+  (declare (indent 1))
+  (if (symbolp alist)
+      (alist-setq--form alist args)
+    (gv-letplace (getter setter) alist
+      (macroexp-let2 macroexp-copyable-p var getter
+        (macroexp-progn
+         (list (alist-setq--form var args)
+               (funcall setter var)))))))
+
+(defun alist-delq--form (var keys)
+  (macroexp-progn
+   (mapcar (lambda (key)
+             (when (eq (car-safe key) 'quote)
+               (byte-compile-warn-x key "The key should not be quoted"))
+             `(alist-del! ,var ,(macroexp-quote key)
+                          ,(macroexp-quote
+                            (cond ((symbolp key) #'eq)
+                                  ((integerp key) #'eql)
+                                  (t #'equal)))))
+           keys)))
 
 (defmacro alist-delq! (alist &rest keys)
   "Remove elements of ALIST whose `car' equals to any of KEYS.
@@ -112,16 +137,12 @@ If the key is a symbol, equality is tested by `eq'.
 If the key is an integer, equality is tested by `eql'.
 Otherwise, equality is tested by `equal'."
   (declare (indent 1))
-  (macroexp-progn
-   (mapcar (lambda (key)
-             (when (eq (car-safe key) 'quote)
-               (byte-compile-warn-x key "The key should not be quoted"))
-             `(alist-del! ,alist ,(macroexp-quote key)
-                          ,(macroexp-quote
-                            (cond ((symbolp key) #'eq)
-                                  ((integerp key) #'eql)
-                                  (t #'equal)))))
-           keys)))
+  (if (symbolp alist)
+      (alist-delq--form alist keys)
+    (gv-letplace (getter setter) alist
+      (macroexp-let2 macroexp-copyable-p var getter
+        (list (alist-delq--form var keys)
+              (funcall setter var))))))
 
 (defmacro after-load-1! (spec &rest body)
   "Evaluate BODY after the specified features or files are loaded.
@@ -185,7 +206,7 @@ This can be useful for code that should not be byte-compiled.
 For example, code that uses macros which might not be
 available at compile time."
   (declare (indent 0))
-  `(eval ',(macroexp-progn body) lexical-binding))
+  `(eval ',(macroexp-progn body) ,(macroexp-quote lexical-binding)))
 
 (defvar dotemacs--project-hooks nil)
 
