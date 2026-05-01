@@ -1,5 +1,12 @@
 2026-05-01  Zhengyi Fu  <i@fuzy.me>
 
+	Update nerd-icons-multimodal setup to use alist-setq!
+
+	* user-lisp/dotemacs-ui.el: Replace pcase-dolist and setf pattern
+	with `dolist' and `alist-setq!'.
+
+2026-05-01  Zhengyi Fu  <i@fuzy.me>
+
 	Improve alist macros and fix with-no-compile!
 
 	* user-lisp/dotemacs-core.el: (alist-del!): Remove all elements
