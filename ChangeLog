@@ -1,5 +1,12 @@
 2026-05-01  Zhengyi Fu  <i@fuzy.me>
 
+	Workaround a bug in `modus-themes'
+
+	* user-lisp/dotemacs-theme.el (+modus-themes--fix-overrides): New defun.
+	Use it to fix `modus-themes-preset-overrides-faint'.
+
+2026-05-01  Zhengyi Fu  <i@fuzy.me>
+
 	Fix docstrings in project-compile-history.el
 
 	* user-lisp/project-compile-history.el (project-compile-history-file):
