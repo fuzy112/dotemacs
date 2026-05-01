@@ -1,5 +1,21 @@
 2026-05-01  Zhengyi Fu  <i@fuzy.me>
 
+	Improve alist macros and fix with-no-compile!
+
+	* user-lisp/dotemacs-core.el: (alist-del!): Remove all elements
+	matching KEY instead of just the first. Implement using
+	`assoc-delete-all' and add support for generalized variables.
+	(alist-setq--form): New helper function extracted from `alist-setq!'
+	macro.:(alist-setq!): Refactor to support generalized variables, not
+	just symbol alists.
+	(alist-delq--form): New helper function extracted from `alist-delq!'
+	macro.:(alist-delq!): Refactor to support generalized variables, not
+	just symbol alists.:(with-no-compile!): Properly capture and quote
+	`lexical-binding' value at macro expansion time.
+
+
+2026-05-01  Zhengyi Fu  <i@fuzy.me>
+
 	Improve consult configuration
 
 	* user-lisp/dotemacs-completion.el (consult-recent-file): Add :before
