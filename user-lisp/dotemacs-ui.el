@@ -23,8 +23,9 @@
 
 (after-load! (:and nerd-icons-multimodal deb-view)
   (add-hook 'debview-mode-hook #'nerd-icons-multimodal-refresh)
-  (pcase-dolist (`(,_func . ,alist) nerd-icons-multimodal-functions-alist)
-    (setf (alist-get 'debview-mode alist) (alist-get 'tar-mode alist))))
+  (dolist (func-alist nerd-icons-multimodal-functions-alist)
+    (alist-setq! (cdr func-alist)
+      debview-mode (alist-get 'tar-mode (cdr func-alist)))))
 
 ;; show nerd-icons on mode-line
 (setq-default mode-line-buffer-identification
