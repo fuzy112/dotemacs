@@ -194,8 +194,23 @@ Otherwise disable it."
                 tar-mode-hook
                 vc-dir-mode-hook
                 world-clock-mode-hook
-                xref--xref-buffer-mode-hook))
+                xref--xref-buffer-mode-hook
+                telega-root-mode-hook))
   (add-hook hook #'lin-mode))
+
+(defvar +lin--theme-face-alist
+  '((default . lin-blue)
+    (modus-vivendi . lin-cyan)
+    (modus-operandi . lin-cyan)
+    (ef-light . lin-cyan)))
+
+(defun +lin--setup-face-for-theme (&optional theme)
+  (when-let* ((match (assq theme +lin--theme-face-alist)))
+    (setopt lin-face (cdr match))))
+
+(after-load! lin
+  (run-after-init #'+lin--setup-face-for-theme)
+  (add-hook 'enable-theme-functions #'+lin--setup-face-for-theme))
 
 ;;;; prism
 
