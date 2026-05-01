@@ -490,21 +490,22 @@ value for USE-OVERLAYS."
      consult-source-recent-file
      :enabled (lambda () (require 'recentf) (default-toplevel-value 'recentf-mode))))
 
+  (define-advice consult-recent-file (:before (&rest _) enable-recentf)
+    (require 'recentf)
+    (unless recentf-mode (recentf-mode)))
+
   ;; url-only bookmark type
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow)))
 
   ;; filter internal buffers
-  (add-to-list 'consult-buffer-filter "\\`\\*EGLOT .* \\(?:stderr\\|output\\|events\\)\\*\\'")
-  (add-to-list 'consult-buffer-filter "\\`magit-process: .*\\'")
-  (add-to-list 'consult-buffer-filter "\\`.*\\.~\\(?:{.+}\\|[0-9a-f]\\{7\\}\\)~\\'")
-  (add-to-list 'consult-buffer-filter "\\`log-edit-files\\'")
-  (add-to-list 'consult-buffer-filter "\\`\\*Async-native-compile-log\\*\\'")
-  (add-to-list 'consult-buffer-filter "\\`nix-edit\\'")
-  (add-to-list 'consult-buffer-filter "\\`\\*envrc\\*\\'")
-  (add-to-list 'consult-buffer-filter "\\`\\*Compile-Log\\*\\'")
-  (add-to-list 'consult-buffer-filter "\\`\\*Pp Eval Output\\*\\'")
-  (add-to-list 'consult-buffer-filter "\\`\\*Warnings\\*\\'")
-  (add-to-list 'consult-buffer-filter "\\`\\*Messages\\*\\'"))
+  (add-to-list 'consult-buffer-filter
+               (rx (or (seq bot "*EGLOT " (+ nonl) (or "stderr" "output" "events") "*" eot)
+                       (seq bot "magit-process: " (+ nonl) eot)
+                       (seq bot (+ nonl) ".~" (repeat 7 (in "a-f0-9")) "~" eot)
+                       (seq bot (or "*Async-Native-Compile-Log*" "nix-edit" "*envrc*"
+                                    "*Compile-Log*" "*Pp Eval Output*" "*log-edit-files*"
+                                    "*Messages*" "*Warnings" ".newsrc-dribble")
+                            eot)))))
 
 (defun +recenter-top-30% ()
   (recenter (ceiling (* (window-height) 0.3))))
