@@ -1,6 +1,6 @@
 ;;; cmake-capf.el --- Completion-at-point function for CMake  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2023, 2024, 2025  Zhengyi Fu <i@fuzy.me>
+;; Copyright (C) 2023, 2024, 2025, 2026  Zhengyi Fu <i@fuzy.me>
 
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Keywords: convenience
@@ -79,14 +79,12 @@ The returned value can be used to lookup the document."
                     ("property" . property)
                     ("variable" . variable)
                     ("policy" . magic)))
-      (with-temp-buffer
-        (call-process cmake-capf-executable nil t nil
-                      (format "--help-%s-list" (car type)))
-        (dolist (line (string-lines (buffer-string) t))
-          (dolist (cand (cmake-capf--expand line))
-            (put-text-property 0 (length cand) :company-kind (cdr type) cand)
-            (put-text-property 0 (length cand) :type (car type) cand)
-            (push cand cmake-capf--candidates))))))
+      (dolist (line (process-lines (executable-find cmake-capf-executable t)
+                                   (format "--help-%s-list" (car type))))
+        (dolist (cand (cmake-capf--expand line))
+          (put-text-property 0 (length cand) :company-kind (cdr type) cand)
+          (put-text-property 0 (length cand) :type (car type) cand)
+          (push cand cmake-capf--candidates)))))
   cmake-capf--candidates)
 
 (defun cmake-capf--company-kind (str)
