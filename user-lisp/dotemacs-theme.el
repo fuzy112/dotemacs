@@ -300,17 +300,19 @@ attributes."
 
 (defvar consult-theme--save-variable t)
 
-(defun consult-theme--state (action theme)
-  (with-selected-window (or (active-minibuffer-window)
-                            (selected-window))
-    (let (consult-theme--save-variable)
-      (pcase action
-        ('return (consult-theme (or theme saved-theme)))
-        ((and 'preview (guard theme)) (consult-theme theme))))))
+(defun consult-theme--state ()
+  (let ((saved-theme (car custom-enabled-themes)))
+    (lambda (action theme)
+      (with-selected-window (or (active-minibuffer-window)
+                                (selected-window))
+        (let (consult-theme--save-variable)
+          (pcase action
+            ('return (consult-theme (or theme saved-theme)))
+            ((and 'preview (guard theme)) (consult-theme theme))))))))
 
 (with-eval-after-load 'consult
   (with-no-compile!
-    (consult-customize consult-theme :state #'consult-theme--state)))
+    (consult-customize consult-theme :state (consult-theme--state))))
 
 (define-advice consult-theme (:after (theme) save)
   "Advice to persist theme selections after using `consult-theme'.
