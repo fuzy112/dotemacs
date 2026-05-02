@@ -141,23 +141,7 @@
           modus-themes-slanted-constructs t
           modus-themes-variable-pitch-ui  nil
           modus-themes-to-toggle          '(modus-vivendi modus-operandi))
-
-  (defun +modus-themes--fix-overrides (overrides)
-    "Replace color names in OVERRIDES to hex strings."
-    (let (result)
-      (dolist (override overrides)
-        (if-let* ((color (cadr override))
-                  ((stringp color))
-                  ((string-prefix-p "#" color))
-                  (rgb (color-name-to-rgb color))
-                  (hex (apply #'color-rgb-to-hex rgb))
-                  (name (car override)))
-            (push (list name hex) result)
-          (push override result)))
-      (nreverse result)))
-
-  (setopt modus-themes-common-palette-overrides
-          (+modus-themes--fix-overrides modus-themes-preset-overrides-faint))
+  (setopt modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
   (load-theme 'modus-operandi t t)
   (load-theme 'modus-vivendi t t))
 
