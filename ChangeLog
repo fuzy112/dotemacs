@@ -1,3 +1,10 @@
+2026-05-02  Zhengyi Fu  <i@fuzy.me>
+
+	Update embark and vertico configuration
+
+	* user-lisp/dotemacs-completion.el: Enable `vertico-multiform-mode'.
+	(vertico-multiform-categories): Use `grid' for `embark-keybinding'.
+
 2026-05-01  Zhengyi Fu  <i@fuzy.me>
 
 	Update nerd-icons-multimodal setup to use alist-setq!
