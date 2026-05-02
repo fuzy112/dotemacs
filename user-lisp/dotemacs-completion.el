@@ -159,6 +159,7 @@ falls back to its default handling."
   (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
   (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
   (vertico-mode)
+  (vertico-multiform-mode)
   (keymap-global-set "M-R" #'vertico-repeat)
   (define-keymap :keymap vertico-map
     ;; vertico-repeat
@@ -361,6 +362,9 @@ value for USE-OVERLAYS."
   (keymap-set embark-bookmark-map "W" '+embark/eww-open-bookmark)
   (keymap-set embark-bookmark-map "u" '+embark/browse-url-open-bookmark)
   (keymap-set embark-region-map "[" '+embark/apply-ansi-color))
+
+(after-load! (:and embark vertico-multiform)
+  (add-to-list 'vertico-multiform-categories '(embark-keybinding grid)))
 
 ;;;; consult
 
