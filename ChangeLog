@@ -1,3 +1,12 @@
+2026-05-03  Zhengyi Fu  <i@fuzy.me>
+
+	Remove too opinionated face customization
+
+	* user-lisp/dotemacs-theme.el (dotemacs-theme-refresh): Comment
+	out custom face overrides for cursor,
+	meow-insert/normal/motion-cursor, tab-line-tab-current, and
+	tab-line-tab-inactive, to use the active theme's defaults instead.
+
 2026-05-02  Zhengyi Fu  <i@fuzy.me>
 
 	* user-lisp/dotemacs-theme.el (consult-theme--state): Fix.
