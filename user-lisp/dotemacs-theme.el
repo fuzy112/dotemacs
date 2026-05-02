@@ -183,17 +183,17 @@ attributes."
                                 ((equal '(0 0 0) colors)))
                           "unspecified-bg"
                         bg))))
-     `(cursor
-       ((((class color) (min-colors 256) (background light)) :background "#005077")
-        (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
-     `(meow-insert-cursor
-       ((((class color) (min-colors 256) (background dark)) :background "#ec7745")))
-     `(meow-normal-cursor
-       ((((class color) (min-colors 256) (background light)) :background "#005077")
-        (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
-     `(meow-motion-cursor
-       ((((class color) (min-colors 256) (background light)) :background "#005077")
-        (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
+     ;; `(cursor
+     ;;   ((((class color) (min-colors 256) (background light)) :background "#005077")
+     ;;    (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
+     ;; `(meow-insert-cursor
+     ;;   ((((class color) (min-colors 256) (background dark)) :background "#ec7745")))
+     ;; `(meow-normal-cursor
+     ;;   ((((class color) (min-colors 256) (background light)) :background "#005077")
+     ;;    (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
+     ;; `(meow-motion-cursor
+     ;;   ((((class color) (min-colors 256) (background light)) :background "#005077")
+     ;;    (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
      `(fill-column-indicator
        ((((type w32 tty))
          :height 1.0 :foreground "gray50" :background ,(face-background 'default))))
@@ -252,16 +252,18 @@ attributes."
      ;;     :box ( :line-width 6
      ;;            :color ,(face-background 'default)
      ;;            :style nil))))
-     `(tab-line-tab-current
-       ((((min-colors 256) (background dark))
-         :background "purple"
-         :foreground "white"
-         :box nil)))
-     `(tab-line-tab-inactive
-       ((((min-colors 256) (background dark))
-         :background "DarkGreen"
-         :foreground "white"
-         :box nil)))
+
+     ;; `(tab-line-tab-current
+     ;;   ((((min-colors 256) (background dark))
+     ;;     :background "purple"
+     ;;     :foreground "white"
+     ;;     :box nil)))
+     ;; `(tab-line-tab-inactive
+     ;;   ((((min-colors 256) (background dark))
+     ;;     :background "DarkGreen"
+     ;;     :foreground "white"
+     ;;     :box nil)))
+
      ;; `(tab-bar
      ;;   ((((supports :box t))
      ;;     :box ( :line-width (-2 . 6)
