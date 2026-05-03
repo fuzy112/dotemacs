@@ -1,5 +1,12 @@
 2026-05-03  Zhengyi Fu  <i@fuzy.me>
 
+	Remove unused functions
+
+	* user-lisp/dotemacs-completion.el (+recenter-top-30%)
+	(+recenter-bottom-30%): Remove.
+
+2026-05-03  Zhengyi Fu  <i@fuzy.me>
+
 	Prevent the posframe from showning when switching themes
 
 	* user-lisp/pp-posframe.el (pp-posframe-mode): Clear the posframe
