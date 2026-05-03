@@ -125,6 +125,10 @@
 
 ;;;; themes
 
+;; Any Elisp file can run arbitrary code, so there is no reason to
+;; handle themes differently.
+(setopt custom-safe-themes t)
+
 (defun +inhibit-implied-resize (&rest args)
   "Prevent implied resize when switching themes."
   (let ((frame-inhibit-implied-resize t))
