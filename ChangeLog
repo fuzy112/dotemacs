@@ -1,5 +1,9 @@
 2026-05-03  Zhengyi Fu  <i@fuzy.me>
 
+	* user-lisp/dotemacs-theme.el (custom-safe-themes): Set to t.
+
+2026-05-03  Zhengyi Fu  <i@fuzy.me>
+
 	Isearch configuration
 
 	* user-lisp/dotemacs-editor.el (search-whitespace-regexp): Set to
