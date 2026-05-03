@@ -149,6 +149,7 @@ new record is started."
 (defvar diff-hl-margin-symbols-alist)
 
 (after-load! diff-hl
+  (diff-hl-flydiff-mode)
   (setopt diff-hl-margin-symbols-alist '((insert  . "增")
                                          (delete  . "刪")
                                          (change  . "改")

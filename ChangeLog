@@ -1,5 +1,11 @@
 2026-05-03  Zhengyi Fu  <i@fuzy.me>
 
+	Enable diff-hl-flydiff-mode when diff-hl is loaded
+
+	* user-lisp/dotemacs-vc.el:
+
+2026-05-03  Zhengyi Fu  <i@fuzy.me>
+
 	Set embark-prompter to embark-completing-read-prompter
 
 	* user-lisp/dotemacs-completion.el (embark-prompter): Set to
