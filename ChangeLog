@@ -1,5 +1,9 @@
 2026-05-03  Zhengyi Fu  <i@fuzy.me>
 
+	* user-lisp/dotemacs-misc.el (bookmark-fringe-mark): Set to nil.
+
+2026-05-03  Zhengyi Fu  <i@fuzy.me>
+
 	Don't include files other than Elisp in find-library candidates
 
 	* user-lisp/dotemacs-lisp.el (find-library-include-other-files):
