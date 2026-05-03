@@ -525,11 +525,6 @@ value for USE-OVERLAYS."
                                     "*Compile-Log*" "*Pp Eval Output*" "*log-edit-files*"
                                     "*Messages*" "*Warnings" ".newsrc-dribble")
                             eot)))))
-
-(defun +recenter-top-30% ()
-  (recenter (ceiling (* (window-height) 0.3))))
-(defun +recenter-bottom-30% ()
-  (recenter (ceiling (* (window-height) 0.7))))
 
 ;;;; Prescent
 
