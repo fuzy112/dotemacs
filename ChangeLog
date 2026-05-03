@@ -1,5 +1,12 @@
 2026-05-03  Zhengyi Fu  <i@fuzy.me>
 
+	Don't include files other than Elisp in find-library candidates
+
+	* user-lisp/dotemacs-lisp.el (find-library-include-other-files):
+	Set o nil.
+
+2026-05-03  Zhengyi Fu  <i@fuzy.me>
+
 	Dired: make copy and deletion recursive by default
 
 	* user-lisp/dotemacs-dired.el (dired-recursive-copies)
