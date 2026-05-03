@@ -1,5 +1,12 @@
 2026-05-03  Zhengyi Fu  <i@fuzy.me>
 
+	Disable colors and fonts in SHR
+
+	* user-lisp/dotemacs-misc.el (shr-use-colors, shr-use-fonts): Set
+	to nil.
+
+2026-05-03  Zhengyi Fu  <i@fuzy.me>
+
 	* user-lisp/dotemacs-misc.el (bookmark-fringe-mark): Set to nil.
 
 2026-05-03  Zhengyi Fu  <i@fuzy.me>
