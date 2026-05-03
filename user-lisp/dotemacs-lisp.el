@@ -58,6 +58,9 @@
     (keymap-set emacs-lisp-mode-map "C-c C-l" #'emacs-lisp-native-compile-and-load))
   (keymap-set lisp-interaction-mode-map "C-c C-j" #'eval-print-last-sexp))
 
+(after-load! find-func
+  (setopt find-library-include-other-files nil))
+
 ;;;; libraries
 (after-load! (:or dash elisp-mode)
   (global-dash-fontify-mode))
