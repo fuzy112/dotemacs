@@ -423,6 +423,12 @@ not used, but is required by the hook."
                (body-function . select-window)))
 
 (add-to-list 'display-buffer-alist
+             '((or "\\`\\*Pp Eval Output\\*\\'")
+               (display-buffer-in-side-window)
+               (dedicated . t)
+               (side . bottom)))
+
+(add-to-list 'display-buffer-alist
              '("\\` ?\\*\\(Org \\(Select\\|Note\\)\\|Agenda Commands\\)\\*\\'" ; the `org-capture' key selection, `org-add-log-note', and agenda dispatcher
                (display-buffer-in-side-window)
                (dedicated . t)
