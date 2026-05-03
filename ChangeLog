@@ -1,5 +1,12 @@
 2026-05-03  Zhengyi Fu  <i@fuzy.me>
 
+	Dired: make copy and deletion recursive by default
+
+	* user-lisp/dotemacs-dired.el (dired-recursive-copies)
+	(dired-recursive-deletes): Set to `always'.
+
+2026-05-03  Zhengyi Fu  <i@fuzy.me>
+
 	Control the display of common ancillary windows
 
 	* user-lisp/dotemacs-ui.el (display-buffer-alist): Add display

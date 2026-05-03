@@ -30,6 +30,8 @@
           dired-x-hands-off-my-keys nil
           dired-auto-revert-buffer t
           dired-mouse-drag-files t
+          dired-recursive-copies 'always
+          dired-recursive-deletes 'always
           shell-command-prompt-show-cwd t))
 
 (defun +dired-side-noselect ()
