@@ -138,7 +138,8 @@
 
   (setopt bookmark-save-flag 1
           bookmark-watch-bookmark-file 'silent
-          bookmark-version-control t)
+          bookmark-version-control t
+          bookmark-fringe-mark nil)
 
   (require 'bookmark-extras))
 
