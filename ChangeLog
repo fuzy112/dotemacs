@@ -1,5 +1,16 @@
 2026-05-03  Zhengyi Fu  <i@fuzy.me>
 
+	Isearch configuration
+
+	* user-lisp/dotemacs-editor.el (search-whitespace-regexp): Set to
+	".*?".	This idea is borrowed from Prot.
+	(isearch-lax-whitespace): Explicitly set to t.
+	(isearch-lazy-count): Set to t.
+	(lazy-count-prefix-format): Set to "(%s/%s) ".
+	(lazy-count-suffix-format): Set to nil.
+
+2026-05-03  Zhengyi Fu  <i@fuzy.me>
+
 	Disable colors and fonts in SHR
 
 	* user-lisp/dotemacs-misc.el (shr-use-colors, shr-use-fonts): Set
