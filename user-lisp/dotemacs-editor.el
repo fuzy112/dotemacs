@@ -24,6 +24,15 @@
 (when (fboundp 'kill-ring-deindent-mode)
   (kill-ring-deindent-mode))
 
+;;;; Isearch
+
+(setq search-whitespace-regexp ".*?")
+(setq isearch-lax-whitespace t)
+;; (setq isearch-regexp-lax-whitespace nil)
+
+(setq isearch-lazy-count t)
+(setq lazy-count-prefix-format "(%s/%s) ")
+(setq lazy-count-suffix-format nil)
 
 ;;;; ws-butler
 
