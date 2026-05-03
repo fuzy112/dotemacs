@@ -63,12 +63,6 @@
 (when (file-exists-p pre-init-file)
   (load pre-init-file nil t))
 
-;;;; custom
-
-(defvar custom-file)
-(and custom-file
-     (file-exists-p custom-file)
-     (load custom-file))
 
 (require 'dotemacs-ui)
 (require 'dotemacs-editor)
@@ -96,6 +90,13 @@
 (require 'dotemacs-chinese)
 (require 'dotemacs-treesit)
 (require 'dotemacs-security)
+
+;;;; custom
+
+(defvar custom-file)
+(and custom-file
+     (load custom-file t))
+
 
 ;;;; post-init
 
