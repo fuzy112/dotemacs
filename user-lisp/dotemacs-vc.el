@@ -142,6 +142,9 @@ new record is started."
 
 (autoload 'diff-hl-magit-post-refresh "diff-hl")
 (add-hook 'tty-setup-hook #'diff-hl-margin-mode)
+
+(add-hook 'dired-mode-hook #'diff-hl-dired-mode)
+
 (after-load! magit-mode
   (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh))
 
@@ -169,7 +172,6 @@ Then refresh all windows displaying the current buffer."
     (set width-var (apply #'max (map-values-apply #'string-width diff-hl-margin-symbols-alist))))
   (dolist (win (get-buffer-window-list))
     (set-window-buffer win (current-buffer))))
-
 
 (after-load! (:or diff-hl vc magit)
   (global-diff-hl-mode)
