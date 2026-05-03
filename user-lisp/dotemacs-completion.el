@@ -355,6 +355,7 @@ value for USE-OVERLAYS."
 (after-load! embark
   (setopt embark-help-key "?")
   (setopt embark-cycle-key "C-.")
+  (setopt embark-prompter #'embark-completing-read-prompter)
   (setopt embark-indicators '(embark-minimal-indicator
                               embark-highlight-indicator
                               embark-isearch-highlight-indicator))

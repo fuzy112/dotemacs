@@ -1,5 +1,12 @@
 2026-05-03  Zhengyi Fu  <i@fuzy.me>
 
+	Set embark-prompter to embark-completing-read-prompter
+
+	* user-lisp/dotemacs-completion.el (embark-prompter): Set to
+	`embark-completing-read-prompter`.
+
+2026-05-03  Zhengyi Fu  <i@fuzy.me>
+
 	Reorganize +lin--theme-face-alist and refine +lin--setup-face-for-theme
 
 	* user-lisp/dotemacs-ui.el (+lin--theme-face-alist): Change
