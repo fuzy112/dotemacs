@@ -186,6 +186,8 @@ Otherwise disable it."
 (after-load! hl-line
   (add-hook 'next-error-hook '+lin-line--next-error-h))
 
+(add-hook 'gnus-summary-mode-hook #'hl-line-mode)
+
 ;;;; lin
 
 ;; Stylistic enhancement for hl-line for selection based UI.
@@ -197,7 +199,6 @@ Otherwise disable it."
                 ement-notifications-mode-hook
                 git-rebase-mode-hook
                 gnus-group-mode-hook
-                gnus-summary-mode-hook
                 grep-mode-hook
                 ibuffer-mode-hook
                 log-view-mode-hook
