@@ -1,5 +1,12 @@
 2026-05-03  Zhengyi Fu  <i@fuzy.me>
 
+	Show *Pp Eval Output* buffer at bottom
+
+	* user-lisp/dotemacs-ui.el (display-buffer-alist): Add rule for
+	pp-eval-expresion output buffers.
+
+2026-05-03  Zhengyi Fu  <i@fuzy.me>
+
 	Remove unused functions
 
 	* user-lisp/dotemacs-completion.el (+recenter-top-30%)
