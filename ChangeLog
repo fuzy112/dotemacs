@@ -1,3 +1,10 @@
+2026-05-04  Zhengyi Fu  <i@fuzy.me>
+
+	Use hl-line-mode directly for gnus-summary-mode
+
+	* user-lisp/dotemacs-ui.el (gnus-summary-mode-hook): Add hl-line-mode
+	directly.  Remove lin-mode.
+
 2026-05-03  Zhengyi Fu  <i@fuzy.me>
 
 	* user-lisp/dotemacs-vc.el (dired-mode-hook): Add diff-hl-dired-mode.
