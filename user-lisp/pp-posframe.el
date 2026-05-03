@@ -1,6 +1,6 @@
 ;;; pp-posframe.el --- Show pp results in posframe    -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024, 2025  Zhengyi Fu
+;; Copyright (C) 2024, 2025, 2026  Zhengyi Fu
 
 ;; Author: Zhengyi Fu <i@fuzy.me>
 ;; Keywords: lisp
@@ -84,7 +84,9 @@
   (if pp-posframe-mode
       (apply #'posframe-show pp-posframe-buffer-name
 	     :min-width 5 pp-posframe-parameters)
-    (posframe-hide pp-posframe-buffer-name)))
+    (posframe-hide pp-posframe-buffer-name)
+    (with-current-buffer pp-posframe-buffer-name
+      (erase-buffer))))
 
 (defun pp-posframe-display-value (value lexical)
   "Display VALUE in a posframe."
