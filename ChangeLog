@@ -1,5 +1,15 @@
 2026-05-03  Zhengyi Fu  <i@fuzy.me>
 
+	Control the display of common ancillary windows
+
+	* user-lisp/dotemacs-ui.el (display-buffer-alist): Add display
+	rules for common ancillary windows including `occur', `grep',
+	`Buffer-menu', `log-view', `help', `org-capture' key selection,
+	`org-add-note', `org-agenda' dispatcher, `calendar' and
+	`re-builder'.
+
+2026-05-03  Zhengyi Fu  <i@fuzy.me>
+
 	Remove too opinionated face customization
 
 	* user-lisp/dotemacs-theme.el (dotemacs-theme-refresh): Comment
