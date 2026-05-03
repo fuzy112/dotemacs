@@ -155,7 +155,11 @@
        " ")
     args))
 
+;;;; SHR
 
+(after-load! shr
+  (setopt shr-use-colors nil)
+  (setopt shr-use-fonts nil))
 
 ;;;; EWW
 
