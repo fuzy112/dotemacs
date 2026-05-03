@@ -1,5 +1,16 @@
 2026-05-03  Zhengyi Fu  <i@fuzy.me>
 
+	Reorganize +lin--theme-face-alist and refine +lin--setup-face-for-theme
+
+	* user-lisp/dotemacs-ui.el (+lin--theme-face-alist): Change
+	modus-operandi face to blue, ef-light to blue, ef-day to
+	orange. Add entries for standard-light, standard-dark, doric-dark,
+	standard-wombat.
+	(+lin--setup-face-for-theme): Use active theme from `custom-enabled-themes`
+	with fallback to 'default.
+
+2026-05-03  Zhengyi Fu  <i@fuzy.me>
+
 	Show *Pp Eval Output* buffer at bottom
 
 	* user-lisp/dotemacs-ui.el (display-buffer-alist): Add rule for

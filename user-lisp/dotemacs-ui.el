@@ -216,12 +216,18 @@ Otherwise disable it."
 
 (defvar +lin--theme-face-alist
   '((default . lin-blue)
+    (standard-light . lin-blue)
+    (modus-operandi . lin-blue)
+    (ef-light . lin-blue)
+    (ef-day . lin-orange)
     (modus-vivendi . lin-cyan)
-    (modus-operandi . lin-cyan)
-    (ef-light . lin-cyan)))
+    (standard-dark . lin-cyan)
+    (doric-dark . lin-magenta)
+    (standard-wombat . lin-red)))
 
 (defun +lin--setup-face-for-theme (&optional theme)
-  (when-let* ((match (assq theme +lin--theme-face-alist)))
+  (when-let* ((theme (or theme (car custom-enabled-themes) 'default))
+              (match (assq theme +lin--theme-face-alist)))
     (setopt lin-face (cdr match))))
 
 (after-load! lin
