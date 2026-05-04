@@ -51,12 +51,13 @@
 
 (setopt elisp-fontify-semantically t)
 (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
-(after-load! elisp-mode
-  (when (boundp 'trusted-content)
-    (add-to-list 'trusted-content (locate-user-emacs-file "site-lisp/")))
-  (when (native-comp-available-p)
-    (keymap-set emacs-lisp-mode-map "C-c C-l" #'emacs-lisp-native-compile-and-load))
-  (keymap-set lisp-interaction-mode-map "C-c C-j" #'eval-print-last-sexp))
+
+(when (boundp 'trusted-content)
+  (add-to-list 'trusted-content (locate-user-emacs-file "site-lisp/")))
+(when (native-comp-available-p)
+  (keymap-set emacs-lisp-mode-map "C-c C-l" #'emacs-lisp-native-compile-and-load))
+(keymap-set emacs-lisp-mode-map "C-x C-M-x" #'compile-defun)
+(keymap-set lisp-interaction-mode-map "C-c C-j" #'eval-print-last-sexp)
 
 (after-load! find-func
   (setopt find-library-include-other-files nil))

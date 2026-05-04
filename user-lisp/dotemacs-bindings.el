@@ -89,7 +89,8 @@
   "x"     #'+toggle-transparent
   "v"     #'visual-line-mode
   "w"     #'whitespace-mode
-  "t"     #'consult-theme)
+  "t"     #'consult-theme
+  "T"     #'reload-enabled-themes)
 
 (defvar-keymap debug-map
   :doc    "Keymap for debugging commands."
@@ -144,9 +145,7 @@
   "m"   #'consult-man
   "i"   #'consult-info
 
-  "C-/" #'apheleia-format-buffer
-  "M-e" #'pp-posframe-macroexpand-last-sexp
-  )
+  "C-/" #'apheleia-format-buffer)
 
 (define-keymap :keymap ctl-x-4-map
   "t" #'eat-other-window
@@ -246,10 +245,10 @@
   "+" #'tempel-complete
   "*" #'tempel-insert
 
-  "c"		#'capitalize-dwim
-  "l"		#'downcase-dwim
-  "u"		#'upcase-dwim
-  "o"		#'quick-window-jump
+  "c"	#'capitalize-dwim
+  "l"	#'downcase-dwim
+  "u"	#'upcase-dwim
+  "o"	#'quick-window-jump
 
   "y" #'consult-yank-pop
   )
@@ -260,17 +259,16 @@
   "<f5>"	#'compile
 
   "<remap> <dabbrev-expand>" #'hippie-expand
-  "<remap> <eval-last-sexp>" #'pp-posframe-eval-last-sexp
-  "<remap> <compile-defun>" #'pp-posframe-compile-defun
+  "<remap> <eval-last-sexp>" #'pp-eval-last-sexp
   "<remap> <eval-expression>" #'pp-eval-expression
 
   "C-."  #'embark-act
 
   "<remap> <Info-search>" #'consult-info
 
-  "M-#"                   #'consult-register-load
-  "M-'"                   #'consult-register-store ; orig. abbrev-prefix-mark (unrelated)
-  "C-M-#"                 #'consult-register
+  "M-#"         #'consult-register-load
+  "M-'"         #'consult-register-store ; orig. abbrev-prefix-mark (unrelated)
+  "C-M-#"       #'consult-register
 
   "S-<left>"  #'windmove-left
   "S-<right>" #'windmove-right
