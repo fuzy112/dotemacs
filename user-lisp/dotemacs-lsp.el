@@ -49,6 +49,7 @@
   (keymap-set eglot-mode-map "C-x x /" #'eglot-format)
   (keymap-set eglot-mode-map "C-c C-a" #'eglot-code-actions)
   (keymap-set eglot-mode-map "C-c l" '+eglot-prefix-map)
+  (keymap-set eglot-mode-map "<remap> <eglot>" #'eglot-shutdown)
   (eglot-tempel-mode))
 
 ;;;;; Nix integration

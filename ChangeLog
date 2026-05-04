@@ -1,5 +1,11 @@
 2026-05-04  Zhengyi Fu  <i@fuzy.me>
 
+	Use the same keybinding for turning on eglot as well as turning off
+
+	* user-lisp/dotemacs-lisp.el:
+
+2026-05-04  Zhengyi Fu  <i@fuzy.me>
+
 	Use hl-line-mode directly for gnus-summary-mode
 
 	* user-lisp/dotemacs-ui.el (gnus-summary-mode-hook): Add hl-line-mode
