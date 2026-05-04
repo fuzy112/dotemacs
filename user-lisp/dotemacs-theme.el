@@ -16,7 +16,8 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-(eval-when-compile (require 'dotemacs-core))
+(eval-when-compile (require 'dotemacs-core)
+                   (require 'llama))
 
 ;;;; fonts
 
@@ -342,6 +343,11 @@ already marked as safe and is not a built-in default Emacs theme."
                                        (cons hash custom-safe-themes))))))
       (customize-save-variable 'custom-enabled-themes custom-enabled-themes
                                "Saved by `consult-theme'."))))
+
+(defun reload-enabled-themes ()
+  (interactive)
+  (mapc (##load-theme %1 t t)
+        custom-enabled-themes))
 
 (provide 'dotemacs-theme)
 ;;; dotemacs-theme.el ends here

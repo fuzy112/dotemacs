@@ -1,5 +1,25 @@
 2026-05-04  Zhengyi Fu  <i@fuzy.me>
 
+	Add reload-enabled-themes, replace pp-posframe eval bindings, adjust elisp bindings
+
+	* user-lisp/dotemacs-bindings.el (toggle-map): Add "T" binding for
+	`reload-enabled-themes`.
+	(ctl-c-map): Remove "M-e" binding for
+	`pp-posframe-macroexpand-last-sexp`.
+	(global-map): Remap `eval-last-sexp` to `pp-eval-last-sexp` instead of
+	`pp-posframe-eval-last-sexp`.  Remove remap of `compile-defun` to
+	`pp-posframe-compile-defun`.  Clean up indentation of keymap entries.
+
+	* user-lisp/dotemacs-lisp.el: Move trusted-content setup,
+	native-compile keymap binding, and lisp-interaction mode binding out
+	of `after-load! elisp-mode` block to run immediately.
+	(emacs-lisp-mode-map): Add "C-x C-M-x" binding for `compile-defun`.
+
+	* user-lisp/dotemacs-theme.el (reload-enabled-themes): New interactive
+	function to reload all currently enabled themes.
+
+2026-05-04  Zhengyi Fu  <i@fuzy.me>
+
 	Use the same keybinding for turning on eglot as well as turning off
 
 	* user-lisp/dotemacs-lisp.el:
