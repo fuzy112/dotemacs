@@ -70,6 +70,11 @@ font-locking and indentation."
    "help-gnu-emacs@gnu.org"
    (read-string "Title: ")))
 
+;;;; Man
+
+(after-load! man
+  (setopt Man-notify-method 'aggressive))
+
 
 (defvar url-http-response-status)
 (declare-function mm-url-encode-multipart-form-data "mm-url.el")
