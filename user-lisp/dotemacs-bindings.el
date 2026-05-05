@@ -206,7 +206,10 @@
   "M-r" #'consult-history
 
   "C-x C-d"  #'consult-dir
-  "C-x C-j"  #'consult-dir-jump-file)
+  "C-x C-j"  #'consult-dir-jump-file
+
+  "C-c C-c"  #'embark-collect
+  "C-c C-e"  #'embark-export)
 
 (define-keymap :keymap isearch-mode-map
   "M-e"   #'consult-isearch-history
@@ -263,6 +266,10 @@
   "<remap> <eval-expression>" #'pp-eval-expression
 
   "C-."  #'embark-act
+  "C-;"  #'embark-dwim
+
+  "M-$"  #'jinx-correct
+  "C-M-$" #'jinx-languages
 
   "<remap> <Info-search>" #'consult-info
 

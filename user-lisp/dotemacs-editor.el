@@ -80,6 +80,11 @@
           (indent-tabs-mode score))))))
 (add-hook 'hack-local-variables-hook #'+indent-tabs-mode--hack-local-variables-h)
 
+;;;; Jinx
+
+(after-load! (:and jinx vertico)
+  (add-to-list 'vertico-multiform-categories
+               '(jinx grid (vertico-grid-annotate . 20) (vertico-count . 4))))
 
 ;;;; recentf
 ;; (setq recentf-save-file (locate-user-emacs-file '("recentf.eld.zst")))
