@@ -61,6 +61,13 @@
                   (concat (file-remote-p default-directory) "~/.cache/eat-shell-integration")
                   nil t t))
 
+;;;; coterm
+
+(after-load! comint
+  (coterm-mode)
+  (add-hook 'shell-mode-hook #'coterm-auto-char-mode)
+  (keymap-set comint-mode-map "C-c C-;" #'coterm-char-mode-cycle))
+
 ;;;; with-editor
 
 (setopt shell-command-with-editor-mode t)
