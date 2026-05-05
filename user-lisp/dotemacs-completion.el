@@ -372,6 +372,7 @@ value for USE-OVERLAYS."
 (after-load! comint
   (define-keymap :keymap comint-mode-map
     ;; "M-s" #'consult-history
+    "M-h" #'cape-history
     "M-r" #'consult-history))
 
 (after-load! consult
