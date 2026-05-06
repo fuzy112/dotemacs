@@ -26,7 +26,7 @@
   "m" #'magit-project-status
   "=" #'+project/vc-diff
   "b" #'consult-project-buffer ; orig. project-switch-to-buffer
-  "B" #'consult-project-buffer ; orig. project-switch-to-buffer
+  "C-b" nil ; orig. `project-list-buffers'
   )
 
 (define-keymap :keymap vc-prefix-map
@@ -121,8 +121,7 @@
   "G"   #'gnus
   "V"   #'vundo
   "a"   #'embark-act
-  "b"   #'switch-to-buffer
-  "B"   #'consult-buffer
+  "b"   #'consult-buffer
   "t"   tool-map
   "d"   doc-map
   "e"   #'cape-prefix-map
