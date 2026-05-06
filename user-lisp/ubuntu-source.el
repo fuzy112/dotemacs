@@ -1,5 +1,5 @@
 ;; ubuntu-source.el --- Download Ubuntu source packages   -*- lexical-binding: t; -*-
-;; Copyright © 2025  Zhengyi Fu <i@fuzy.me>
+;; Copyright © 2025, 2026  Zhengyi Fu <i@fuzy.me>
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -122,6 +122,7 @@ Call CALLBACK with (SRC-PKG SRC-VERSION SRC-URLS) when done."
          pkg distro intermediate-callback distro)))))
 
 
+;;;###autoload
 (defun ubuntu-source-download (pkg)
   (interactive (list (apt-utils-choose-package)))
   (let ((frame (selected-frame))
