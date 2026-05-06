@@ -50,10 +50,6 @@
 (require 'early-init early-init-file t)
 (when (featurep 'init)
   (load early-init-file nil t))
-(require 'dotemacs-core)
-(eval-when-compile
-  (require 'compat)
-  (require 'cond-let))
 
 ;;;; pre-init.el
 
