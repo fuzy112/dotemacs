@@ -184,6 +184,7 @@ See `after-load-1!' for SPEC."
   (declare (indent 1))
   `(after-load-1! ,spec (with-no-warnings ,@body)))
 
+;;;###autoload
 (defun run-after-init (func)
   "Execute FUNC after Emacs has finished initialization.
 If Emacs has already finished initializing, execute FUNC immediately.
