@@ -96,6 +96,9 @@
   (global-clipetty-mode))
 (if (eq (framep-on-display) t) (require 'clipetty))
 
+;;;; Characters
+
+(setopt cjk-ambiguous-chars-are-wide nil)
 
 ;;;; emacs-server
 
