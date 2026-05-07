@@ -50,6 +50,16 @@
                          (vc-read-backend "Backend: ")))
          (default-directory root))
     (vc-diff nil nil (list vc-backend (list root)))))
+
+(defcustom vc-git-use-private-ignore-file t
+  "Use user private ignore file rather than  the .gitignore file."
+  :group 'vc-git)
+
+(define-advice vc-git-find-ignore-file (:around (orig file) use-private-ignore-file)
+  (if vc-git-use-private-ignore-file
+      (expand-file-name ".git/info/exclude" (vc-git-root file))
+    (funcall orig file)))
+
 ;;;; magit
 
 (after-load! project
