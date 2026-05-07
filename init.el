@@ -62,8 +62,7 @@
 
 (require 'dotemacs-ui)
 (require 'dotemacs-editor)
-(with-eval-after-load 'gptel
-  (require 'dotemacs-llm))
+(require 'dotemacs-llm)
 (require 'dotemacs-bindings)
 (require 'dotemacs-lsp)
 (require 'dotemacs-completion)
