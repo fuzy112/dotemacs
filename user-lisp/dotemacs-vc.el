@@ -83,7 +83,7 @@
            `((log-edit-listfun . ,#'magit-staged-files)
              (log-edit-diff-function . ,#'magit-diff-while-committing))))
       (dolist (crt params)
-        (set (make-local-variable (car crt)) (cdr crt)))
+        (set-local (car crt) (cdr crt)))
       (run-hooks 'log-edit-hook)
       (save-buffer))))
 
@@ -169,7 +169,7 @@ and set the appropriate margin width variable accordingly.
 Then refresh all windows displaying the current buffer."
   (require 'map)
   (let ((width-var (intern (format "%S-margin-width" diff-hl-side))))
-    (set width-var (apply #'max (map-values-apply #'string-width diff-hl-margin-symbols-alist))))
+    (set-local width-var (apply #'max (map-values-apply #'string-width diff-hl-margin-symbols-alist))))
   (dolist (win (get-buffer-window-list))
     (set-window-buffer win (current-buffer))))
 

@@ -1,5 +1,5 @@
 ;;; good-doc.el --- API Documentation Browser -*- lexical-binding: t -*-
-;; Copyright © 2024, 2025  Zhengyi Fu <i@fuzy.me>
+;; Copyright © 2024, 2025, 2026  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
 ;; Version: 0.1.1
@@ -79,9 +79,7 @@
 ;;;; Parsing functions
 
 (defun good-doc--set-untrusted-content ()
-  (set (make-local-variable 'untrusted-contents) t)
-  (with-suppressed-warnings ((obsolete untrusted-content))
-    (set (make-local-variable 'untrusted-content) t)))
+  (setq untrusted-content t))
 
 (put 'good-doc--parse 'good-doc-cache-function nil)
 (defun good-doc--parse (doc)
