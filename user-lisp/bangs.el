@@ -477,6 +477,7 @@ Called via advice on `browse-url'."
 Transforms the URL in ARGS if it matches a bang pattern."
   ;; This interactive form replaces the one in the original function,
   ;; even if this is a :filter-args advice.
+  ;; FIXME: Emacs-31.1 added an `:interactive-only' way to add an advice.
   (interactive
    (minibuffer-with-setup-hook
        bangs-minibuffer-setup-function
