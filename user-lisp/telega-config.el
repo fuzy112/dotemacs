@@ -49,21 +49,7 @@
 
 (add-hook 'telega-root-mode-hook #'hl-line-mode)
 
-(setopt telega-chat-input-complete-function #'completion-at-point)
-
-;; (add-hook 'telega-chat-mode-hook #'telega-capf-setup)
-(defun telega-completion-setup-corfu ()
-  (setq-local corfu-auto t
-              corfu-auto-trigger "#:/@"
-              completion-at-point-functions
-              (list (cape-capf-super #'telega-completion-emoji
-                                     :with #'telega-completion-telegram-emoji)
-                    #'telega-completion-username
-                    (cape-capf-super #'telega-completion-botcmd
-                                     #'telega-completion-quick-reply)
-                    #'telega-completion-hashtag
-                    t)))
-(add-hook 'telega-chat-mode-hook #'telega-completion-setup-corfu)
+(add-hook 'telega-chat-mode-hook #'telega-completions-setup-capf)
 
 (provide 'telega-config)
 ;;; telega-config.el ends here
