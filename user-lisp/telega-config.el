@@ -65,8 +65,5 @@
                     t)))
 (add-hook 'telega-chat-mode-hook #'telega-completion-setup-corfu)
 
-(keymap-global-set "M-g t" telega-prefix-map)
-
-
 (provide 'telega-config)
 ;;; telega-config.el ends here

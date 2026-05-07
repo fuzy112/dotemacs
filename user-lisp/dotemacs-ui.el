@@ -307,9 +307,6 @@ not used, but is required by the hook."
 
 ;;;; ibuffer
 
-;; Replace `list-buffers' with `ibuffer-jump'.
-(keymap-global-set "<remap> <list-buffers>" #'ibuffer-jump)
-
 (after-load! ibuffer
   (setopt ibuffer-expert t
           ibuffer-show-empty-filter-groups nil

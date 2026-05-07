@@ -160,7 +160,6 @@ falls back to its default handling."
   (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
   (vertico-mode)
   (vertico-multiform-mode)
-  (keymap-global-set "M-R" #'vertico-repeat)
   (define-keymap :keymap vertico-map
     ;; vertico-repeat
     "M-P"   #'vertico-repeat-previous

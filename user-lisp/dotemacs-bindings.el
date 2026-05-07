@@ -149,24 +149,22 @@
 (define-keymap :keymap ctl-x-4-map
   "t" #'eat-other-window
   "e" #'+eshell/other-window
-  "b" #'consult-buffer-other-window ; orig. switch-to-buffer-other-window
+  "b" #'consult-buffer-other-window
   "F" #'find-function-other-window
   "V" #'find-variable-other-window
   "K" #'find-function-on-key-other-window
-  "L" #'find-library-other-window
-  )
+  "L" #'find-library-other-window)
 
 (define-keymap :keymap ctl-x-5-map
   "F" #'find-function-other-frame
   "V" #'find-variable-other-frame
   "K" #'find-function-on-key-other-frame
   "L" #'find-library-other-frame
-  "b" #'consult-buffer-other-frame ; orig. switch-to-buffer-other-frame
-  )
+  "b" #'consult-buffer-other-frame)
 
 (define-keymap :keymap ctl-x-r-map
   "b" #'consult-bookmark ; orig. bookmark-jump
-  )
+  "u" #'url-bookmark-add)
 
 (declare-function consult-register "consult")
 
@@ -196,19 +194,15 @@
   "g"   #'magit-status-quick
   "M-g" #'magit-dispatch
   "M-:" #'consult-complex-command ; orig. repeat-complex-command
-  "C-d" #'consult-dir
-  )
+  "C-d" #'consult-dir)
 
 (define-keymap :keymap minibuffer-local-map
-  "M-A" #'marginalia-cycle
-  ;; "M-s" #'consult-history
-  "M-r" #'consult-history
-
-  "C-x C-d"  #'consult-dir
-  "C-x C-j"  #'consult-dir-jump-file
-
-  "C-c C-c"  #'embark-collect
-  "C-c C-e"  #'embark-export)
+  "M-A"		#'marginalia-cycle
+  "M-r"		#'consult-history
+  "C-x C-d"	#'consult-dir
+  "C-x C-j"	#'consult-dir-jump-file
+  "C-c C-c"	#'embark-collect
+  "C-c C-e"	#'embark-export)
 
 (define-keymap :keymap isearch-mode-map
   "M-e"   #'consult-isearch-history
@@ -241,45 +235,46 @@
   "m"     #'consult-mark
   "k"     #'consult-global-mark
   "i"     #'consult-imenu
-  "I"     #'consult-imenu-multi)
+  "I"     #'consult-imenu-multi
+  "t"     telega-prefix-map)
 
 (define-keymap :keymap esc-map
-  "+" #'tempel-complete
-  "*" #'tempel-insert
-
-  "c"	#'capitalize-dwim
-  "l"	#'downcase-dwim
-  "u"	#'upcase-dwim
-  "o"	#'quick-window-jump
-
-  "y" #'consult-yank-pop
-  )
+  "o"		#'quick-window-jump
+  ;; vertico
+  "R"		#'vertico-repeat
+  ;;
+  "c"		#'capitalize-dwim
+  "l"		#'downcase-dwim
+  "u"		#'upcase-dwim
+  ;; tempel
+  "+"		#'tempel-complete
+  "*"		#'tempel-insert
+  ;; jinx
+  "$"		#'jinx-correct
+  "C-$"		#'jinx-languages
+  ;; consult
+  "#"		#'consult-register-load
+  "'"		#'consult-register-store
+  "C-#"		#'consult-register)
 
 (define-keymap :keymap global-map
-  "C-S-d"	#'duplicate-dwim
-
-  "<f5>"	#'compile
-
-  "<remap> <dabbrev-expand>" #'hippie-expand
-  "<remap> <eval-last-sexp>" #'pp-eval-last-sexp
-  "<remap> <eval-expression>" #'pp-eval-expression
-
-  "C-."  #'embark-act
-  "C-;"  #'embark-dwim
-
-  "M-$"  #'jinx-correct
-  "C-M-$" #'jinx-languages
-
-  "<remap> <Info-search>" #'consult-info
-
-  "M-#"         #'consult-register-load
-  "M-'"         #'consult-register-store ; orig. abbrev-prefix-mark (unrelated)
-  "C-M-#"       #'consult-register
-
-  "S-<left>"  #'windmove-left
-  "S-<right>" #'windmove-right
-  "S-<up>"    #'windmove-up
-  "S-<down>"  #'windmove-down)
+  "<f5>"			#'compile
+  "C-S-d"			#'duplicate-dwim
+  ;; embark
+  "C-."				#'embark-act
+  "C-;"				#'embark-dwim
+  ;; windmove
+  "S-<left>"			#'windmove-left
+  "S-<right>"			#'windmove-right
+  "S-<up>"			#'windmove-up
+  "S-<down>"			#'windmove-down
+  ;; remap some commands
+  "<remap> <yank-pop>"          #'consult-yank-pop
+  "<remap> <dabbrev-expand>"	#'hippie-expand
+  "<remap> <eval-last-sexp>"	#'pp-eval-last-sexp
+  "<remap> <eval-expression>"	#'pp-eval-expression
+  "<remap> <Info-search>"	#'consult-info
+  "<remap> <list-buffers>"	#'ibuffer-jump)
 
 (provide 'dotemacs-bindings)
 ;;; dotemacs-bindings.el ends here

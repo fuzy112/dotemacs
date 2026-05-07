@@ -142,7 +142,6 @@
   (let ((pp-default-function 'pp-28))
     (apply args)))
 
-(keymap-global-set "C-x r u" #'url-bookmark-add)
 (after-load! bookmark
   (advice-add #'bookmark-write-file :around '+bookmark--pp-28)
 
