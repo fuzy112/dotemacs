@@ -126,8 +126,8 @@
                             `( link ,(dom-attr dom 'link)
                                doc ,good-doc--doc)
                             page)
-       (cl-pushnew page good-doc--pages :test 'equal)
-       (cl-pushnew page good-doc--entries :test 'equal)))
+       (push page good-doc--pages)
+       (push page good-doc--entries)))
     ('sub
      (let ((page (substring-no-properties (dom-attr dom 'name))))
        (when (string-empty-p page)
@@ -136,8 +136,8 @@
                             `( link ,(dom-attr dom 'link)
                                doc ,good-doc--doc)
                             page)
-       (cl-pushnew page good-doc--pages :test 'equal)
-       (cl-pushnew page good-doc--entries :test 'equal)))
+       (push page good-doc--pages)
+       (push page good-doc--entries)))
     ('keyword
      (let ((symbol (substring-no-properties (dom-attr dom 'name))))
        (add-text-properties 0 1
@@ -145,8 +145,8 @@
                                type ,(dom-attr dom 'type)
                                doc ,good-doc--doc)
                             symbol)
-       (cl-pushnew symbol good-doc--symbols :test 'equal)
-       (cl-pushnew symbol good-doc--entries :test 'equal))))
+       (push symbol good-doc--symbols)
+       (push symbol good-doc--entries))))
   (dolist (it (dom-children dom))
     (good-doc--parse-1 it)))
 
