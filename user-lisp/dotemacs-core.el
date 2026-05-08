@@ -197,9 +197,7 @@ Otherwise, add FUNC to `after-init-hook'."
   "Execute BODY after Emacs has finished initialization.
 See `after-init'."
   (declare (indent 0))
-  (let ((body-var (gensym "body-")))
-    `(let ((,body-var (lambda () ,@body)))
-       (run-after-init ,body-var))))
+  `(run-after-init (lambda () ,@body)))
 
 (defmacro with-no-compile! (&rest body)
   "Evaluate BODY without byte-compiling it.
