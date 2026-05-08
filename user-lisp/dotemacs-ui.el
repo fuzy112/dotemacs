@@ -421,13 +421,19 @@ not used, but is required by the hook."
              '((or . ((derived-mode . occur-mode)
                       (derived-mode . grep-mode)
                       (derived-mode . Buffer-menu-mode)
-                      (derived-mode . log-view-mode)
-                      (derived-mode . help-mode)))
+                      (derived-mode . log-view-mode)))
                (display-buffer-reuse-mode-window display-buffer-below-selected)
                (body-function . select-window)))
 
 (add-to-list 'display-buffer-alist
-             '((or "\\`\\*Pp Eval Output\\*\\'")
+             '("\\`\\*vc-git : .*?\\*\\'"
+               (display-buffer-reuse-mode-window display-buffer-in-side-window)
+               (mode . (vc-compilation-mode))
+               (dedicated . t)
+               (side . bottom)))
+
+(add-to-list 'display-buffer-alist
+             '("\\`\\*Pp Eval Output\\*\\'"
                (display-buffer-in-side-window)
                (dedicated . t)
                (side . bottom)))
@@ -455,7 +461,6 @@ not used, but is required by the hook."
                (window-height . 4) ; note this is literal lines, not relative
                (dedicated . t)
                (preserve-size . (t . t))))
-
 
 
 (defun smart-kill-buffer ()
