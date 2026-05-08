@@ -19,11 +19,12 @@
 (eval-when-compile (require 'dotemacs-core))
 
 ;;;; auth-sources
-(after-load! auth-sources
+(after-load! auth-source
   (when (custom--standard-value-p 'auth-sources auth-sources)
     (setopt auth-sources '("~/.authinfo.gpg")))
   (setopt auth-source-save-behavior t
           auth-source-gpg-encrypt-to (list  "0xBBE2757FC7BFC23B"))
+  (setopt plstore-encrypt-to auth-source-gpg-encrypt-to)
   (auth-source-forget-all-cached))
 
 ;;;; epg
