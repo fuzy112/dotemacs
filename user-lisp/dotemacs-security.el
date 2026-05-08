@@ -31,6 +31,12 @@
 
 (after-load! epa
   (setopt epa-keys-select-method 'minibuffer))
+
+;;;; plstore
+
+(after-load! plstore
+  (setopt plstore-select-keys nil))
+
 
 (defun send-password-to-process (process)
   "Read a password and send it to the process in BUFFER."
