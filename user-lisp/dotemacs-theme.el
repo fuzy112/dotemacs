@@ -15,9 +15,10 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
-(eval-when-compile (require 'dotemacs-core)
-                   (require 'llama))
+(eval-when-compile
+  (require 'dotemacs-core)
+  (require 'llama)
+  (require 'modus-themes))
 
 ;;;; fonts
 
@@ -230,8 +231,10 @@ attributes."
      '(whitespace-indentation ((t :underline "yellow")))
      '(whitespace-space-before-tab ((t :underline "DarkOrange")))
      '(whitespace-space-after-tab ((t :underline "yellow")))
-     '(parenthesis
-       ((t :inherit shadow)))
+     `(parenthesis
+       ((t :foreground ,(if (modus-themes-get-current-theme)
+                            (modus-themes-get-color-value 'bg-active)
+                          "gray"))))
      ;; `(header-line
      ;;   ((((supports :underline t) (class color grayscale))
      ;;     :background ,(face-background 'default)
