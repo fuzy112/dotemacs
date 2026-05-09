@@ -284,8 +284,7 @@ confirmed."
 (after-load! comint
   (add-hook 'comint-output-filter-functions #'comint-osc-process-output)
   (setopt comint-prompt-read-only t
-          comint-buffer-maximum-size 2048
-          comint-terminfo-terminal "dumb-emacs-ansi")
+          comint-buffer-maximum-size 2048)
   (setopt comint-input-ring-size 10000
           comint-input-ignoredups t
           comint-history-isearch 'dwim
