@@ -75,6 +75,7 @@
   (transient-set-default-level 'magit:--gpg-sign 1)
   (transient-set-default-level 'magit:--signoff 1)
   (setq-default magit-tramp-pipe-stty-settings 'pty)
+  (setopt magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   (setopt magit-format-file-function #'magit-format-file-nerd-icons)
   (advice-add #'magit-maybe-start-credential-cache-daemon :after '+magit--ccdp-no-query)
   (setopt magit-wip-mode-lighter "")

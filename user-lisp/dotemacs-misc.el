@@ -38,15 +38,7 @@
   (setopt eshell-visual-commands nil)
   (add-hook 'eshell-load-hook #'eat-eshell-mode))
 
-(after-load! project
-  (keymap-set project-prefix-map "t" #'eat-project)
-  (keymap-set project-other-window-map "t" #'eat-project-other-window)
-  (when (consp project-switch-commands)
-    (add-to-list 'project-switch-commands '(eat-project "Eat") t)))
-
 (defvar eat-terminal)
-(declare-function eat-term-send-string "eat.el" (terminal string))
-(declare-function eat-self-input "eat.el" (n &optional e))
 
 (defvar eat-term-terminfo-directory)
 (defvar eat-term-shell-integration-directory)
