@@ -36,15 +36,11 @@
 
 ;;;; ws-butler
 
-(autoload 'ws-butler--global-mode-turn-on "ws-butler")
-(add-hook 'find-file-hook #'ws-butler--global-mode-turn-on)
-(after-load! ws-butler
-  (remove-hook 'find-file-hook #'ws-butler--global-mode-turn-on)
-  (setopt ws-butler-keep-whitespace-before-point nil
-          ws-butler-convert-leading-tabs-or-spaces nil)
-  (add-to-list 'ws-butler-global-exempt-modes 'diff-mode)
-  (ws-butler-global-mode))
-
+(require 'ws-butler)
+(setopt ws-butler-keep-whitespace-before-point nil
+        ws-butler-convert-leading-tabs-or-spaces nil)
+(add-to-list 'ws-butler-global-exempt-modes 'diff-mode)
+(ws-butler-global-mode)
 
 ;;;; whitespace
 
@@ -124,15 +120,14 @@
 
 ;;;; repeat
 
-(defun +repeat--post-command ()
+(defun +repeat--pre-command ()
   (when (and (symbolp this-command) (function-get this-command 'repeat-map))
-    (message "Command %S has a `repeat-map'" this-command)
     (require 'repeat)
-    (declare-function repeat-post-hook "repeat.el")
-    (repeat-post-hook)))
-(add-hook 'post-command-hook '+repeat--post-command)
+    (declare-function repeat-pre-hook "repeat.el")
+    (repeat-pre-hook)))
+(add-hook 'pre-command-hook '+repeat--pre-command)
 (after-load! repeat
-  (remove-hook 'post-command-hook '+repeat--post-command)
+  (remove-hook 'pre-command-hook '+repeat--pre-command)
   (repeat-mode))
 
 
