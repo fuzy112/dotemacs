@@ -68,6 +68,11 @@
   (add-hook 'shell-mode-hook #'coterm-auto-char-mode)
   (keymap-set comint-mode-map "C-c C-;" #'coterm-char-mode-cycle))
 
+;; bug#80888
+(define-advice coterm--init (:around (orig-fn) exclude-async-shell-command)
+  (unless (derived-mode-p async-shell-command-mode)
+    (funcall orig-fn)))
+
 ;;;; with-editor
 
 (setopt shell-command-with-editor-mode t)
