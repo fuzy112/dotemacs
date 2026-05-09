@@ -214,6 +214,7 @@ confirmed."
   (let ((dotemacs-prog--project-files-ignore-vcs t))
     (cl-call-next-method)))
 
+(defvar project-files-relative-names)
 ;; Use fd to speed up C-u C-x p f.
 (define-advice project--files-in-directory (:around (orig-fn dir ignores &optional files) fd)
   (require 'find-dired)

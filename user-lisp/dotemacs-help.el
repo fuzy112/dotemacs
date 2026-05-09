@@ -20,10 +20,10 @@
 ;;;; help
 
 ;; Enable editing of variable values in help buffers
-(setq help-enable-variable-value-editing t
-      help-enable-completion-autoload nil
-      help-window-select t
-      help-window-keep-selected t)
+(setopt help-enable-variable-value-editing t
+        help-enable-completion-autoload nil
+        help-window-select t
+        help-window-keep-selected t)
 
 ;; Add shortdoc examples to function help if available
 (when (fboundp 'shortdoc-help-fns-examples-function)
