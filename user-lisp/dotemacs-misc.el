@@ -32,7 +32,11 @@
   (setopt eat-kill-buffer-on-exit t)
   (setopt eat-semi-char-non-bound-keys
           (seq-union '([?\e ?o])
-                     eat-semi-char-non-bound-keys)))
+                     eat-semi-char-non-bound-keys))
+  (defvar eat--line-mode)
+  (add-hook 'eat--line-mode-hook
+            (lambda ()
+              (corfu-mode (if eat--line-mode +1 -1)))))
 
 (unless (memq system-type '(ms-dos windows-nt))
   (setopt eshell-visual-commands nil)
