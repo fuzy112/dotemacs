@@ -532,6 +532,10 @@ value for USE-OVERLAYS."
 (after-load! prescient
   (prescient-persist-mode))
 
+(define-advice vertico-prescient--remember-minibuffer-contents (:around (orig) password)
+  (unless (bound-and-true-p read-passwd-mode)
+    (funcall orig)))
+
 (after-load! vertico
   ;; disable prescient's filtering since we use orderless
   (setopt vertico-prescient-enable-filtering nil)
