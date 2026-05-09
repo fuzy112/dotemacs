@@ -319,6 +319,17 @@ PROJECT defaults to the current project."
       (when (derived-mode-p major-modes)
         (funcall mode)))))
 
+(defmacro blackout! (feature-or-file mode &optional replacement)
+  "Configure `blackout' for MODE to take effect after FEATURE-OR-FILE is loaded.
+When REPLACEMENT is provided, show it in the mode line instead of hiding
+MODE's indicator entirely.
+
+This wraps `blackout' in `with-eval-after-load' to safely defer
+configuration until the relevant feature or file is available."
+  `(with-eval-after-load
+       ,(macroexp-quote feature-or-file)
+     (blackout ,(macroexp-quote mode) ,replacement)))
+
 (provide 'dotemacs-core)
 
 ;; Local Variables:
