@@ -87,7 +87,7 @@
 When a side window exists on SIDE, close it and remember its state.
 When no side window exists on SIDE, restore the remembered state.
 
-SIDE is one of the symbols `left', `right', `above', or `below'.
+SIDE is one of the symbols `left', `right', `top', or `bottom'.
 FRAME defaults to the selected frame."
   (let* ((frame (window-normalize-frame frame))
          (window--sides-inhibit-check t)
@@ -102,7 +102,11 @@ FRAME defaults to the selected frame."
       (let* ((size (if (memq side '(left right))
                        (alist-get 'total-width state)
                      (alist-get 'total-height state)))
-             (new-win (split-window (frame-root-window frame) (and size (- size)) side)))
+             (new-win (split-window (frame-root-window frame) (and size (- size))
+                                    (pcase side
+                                      ('top 'above)
+                                      ('bottom 'below)
+                                      (_ side)))))
         (window-state-put state new-win)))
      (t
       (user-error "No remembered side window for this frame")))))
@@ -125,23 +129,23 @@ FRAME defaults to the selected frame."
   (interactive)
   (+toggle-side-window 'right frame))
 
-(defun +toggle-side-window-above (&optional frame)
-  "Toggle a side window above FRAME.
-When an above side window exists, close it and remember its state.
-When no above side window exists, restore the remembered state.
+(defun +toggle-side-window-top (&optional frame)
+  "Toggle a side window top FRAME.
+When an top side window exists, close it and remember its state.
+When no top side window exists, restore the remembered state.
 
 FRAME defaults to the selected frame."
   (interactive)
-  (+toggle-side-window 'above frame))
+  (+toggle-side-window 'top frame))
 
-(defun +toggle-side-window-below (&optional frame)
-  "Toggle a side window below FRAME.
-When a below side window exists, close it and remember its state.
-When no below side window exists, restore the remembered state.
+(defun +toggle-side-window-bottom (&optional frame)
+  "Toggle a side window bottom FRAME.
+When a bottom side window exists, close it and remember its state.
+When no bottom side window exists, restore the remembered state.
 
 FRAME defaults to the selected frame."
   (interactive)
-  (+toggle-side-window 'below frame))
+  (+toggle-side-window 'bottom frame))
 
 (defvar +toggle-transparent-alpha 80)
 

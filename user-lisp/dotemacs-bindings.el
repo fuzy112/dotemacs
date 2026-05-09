@@ -178,8 +178,8 @@
   "r l" #'window-layout-rotate-anticlockwise
   "h"   #'+toggle-side-window-left
   "l"   #'+toggle-side-window-right
-  "k"   #'+toggle-side-window-above
-  "j"   #'+toggle-side-window-below)
+  "k"   #'+toggle-side-window-top
+  "j"   #'+toggle-side-window-bottom)
 
 (define-keymap :keymap tab-prefix-map
   "b" #'consult-buffer-other-tab ; orig. switch-to-buffer-other-tab
