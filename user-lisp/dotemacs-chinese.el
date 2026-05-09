@@ -35,6 +35,7 @@
 ;;;; rime
 
 (after-load! rime
+  (setopt rime-share-data-dir "/run/current-system/sw/share/rime-data/")
   (setopt rime-disable-predicates
           '(meow-normal-mode-p
             ;; meow-keypad-mode-p
