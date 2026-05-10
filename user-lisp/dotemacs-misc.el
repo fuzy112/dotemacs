@@ -109,8 +109,6 @@
     (apply args)))
 
 (after-load! server
-  (require 'org-protocol)
-
   ;; If the operating system is either Windows (windows-nt) or DOS (ms-dos),
   ;; add an advice around the server process filter function to correctly handle coding systems.
   (when (memq system-type '(windows-nt ms-dos))

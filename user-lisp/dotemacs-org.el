@@ -103,5 +103,11 @@
                '("j" "Journal" entry (file+datetree "journal.org")
                  "* %U - %^{Heading} %^g\n%?\n")))
 
+;;;; org-protocol
+
+(record-time! org-protocol
+  (autoload 'org--protocol-detect-protocol-server "org-protocol")
+  (advice-add 'server-visit-files :around #'org--protocol-detect-protocol-server))
+
 (provide 'dotemacs-org)
 ;;; dotemacs-org.el ends here
