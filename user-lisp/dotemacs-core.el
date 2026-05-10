@@ -144,6 +144,22 @@ Otherwise, equality is tested by `equal'."
         (list (alist-delq--form var keys)
               (funcall setter var))))))
 
+;;;###autoload
+(defvar dotemacs-time-alist nil)
+
+(defmacro record-time! (label &rest body)
+  (declare (indent 1))
+  (macroexp-let2 nil start-time '(current-time)
+    `(unwind-protect
+         ,(macroexp-progn body)
+       ,(macroexp-let2 nil end-time '(current-time)
+          `(push (list ,(macroexp-quote label) ,start-time ,end-time (time-subtract ,end-time ,start-time))
+                 dotemacs-time-alist)))))
+
+(defmacro require! (feature)
+  `(record-time! ,feature
+     (require ,(macroexp-quote feature))))
+
 (defmacro after-load-1! (spec &rest body)
   "Evaluate BODY after the specified features or files are loaded.
 SPEC could be
@@ -182,7 +198,7 @@ SPEC could be
   "Similar to `after-load-1!', but suppress warnings in BODY.
 See `after-load-1!' for SPEC."
   (declare (indent 1))
-  `(after-load-1! ,spec (with-no-warnings ,@body)))
+  `(after-load-1! ,spec (with-no-warnings (record-time! ,spec ,@body))))
 
 ;;;###autoload
 (defun run-after-init (func)
@@ -197,7 +213,7 @@ Otherwise, add FUNC to `after-init-hook'."
   "Execute BODY after Emacs has finished initialization.
 See `after-init'."
   (declare (indent 0))
-  `(run-after-init (lambda () ,@body)))
+  `(run-after-init (lambda () (record-time! ,(gensym "after-init-") ,@body))))
 
 (defmacro with-no-compile! (&rest body)
   "Evaluate BODY without byte-compiling it.
