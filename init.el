@@ -24,6 +24,8 @@
 
 ;;; Code:
 
+(setq debug-on-error init-file-debug)
+
 (require 'early-init early-init-file t)
 (when (featurep 'init)
   (load early-init-file nil t))
