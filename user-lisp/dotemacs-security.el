@@ -38,6 +38,19 @@
   (setopt plstore-select-keys nil))
 
 
+(defun +insert-pass ()
+  (interactive)
+  (require 'auth-source-pass)
+  (when-let* ((entry (completing-read
+                      "Select pass entry: "
+                      (auth-source-pass-entries)))
+              (info (auth-source-pass-search :host entry)))
+    (cl-assert (length= info 1))
+    (insert (auth-info-password (car info)))))
+
+(after-load! auth-source
+  (keymap-set read-passwd-map "C-c C-p" #'+insert-pass))
+
 (defun send-password-to-process (process)
   "Read a password and send it to the process in BUFFER."
   (interactive
