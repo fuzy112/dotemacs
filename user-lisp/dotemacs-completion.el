@@ -31,6 +31,11 @@
 (orderless-define-completion-style orderless+flex
   (orderless-matching-styles '(orderless-flex)))
 
+(orderless-define-completion-style orderless+prefixes
+  (orderless-matching-styles '(orderless-prefixes
+                               orderless-literal
+                               orderless-regexp)))
+
 ;; orderless+initialism is tuned for commands and variables where
 ;; initialisms are common.  The style tries (in order):
 ;;   1. exact initialism match (“tb” → “toggle-button”),
@@ -57,7 +62,7 @@
         '(
           ;; For file names the default `basic' already deals with partial
           ;; paths (“~/.e” → “~/.emacs.d/”), keep it.
-          (file        . ((styles . (basic partial-completion))))
+          (file        . ((styles . (partial-completion))))
 
           ;; Make symbols and symbol-help use flexible matching.
           (symbol      . ((styles . (orderless+flex))))
@@ -75,7 +80,10 @@
 
           ;; Git revisions (magit-rev) are often typed by scattered parts
           ;; (“mwr” → “merge-request-work”), so fall back to flex.
-          (magit-rev   . ((styles . (orderless+flex))))))
+          (magit-rev   . ((styles . (partial-completion))))
+
+          ;; Project file
+          (project-file . ((styles . (orderless+prefixes))))))
 
 (setq completion-pcm-leading-wildcard t)
 
