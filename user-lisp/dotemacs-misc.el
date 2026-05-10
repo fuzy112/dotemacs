@@ -207,6 +207,24 @@
 (after-init!
   (envrc-global-mode))
 
+;;;; time report
+
+(defun dotemacs-time-report ()
+  (interactive)
+  (let ((buffer (get-buffer-create "*dotemacs-time-report*")))
+    (pop-to-buffer buffer)
+    (erase-buffer)
+    (dolist (item (sort dotemacs-time-alist :key (apply-partially #'nth 3) :reverse t ))
+      (insert (format "%s%s%f%s%f%s%f"
+                      (car item)
+                      (propertize " " 'display '(space :align-to 25))
+                      (float-time (nth 1 item))
+                      (propertize " " 'display '(space :align-to 45))
+                      (float-time (nth 2 item))
+                      (propertize " " 'display '(space :align-to 65))
+                      (float-time (nth 3 item)))
+              "\n"))
+    (goto-char (point-min))))
 
 ;;;; uptime
 
