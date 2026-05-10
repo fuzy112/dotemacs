@@ -170,7 +170,10 @@ new record is started."
                                          (unknown . "疑")
                                          (ignored . "略")))
 
-  (setopt diff-hl-update-async (fboundp 'make-thread))
+  (setopt diff-hl-update-async
+          (cond ((version<= "31" emacs-version) t)
+                ((fboundp 'make-thread) 'thread)
+                (t nil)))
   (add-hook 'diff-hl-margin-mode-hook #'diff-hl-margin-ensure-visible))
 
 (define-advice diff-hl-margin-ensure-visible (:override () auto-width)
