@@ -401,9 +401,7 @@ and regex-based bangs ($1, $2, etc.)."
 
 (defvar bangs--completion-metadata
   `((category . bang)        ; categories are usually in singular form
-    (affixation-function . ,#'bangs--affixation-function)
-    (cycle-sort-function . ,#'identity)
-    (display-sort-function . ,#'identity)))
+    (affixation-function . ,#'bangs--affixation-function)))
 
 (defun bangs--completion-table ()
   (bangs--load-data)
