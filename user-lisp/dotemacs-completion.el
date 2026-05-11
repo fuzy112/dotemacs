@@ -477,7 +477,7 @@ except that it specifies `identity' as the `display-sort-function' and
                      :add-history mb-default
                      :sort t
                      :lookup (lambda (selected &rest _) selected)
-                     :state (consult--file-state)
+                     :state (consult--file-preview)
                      :preview-key consult-preview-key)))
 
 
