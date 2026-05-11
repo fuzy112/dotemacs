@@ -270,6 +270,7 @@ PROJECT defaults to the current project."
 
 (defvar emmip--minor-mode-history nil)
 (defvar emmip--major-modes-history nil)
+(declare-function map-values "map")
 
 (defun dotemacs--major-mode-completion-table ()
   (require 'map)
@@ -288,6 +289,7 @@ PROJECT defaults to the current project."
     (completion-table-with-metadata modes metadata)))
 
 (declare-function project-buffers "project")
+(declare-function project-root "project")
 
 (defun enable-minor-mode-in-project (mode project major-modes)
   "Enable MODE in all buffers of any MAJOR-MODES in PROJECT."
