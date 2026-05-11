@@ -157,8 +157,14 @@ Otherwise, equality is tested by `equal'."
                  dotemacs-time-alist)))))
 
 (defmacro require! (feature)
-  `(record-time! ,feature
-     (require ,(macroexp-quote feature))))
+  (let ((err-var (make-symbol "err")))
+    `(record-time! ,feature
+       (condition-case-unless-debug ,err-var
+           (require ,(macroexp-quote feature))
+         (t (delay-warning
+             'dotemacs
+             (format-message,(format "(require! %s): %%s" feature) ,err-var)
+             :error))))))
 
 (defmacro after-load-1! (spec &rest body)
   "Evaluate BODY after the specified features or files are loaded.
