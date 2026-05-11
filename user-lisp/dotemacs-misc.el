@@ -202,6 +202,15 @@
              :triggers ("rednote" "redn"))))
   (setopt bangs-pretty-print-json t))
 
+;;;; elfeed
+
+(after-load! elfeed
+  (keymap-set elfeed-show-mode-map "e"
+              (lambda ()
+                (interactive)
+                (let ((browse-url-browser-function #'eww-browse-url))
+                  (call-interactively #'elfeed-show-visit)))))
+
 ;;;; envrc
 
 (after-init!
