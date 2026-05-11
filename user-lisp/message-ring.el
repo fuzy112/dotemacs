@@ -125,7 +125,6 @@ allowing you to retrieve transient messages later using `copy-message'."
   "Read a message from the ring with PROMPT using completion.
 Return the selected message string from `message-ring'."
   (let* ((messages (ring-elements message-ring))
-	 (messages (mapcar #'substring-no-properties messages))
 	 (metadata `((category . string)
 		     (display-sort-function . ,#'identity)
 		     (cycle-sort-function . ,#'identity)))
