@@ -530,7 +530,7 @@ value for USE-OVERLAYS."
                (rx (or (seq bot "*EGLOT " (+ nonl) (or "stderr" "output" "events") "*" eot)
                        (seq bot "magit-process: " (+ nonl) eot)
                        (seq bot (+ nonl) ".~" (repeat 7 (in "a-f0-9")) "~" eot)
-                       (seq bot (or "*Async-Native-Compile-Log*" "nix-edit" "*envrc*"
+                       (seq bot (or "*Async-native-compile-log*" "nix-edit" "*envrc*"
                                     "*Compile-Log*" "*Pp Eval Output*" "*log-edit-files*"
                                     "*Messages*" "*Warnings" ".newsrc-dribble")
                             eot)))))
