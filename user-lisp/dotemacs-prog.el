@@ -195,7 +195,8 @@ confirmed."
       (goto-char (point-min))
       (let ((default-directory root)
             (metadata (read (current-buffer))))
-        (alist-get 'external-roots metadata)))))
+        (append (alist-get 'external-roots metadata)
+                (list (vc-root-dir)))))))
 
 (defun create-emacs-project-file (dir)
   (interactive (list (read-directory-name "Project root: " default-directory nil t)))
