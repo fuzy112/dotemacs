@@ -20,14 +20,6 @@
 (eval-when-compile (require 'dotemacs-core))
 (eval-when-compile (require 'orderless))
 
-;; Define two “compound” completion styles on top of orderless and give
-;; them convenient names so that they can be re-used in
-;; completion-category-overrides without repeating a long list every
-;; time.
-
-;; orderless+flex enables “flex” (aka scatter) matching, useful for
-;; symbols where short substrings may suffice – e.g. typing “baf” →
-;; “buffer-auto-save-file-name”.
 (orderless-define-completion-style orderless+flex
   (orderless-matching-styles '(orderless-flex)))
 
@@ -36,94 +28,55 @@
                                orderless-literal
                                orderless-regexp)))
 
-;; orderless+initialism is tuned for commands and variables where
-;; initialisms are common.  The style tries (in order):
-;;   1. exact initialism match (“tb” → “toggle-button”),
-;;   2. literal substring,
-;;   3. regexp.
 (orderless-define-completion-style orderless+initialism
   (orderless-matching-styles '(orderless-initialism
                                orderless-literal
                                orderless-regexp)))
 
-;; --- Global defaults -------------------------------------------------
-;; Search for candidates with orderless first, fall back to the “basic”
-;; style (Emacs standard prefix + substring) when orderless returns no
-;; matches.
 (setopt completion-styles '(orderless basic))
 
-;; Let categories decide everything, do not force any extra defaults.
 (setopt completion-category-defaults nil)
 
-;; --- Category-specific tweaks ----------------------------------------
-;; Different kinds of completions benefit from different matching
-;; behaviour, so override the style on a per-category basis:
 (setopt completion-category-overrides
         '(
-          ;; For file names the default `basic' already deals with partial
-          ;; paths (“~/.e” → “~/.emacs.d/”), keep it.
           (file        . ((styles . (partial-completion))))
 
-          ;; Make symbols and symbol-help use flexible matching.
           (symbol      . ((styles . (orderless+flex))))
           (symbol-help . ((styles . (orderless+flex))))
 
-          ;; Commands and variables are represented mostly by their
-          ;; command/variable names – initialism matching shines here.
           (command     . ((styles . (orderless+initialism))))
           (variable    . ((styles . (orderless+initialism))))
 
-          ;; Eglot completion and its capf backend: just plain orderless,
-          ;; no extra tweaks.
           (eglot       . ((styles . (orderless))))
           (eglot-capf  . ((styles . (orderless))))
 
-          ;; Git revisions (magit-rev) are often typed by scattered parts
-          ;; (“mwr” → “merge-request-work”), so fall back to flex.
           (magit-rev   . ((styles . (partial-completion))))
 
-          ;; Project file
           (project-file . ((styles . (orderless+prefixes))))))
 
 (setq completion-pcm-leading-wildcard t)
 
 ;; Registers an orderless dispatcher that makes
 ;; 1) the “$” suffix work together with Consult’s tofu suffixes, and
-;; 2) dotted file-extension patterns of the form “..EXT”.
+;; 2) dotted file-extension patterns of the form “.EXT”.
 
 (defun +orderless--consult-suffix ()
-  "Return a regexp that matches either:
-  - the end of string “$”, or
-  - any sequence of Consult tofu characters followed by the end of string."
   (if (and (boundp 'consult--tofu-char) (boundp 'consult--tofu-range))
       (format "[%c-%c]*$" consult--tofu-char
               (+ consult--tofu-char consult--tofu-range -1))
     "$"))
 
 (defun +orderless--consult-dispatch (word _index _total)
-  "Transform WORD for orderless, producing a cons cell (STYLE . REGEXP).
-Leaves WORD untouched unless it is one of the patterns handled specially here:
-  - WORD ends with “$”           → remove trailing “$” and re-append the suffix
-  - WORD starts with “..EXT”      → turn it into a \\.EXT.*<suffix> pattern
-The return value is nil when WORD does not match either pattern, so orderless
-falls back to its default handling."
   (cond
-   ;; Allow completing-read users to terminate a string with “$” even when
-   ;; Consult appends tofu suffixes such as “<taboo char>…index”.
    ((string-suffix-p "$" word)
     `(orderless-regexp . ,(concat (substring word 0 -1) (+orderless--consult-suffix))))
-   ;; In file-name contexts, let “..ext” expand to any file whose name ends in
-   ;; the extension “.ext”, hiding files that do not end with that extension.
    ((and (or minibuffer-completing-file-name
              (derived-mode-p 'eshell-mode))
          (string-match-p "\\`\\.." word))
     `(orderless-regexp . ,(concat "\\." (substring word 1) (+orderless--consult-suffix))))))
 
 (after-load! orderless
-  ;; The dispatcher must be added *after* orderless has been loaded;
-  ;; otherwise orderless-style-dispatchers may not be defined yet.
   (add-to-list 'orderless-style-dispatchers #'+orderless--consult-dispatch))
-
 
 ;;;; Default completion UI
 
@@ -453,6 +406,10 @@ value for USE-OVERLAYS."
              (abs-cpd (expand-file-name (or common-parent-directory "")))
              (abs-cpd-length (length abs-cpd))
              (non-essential t)          ;Avoid new Tramp connections.
+             ;; FIXME: minibuffer-completing-file-name is a variable
+             ;; used internally in minibuf.c and it may be obsolete in
+             ;; the future.
+             (minibuffer-completing-file-name t)
              ((symbol-value hist)
               (if common-parent-directory
                   (mapcan
