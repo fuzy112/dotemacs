@@ -131,7 +131,8 @@
   "M-g" #'magit-file-dispatch
   "p"   #'project-prefix-map
   "q"   quilt-prefix-map
-  "r"   #'rg-dwim
+  "r"   ctl-x-r-map
+  "x"   ctl-x-x-map
   "R"   #'rg-menu
   "s"   search-map
   "v"   #'vc-prefix-map
