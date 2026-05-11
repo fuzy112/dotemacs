@@ -66,7 +66,7 @@
 
 ;; bug#80888
 (define-advice coterm--init (:around (orig-fn) exclude-async-shell-command)
-  (unless (derived-mode-p async-shell-command-mode)
+  (unless (derived-mode-p `(eat-mode ,async-shell-command-mode))
     (funcall orig-fn)))
 
 ;;;; with-editor
