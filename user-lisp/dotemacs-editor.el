@@ -115,7 +115,10 @@
 ;;;; savehist
 
 (after-init!
-  (setopt savehist-ignored-variables '(buffer-name-history))
+  (setopt savehist-ignored-variables '(buffer-name-history
+                                       consult--line-history
+                                       vertico-repeat-history
+                                       search-ring))
   (savehist-mode))
 
 ;;;; repeat
