@@ -188,13 +188,26 @@ confirmed."
 (defun +project--external-roots ()
   (and-let* ((project (project-current))
              (root (project-root project))
-             (project-root-file (expand-file-name ".project-root" root))
+             (project-root-file (expand-file-name ".emacs-project" root))
              ((file-exists-p project-root-file)))
     (with-temp-buffer
       (insert-file-contents project-root-file)
-      (let ((default-directory root))
-        (mapcar #'expand-file-name
-                (string-lines (buffer-string) t nil))))))
+      (goto-char (point-min))
+      (let ((default-directory root)
+            (metadata (read (current-buffer))))
+        (alist-get 'external-roots metadata)))))
+
+(defun create-emacs-project-file (dir)
+  (interactive (list (read-directory-name "Project root: " default-directory nil t)))
+  (let ((default-directory dir))
+    (if (file-exists-p ".emacs-project")
+        (user-error "Project exists")
+      (with-temp-buffer
+        (insert ";; Emacs project marker   -*- mode: lisp-data; -*-\n\n"
+                "()"
+                "\n")
+        (write-region nil nil ".emacs-project")))
+    (project--clear-cache)))
 
 (after-load! project
   (setopt project-switch-commands 'project-prefix-or-any-command)
@@ -204,7 +217,7 @@ confirmed."
   (setopt project-vc-ignores (seq-union project-vc-ignores '(".pc")))
   (setopt project-vc-extra-root-markers
           (seq-union project-vc-extra-root-markers
-                     '(".project-root" "configure.ac" "Cargo.toml" "package.json")))
+                     '(".emacs-project" "configure.ac" "Cargo.toml" "package.json")))
 
   (project-compile-history-mode))
 
