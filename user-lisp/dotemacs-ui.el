@@ -430,7 +430,8 @@ not used, but is required by the hook."
                (body-function . select-window)))
 
 (add-to-list 'display-buffer-alist
-             '("\\`\\*vc-git : .*?\\*\\'"
+             '((and "\\`\\*vc-git : .*?\\*\\'"
+                    (derived-mode . special-mode))
                (display-buffer-reuse-mode-window display-buffer-in-side-window)
                (mode . (vc-compilation-mode))
                (dedicated . t)
