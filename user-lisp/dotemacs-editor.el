@@ -225,8 +225,11 @@
 ;;;; undo-fu-session
 
 (unless (featurep 'undo-fu-session)
-  (add-hook 'find-file-hook #'undo-fu-session-recover)
-  (add-hook 'write-file-functions #'undo-fu-session-save))
+  (autoload 'undo-fu-session--recover-safe "undo-fu-session")
+  (autoload 'undo-fu-session--save-safe "undo-fu-session")
+
+  (add-hook 'find-file-hook #'undo-fu-session--recover-safe)
+  (add-hook 'write-file-functions #'undo-fu-session--save-safe))
 
 (after-load! undo-fu-session
   (remove-hook 'find-file-hook #'undo-fu-session-recover)
