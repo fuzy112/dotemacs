@@ -313,9 +313,9 @@ value for USE-OVERLAYS."
 (setq prefix-help-command #'embark-prefix-help-command)
 
 (after-load! embark
-  (setopt embark-help-key "?")
+  (setopt embark-help-key "C-h")
   (setopt embark-cycle-key "C-.")
-  (setopt embark-prompter #'embark-completing-read-prompter)
+  (setopt embark-prompter #'embark-keymap-prompter)
   (setopt embark-indicators '(embark-minimal-indicator
                               embark-highlight-indicator
                               embark-isearch-highlight-indicator))
