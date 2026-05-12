@@ -96,8 +96,8 @@
 
 ;;;; auto-save-mode
 
-(setopt auto-save-timeout 1)
-(setopt auto-save-interval 100)
+(setq auto-save-timeout 1)
+(setq auto-save-interval 20)
 
 ;;;; saveplace
 
