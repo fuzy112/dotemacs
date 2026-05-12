@@ -96,8 +96,31 @@
 
 ;;;; auto-save-mode
 
-(setq auto-save-timeout 1)
-(setq auto-save-interval 20)
+(setq auto-save-no-message nil)
+(setq auto-save-timeout 30)
+(setq auto-save-interval 300)
+
+(defvar auto-save-on-focus-out-timer nil)
+
+(defun auto-save-on-focus-out-cancel-timer ()
+  (when (timerp auto-save-on-focus-out-timer)
+    (cancel-timer auto-save-on-focus-out-timer))
+  (setq auto-save-on-focus-out-timer nil))
+
+(defun auto-save-on-focus-out-start-timer ()
+  (setq auto-save-on-focus-out-timer
+        (run-with-idle-timer 1 nil #'do-auto-save)))
+
+(defun auto-save-on-focus-out ()
+  (if (catch 'found-focus
+        (dolist (frame (frame-list))
+          (with-selected-frame frame
+            (when (eq (frame-focus-state) t)
+              (throw 'found-focus t)))))
+      (auto-save-on-focus-out-cancel-timer)
+    (auto-save-on-focus-out-start-timer)))
+
+(add-function :after after-focus-change-function #'auto-save-on-focus-out)
 
 ;;;; saveplace
 
