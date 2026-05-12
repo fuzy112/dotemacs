@@ -224,11 +224,17 @@
 (after-load! re-builder
   (setopt reb-re-syntax 'string))
 
-
 ;;;; undo-fu-session
 
-(setopt undo-fu-session-compression 'zst)
-(undo-fu-session-global-mode)
+(unless (featurep 'undo-fu-session)
+  (add-hook 'find-file-hook #'undo-fu-session-recover)
+  (add-hook 'write-file-functions #'undo-fu-session-save))
+
+(after-load! undo-fu-session
+  (remove-hook 'find-file-hook #'undo-fu-session-recover)
+  (remove-hook 'write-file-functions #'undo-fu-session-save)
+  (setopt undo-fu-session-compression 'zst)
+  (undo-fu-session-global-mode))
 
 ;;;; vundo
 
