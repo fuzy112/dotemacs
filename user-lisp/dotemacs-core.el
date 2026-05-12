@@ -186,7 +186,7 @@ SPEC could be
      `(with-eval-after-load ,(macroexp-quote spec)
         ,@body))
     (`(:or . ,sub-specs)
-     (let ((lambda-var (gensym "body-")))
+     (let ((lambda-var (make-symbol "body-")))
        `(let ((,lambda-var (lambda () ,@body)))
           ,(macroexp-progn
             (mapcar (lambda (sub-spec)
