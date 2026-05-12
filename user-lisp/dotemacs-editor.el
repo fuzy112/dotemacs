@@ -89,8 +89,10 @@
 ;; (add-hook 'buffer-list-update-hook #'recentf-track-opened-file)
 (after-load! recentf
   (setopt recentf-max-saved-items 8192)
-  (let ((inhibit-message t))
-    (recentf-mode)))
+  (setopt recentf-autosave-interval 30)
+  (setopt recentf-auto-cleanup 600)
+  (setopt recentf-show-messages nil)
+  (recentf-mode))
 
 ;;;; auto-save-mode
 
@@ -131,6 +133,7 @@
 (add-hook 'dired-initial-position-hook #'save-place-dired-hook)
 (after-load! saveplace
   (setopt save-place-limit 65536)
+  (setopt save-place-autosave-interval 30)
   (save-place-mode))
 
 (define-advice save-place-find-file-hook (:after (&rest _) recenter)
@@ -145,6 +148,7 @@
                                        consult--line-history
                                        vertico-repeat-history
                                        search-ring))
+  (setopt savehist-autosave-interval 30)
   (savehist-mode))
 
 ;;;; repeat
@@ -232,8 +236,6 @@
   (add-hook 'write-file-functions #'undo-fu-session--save-safe))
 
 (after-load! undo-fu-session
-  (remove-hook 'find-file-hook #'undo-fu-session-recover)
-  (remove-hook 'write-file-functions #'undo-fu-session-save)
   (setopt undo-fu-session-compression 'zst)
   (undo-fu-session-global-mode))
 
