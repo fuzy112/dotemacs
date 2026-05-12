@@ -82,8 +82,6 @@
 (setq frame-resize-pixelwise t
       window-resize-pixelwise t)
 
-(setq auto-save-no-message t)
-
 (setq window-combination-resize t)
 
 (setq set-mark-command-repeat-pop t)

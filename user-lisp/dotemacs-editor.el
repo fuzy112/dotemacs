@@ -20,9 +20,7 @@
 
 ;;;; indent-aux
 
-;; New minor mode in Emacs 30.1: deindents code copied into kill-ring.
-(when (fboundp 'kill-ring-deindent-mode)
-  (kill-ring-deindent-mode))
+(kill-ring-deindent-mode)
 
 ;;;; Isearch
 
@@ -36,7 +34,7 @@
 
 ;;;; ws-butler
 
-(require 'ws-butler)
+(require! ws-butler)
 (setopt ws-butler-keep-whitespace-before-point nil
         ws-butler-convert-leading-tabs-or-spaces nil)
 (add-to-list 'ws-butler-global-exempt-modes 'diff-mode)
@@ -265,8 +263,6 @@ BEG and END specify the region boundaries."
     (let ((inhibit-read-only t))
       (set-text-properties beg end nil)
       (message "Cleared all text properties in region %d-%d" beg end))))
-
-
 
 (provide 'dotemacs-editor)
 ;;; dotemacs-editor.el ends here
