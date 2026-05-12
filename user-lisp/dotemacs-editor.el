@@ -94,6 +94,11 @@
   (let ((inhibit-message t))
     (recentf-mode)))
 
+;;;; auto-save-mode
+
+(setopt auto-save-timeout 1)
+(setopt auto-save-interval 100)
+
 ;;;; saveplace
 
 ;; (setq save-place-file
