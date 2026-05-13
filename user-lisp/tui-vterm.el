@@ -1,5 +1,5 @@
 ;;; tui-vterm.el --- VTerm support for TUI -*- lexical-binding: t -*-
-;; Copyright © 2024, 2025  Zhengyi Fu <i@fuzy.me>
+;; Copyright © 2024, 2025, 2026, 2026  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
 ;; Version: 0.1.0
@@ -30,8 +30,14 @@
 
 (define-derived-mode tui-vterm-mode vterm-mode "VTerm[TUI]")
 
+(declare-function vterm-mode "ext:vterm")
+
 ;;;###autoload
 (defun tui-vterm-exec (name command callback)
+  (defvar vterm-shell)
+  (defvar vterm-mode-hook)
+  (defvar vterm--term)
+  (defvar vterm--redraw)
   (let* ((dir default-directory)
 	 (vterm-shell (format "sh -c %s" (shell-quote-argument command)))
 	 (vterm-buffer-name (concat "*" name "*"))

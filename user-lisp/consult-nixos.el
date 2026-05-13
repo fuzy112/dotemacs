@@ -36,7 +36,7 @@ Return a formatted string showing the option type and first line of description.
      (concat
       (propertize type 'face 'font-lock-type-face)
       (propertize " " 'display `(space :width ,space-width))
-      (propertize short-description 'face font-lock-doc-face)
+      (propertize short-description 'face 'font-lock-doc-face)
       ))))
 
 (defun consult--nixos-option-preview ()

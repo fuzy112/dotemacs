@@ -27,7 +27,7 @@
     (buffer-string)))
 
 (defun tencent-cos-auth-info (host)
-  "Return the first auth-source entry matching HOST (with diminishing sub-domain specificity).
+  "Return the first auth-source entry matching HOST.
 HOST is reduced successively by dropping its left-most label until a
 credential set (:user and :secret) is found or HOST becomes empty.  Return
 nil when none exists."
@@ -135,10 +135,11 @@ SECRET-ID: The Tencent Cloud API secret ID.
 SECRET-KEY: The Tencent Cloud API secret key.
 
 Optional arguments:
-CONTENT-TYPE: The MIME type of the content (defaults to application/octet-stream).
+CONTENT-TYPE: The MIME type of the content
+(defaults to application/octet-stream).
 CONTENT-DISPOSITION: The Content-Disposition header value.
 CALLBACK: Function to call after upload completion.
-         Called with nil on success, error message string on failure."
+Called with nil on success, error message string on failure."
   (let* ((host (tencent-cos-host bucket-appid region))
          (url-request-method "PUT")
          (url-request-data content)
@@ -265,7 +266,7 @@ CALLBACK: Function to call after upload completion.
 
 ;;;###autoload
 (defun tencent-cos-put-buffer (type duration)
-  "Upload current buffer contents to Tencent Cloud COS and create a download link.
+  "Upload current buffer contents to COS and create a download link.
 
 Upload the buffer contents with content TYPE and generate a signed URL valid
 for DURATION seconds. The URL is copied to the kill ring upon completion.

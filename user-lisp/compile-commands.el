@@ -1,5 +1,5 @@
 ;;; compile-commands.el --- Setup flymake-cc with compilation database -*- lexical-binding: t -*-
-;; Copyright © 2024, 2025  Zhengyi Fu
+;; Copyright © 2024, 2025, 2026  Zhengyi Fu
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
 ;; Version: 0.2.0
@@ -94,11 +94,11 @@
     (when-let* ((node (cl-member "-o" .arguments :test #'equal)))
       (setf (nth 1 node) "/dev/null")
       (setf output t))
-    (when-let* ((node (cl-member-if
-                      (lambda (el)
-                        (equal (expand-file-name el .directory)
-                               .file))
-                      .arguments)))
+    (when-let* ((node (member-if
+                       (lambda (el)
+                         (equal (expand-file-name el .directory)
+                                .file))
+                       .arguments)))
       ;; FIXME
       (setcdr node
               (nconc (list

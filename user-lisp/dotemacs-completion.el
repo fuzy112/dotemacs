@@ -400,6 +400,7 @@ except that it specifies `identity' as the `display-sort-function' and
 `cycle-sort-function' in the completion table."
   (defvar project-prune-zombie-projects)
   (defvar project--list)
+  (defvar project--dir-history)
   (project--ensure-read-project-list)
   (when-let* ((pred (alist-get 'prompt project-prune-zombie-projects))
               (inhibit-message t))
@@ -411,7 +412,8 @@ except that it specifies `identity' as the `display-sort-function' and
                                              (project-root p)))))
                     (project-root p)))
          (choices
-          (let ((table (append project--list `(,dir-choice))))
+          (let ((table (if require-known project--list
+                         (append project--list `(,dir-choice)))))
             (lambda (string pred action)
               (cond
                ((eq action 'metadata)

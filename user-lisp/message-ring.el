@@ -152,7 +152,7 @@ Otherwise copy the most recent message (index 0)."
 (defalias 'copy-message #'message-ring-copy-message)
 
 (defun message-ring-wrap-inhibit (&rest funargs)
-  "Advice for `message' to inhibit insertion into `message-ring' during FUNARGS execution."
+  "Inhibit insertion into `message-ring' during FUNARGS execution."
   (let (message-ring-insert)
     (apply funargs)))
 

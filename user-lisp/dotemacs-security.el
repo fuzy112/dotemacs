@@ -38,6 +38,8 @@
   (setopt plstore-select-keys nil))
 
 
+(declare-function auth-source-pass-search "auth-source-pass")
+(declare-function auth-source-pass-entries "auth-source-pass")
 (defun +insert-pass ()
   (interactive)
   (require 'auth-source-pass)

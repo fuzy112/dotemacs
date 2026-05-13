@@ -54,7 +54,8 @@
 
 (defcustom vc-git-use-private-ignore-file t
   "Use user private ignore file rather than  the .gitignore file."
-  :group 'vc-git)
+  :group 'vc-git
+  :type 'boolean)
 
 (define-advice vc-git-find-ignore-file (:around (orig file) use-private-ignore-file)
   (if vc-git-use-private-ignore-file
