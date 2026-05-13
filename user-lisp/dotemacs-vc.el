@@ -30,7 +30,8 @@
    vc-svn-diff-switches '("-x" "-u -p")
    vc-find-revision-no-save t
    vc-deduce-backend-nonvc-modes t ;; Deduce VC backend for all buffers
-   vc-dir-auto-hide-up-to-date t))
+   vc-dir-auto-hide-up-to-date t
+   vc-allow-async-diff t))
 
 (declare-function vc-read-backend "vc.el")
 (defun +vc/dir-here (&optional backend)
