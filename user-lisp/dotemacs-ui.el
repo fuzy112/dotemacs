@@ -15,7 +15,9 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-(eval-when-compile (require 'dotemacs-core))
+(eval-when-compile
+  (require 'dotemacs-core)
+  (require 'modus-themes))
 
 ;; mouse
 
@@ -252,35 +254,49 @@ it uses theme-specific colors. Otherwise, it blends generic colors
 with the default foreground. Special handling is also provided for
 comments and strings."
   (prism-set-colors
-   :num 16
-   ;; Create a series of desaturations from 0 to 37.5 in steps of 2.5
-   :desaturations (number-sequence 0 37.5 2.5)
-   ;; Create a series of lightness values from 0 to 37.5 in steps of 2.5
-   :lightens (number-sequence 0 37.5 2.5)
-   ;; Choose colors based on the active theme
-   :colors (cond
-            ;; For Modus themes, use theme-specific colors
-            ((and (fboundp 'modus-themes-get-current-theme)
-                  (modus-themes-get-current-theme))
-             (with-no-compile!
-               (modus-themes-with-colors
-                 (list pink fg-alt green indigo))))
-            ;; For other themes, blend generic colors with foreground
-            (t
-             (let ((foreground (face-attribute 'default :foreground)))
-               (mapcar (lambda (c) (prism-blend c foreground 0.5))
-                       (list "pink" "green" "magenta" "cyan")))))
+    :num 16
+    ;; Create a series of desaturations from 0 to 37.5 in steps of 2.5
+    :desaturations '(0)
+    ;; Create a series of lightness values from 0 to 37.5 in steps of 2.5
+    :lightens '(0)
+    ;; Choose colors based on the active theme
+    :colors (cond
+             ;; For Modus themes, use theme-specific colors
+             ((and (fboundp 'modus-themes-get-current-theme)
+                   (modus-themes-get-current-theme))
+              (modus-themes-with-colors
+                (list fg-main
+                      magenta
+                      cyan-cooler
+                      magenta-cooler
+                      blue
+                      magenta-warmer
+                      cyan-warmer
+                      red-cooler
+                      green
+                      fg-main
+                      cyan
+                      yellow
+                      blue-warmer
+                      red-warmer
+                      green-cooler
+                      yellow-faint)))
+             ;; For other themes, blend generic colors with foreground
+             (t
+              (let ((foreground (face-attribute 'default :foreground)))
+                (mapcar (lambda (c) (prism-blend c foreground 0.5))
+                        (list "pink" "green" "magenta" "cyan")))))
 
-   ;; Custom function for comments - blend with comment face color
-   :comments-fn
-   (lambda (color)
-     (prism-blend color
-                  (face-attribute 'font-lock-comment-face :foreground) 0.25))
+    ;; Custom function for comments - blend with comment face color
+    :comments-fn
+    (lambda (color)
+      (prism-blend color
+                   (face-attribute 'font-lock-comment-face :foreground) 0.25))
 
-   ;; Custom function for strings - blend with default foreground
-   :strings-fn
-   (lambda (color)
-     (prism-blend color (face-attribute 'default :foreground) 0.5))))
+    ;; Custom function for strings - blend with default foreground
+    :strings-fn
+    (lambda (color)
+      (prism-blend color (face-attribute 'default :foreground) 0.5))))
 
 (defun +prism--enable-theme-f (_theme)
   "Refresh prism colors when a theme is enabled.
