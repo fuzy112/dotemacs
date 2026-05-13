@@ -2,13 +2,21 @@
 org-mode
 
 (header "# -*- mode: org; coding: utf-8-unix; -*-" n n
-	"#+title: " (p "title") n
-	"#+author: " user-full-name "  <" user-mail-address ">" n
-	"#+date: " (current-time-string) n
-	"#+startup: fold" n)
+	"#+TITLE:    " (p "title") n
+	"#+AUTHOR:   " user-full-name "  <" user-mail-address ">" n
+	"#+DATE:     " (current-time-string) n
+	"#+FILETAGS: :" (string-join
+			 (completing-read-multiple "File tags: " (org-global-tags-completion-table))
+			 ":")
+	":" n
+	"#+STARTUP:  fold" n)
 
 (src "#+begin_src " (p "lang") n
      p n
      "#+end_src" n)
+
+(quote "#+begin_quote " n
+     p n
+     "#+end_quote" n)
 
 (kbd "{{{kbd(" p ")}}}")
