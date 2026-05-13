@@ -224,8 +224,8 @@
     (pop-to-buffer buffer)
     (erase-buffer)
     (dolist (item (sort dotemacs-time-alist :key (apply-partially #'nth 3) :reverse t ))
-      (insert (format "%s%s%f%s%f%s%f"
-                      (car item)
+      (insert (truncate-string-to-width (prin1-to-string (car item)) 24))
+      (insert (format "%s%f%s%f%s%f"
                       (propertize " " 'display '(space :align-to 25))
                       (float-time (nth 1 item))
                       (propertize " " 'display '(space :align-to 45))
