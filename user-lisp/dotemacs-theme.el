@@ -147,7 +147,9 @@
           modus-themes-slanted-constructs t
           modus-themes-variable-pitch-ui  nil
           modus-themes-to-toggle          '(modus-vivendi modus-operandi))
-  (setopt modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
+  (setopt modus-themes-common-palette-overrides
+          (append modus-themes-preset-overrides-faint
+                  '((fg-region unspecified))))
   (load-theme 'modus-operandi t t)
   (load-theme 'modus-vivendi t t))
 
@@ -182,27 +184,13 @@ attributes."
   (let ((custom--inhibit-theme-enable nil))
     (custom-theme-set-faces
      'dotemacs
-     `(default
-       ((((type tty) (class color) (background dark))
-         :background ,(if-let* ((bg (face-attribute 'default :background))
-                                (colors (color-values bg))
-                                ((equal '(0 0 0) colors)))
-                          "unspecified-bg"
-                        bg))))
-     ;; `(cursor
-     ;;   ((((class color) (min-colors 256) (background light)) :background "#005077")
-     ;;    (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
-     ;; `(meow-insert-cursor
-     ;;   ((((class color) (min-colors 256) (background dark)) :background "#ec7745")))
-     ;; `(meow-normal-cursor
-     ;;   ((((class color) (min-colors 256) (background light)) :background "#005077")
-     ;;    (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
-     ;; `(meow-motion-cursor
-     ;;   ((((class color) (min-colors 256) (background light)) :background "#005077")
-     ;;    (((class color) (min-colors 256) (background dark)) :background "#40c8ec")))
-     `(fill-column-indicator
-       ((((type w32 tty))
-         :height 1.0 :foreground "gray50" :background ,(face-background 'default))))
+     ;; `(default
+     ;;   ((((type tty) (class color) (background dark))
+     ;;     :background ,(if-let* ((bg (face-attribute 'default :background))
+     ;;                            (colors (color-values bg))
+     ;;                            ((equal '(0 0 0) colors)))
+     ;;                      "unspecified-bg"
+     ;;                    bg))))
      `(diff-hl-margin-insert
        ((t :family ,(face-attribute 'default :family)
            :foreground ,(face-foreground 'default)
@@ -228,60 +216,8 @@ attributes."
            :foreground ,(face-foreground 'default)
            :slant normal :weight regular
            :inherit diff-hl-unknown)))
-     '(whitespace-indentation ((t :underline "yellow")))
-     '(whitespace-space-before-tab ((t :underline "DarkOrange")))
-     '(whitespace-space-after-tab ((t :underline "yellow")))
-     `(parenthesis
-       ((t :foreground ,(if (modus-themes-get-current-theme)
-                            (modus-themes-get-color-value 'bg-active)
-                          "gray"))))
-     ;; `(header-line
-     ;;   ((((supports :underline t) (class color grayscale))
-     ;;     :background ,(face-background 'default)
-     ;;     :underline ( :color ,(face-foreground 'default)
-     ;;                  :style line
-     ;;                  :position t)
-     ;;     :box (:line-width 6 :style flat-button))))
-     ;; `(header-line-inactive
-     ;;   ((t :inherit (shadow header-line))))
-     ;; `(mode-line-active
-     ;;   ((((supports :overline t) (class color grayscale))
-     ;;     :background ,(face-background 'default)
-     ;;     :foreground ,(face-foreground 'default)
-     ;;     :overline ,(face-foreground 'default)
-     ;;     :box ( :line-width 6
-     ;;            :color ,(face-background 'default)
-     ;;            :style nil))))
-     ;; `(mode-line-inactive
-     ;;   ((((supports :overline t) (class color grayscale))
-     ;;     :background ,(face-background 'default)
-     ;;     :foreground ,(face-foreground 'shadow)
-     ;;     :overline t
-     ;;     :box ( :line-width 6
-     ;;            :color ,(face-background 'default)
-     ;;            :style nil))))
-
-     ;; `(tab-line-tab-current
-     ;;   ((((min-colors 256) (background dark))
-     ;;     :background "purple"
-     ;;     :foreground "white"
-     ;;     :box nil)))
-     ;; `(tab-line-tab-inactive
-     ;;   ((((min-colors 256) (background dark))
-     ;;     :background "DarkGreen"
-     ;;     :foreground "white"
-     ;;     :box nil)))
-
-     ;; `(tab-bar
-     ;;   ((((supports :box t))
-     ;;     :box ( :line-width (-2 . 6)
-     ;;            :style flat-button))))
-     '(region
-       ((t :foreground unspecified)))
      '(secondary-selection
        ((t :foreground unspecified)))
-     '(minibuffer-depth-indicator
-       ((t :inherit shadow)))
      ;; FIXME It seems that setting :fontset here doesn't work at all.
      ;; term
      '(term
