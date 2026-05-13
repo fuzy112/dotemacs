@@ -94,6 +94,10 @@
   (setopt recentf-show-messages nil)
   (recentf-mode))
 
+;;;; backup
+
+(setopt backup-by-copying-when-linked t)
+
 ;;;; auto-save-mode
 
 (setq auto-save-no-message nil)
