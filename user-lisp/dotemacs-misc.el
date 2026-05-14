@@ -29,6 +29,7 @@
 ;;;; eat
 
 (after-load! eat
+  (setopt eat-enable-auto-line-mode t)
   (setopt eat-kill-buffer-on-exit t)
   (setopt eat-semi-char-non-bound-keys
           (seq-union '([?\e ?o])
