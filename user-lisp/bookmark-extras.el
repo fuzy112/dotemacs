@@ -1,5 +1,5 @@
 ;;; bookmark-extras.el --- Bookmark support for various modes -*- lexical-binding: t -*-
-;; Copyright © 2024, 2025  Zhengyi Fu
+;; Copyright © 2024, 2025, 2026  Zhengyi Fu
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
 ;; Version: 0.2.2
@@ -59,43 +59,21 @@
 ;; following code debounces the `bookmark-save' call, in the specified
 ;; functions, to optimise the performance.
 
-(defun bookmark-save-debounce-functions--set (symbol value)
-  (when (eq symbol 'bookmark-save-debounce-functions)
-    (when (boundp 'bookmark-save-debounce-functions)
-      (dolist (fn bookmark-save-debounce-functions)
-        (advice-remove fn #'bookmark-save-debounce)))
-    (set-default symbol value)
-    (dolist (fn value)
-      (advice-add fn :around #'bookmark-save-debounce))))
-
-(defcustom bookmark-save-debounce-functions
-  '(bookmark-store
-    bookmark-relocate
-    bookmark-rename
-    bookmark-delete
-    bookmark-delete-all)
-  "Functions in which `bookmark-save' is debounced."
-  :type '(repeat function)
-  :set #'bookmark-save-debounce-functions--set)
-
 (defcustom bookmark-save-delay 1.5
   "The number of seconds to wait before running `bookmark-save'."
-  :type 'number)
+  :type 'number
+  :set (lambda (sym val)
+         (set-default sym val)
+         (if bookmark-save-delay
+             (advice-add #'bookmark-save :around #'bookmark-save-debounce)
+           (advice-remove #'bookmark-save #'bookmark-save-debounce))))
 
 (defvar bookmark-save-debounce-timer nil)
 
 (defun bookmark-save-debounce (&rest args)
-  (let ((bookmark-save-flag t))
-    (prog1
-        (apply args)
-      (when (timerp bookmark-save-debounce-timer)
-        (cancel-timer bookmark-save-debounce-timer))
-      (setq bookmark-save-debounce-timer
-            (run-with-timer bookmark-save-delay nil
-                            #'bookmark-save)))))
-
-(dolist (fn bookmark-save-debounce-functions)
-  (advice-add fn :around #'bookmark-save-debounce))
+  (when (timerp bookmark-save-debounce-timer)
+    (cancel-timer bookmark-save-debounce-timer))
+  (setq bookmark-save-debounce-timer (apply #'run-with-timer bookmark-save-delay nil args)))
 
 ;;;; DevDocs
 
