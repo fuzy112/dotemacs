@@ -23,7 +23,7 @@
 Return a formatted string showing the option type and first line of description."
   (let* ((option (nixos-options-get-option-by-name candidate))
 	 (type (nixos-options-get-type option))
-	 (default (nixos-options-get-default option))
+	 ;; (default (nixos-options-get-default option))
 	 (description (nixos-options-get-description option))
 	 (short-description (with-temp-buffer
 			      (insert description)

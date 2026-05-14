@@ -268,13 +268,14 @@ Called with nil on success, error message string on failure."
 (defun tencent-cos-put-buffer (type duration)
   "Upload current buffer contents to COS and create a download link.
 
-Upload the buffer contents with content TYPE and generate a signed URL valid
-for DURATION seconds. The URL is copied to the kill ring upon completion.
+Upload the buffer contents with content TYPE and generate a signed URL
+valid for DURATION seconds. The URL is copied to the kill ring upon
+completion.
 
-When called interactively:
-- TYPE defaults to text/plain for multibyte buffers, application/octet-stream otherwise
-- DURATION defaults to `tencent-cos-default-link-validity'
-- With prefix arg, prompts for both TYPE and DURATION (in hours)
+When called interactively, TYPE defaults to text/plain for multibyte
+buffers, application/octet-stream otherwise.  When called interactively,
+DURATION defaults to `tencent-cos-default-link-validity'.  With prefix
+arg, prompts for both TYPE and DURATION (in hours)
 
 Uses `tencent-cos-default-bucket' and `tencent-cos-default-region'
 for the target bucket configuration.

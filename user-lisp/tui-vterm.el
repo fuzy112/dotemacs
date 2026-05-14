@@ -31,13 +31,15 @@
 (define-derived-mode tui-vterm-mode vterm-mode "VTerm[TUI]")
 
 (declare-function vterm-mode "ext:vterm")
+(declare-function vterm--redraw "ext:vterm")
+
+(defvar vterm-shell)
+(defvar vterm-mode-hook)
+(defvar vterm-kill-buffer-on-exit)
 
 ;;;###autoload
 (defun tui-vterm-exec (name command callback)
-  (defvar vterm-shell)
-  (defvar vterm-mode-hook)
   (defvar vterm--term)
-  (defvar vterm--redraw)
   (let* ((dir default-directory)
 	 (vterm-shell (format "sh -c %s" (shell-quote-argument command)))
 	 (vterm-buffer-name (concat "*" name "*"))
