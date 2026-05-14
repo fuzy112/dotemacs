@@ -36,7 +36,10 @@
   (defvar eat--line-mode)
   (add-hook 'eat--line-mode-hook
             (lambda ()
-              (corfu-mode (if eat--line-mode +1 -1)))))
+              (corfu-mode (if eat--line-mode +1 -1))))
+  (keymap-set eat-line-mode-map "M-h" #'cape-eat-line-history)
+  (keymap-set eat-line-mode-map "M-r" #'consult-history)
+  )
 
 (unless (memq system-type '(ms-dos windows-nt))
   (setopt eshell-visual-commands nil)
@@ -56,6 +59,16 @@
   (copy-directory eat-term-shell-integration-directory
                   (concat (file-remote-p default-directory) "~/.cache/eat-shell-integration")
                   nil t t))
+
+(declare-function cape-interactive "ext:cape")
+(defvar cape--history-properties)
+(defun cape-eat-line-history (&optional interactive)
+  (interactive (list t))
+  (if interactive
+      (cape-interactive #'cape-eat-line-history)
+    (when-let* ((history (ring-elements eat--line-input-ring))
+                (bol (line-beginning-position)))
+      `(,bol ,(point) ,history ,@cape--history-properties))))
 
 ;;;; coterm
 

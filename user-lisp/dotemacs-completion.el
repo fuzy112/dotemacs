@@ -331,11 +331,11 @@ value for USE-OVERLAYS."
 
 (after-load! comint
   (define-keymap :keymap comint-mode-map
-    ;; "M-s" #'consult-history
     "M-h" #'cape-history
     "M-r" #'consult-history))
 
 (after-load! consult
+  (add-to-list 'consult-mode-histories '(eat-mode eat--line-input-ring eat--line-input-ring-index beginning-of-line))
   (remove-hook 'consult-after-jump-hook #'recenter)
   (add-hook 'consult-after-jump-hook #'reposition-window))
 
