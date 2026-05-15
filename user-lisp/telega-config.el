@@ -36,7 +36,9 @@
 
 (after-load! telega
   (when (dbus-get-name-owner :session "org.freedesktop.Notifications")
-    (telega-notifications-mode)))
+    (telega-notifications-mode))
+
+  (keymap-set telega-prefix-map "k" #'telega-kill))
 
 (after-load! consult
   (add-to-list 'consult-buffer-filter (concat "\\`" (substring-no-properties (telega-symbol 'telegram))) 'append)
