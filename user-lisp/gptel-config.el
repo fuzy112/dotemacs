@@ -136,35 +136,35 @@
 	     :capabilities (reasoning tool-use json)
 	     :context-window 256)))
 
-(gptel-make-openai "Volcengine Coding"
-  :host "ark.cn-beijing.volces.com"
-  :endpoint "/api/coding/v3/chat/completions"
-  :stream t
-  :key #'gptel-api-key-from-auth-source
-  :models '((ark-code-latest
-	     :description "Ark Code Latest"
-	     :capabilities (reasoning tool-use json)
-	     :context-window 256)
-	    (deepseek-v3.2
-	     :description "DeepSeek V3.2"
-	     :capabilities (reasoning tool-use json)
-	     :context-window 128)
-	    (doubao-seed-code
-	     :description "Doubao Seed Code"
-	     :capabilities (reasoning tool-use json)
-	     :context-window 256)
-	    (glm-4.7
-	     :description "GLM 4.7"
-	     :capabilities (reasoning tool-use json)
-	     :context-window 200)
-	    (kimi-k2-thinking
-	     :description "Kimi K2 thinking"
-	     :capabilities (reasoning tool-use json)
-	     :context-window 256)
-	    (kimi-k2.5
-	     :description "Kimi K2.5"
-	     :capabilities (reasoning tool-use json)
-	     :context-window 256)))
+;; (gptel-make-openai "Volcengine Coding"
+;;   :host "ark.cn-beijing.volces.com"
+;;   :endpoint "/api/coding/v3/chat/completions"
+;;   :stream t
+;;   :key #'gptel-api-key-from-auth-source
+;;   :models '((ark-code-latest
+;; 	     :description "Ark Code Latest"
+;; 	     :capabilities (reasoning tool-use json)
+;; 	     :context-window 256)
+;; 	    (deepseek-v3.2
+;; 	     :description "DeepSeek V3.2"
+;; 	     :capabilities (reasoning tool-use json)
+;; 	     :context-window 128)
+;; 	    (doubao-seed-code
+;; 	     :description "Doubao Seed Code"
+;; 	     :capabilities (reasoning tool-use json)
+;; 	     :context-window 256)
+;; 	    (glm-4.7
+;; 	     :description "GLM 4.7"
+;; 	     :capabilities (reasoning tool-use json)
+;; 	     :context-window 200)
+;; 	    (kimi-k2-thinking
+;; 	     :description "Kimi K2 thinking"
+;; 	     :capabilities (reasoning tool-use json)
+;; 	     :context-window 256)
+;; 	    (kimi-k2.5
+;; 	     :description "Kimi K2.5"
+;; 	     :capabilities (reasoning tool-use json)
+;; 	     :context-window 256)))
 
 (gptel-make-deepseek "DeepSeek"
   :stream t
@@ -195,8 +195,8 @@
 
 (gptel-make-gh-copilot "Copilot")
 
-(setq-default gptel-backend (gptel-get-backend "Volcengine Coding"))
-(setq-default gptel-model 'ark-code-latest)
+(setq-default gptel-backend (gptel-get-backend "Kimi Code"))
+(setq-default gptel-model 'kimi-for-coding)
 
 
 ;;; Tweaks
@@ -242,17 +242,15 @@ BEG and END define the region to process."
 
 ;;; Presets
 
-(gptel-make-preset 'deepseek-translator
+(gptel-make-preset 'translator
   :description "High-precision English ↔ Chinese translator"
   :system "You are a professional English-Chinese translator.
 - Translate accurately, preserving tone, nuance, and context.
 - Return only the translation, no additional commentary.
 - Use concise, idiomatic language.
 - Retain proper nouns, code, and formatting exactly as given."
-  :backend "DeepSeek"
-  :model 'deepseek-chat
   :use-tools nil
-  :temperature 1.3
+  :temperature 0.5
   :stream t)
 
 (gptel-make-preset 'kagi-search
