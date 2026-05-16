@@ -140,8 +140,6 @@
 
 (after-load! marginalia
   (alist-setq! marginalia-prompt-categories
-    "\\<info manuals\\>" 'info-manual
-    "\\<manual name\\>" 'info-manual
     "\\<Log rev,s\\>" 'magit-rev)
   (marginalia-mode))
 
