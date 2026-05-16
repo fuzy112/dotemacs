@@ -645,8 +645,8 @@ Follow these rules when creating the bookmark name:
 Example output: auth-service password validation function"
   :context #'gptel-bookmark-set-context
   :match-prompt "Set bookmark named"
-  :backend "Volcengine Coding"
-  :model 'ark-code-latest)
+  :backend "DeepSeek"
+  :model 'deepseek-v4-flash)
 
 ;;;###autoload
 (defun gptel-bookmark-set-context ()
