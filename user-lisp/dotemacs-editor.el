@@ -191,7 +191,7 @@
 (defun +visual-fill-column/toggle-visual-fill-and-center ()
   (interactive)
   (visual-fill-column-mode 'toggle)
-  (setopt visual-fill-column-center-text (symbol-value 'visual-fill-column-mode)))
+  (setopt visual-fill-column-center-text (bound-and-true-p visual-fill-column-mode)))
 
 ;;;; hl-todo
 
