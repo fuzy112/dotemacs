@@ -102,7 +102,8 @@
 (setq version-control     t
       delete-old-versions t
       kept-old-versions   9
-      kept-new-versions   9)
+      kept-new-versions   9
+      require-final-newline 'ask)
 
 ;;;; custom
 
