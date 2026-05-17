@@ -585,8 +585,8 @@ callback that inserts the response into the minibuffer."
 (defvar gptel-autosuggest-alist nil)
 
 ;;;###autoload
-(progn
-  (cl-defun gptel-autosuggest-define
+(eval-and-compile
+  (cl-defun gptel-autosuggest--define
       (command &key system context match-prompt (name 'autosuggest) backend model)
     "Add GPTel-based auto-suggestion functionality to COMMAND.
 COMMAND is an interactive function symbol.  SYSTEM is the system prompt
@@ -601,8 +601,6 @@ modify COMMAND.  If NAME is non-nil, the advice is named
     (declare (indent 1))
     (let ((advice-symbol (intern (format "%s@%s" command name))))
       (fset advice-symbol (lambda (orig-fn &rest args)
-			    (require 'gptel)
-			    (require 'gptel-config)
 			    (let* ((computed-context
 				    (cond
 				     ((functionp context) (funcall context))
@@ -626,6 +624,12 @@ modify COMMAND.  If NAME is non-nil, the advice is named
 				(apply orig-fn args)))))
       (advice-add command :around advice-symbol))))
 
+;;;###autoload
+(defmacro gptel-autosuggest-define (&rest args)
+  (declare (indent 1)
+	   (autoload-macro expand))
+  `(gptel-autosuggest--define ,@args))
+
 (declare-function which-function "which-func.el")
 
 ;;;###autoload
@@ -648,7 +652,6 @@ Example output: auth-service password validation function"
   :backend "DeepSeek"
   :model 'deepseek-v4-flash)
 
-;;;###autoload
 (defun gptel-bookmark-set-context ()
   (require 'which-func)
   (let* ((file-name (buffer-file-name))
