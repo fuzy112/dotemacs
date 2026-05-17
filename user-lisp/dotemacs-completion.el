@@ -334,8 +334,7 @@ value for USE-OVERLAYS."
 
 (after-load! consult
   (add-to-list 'consult-mode-histories '(eat-mode eat--line-input-ring eat--line-input-ring-index beginning-of-line))
-  (remove-hook 'consult-after-jump-hook #'recenter)
-  (add-hook 'consult-after-jump-hook #'reposition-window))
+  (add-hook 'consult-after-jump-hook #'pulse-momentary-highlight-one-line))
 
 (setopt register-preview-delay 0.5
         register-preview-function #'consult-register-format)
