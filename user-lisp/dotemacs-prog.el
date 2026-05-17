@@ -287,12 +287,24 @@ confirmed."
           compilation-scroll-output 'first-error)
   (add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
   (setopt compilation-error-regexp-alist
-          (seq-difference compilation-error-regexp-alist
-                          '( absoft ada aix ant borland comma msft
-                             edg-1 edg-2 epc ftnchek jikes-file jikes-line
-                             cucumber lcc makepp mips-1 mips-2 oracle rxp
-                             sparc-pascal-file sparc-pascal-line
-                             sparc-pascal-example sun sun-ada watcom 4bsd))))
+          '(bash
+            python-tracebacks-and-caml
+            cmake
+            cmake-info
+            clang-include
+            gcc-include
+            rust-panic
+            lua
+            lua-stack
+            gmake
+            gnu
+            perl
+            rust
+            shellcheck
+            guile-file
+            guile-line
+            typescript-tsc-plain
+            typescript-tsc-pretty)))
 
 ;;;; comint
 
