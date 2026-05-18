@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 SOURCE_DIR="$(realpath "$(dirname "$0")")"
 PATH=${PATH//"$SOURCE_DIR:"//}
@@ -30,20 +30,23 @@ done
 case "$provider" in
     deepseek)
         export ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic
-        export ANTHROPIC_API_KEY="$(secret-tool lookup host api.deepseek.com)"
+        ANTHROPIC_API_KEY="$(secret-tool lookup host api.deepseek.com)"
+        export ANTHROPIC_API_KEY
         export ANTHROPIC_MODEL=deepseek-chat
         export ANTHROPIC_SMALL_FAST_MODEL=deepseek-chat
         ;;
     moonshot)
         export ANTHROPIC_BASE_URL=https://api.moonshot.cn/anthropic
-        export ANTHROPIC_API_KEY="$(secret-tool lookup host api.moonshot.cn)"
+        ANTHROPIC_API_KEY="$(secret-tool lookup host api.moonshot.cn)"
+        export ANTHROPIC_API_KEY
         export ANTHROPIC_MODEL=kimi-k2-turbo-preview
         export ANTHROPIC_SMALL_FAST_MODEL=kimi-k2-turbo-preview
         ;;
     kimi-coding)
         export ENABLE_TOOL_SEARCH=false
         export ANTHROPIC_BASE_URL=https://api.kimi.com/coding/
-        export ANTHROPIC_API_KEY=$(pass api.kimi.com | head -1)
+        ANTHROPIC_API_KEY=$(pass api.kimi.com | head -1)
+        export ANTHROPIC_API_KEY
         ;;
 esac
 
