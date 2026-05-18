@@ -80,6 +80,11 @@
 (add-hook 'term-exec-hook #'with-editor-export-editor)
 (add-hook 'vterm-mode-hook #'with-editor-export-editor)
 
+;;;; shell-command
+
+;; Don't display async shell command buffer until there is output.
+(setq async-shell-command-display-buffer nil)
+
 ;;;; xterm
 
 (after-load! term/xterm
