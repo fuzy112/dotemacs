@@ -20,12 +20,14 @@
 
 ;;;; auth-sources
 (after-load! auth-source
+  (require! auth-source-pass)
   (when (custom--standard-value-p 'auth-sources auth-sources)
-    (setopt auth-sources '("~/.authinfo.gpg")))
+    (setopt auth-sources '("~/.authinfo.gpg" password-store)))
   (setopt auth-source-save-behavior t
-          auth-source-gpg-encrypt-to (list  "0xBBE2757FC7BFC23B"))
+          auth-source-gpg-encrypt-to (list "0xBBE2757FC7BFC23B"))
   (setopt plstore-encrypt-to auth-source-gpg-encrypt-to)
-  (auth-source-forget-all-cached))
+  (auth-source-forget-all-cached)
+  (keymap-set read-passwd-map "C-c C-p" #'+insert-pass))
 
 ;;;; epg
 
@@ -49,9 +51,6 @@
               (info (auth-source-pass-search :host entry)))
     (cl-assert (length= info 1))
     (insert (auth-info-password (car info)))))
-
-(after-load! auth-source
-  (keymap-set read-passwd-map "C-c C-p" #'+insert-pass))
 
 (defun send-password-to-process (process)
   "Read a password and send it to the process in BUFFER."
