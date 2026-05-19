@@ -170,6 +170,10 @@
        " ")
     args))
 
+(after-load! proced
+  (setopt proced-auto-update-flag 'visible)
+  (setopt proced-auto-update-interval 1))
+
 ;;;; SHR
 
 (after-load! shr
