@@ -73,21 +73,32 @@
   (when (bound-and-true-p magit-credential-cache-daemon-process)
     (set-process-query-on-exit-flag
      magit-credential-cache-daemon-process nil)))
+
 (after-load! magit
   (transient-set-default-level 'magit:--gpg-sign 1)
   (transient-set-default-level 'magit:--signoff 1)
-  (setq-default magit-tramp-pipe-stty-settings 'pty)
-  (setopt magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
-  (setopt magit-format-file-function #'magit-format-file-nerd-icons)
-  (advice-add #'magit-maybe-start-credential-cache-daemon :after '+magit--ccdp-no-query)
+
+  (require! magit-wip))
+
+(after-load! magit-wip
   (setopt magit-wip-mode-lighter "")
   (magit-wip-mode))
+
+(after-load! magit-diff
+  (setopt magit-format-file-function #'magit-format-file-nerd-icons))
+
+(after-load! magit-mode
+  (setopt magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 (after-load! magit-status
   (cl-pushnew "--show-signature" (get 'magit-status-mode 'magit-log-default-arguments)))
 
 (after-load! magit-log
   (cl-pushnew "--show-signature" (get 'magit-log-mode 'magit-log-default-arguments)))
+
+(after-load! magit-process
+  (setq-default magit-tramp-pipe-stty-settings 'pty)
+  (advice-add #'magit-maybe-start-credential-cache-daemon :after '+magit--ccdp-no-query))
 
 (declare-function magit-staged-files "magit-commit.el")
 (defun +git-commit--log-edit-h ()
@@ -104,11 +115,6 @@
   (setopt git-commit-major-mode #'log-edit-mode)
   (add-hook 'git-commit-post-finish-hook #'log-edit-hide-buf)
   (add-hook 'git-commit-setup-hook #'+git-commit--log-edit-h 90))
-
-;;;; forge
-
-(after-load! magit
-  (require 'forge))
 
 ;;;; Add-Log
 
