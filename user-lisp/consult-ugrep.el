@@ -70,7 +70,7 @@ Can be either a string, or a list of strings or expressions."
   "Search with `ugrep' for files in DIR with INITIAL input.
 See `consult-grep' for details."
   (interactive "P")
-  (consult--grep  "Ugrep: " #'consult--ugrep-make-builder dir initial))
+  (consult--grep "Ugrep" #'consult--ugrep-make-builder dir initial))
 
 (provide 'consult-ugrep)
 ;;; consult-ugrep.el ends here
