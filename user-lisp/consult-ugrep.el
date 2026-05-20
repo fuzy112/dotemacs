@@ -38,6 +38,7 @@ Can be either a string, or a list of strings or expressions."
   :type '(choice string (repeat (choice string sexp)))
   :group 'consult)
 
+;; TODO: add support for booloan query patterns
 (defun consult--ugrep-make-builder (paths)
   "Create grep command line builder given PATHS."
   (let* ((cmd (consult--build-args consult-ugrep-args)))
