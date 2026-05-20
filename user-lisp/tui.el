@@ -194,7 +194,7 @@ When called interactively, the symbol at point is used as the initial query."
       :ansi t
       :bind '("ctrl-k:kill-line")
       :cmd-prompt "ripgrep> "
-      :cmd "rg --no-heading --column --color=always --line-number --smart-case -- {}"
+      :cmd "nice rg --no-heading --column --color=always --line-number --smart-case -- {}"
       :delimiter ":"
       :preview tui--grep-preview
       :preview-window "+{2}-/3")
@@ -213,7 +213,7 @@ When called interactively, the symbol at point is used as the initial query."
       :ansi t
       :bind '("ctrl-k:kill-line")
       :cmd-prompt "ugrep> "
-      :cmd "ugrep --with-filename --color=always --line-number --column-number --smart-case --ignore-binary -- {}"
+      :cmd "nice ugrep --with-filename --color=always --line-number --column-number --smart-case --ignore-binary -- {}"
       :delimiter ":"
       :preview tui--grep-preview
       :preview-window "+{2}-/3")
@@ -235,7 +235,7 @@ When called interactively, the symbol at point is used as the initial query."
       :ansi t
       :bind '("ctrl-k:kill-line")
       :prompt "line> "
-      :cmd (format "rg --column --color=always --with-filename --line-number --smart-case -- {} %s" (shell-quote-argument file))
+      :cmd (format "nice rg --column --color=always --with-filename --line-number --smart-case -- {} %s" (shell-quote-argument file))
       :delimiter ":"
       :preview tui--grep-preview
       :preview-window "up:60%:+{2}-/3")
@@ -260,7 +260,7 @@ When called interactively, the symbol at point is used as the initial query."
 	     #'tui--file-callback)))
 
 (defconst tui--file-preview
-  "[ -d {} ] && ls -lBh --color=always {} || bat --force-colorization -- {}")
+  "[ -d {} ] && nice ls -lBh --color=always {} || nice bat --force-colorization -- {}")
 
 ;;;###autoload
 (defun tui-find (arg)
@@ -271,7 +271,7 @@ When called interactively, the symbol at point is used as the initial query."
      (fuzzy-finder-command
       :ansi t
       :bind '("ctrl-k:kill-line")
-      :cmd "fd . || fd-find . || find ."
+      :cmd "nice fd . || nice fd-find . || nice find ."
       :preview tui--file-preview
       :preview-window "up:60%:+{2}/3")
      #'tui--file-callback)))
@@ -285,7 +285,7 @@ When called interactively, the symbol at point is used as the initial query."
     :ansi t :interactive t
     :bind '("ctrl-k:kill-line")
     :cmd-prompt "locate> "
-    :cmd "locate {}"
+    :cmd "nice locate {}"
     :preview tui--file-preview
     :preview-window "up:60%:+{2}-/3")
    #'tui--file-callback))
@@ -330,10 +330,10 @@ When called interactively, the symbol at point is used as the initial query."
    (fuzzy-finder-command
     :ansi t
     :bind '("ctrl-k:kill-line")
-    :cmd "ps -ax"
+    :cmd "nice ps -ax"
     :header-lines 1
     :layout "reverse"
-    :preview "ps -p {2} -F"
+    :preview "nice ps -p {2} -F"
     :preview-window "up:5")
    #'tui--kill-callback))
 
@@ -357,7 +357,7 @@ When called interactively, the symbol at point is used as the initial query."
 	   (fuzzy-finder-command
 	    :ansi t
 	    :bind '("ctrl-k:kill-line")
-	    :cmd (format "%s -Q --batch --eval %s"
+	    :cmd (format "nice %s -Q --batch --eval %s"
 			 (expand-file-name invocation-name invocation-directory)
 			 (shell-quote-argument
 			  (prin1-to-string
@@ -379,7 +379,7 @@ When called interactively, the symbol at point is used as the initial query."
 	   (fuzzy-finder-command
 	    :ansi t
 	    :bind '("ctrl-k:kill-line")
-	    :cmd "git ls-files"
+	    :cmd "nice git ls-files"
 	    :preview tui--file-preview
 	    :preview-window "up:60%:+{2}/3")
 	   #'tui--file-callback))
@@ -402,7 +402,7 @@ When called interactively, the symbol at point is used as the initial query."
 	   (fuzzy-finder-command
 	    :ansi t
 	    :bind '("ctrl-k:kill-line")
-	    :cmd (format "%s -Q --batch --eval %s"
+	    :cmd (format "nice %s -Q --batch --eval %s"
 			 (expand-file-name invocation-name invocation-directory)
 			 (shell-quote-argument
 			  (prin1-to-string
