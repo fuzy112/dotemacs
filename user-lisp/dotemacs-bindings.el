@@ -247,6 +247,7 @@
   "c"		#'capitalize-dwim
   "l"		#'downcase-dwim
   "u"		#'upcase-dwim
+  "C-S-d"	#'copy-from-above-command
   ;; tempel
   "+"		#'tempel-complete
   "*"		#'tempel-insert
