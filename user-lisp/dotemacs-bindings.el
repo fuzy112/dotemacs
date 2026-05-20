@@ -278,7 +278,8 @@
   "<remap> <eval-last-sexp>"	#'pp-eval-last-sexp
   "<remap> <eval-expression>"	#'pp-eval-expression
   "<remap> <Info-search>"	#'consult-info
-  "<remap> <list-buffers>"	#'ibuffer-jump)
+  "<remap> <list-buffers>"	#'ibuffer-jump
+  "<remap> <delete-char>" 	#'delete-forward-char)
 
 (provide 'dotemacs-bindings)
 ;;; dotemacs-bindings.el ends here
