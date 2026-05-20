@@ -261,6 +261,7 @@
 (define-keymap :keymap global-map
   "<f5>"			#'compile
   "C-S-d"			#'duplicate-dwim
+  "C-z"	                        #'zap-up-to-char
   ;; embark
   "C-."				#'embark-act
   "C-;"				#'embark-dwim
