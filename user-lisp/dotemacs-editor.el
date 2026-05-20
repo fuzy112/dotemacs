@@ -275,7 +275,8 @@ BEG and END specify the region boundaries."
 
 (dolist (cmd '(capitalize-dwim
                upcase-dwim
-               downcase-dwim))
+               downcase-dwim
+               transpose-words))
   ;; Advise these case-changing commands to, when invoked at end of line
   ;; (i.e., point is at whitespace until line end), change the case of
   ;; the previous word instead of the next word.
