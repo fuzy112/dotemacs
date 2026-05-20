@@ -64,6 +64,15 @@
 
 ;;;; magit
 
+(defun magit-status-other-window ()
+  (interactive)
+  (let ((magit-display-buffer-function #'display-buffer)
+        (display-buffer-overriding-action '((display-buffer-reuse-mode-window
+                                             display-buffer-in-previous-window)
+                                            (inhibit-same-window . t)
+                                            (inhibit-switch-frame . t))))
+    (magit-status-setup-buffer)))
+
 (after-load! project
   (when (consp project-switch-commands)
     (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)))

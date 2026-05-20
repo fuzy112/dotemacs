@@ -154,7 +154,8 @@
   "F" #'find-function-other-window
   "V" #'find-variable-other-window
   "K" #'find-function-on-key-other-window
-  "L" #'find-library-other-window)
+  "L" #'find-library-other-window
+  "g" #'magit-status-other-window)
 
 (define-keymap :keymap ctl-x-5-map
   "F" #'find-function-other-frame
