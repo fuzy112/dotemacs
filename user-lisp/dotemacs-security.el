@@ -53,16 +53,47 @@
     (insert (auth-info-password (car info)))))
 
 (defun send-password-to-process (process)
-  "Read a password and send it to the process in BUFFER."
+  "Read a password and send it to the PROCESS.
+Interactively, without a prefix argument, use the process
+associated with the current buffer; with a prefix argument,
+prompt for a process among all live real processes in visible
+windows."
   (interactive
    (list
     (if-let* ((proc (get-buffer-process (current-buffer)))
               ((not current-prefix-arg)))
         proc
-      (read-process-name "Process"))))
+      (cl-flet ((procitem
+                  (p) (when (process-live-p p)
+                        (let ((pid (process-id p))
+	                      (procname (process-name p))
+	                      (procbuf (process-buffer p)))
+	                  (and (eq (process-type p) 'real)
+	                       (cons (if procbuf
+			                 (format "%s (%s) in buffer %s"
+				                 procname pid
+				                 (buffer-name procbuf))
+		                       (format "%s (%s)" procname pid))
+		                     p)))))))
+      (cl-loop for w in (window-list)
+               for b = (window-buffer w)
+               for p = (get-buffer-process b)
+               when p
+               collect p into processes
+               finally
+               return (if (length< processes 2)
+                          (car processes)
+                        (completing-read
+                         "Process: "
+                         (delq nil (mapcar #'procitem processes))
+                         nil :require-match))))))
+  (unless process
+    (user-error "No process"))
   (process-send-string process
                        (concat
-                        (read-passwd "Password: ")
+                        (read-passwd
+                         (format-prompt "Send password to process `%s' in buffer `%s'"
+                                        nil process (process-buffer process)))
                         "\n")))
 
 (provide 'dotemacs-security)
