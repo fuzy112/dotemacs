@@ -273,5 +273,21 @@ BEG and END specify the region boundaries."
       (set-text-properties beg end nil)
       (message "Cleared all text properties in region %d-%d" beg end))))
 
+(dolist (cmd '(capitalize-dwim
+               upcase-dwim
+               downcase-dwim))
+  ;; Advise these case-changing commands to, when invoked at end of line
+  ;; (i.e., point is at whitespace until line end), change the case of
+  ;; the previous word instead of the next word.
+  (advice-add cmd :interactive-only
+              (lambda (arg)
+                (interactive
+                 (list (if current-prefix-arg
+                           (prefix-numeric-value current-prefix-arg)
+                         (if (looking-at-p "\\W*$")
+                             -1
+                           1)))))
+              '((name . eol))))
+
 (provide 'dotemacs-editor)
 ;;; dotemacs-editor.el ends here
