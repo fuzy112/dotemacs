@@ -145,7 +145,9 @@
   "m"   #'consult-man
   "i"   #'consult-info
 
-  "C-/" #'apheleia-format-buffer)
+  "C-/" #'apheleia-format-buffer
+  "C-k" #'compile
+  "C-p" #'send-password-to-process)
 
 (define-keymap :keymap ctl-x-4-map
   "t" #'eat-other-window
