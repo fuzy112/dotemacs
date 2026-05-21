@@ -124,7 +124,7 @@
   (setq-default magit-tramp-pipe-stty-settings 'pty)
   (advice-add #'magit-maybe-start-credential-cache-daemon :after '+magit--ccdp-no-query))
 
-(declare-function magit-staged-files "magit-commit.el")
+(declare-function magit-staged-files "ext:magit-commit.el")
 (defun +git-commit--log-edit-h ()
   (when (string-empty-p (buffer-substring-no-properties (point-min) (line-end-position 1)))
     (let ((params

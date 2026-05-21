@@ -276,7 +276,7 @@ PROJECT defaults to the current project."
 
 (defvar emmip--minor-mode-history nil)
 (defvar emmip--major-modes-history nil)
-(declare-function map-values "map")
+(declare-function map-values "map.el")
 
 (defun dotemacs--major-mode-completion-table ()
   (require 'map)
@@ -294,7 +294,7 @@ PROJECT defaults to the current project."
         (metadata '((category . command))))
     (completion-table-with-metadata modes metadata)))
 
-(declare-function project-buffers "project")
+(declare-function project-buffers "project.el")
 (declare-function project-root "project")
 
 (defun enable-minor-mode-in-project (mode project major-modes)

@@ -78,7 +78,7 @@
 ;;;; DevDocs
 
 (defvar devdocs--stack)
-(declare-function devdocs--render "ext:devdocs")
+(declare-function devdocs--render "ext:devdocs.el")
 
 (defun devdocs-bookmark-make-record ()
   "Create a bookmark record."
@@ -106,7 +106,7 @@
 ;;;###autoload(add-hook 'devdocs-mode-hook #'devdocs-bookmark-enable)
 
 ;;;; Mu4e
-(declare-function mu4e "ext:mu4e")
+(declare-function mu4e "ext:mu4e.el")
 
 (defun mu4e-bookmark-main-make-record ()
   "Create a bookmark record for mu4e."
@@ -237,11 +237,11 @@
 (defvar deadgrep--context)
 (defvar deadgrep-display-buffer-function)
 
-(declare-function deadgrep--buffer "deadgrep")
-(declare-function deadgrep--start "deadgrep")
-(declare-function deadgrep-next-error "deadgrep")
-(declare-function deadgrep--create-imenu-index "deadgrep")
-(declare-function deadgrep--write-heading "deadgrep")
+(declare-function deadgrep--buffer "ext:deadgrep.el")
+(declare-function deadgrep--start "ext:deadgrep.el")
+(declare-function deadgrep-next-error "ext:deadgrep.el")
+(declare-function deadgrep--create-imenu-index "ext:deadgrep.el")
+(declare-function deadgrep--write-heading "ext:deadgrep.el")
 
 (defun deadgrep-bookmark-make-record ()
   "Create a bookmark record for deadgrep buffer."

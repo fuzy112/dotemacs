@@ -246,8 +246,8 @@ Otherwise disable it."
 
 ;;;; prism
 
-(declare-function prism-blend "prism.el")
-(declare-function prism-set-colors "prism.el")
+(declare-function prism-blend "ext:prism.el")
+(declare-function prism-set-colors "ext:prism.el")
 
 (defun +prism--set-colors ()
   "Configure colors used by prism according to the current theme.

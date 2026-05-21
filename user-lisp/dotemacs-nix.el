@@ -20,7 +20,7 @@
 
 ;;;; nix-mode
 
-(declare-function nix-mode "nix-mode")
+(declare-function nix-mode "ext:nix-mode.el")
 
 (add-to-list 'major-mode-remap-alist '(nix-mode . nix-ts-mode))
 
@@ -33,8 +33,8 @@
 
 (add-hook 'nix-repl-mode-hook #'nix-repl-setup)
 
-(declare-function nix--make-repl-in-buffer "nix-repl.el")
-(declare-function nix-repl-mode "nix-repl.el")
+(declare-function nix--make-repl-in-buffer "ext:nix-repl.el")
+(declare-function nix-repl-mode "ext:nix-repl.el")
 
 (defun nix-get-repl ()
   "Get or create the Nix REPL process.

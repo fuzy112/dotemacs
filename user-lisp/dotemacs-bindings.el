@@ -171,7 +171,7 @@
   "b" #'consult-bookmark ; orig. bookmark-jump
   "u" #'url-bookmark-add)
 
-(declare-function consult-register "consult")
+(declare-function consult-register "ext:consult.el")
 
 (define-keymap :keymap ctl-x-x-map
   "/" #'apheleia-format-buffer)

@@ -20,7 +20,7 @@
 
 ;;;; pyim
 
-(declare-function pyim-cregexp-build "pyim-cregexp.el")
+(declare-function pyim-cregexp-build "ext:pyim-cregexp.el")
 (defun +orderless-pinyin (component)
   (require 'pyim)
   (pyim-cregexp-build component 3 t))

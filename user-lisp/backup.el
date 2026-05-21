@@ -1,6 +1,6 @@
 ;;; backup.el --- Backup management                  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024, 2025  Zhengyi Fu
+;; Copyright (C) 2024, 2025, 2026  Zhengyi Fu
 
 ;; Package-Version: 0.7.3
 ;; Author: Zhengyi Fu <i@fuzy.me>
@@ -103,7 +103,7 @@ If NOCONFIRM is non-nil, do not ask for confirmation."
   (let ((file (alist-get 'real-file bookmark)))
     (set-buffer (backup-list-backups file))))
 
-(declare-function bookmark-make-record-default "bookmark")
+(declare-function bookmark-make-record-default "bookmark.el")
 
 (defun backup-list--bookmark-make-record ()
   `(,@(bookmark-make-record-default 'no-file 'no-context)

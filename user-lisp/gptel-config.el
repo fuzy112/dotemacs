@@ -378,9 +378,9 @@ Output only the commit message, with no extra explanation or surrounding markup.
       (newline)
       (gptel-send))))
 
-(declare-function magit-commit-arguments "magit-commit.el")
-(declare-function magit-process-git "magit-process.el")
-(declare-function magit-run-git-with-editor "magit-process.el")
+(declare-function magit-commit-arguments "ext:magit-commit.el")
+(declare-function magit-process-git "ext:magit-process.el")
+(declare-function magit-run-git-with-editor "ext:magit-process.el")
 
 ;;;###autoload
 (defun +gptel-commit-staged (&optional args)

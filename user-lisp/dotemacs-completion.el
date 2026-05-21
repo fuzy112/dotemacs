@@ -239,7 +239,7 @@
 (add-hook 'prog-mode-hook 'tempel-setup-capf)
 (add-hook 'text-mode-hook 'tempel-setup-capf)
 
-(declare-function tempel--templates "tempel.el")
+(declare-function tempel--templates "ext:tempel.el")
 (defun tempel-include (elt)
   (when (eq (car-safe elt) 'i)
     (if-let* ((template (alist-get (cadr elt) (tempel--templates))))
@@ -348,10 +348,10 @@ value for USE-OVERLAYS."
 
 
 ;; Declare internal functions of consult to avoid bytecomp warnings.
-(declare-function consult--read-1 "consult.el" (arg1 &rest rest))
-(declare-function consult--file-preview "consult.el")
-(declare-function consult--buffer-preview "consult.el")
-(declare-function consult--file-state "consult.el")
+(declare-function consult--read-1 "ext:consult.el" (arg1 &rest rest))
+(declare-function consult--file-preview "ext:consult.el")
+(declare-function consult--buffer-preview "ext:consult.el")
+(declare-function consult--file-state "ext:consult.el")
 
 ;; Add preview for `read-file-name'.
 (defun +consult--read-file-name-function (prompt &optional dir default mustmatch initial pred)
@@ -487,9 +487,9 @@ except that it specifies `identity' as the `display-sort-function' and
 
 ;; Use `orderless-compile' as the `consult''s default regexp compiler.
 
-(declare-function orderless-compile "orderless.el" (arg1 &optional arg2 arg3))
-(declare-function orderless--highlight "orderless.el" (arg1 arg2 arg3))
-(declare-function consult--convert-regexp "consult.el" (arg1 arg2))
+(declare-function orderless-compile "ext:orderless.el" (arg1 &optional arg2 arg3))
+(declare-function orderless--highlight "ext:orderless.el" (arg1 arg2 arg3))
+(declare-function consult--convert-regexp "ext:consult.el" (arg1 arg2))
 
 (defvar orderless-match-faces)
 (defun +consult--orderless-regexp-compiler (input type &rest _config)

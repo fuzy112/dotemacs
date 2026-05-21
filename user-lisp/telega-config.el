@@ -31,7 +31,7 @@
 ;;     (setq-local telega-avatar-workaround-gaps-for '(return t))))
 ;; (add-hook 'telega-chat-mode-hook #'telega-config-workaround-gaps-on-graphic-display)
 
-(declare-function telega-chat-auto-fill-mode "telega-chat.el" (&optional arg1))
+(declare-function telega-chat-auto-fill-mode "ext:telega-chat.el" (&optional arg1))
 (add-hook 'telega-chat-mode-hook #'telega-chat-auto-fill-mode)
 
 (after-load! telega
