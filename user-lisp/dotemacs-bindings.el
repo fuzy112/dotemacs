@@ -34,7 +34,8 @@
 
 (define-keymap :keymap help-map
   "H" #'+mail-to-help-gnu-emacs
-  "M" #'+gnus-read-ephemeral-emacs-search-group)
+  "M" #'+gnus-read-ephemeral-emacs-search-group
+  "B" #'embark-bindings)
 
 (defvar-keymap tool-map
   :doc    "Keymap for calling external tools."
@@ -243,7 +244,7 @@
   "t"     telega-prefix-map)
 
 (define-keymap :keymap esc-map
-  "o"		#'quick-window-jump
+  "o"		#'other-window
   ;; vertico
   "R"		#'vertico-repeat
   ;;
@@ -260,12 +261,14 @@
   ;; consult
   "#"		#'consult-register-load
   "'"		#'consult-register-store
-  "C-#"		#'consult-register)
+  "C-#"		#'consult-register
+  ;; embark
+  "."		#'embark-dwim)
 
 (define-keymap :keymap global-map
   "<f5>"			#'compile
   "C-S-d"			#'duplicate-dwim
-  "C-z"	                        #'zap-up-to-char
+  "C-z"				#'zap-up-to-char
   ;; embark
   "C-."				#'embark-act
   "C-;"				#'embark-dwim
@@ -281,7 +284,7 @@
   "<remap> <eval-expression>"	#'pp-eval-expression
   "<remap> <Info-search>"	#'consult-info
   "<remap> <list-buffers>"	#'ibuffer-jump
-  "<remap> <delete-char>" 	#'delete-forward-char)
+  "<remap> <delete-char>"	#'delete-forward-char)
 
 (provide 'dotemacs-bindings)
 ;;; dotemacs-bindings.el ends here
