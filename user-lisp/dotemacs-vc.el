@@ -62,6 +62,17 @@
       (expand-file-name ".git/info/exclude" (vc-git-root file))
     (funcall orig file)))
 
+;; The original implementation deduces the base dir from the ignore file,
+;; which is incorrect if we change the ignore file to .git/info/exclude.
+(define-advice vc--ignore-base-dir (:around (old-fn) git)
+  (pcase (vc-responsible-backend default-directory)
+    ('Git (if (string-suffix-p
+               "/.git/info/exclude"
+               (vc-call-backend 'Git 'find-ignore-file default-directory))
+              (vc-root-dir 'Git)
+            (funcall old-fn)))
+    (_ (funcall old-fn))))
+
 ;;;; magit
 
 (defun magit-status-other-window ()
