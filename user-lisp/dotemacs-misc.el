@@ -85,6 +85,14 @@
 ;; Don't display async shell command buffer until there is output.
 (setq async-shell-command-display-buffer nil)
 
+;;;; shell-command+
+
+(after-load! shell-command+
+  (alist-setq! shell-command+-substitute-alist
+    "ugrep" #'shell-command+-cmd-grep
+    "ug" #'shell-command+-cmd-grep
+    "rg" #'shell-command+-cmd-grep))
+
 ;;;; xterm
 
 (after-load! term/xterm
