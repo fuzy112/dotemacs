@@ -57,28 +57,6 @@
 (declare-function org-element-parse-buffer "org-element.el")
 (declare-function org-element-map "org-element.el")
 
-(defun +org-has-todo-p ()
-  "Return non-nil if the current buffer contains any active TODO headlines."
-  (org-element-map (org-element-parse-buffer 'headline) 'headline
-    (lambda (h) (eq (org-element-property :todo-type h) 'todo))
-    nil 'first-match))
-
-(defvar org-directory)
-;; TODO: handle file rename and deletion.
-(defun +org-update-agenda ()
-  "Automatically update the org agenda file list for the current buffer. "
-  (when (and (buffer-file-name) (derived-mode-p 'org-mode))
-    (if (and (file-in-directory-p (buffer-file-name) org-directory)
-             (+org-has-todo-p))
-        (org-agenda-file-to-front)
-      (when (org-agenda-file-p)
-        (org-remove-file)))))
-
-(defun +org-setup-auto-agenda ()
-  (add-hook 'after-save-hook #'+org-update-agenda nil t))
-
-(add-hook 'org-mode-hook #'+org-setup-auto-agenda)
-
 (after-load! ox-latex
   (alist-setq! org-latex-classes
     "ctexart" '("\\documentclass[11pt]{ctexart}"
