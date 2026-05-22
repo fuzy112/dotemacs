@@ -42,6 +42,7 @@
 (eval-when-compile (require 'dotemacs-core))
 
 (require! dotemacs-ui)
+(require! dotemacs-fonts)
 (require! dotemacs-editor)
 (require! dotemacs-llm)
 (require! dotemacs-bindings)
