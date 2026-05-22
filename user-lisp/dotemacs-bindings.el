@@ -284,7 +284,8 @@
   "<remap> <eval-expression>"	#'pp-eval-expression
   "<remap> <Info-search>"	#'consult-info
   "<remap> <list-buffers>"	#'ibuffer-jump
-  "<remap> <delete-char>"	#'delete-forward-char)
+  "<remap> <delete-char>"	#'delete-forward-char
+  "<remap> <shell-command>"     #'shell-command+)
 
 (provide 'dotemacs-bindings)
 ;;; dotemacs-bindings.el ends here
