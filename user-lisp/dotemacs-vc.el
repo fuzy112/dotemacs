@@ -33,7 +33,10 @@
    vc-dir-auto-hide-up-to-date t
    vc-allow-async-diff t))
 
+(declare-function project-root "project.el")
+(declare-function vc-git-root "vc-git.el")
 (declare-function vc-read-backend "vc.el")
+
 (defun +vc/dir-here (&optional backend)
   (interactive
    (list
@@ -77,6 +80,7 @@
 
 (defun magit-status-other-window ()
   (interactive)
+  (defvar magit-display-buffer-function)
   (let ((magit-display-buffer-function #'display-buffer)
         (display-buffer-overriding-action '((display-buffer-reuse-mode-window
                                              display-buffer-in-previous-window)
