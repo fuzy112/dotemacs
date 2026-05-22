@@ -59,7 +59,7 @@
   (set-fontset-font "fontset-default" 'emoji (font-spec :family "Noto Color Emoji"))
 
   ;; Nerd Font symbols
-  (let* ((nf-font-family "Symbols Nerd Font")
+  (let* ((nf-font-family "Symbols Nerd Font Mono")
          (nf-font-spec (font-spec :family nf-font-family)))
     ;; https://github.com/ryanoasis/nerd-fonts/wiki/Glyph-Sets-and-Code-Points
     (dolist (range '((#x23fb  . #x23fe)    ; IEC Power Symbols

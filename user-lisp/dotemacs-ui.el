@@ -30,6 +30,9 @@
 
 ;;;; nerd-icons
 
+(after-load! nerd-icons
+  (setopt nerd-icons-font-family "Symbols Nerd Font Mono"))
+
 (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
 (add-hook 'marginalia-mode-hook    #'nerd-icons-completion-mode)
 (add-hook 'ibuffer-mode-hook       #'nerd-icons-ibuffer-mode)
