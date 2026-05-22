@@ -318,6 +318,8 @@ value for USE-OVERLAYS."
                               embark-highlight-indicator
                               embark-isearch-highlight-indicator))
   (keymap-set embark-file-map "#" '+embark/find-file-as-root)
+  (keymap-set embark-file-map "r" 'find-file-read-only)
+  (keymap-set embark-file-map "V" 'view-file)
   (keymap-set embark-bookmark-map "W" '+embark/eww-open-bookmark)
   (keymap-set embark-bookmark-map "u" '+embark/browse-url-open-bookmark)
   (keymap-set embark-region-map "[" '+embark/apply-ansi-color))
