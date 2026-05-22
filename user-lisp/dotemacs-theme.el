@@ -43,8 +43,12 @@
           modus-themes-variable-pitch-ui  nil
           modus-themes-to-toggle          '(modus-vivendi modus-operandi))
   (setopt modus-themes-common-palette-overrides
-          (append modus-themes-preset-overrides-faint
-                  '((fg-region unspecified))))
+          '((fg-region unspecified)))
+  (setopt modus-vivendi-palette-overrides
+          '((bg-mode-line-active        bg-inactive)
+            (border-mode-line-active    fg-dim)
+            (bg-mode-line-inactive      bg-dim)
+            (border-mode-line-inactive  bg-active)))
   (load-theme 'modus-operandi t t)
   (load-theme 'modus-vivendi t t))
 
