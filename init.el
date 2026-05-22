@@ -63,7 +63,6 @@
 (require! dotemacs-text)
 (require! dotemacs-modal)
 (require! dotemacs-theme)
-(require! dotemacs-denote)
 (require! dotemacs-chinese)
 (require! dotemacs-treesit)
 (require! dotemacs-security)
