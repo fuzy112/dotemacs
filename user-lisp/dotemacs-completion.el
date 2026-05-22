@@ -317,6 +317,8 @@ value for USE-OVERLAYS."
   (setopt embark-indicators '(embark-minimal-indicator
                               embark-highlight-indicator
                               embark-isearch-highlight-indicator))
+  (alist-setq! embark-exporters-alist
+    consult-location #'embark-consult-export-location-grep)
   (keymap-set embark-file-map "#" '+embark/find-file-as-root)
   (keymap-set embark-file-map "r" 'find-file-read-only)
   (keymap-set embark-file-map "V" 'view-file)
