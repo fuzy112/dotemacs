@@ -327,6 +327,24 @@ confirmed."
 (after-load! grep
   (setopt grep-use-headings t))
 
+(defun ugrep (command-args)
+  "Run ugrep with COMMAND-ARGS.
+Interactively, prompt for a ugrep command with a default prefix."
+  (interactive
+   (list (read-shell-command "Run ugrep: "
+                             "ugrep --color=auto -nH --null "
+                             'grep-history)))
+  (grep command-args))
+
+(defun ripgrep (command-args)
+  "Run ripgrep with COMMAND-ARGS.
+Interactively, prompt for a ripgrep command with a default prefix."
+  (interactive
+   (list (read-shell-command "Run ripgrep: "
+                             "rg --color=auto -nH --null "
+                             'grep-history)))
+  (grep command-args))
+
 ;;;; Ediff
 
 (after-load! ediff-wind
