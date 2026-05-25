@@ -21,6 +21,7 @@
 ;;;; tramp
 
 (after-load! tramp
+  (setopt tramp-use-connection-share nil)
   (setopt tramp-verbose 2))
 
 (defvar tramp-persistency-file-name)
