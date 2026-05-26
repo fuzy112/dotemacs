@@ -59,8 +59,8 @@
 (setq undo-limit        (* 16 1024 1024)
       undo-strong-limit (* 64 1024 1024))
 
-;; workaround WSL wayland clipboard issue
-(setq select-active-regions nil)
+;; ;; workaround WSL wayland clipboard issue
+;; (setq select-active-regions nil)
 
 (setq save-interprogram-paste-before-kill t
       kill-do-not-save-duplicates t)
