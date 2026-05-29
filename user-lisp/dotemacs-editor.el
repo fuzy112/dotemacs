@@ -222,8 +222,6 @@
 ;;;; elec-pair
 
 (electric-pair-mode)
-(after-load! elec-pair
-  (keymap-set electric-pair-mode-map "]" #'up-list))
 
 ;;;; Re-builder
 
