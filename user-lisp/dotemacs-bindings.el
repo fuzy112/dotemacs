@@ -269,6 +269,9 @@
   "<f5>"			#'compile
   "C-S-d"			#'duplicate-dwim
   "C-z"				#'zap-up-to-char
+  "<Copy>"                      #'kill-ring-save
+  "<Cut>"			#'kill-region
+  "<Paste>"                     #'yank
   ;; embark
   "C-."				#'embark-act
   "C-;"				#'embark-dwim
