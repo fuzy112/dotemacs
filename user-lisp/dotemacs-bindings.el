@@ -252,6 +252,8 @@
   "l"		#'downcase-dwim
   "u"		#'upcase-dwim
   "C-S-d"	#'copy-from-above-command
+  "C-S-u"       #'up-list
+  "<delete>"    #'kill-word
   ;; tempel
   "+"		#'tempel-complete
   "*"		#'tempel-insert
@@ -269,7 +271,6 @@
   "<f5>"			#'compile
   "C-S-d"			#'duplicate-dwim
   "C-z"				#'zap-up-to-char
-  "C-M-S-u"                     #'up-list
   "<Copy>"                      #'kill-ring-save
   "<Cut>"			#'kill-region
   "<Paste>"                     #'yank
