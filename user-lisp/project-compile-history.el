@@ -74,10 +74,11 @@ also set the variable's `history-length' property to the value of
 (defun pch:read-command (command)
   (let ((hist-var (pch:variable (project-current))))
     (prog1
-	(read-shell-command "Compile command: " command
-			    (if (equal (car (symbol-value hist-var)) command)
-				(cons hist-var 1)
-			      hist-var))
+	(let ((history-delete-duplicates t))
+	  (read-shell-command "Compile command: " command
+			      (if (equal (car (symbol-value hist-var)) command)
+				  (cons hist-var 1)
+				hist-var)))
       (setq pch:modified t)
       (pch:-schedule-save))))
 
@@ -134,8 +135,7 @@ also set the variable's `history-length' property to the value of
        (default-directory (project-root project))
        (hist-var (pch:variable project))
        (compile-command (or (car-safe (symbol-value hist-var)) compile-command))
-       ((symbol-function #'compilation-read-command)
-	#'pch:read-command))
+       ((symbol-function #'compilation-read-command) #'pch:read-command))
     (apply args)))
 
 (defvar pch:-watch-descriptor nil)
