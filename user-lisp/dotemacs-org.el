@@ -31,8 +31,8 @@
 (after-load! org
   (setopt org-modern-table nil)
   (add-hook 'org-mode-hook #'org-modern-mode)
-  (setopt valign-fancy-bar t)
-  (add-hook 'org-mode-hook #'valign-mode)
+  ;; (setopt valign-fancy-bar t)
+  ;; (add-hook 'org-mode-hook #'valign-mode)
   (add-hook 'org-mode-hook #'visual-line-mode)
   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
 
