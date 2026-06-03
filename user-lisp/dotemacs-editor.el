@@ -273,7 +273,7 @@ BEG and END specify the region boundaries."
   ;; (i.e., point is at whitespace until line end), change the case of
   ;; the previous word instead of the next word.
   (advice-add cmd :interactive-only
-              (lambda (arg)
+              (lambda (_arg)
                 (interactive
                  (list (if current-prefix-arg
                            (prefix-numeric-value current-prefix-arg)
