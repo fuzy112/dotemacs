@@ -240,6 +240,12 @@
 (after-load! vundo
   (setopt vundo-glyph-alist vundo-unicode-symbols))
 
+(autoload 'vundo--popup-advice "vundo-popup")
+(setq! vundo-popup-mode t)
+(setq! vundo-popup-commands '(undo undo-only undo-redo))
+(dolist (cmd vundo-popup-commands)
+  (advice-add cmd :after #'vundo--popup-advice))
+
 ;;;; copyright
 
 (setq-default copyright-year-ranges t)
