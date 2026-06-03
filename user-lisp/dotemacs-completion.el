@@ -137,7 +137,9 @@
   (add-to-list 'vertico-multiform-commands '(switch-to-buffer unobtrusive)))
 
 (setq! vertico-multiform-commands
-       '((switch-to-buffer unobtrusive)))
+       '((switch-to-buffer unobtrusive)
+         (man grid)
+         (info-display-manual grid)))
 
 (setq! vertico-multiform-categories
        '((embark-keybinding grid)
