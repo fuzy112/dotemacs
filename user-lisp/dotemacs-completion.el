@@ -133,6 +133,16 @@
     "C-q"   #'vertico-quick-insert
     "M-q"   #'vertico-quick-exit))
 
+(after-load! vertico-multiform
+  (add-to-list 'vertico-multiform-commands '(switch-to-buffer unobtrusive)))
+
+(setq! vertico-multiform-commands
+       '((switch-to-buffer unobtrusive)))
+
+(setq! vertico-multiform-categories
+       '((embark-keybinding grid)
+         (jinx grid (vertico-grid-annotate . 20) (vertico-count . 4))))
+
 ;;;; marginalia
 
 (autoload 'marginalia--minibuffer-setup "marginalia")
@@ -326,9 +336,6 @@ value for USE-OVERLAYS."
   (keymap-set embark-bookmark-map "W" '+embark/eww-open-bookmark)
   (keymap-set embark-bookmark-map "u" '+embark/browse-url-open-bookmark)
   (keymap-set embark-region-map "[" '+embark/apply-ansi-color))
-
-(after-load! (:and embark vertico-multiform)
-  (add-to-list 'vertico-multiform-categories '(embark-keybinding grid)))
 
 ;;;; consult
 

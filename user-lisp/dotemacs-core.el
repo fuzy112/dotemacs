@@ -22,6 +22,12 @@
 ;;; Commentary:
 ;;; Code:
 
+(defmacro setq! (sym val)
+  (cl-assert (symbolp sym))
+  `(let (_)
+     (defvar ,sym)
+     (setq ,sym ,val)))
+
 (defmacro delq! (elt place)
   "Delete members of the list stored in PLACE which are `eq' to ELT.
 
