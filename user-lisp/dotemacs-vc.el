@@ -206,6 +206,7 @@ new record is started."
           (cond ((version<= "31" emacs-version) t)
                 ((fboundp 'make-thread) 'thread)
                 (t nil)))
+  (setopt diff-hl-disable-on-remote t)
   (add-hook 'diff-hl-margin-mode-hook #'diff-hl-margin-ensure-visible))
 
 (define-advice diff-hl-margin-ensure-visible (:override () auto-width)
