@@ -74,6 +74,7 @@
   "a"     #'ffap
   "r"     #'ff-find-related-file
   "R"     #'consult-recent-file
+  "C-r"   #'recentf
   "n"     #'rename-visited-file
   "b"     #'backup-list-backups)
 
