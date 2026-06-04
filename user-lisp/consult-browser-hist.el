@@ -51,17 +51,27 @@
                  (float :tag "Ratio in the window")))
 
 (defun cbh--format (item)
-  (let ((cand (concat (truncate-string-to-width
-                       (cdr item)
-                       (if (floatp cbh-title-max-width)
-                           (floor (* .4 (window-width (minibuffer-window))))
-                         cbh-title-max-width)
-                       nil nil :truncate :ellipsis-text-property)
-                      (propertize (concat "\t" (car item)) 'invisible t))))
+  (pcase-let* ((`(,url . ,desc) item)
+               (url (org-link-escape url))
+               (desc (and (org-string-nw-p desc)
+                          (replace-regexp-in-string
+                           "\\(]\\)\\(]\\)"
+                           (concat "\\1" (string ?\x200B) "\\2")
+                           (replace-regexp-in-string "]\\'"
+                                                     (concat "\\&" (string ?\x200B))
+                                                     (org-trim desc)))))
+               (cand (concat (propertize (concat "[[" url "][") 'invisible t)
+                             (truncate-string-to-width
+                              desc
+                              (if (floatp cbh-title-max-width)
+                                  ;; FIXME: use (selected-window)?
+                                  (floor (* cbh-title-max-width (window-width (minibuffer-window))))
+                                cbh-title-max-width)
+                              nil nil "..." t)
+                             (propertize "]]" 'invisible t))))
     (add-text-properties 0 (length cand)
-                         `( cbh-url ,(car item)
-                            cbh-title ,(cdr item)
-                            face cbh-title)
+                         `( cbh-url ,url
+                            cbh-title ,desc)
                          cand)
     cand))
 
@@ -104,6 +114,14 @@
    (consult--async-map #'cbh--format)
    (consult--async-highlight)))
 
+(defun cbh--browse-url (target)
+  (when-let* ((url (get-text-property 0 'cbh-url target)))
+    (browse-url url)))
+
+(defun cbh--eww-browse-url (target)
+  (when-let* ((url (get-text-property 0 'cbh-url target)))
+    (eww-browse-url url)))
+
 (defun cbh-source-make (name browser narrow-key &optional db-path db-fields)
   (when db-path
     (setf (alist-get browser browser-hist-db-paths) db-path))
@@ -111,9 +129,8 @@
     (setf (alist-get browser browser-hist--db-fields) db-fields))
   (list :name name
         :narrow narrow-key
-        :category 'consult-browser-hist
-        :action (lambda (selected)
-                  (browse-url (get-text-property 0 'cbh-url selected)))
+        :category 'cbh-url
+        :action #'cbh--browse-url
         :enabled (lambda ()
                    (and-let* ((path (alist-get browser browser-hist-db-paths)))
                      (file-expand-wildcards (substitute-in-file-name path))))
@@ -161,6 +178,13 @@
    :sort nil
    :require-match t
    :history 'cbh-history))
+
+(with-eval-after-load 'embark
+  (defvar-keymap embark-consult-browser-hist-url-map
+    :parent embark-general-map
+    "e" #'cbh--eww-browse-url)
+  (setf (alist-get 'cbh-url embark-keymap-alist) 'embark-consult-browser-hist-url-map)
+  (setf (alist-get 'cbh-url embark-default-action-overrides) #'cbh--browse-url))
 
 (provide 'consult-browser-hist)
 
