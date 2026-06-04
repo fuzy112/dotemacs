@@ -120,7 +120,7 @@
   (cl-pushnew "--show-signature" (get 'magit-log-mode 'magit-log-default-arguments)))
 
 (after-load! magit-process
-  (setq-default magit-tramp-pipe-stty-settings 'pty)
+  (setq! magit-tramp-pipe-stty-settings 'pty)
   (advice-add #'magit-maybe-start-credential-cache-daemon :after '+magit--ccdp-no-query))
 
 (declare-function magit-staged-files "ext:magit-commit.el")

@@ -334,7 +334,7 @@ value for USE-OVERLAYS."
              #'ansi-color-apply-text-property-face)))
       (ansi-color-apply-on-region beg end))))
 
-(setq prefix-help-command #'embark-prefix-help-command)
+(setq! prefix-help-command #'embark-prefix-help-command)
 
 (after-load! embark
   (setopt embark-help-key "C-h")
@@ -415,7 +415,7 @@ cycling bindings, just what's registered in
      :sort t
      :lookup (lambda (selected &rest _) (substitute-in-file-name selected)))))
 
-(setq read-file-name-function #'+consult--read-file-name-function)
+(setq! read-file-name-function #'+consult--read-file-name-function)
 
 ;; Add preview for `read-buffer'.
 
@@ -434,7 +434,7 @@ cycling bindings, just what's registered in
    :sort          t
    :lookup        (lambda (selected &rest _) selected)))
 
-(setopt read-buffer-function #'+consult--read-buffer-function)
+(setq! read-buffer-function #'+consult--read-buffer-function)
 
 (defun +project-prompt-project-dir (&optional prompt predicate require-known)
   "Prompt the user for a directory that is one of the known project roots.
@@ -546,7 +546,7 @@ except that it specifies `identity' as the `display-sort-function' and
   (setopt consult-preview-key "M-.")
   (setopt consult-narrow-key "<")
   (setopt consult-widen-key ">")
-  (setq-default consult--regexp-compiler #'+consult--orderless-regexp-compiler)
+  (setq! consult--regexp-compiler #'+consult--orderless-regexp-compiler)
 
   ;; consult-customize is a macro and is not autoloaded
   (with-no-compile!
