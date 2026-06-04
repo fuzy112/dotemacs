@@ -158,6 +158,7 @@
   (alist-delq! marginalia-command-categories recentf-open)
 
   (define-completion-category 'recentf '(file)
+    "Completion category for `recentf'."
     :completion-styles '(flex))
 
   (define-advice marginalia--annotator (:override (cat) cat-inherit)
