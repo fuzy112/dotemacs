@@ -105,13 +105,6 @@
 (if (eq (framep-on-display) t)
     (require 'xt-mouse))
 
-;;;; clipetty
-
-(add-hook 'tty-setup-hook #'clipetty-mode)
-(after-load! clipetty
-  (global-clipetty-mode))
-(if (eq (framep-on-display) t) (require 'clipetty))
-
 ;;;; Characters
 
 (setopt cjk-ambiguous-chars-are-wide nil)
