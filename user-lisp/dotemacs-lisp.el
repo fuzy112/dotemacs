@@ -59,6 +59,13 @@
 (keymap-set emacs-lisp-mode-map "C-x C-M-x" #'compile-defun)
 (keymap-set lisp-interaction-mode-map "C-c C-j" #'eval-print-last-sexp)
 
+(defun async-byte-compile-this-file ()
+  (interactive)
+  (when-let* ((file (buffer-file-name)))
+    (async-byte-compile-file file)))
+
+(keymap-set emacs-lisp-mode-map "C-c C-f" #'async-byte-compile-this-file)
+
 (after-load! find-func
   (setopt find-library-include-other-files nil))
 
