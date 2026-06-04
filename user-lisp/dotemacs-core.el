@@ -22,6 +22,8 @@
 ;;; Commentary:
 ;;; Code:
 
+(eval-when-compile (require 'cl-lib))
+
 (defmacro setq! (sym val)
   (cl-assert (symbolp sym))
   `(let (_)
