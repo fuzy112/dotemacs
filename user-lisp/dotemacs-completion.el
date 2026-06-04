@@ -602,7 +602,7 @@ except that it specifies `identity' as the `display-sort-function' and
   (setopt corfu-prescient-enable-filtering nil)
   (corfu-prescient-mode))
 
-(setq completion-preview-sort-function #'prescient-completion-sort)
+(setq! completion-preview-sort-function #'prescient-completion-sort)
 
 (provide 'dotemacs-completion)
 ;;; dotemacs-completion.el ends here

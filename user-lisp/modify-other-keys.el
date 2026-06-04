@@ -18,8 +18,8 @@
 ;;; Commentary:
 
 ;; This maps XTERMINAL/CSI escape sequences in the form
-;; "CSI 27 ; mod ; base ~" to appropriate Emacs key representations See:
-;; https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-Extended-keyboard-protocol
+;; "CSI 27 ; mod ; base ~" to appropriate Emacs key representations.
+;; See <https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-Extended-keyboard-protocol>.
 
 ;;; Code:
 
@@ -79,7 +79,7 @@ This allows C-S-1 to be interpreted as C-!, M-S-4 as M-$, etc."
     (with-selected-frame (car (frames-on-display-list terminal))
       (mok--setup-input-decode-map)
       (mok--translate-shifted-digits)
-      ;; TODO: use xterm--query to query whether kkp is support
+      ;; TODO: use xterm--query to query whether kkp is supported
       (send-string-to-terminal "\e[>4;2m")
       ;; (send-string-to-terminal "\e[>4;1f")
       ;; (push "\e[>4f" (terminal-parameter terminal 'tty-mode-reset-strings))

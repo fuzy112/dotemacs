@@ -63,6 +63,7 @@
 
 (declare-function cape-interactive "ext:cape")
 (defvar cape--history-properties)
+(defvar eat--line-input-ring)
 (defun cape-eat-line-history (&optional interactive)
   (interactive (list t))
   (if interactive
