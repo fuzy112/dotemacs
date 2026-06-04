@@ -383,19 +383,17 @@ Output only the commit message, with no extra explanation or surrounding markup.
 (declare-function magit-run-git-with-editor "ext:magit-process.el")
 
 ;;;###autoload
-(defun +gptel-commit-staged (&optional args)
+(defun +gptel-commit-staged (rationale &optional args)
   "Generate a commit message for staged changes using LLM, then open for editing.
 
 Queries LLM with the current git status, staged diff, and recent git log
 to generate an appropriate commit message. Then opens the generated message
 in the git editor for final editing before committing."
-  (interactive (list (magit-commit-arguments)))
+  (interactive (list nil (magit-commit-arguments)))
   (with-temp-buffer
     (let ((gptel-backend gptel-backend)
 	  (gptel-model gptel-model)
 	  (dir default-directory)
-	  (extra-prompt (and current-prefix-arg
-			     (read-string "Extra prompt: " nil 'gptel--minibuffer-prompt-history)))
 	  gptel-use-context
 	  gptel-use-tools)
       (insert "<git-status>")
@@ -410,9 +408,9 @@ in the git editor for final editing before committing."
       (unless (zerop (magit-process-git t "log" "-n10" "--stat"))
 	(error "Failed to run git log"))
       (insert "</git-log>\n")
-      (when extra-prompt
+      (when rationale
 	(insert "<user-prompt>")
-	(insert extra-prompt)
+	(insert rationale)
 	(insert "\n</user-prompt>\n"))
       (gptel-request
 	  (buffer-string)
@@ -423,10 +421,18 @@ in the git editor for final editing before committing."
 			  (apply #'magit-run-git-with-editor "commit" "-m" response "--edit" args))
 		      (message "Failed to query LLM")))))))
 
+(defun +gptel-commit-staged-with-rationale (&optional args)
+  (interactive (list (magit-commit-arguments)))
+  (+gptel-commit-staged
+   (read-string "Rationale: ")
+   args))
+
 ;;;###autoload
 (with-eval-after-load 'magit-commit
   (transient-append-suffix 'magit-commit "c"
-    '("L" "Commit with AI-generated message" +gptel-commit-staged)))
+    '("g" "Commit with message" +gptel-commit-staged))
+  (transient-append-suffix 'magit-commit "g"
+    '("r" "Commit with rationale" +gptel-commit-staged-with-rationale)))
 
 (defvar log-edit-listfun)
 (defvar log-edit-diff-function)
