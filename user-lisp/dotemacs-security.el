@@ -74,19 +74,19 @@ windows."
 				                 procname pid
 				                 (buffer-name procbuf))
 		                       (format "%s (%s)" procname pid))
-		                     p)))))))
-      (cl-loop for w in (window-list)
-               for b = (window-buffer w)
-               for p = (get-buffer-process b)
-               when p
-               collect p into processes
-               finally
-               return (if (length< processes 2)
-                          (car processes)
-                        (completing-read
-                         "Process: "
-                         (delq nil (mapcar #'procitem processes))
-                         nil :require-match))))))
+		                     p))))))
+        (cl-loop for w in (window-list)
+                 for b = (window-buffer w)
+                 for p = (get-buffer-process b)
+                 when p
+                 collect p into processes
+                 finally
+                 return (if (length< processes 2)
+                            (car processes)
+                          (completing-read
+                           "Process: "
+                           (delq nil (mapcar #'procitem processes))
+                           nil :require-match)))))))
   (unless process
     (user-error "No process"))
   (process-send-string process
