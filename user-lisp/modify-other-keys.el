@@ -48,7 +48,7 @@
            do (mok--define-key base (char-to-string base)))
 
   ;; Special whitespace characters
-  (cl-loop for (key . base) in '(("DEL" . ?\d)
+  (cl-loop for (key . base) in '(("<backspace>" . ?\d)
                                  ("<return>" . ?\r)
                                  ("<tab>" . ?\t)
                                  ("SPC" . ?\s)
