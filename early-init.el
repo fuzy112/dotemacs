@@ -49,7 +49,7 @@
 
 (setq current-time-list nil)
 
-(setq native-comp-async-on-battery-power nil)
+(setq-default native-comp-async-on-battery-power nil)
 
 (setq use-file-dialog    nil
       use-dialog-box     nil
