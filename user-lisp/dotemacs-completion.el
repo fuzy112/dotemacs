@@ -159,7 +159,7 @@
 
   (define-completion-category 'recentf '(file)
     "Completion category for `recentf'."
-    :completion-styles '(flex))
+    :styles '(flex))
 
   (define-advice marginalia--annotator (:override (cat) cat-inherit)
     "Return annotation function for category CAT."
