@@ -114,10 +114,10 @@
   (setopt magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 (after-load! magit-status
-  (cl-pushnew "--show-signature" (get 'magit-status-mode 'magit-log-default-arguments)))
+  (cl-pushnew "--show-signature" (get 'magit-status-mode 'magit-log-default-arguments) :test #'string=))
 
 (after-load! magit-log
-  (cl-pushnew "--show-signature" (get 'magit-log-mode 'magit-log-default-arguments)))
+  (cl-pushnew "--show-signature" (get 'magit-log-mode 'magit-log-default-arguments) :test #'string=))
 
 (after-load! magit-process
   (setq! magit-tramp-pipe-stty-settings 'pty)
