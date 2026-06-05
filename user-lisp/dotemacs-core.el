@@ -25,6 +25,7 @@
 (eval-when-compile (require 'cl-lib))
 
 (defmacro setq! (sym val)
+  "Set SYM to VAL, first ensuring SYM is defined as a special variable."
   (cl-assert (symbolp sym))
   `(let (_)
      (defvar ,sym)
