@@ -430,9 +430,9 @@ in the git editor for final editing before committing."
 ;;;###autoload
 (with-eval-after-load 'magit-commit
   (transient-append-suffix 'magit-commit "c"
-    '("g" "Commit with message" +gptel-commit-staged))
+    '("g" "Generate message" +gptel-commit-staged))
   (transient-append-suffix 'magit-commit "g"
-    '("r" "Commit with rationale" +gptel-commit-staged-with-rationale)))
+    '("r" "Generate with rationale" +gptel-commit-staged-with-rationale)))
 
 (defvar log-edit-listfun)
 (defvar log-edit-diff-function)
