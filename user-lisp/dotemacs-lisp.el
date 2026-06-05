@@ -72,10 +72,8 @@
 ;;;; libraries
 (after-load! (:or dash elisp-mode)
   (global-dash-fontify-mode))
-(after-load! info-look
+(after-load! (:and dash info-look)
   (dash-register-info-lookup))
-(after-load! (:and anaphora elisp-mode)
-  (anaphora-install-font-lock-keywords))
 (after-load! cond-let
   (font-lock-add-keywords 'emacs-lisp-mode
                           cond-let-font-lock-keywords t))
