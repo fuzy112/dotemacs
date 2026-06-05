@@ -193,6 +193,7 @@ SPEC could be
      `(after-load-1! ,unquoted ,@body))
     ((or (pred stringp) (pred symbolp))
      `(with-eval-after-load ,(macroexp-quote spec)
+        (eval-when-compile (require ,(macroexp-quote spec)))
         ,@body))
     (`(:or . ,sub-specs)
      (let ((lambda-var (make-symbol "body-")))
@@ -213,7 +214,7 @@ SPEC could be
   "Similar to `after-load-1!', but suppress warnings in BODY.
 See `after-load-1!' for SPEC."
   (declare (indent 1))
-  `(after-load-1! ,spec (with-no-warnings (record-time! ,spec ,@body))))
+  `(after-load-1! ,spec (record-time! ,spec ,@body)))
 
 ;;;###autoload
 (defun run-after-init (func)
