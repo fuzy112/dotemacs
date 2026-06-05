@@ -380,7 +380,8 @@ cycling bindings, just what's registered in
     "M-r" #'consult-history))
 
 (after-load! consult
-  (add-to-list 'consult-mode-histories '(eat-mode eat--line-input-ring eat--line-input-ring-index beginning-of-line))
+  (alist-setq! consult-mode-histories
+    eat-mode '(eat--line-input-ring eat--line-input-ring-index beginning-of-line))
   (add-hook 'consult-after-jump-hook #'pulse-momentary-highlight-one-line))
 
 (setopt register-preview-delay 0.5)
