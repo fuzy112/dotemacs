@@ -113,7 +113,7 @@ To use this protocol, add the following bookmarklet to your browser:
       (setq dest (directory-file-name dest))
       (message "Cloning %s into %s..." clone-url dest)
       (let ((exit (call-process "git" nil "*org-protocol-git-clone*" t
-                                "clone" "--" clone-url dest)))
+                                "clone" "--" clone-url (expand-file-name dest))))
         (unless (zerop exit)
           (pop-to-buffer "*org-protocol-git-clone*")
           (error "Git clone failed (exit %d)" exit))
