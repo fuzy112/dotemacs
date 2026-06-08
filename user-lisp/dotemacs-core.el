@@ -24,12 +24,19 @@
 
 (eval-when-compile (require 'cl-lib))
 
-(defmacro setq! (sym val)
-  "Set SYM to VAL, first ensuring SYM is defined as a special variable."
-  (cl-assert (symbolp sym))
-  `(let (_)
-     (defvar ,sym)
-     (setq ,sym ,val)))
+(defmacro setq! (&rest args)
+  "Set variables to values, first ensuring each is defined as special.
+Works like `setq' but also calls `defvar' for each variable."
+  (declare (indent 1))
+  (when (oddp (length args))
+    (error "setq!: odd number of arguments"))
+  (let ((forms))
+    (while args
+      (let ((sym (pop args))
+            (val (pop args)))
+        (push `(defvar ,sym) forms)
+        (push `(setq ,sym ,val) forms)))
+    `(let (_) ,@(nreverse forms))))
 
 (defmacro delq! (elt place)
   "Delete members of the list stored in PLACE which are `eq' to ELT.
