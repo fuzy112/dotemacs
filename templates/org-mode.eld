@@ -6,7 +6,8 @@ org-mode
 	"#+AUTHOR:   " user-full-name "  <" user-mail-address ">" n
 	"#+DATE:     " (current-time-string) n
 	":" n
-	"#+STARTUP:  fold" n)
+	"#+STARTUP:  fold" n
+	"#+STARTUP:  indent" n)
 
 (src "#+begin_src " (p "lang") n
      p n
