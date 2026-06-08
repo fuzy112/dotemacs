@@ -89,7 +89,12 @@
 
 (defun org-protocol-clone-repo (info)
   "Clone the git repository at :url and register it in `org-protocol-project-alist'.
-INFO is a property list from the org-protocol request."
+INFO is a property list from the org-protocol request.
+
+To use this protocol, add the following bookmarklet to your browser:
+
+    javascript:location.href='org-protocol://clone-repo?'+new URLSearchParams({url:location.href});void(0);
+"
   (let* ((parts (org-protocol-parse-parameters info))
          (url (plist-get parts :url)))
     (unless url
