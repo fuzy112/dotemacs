@@ -359,6 +359,10 @@ value for USE-OVERLAYS."
              #'ansi-color-apply-text-property-face)))
       (ansi-color-apply-on-region beg end))))
 
+(defun +embark/search-web (query)
+  (interactive "sQuery: ")
+  (browse-url (format "https://kagi.com/search?q=%s" query)))
+
 (setq! prefix-help-command #'embark-prefix-help-command)
 
 (defun embark-which-key-indicator ()
@@ -406,6 +410,7 @@ targets."
   (alist-setq! embark-exporters-alist
     consult-location #'embark-consult-export-location-grep)
   (keymap-set embark-general-map "/" #'embark-history-remove)
+  (keymap-set embark-general-map "W" `("Search web" . ,#'+embark/search-web))
   (keymap-set embark-file-map "#" '+embark/find-file-as-root)
   (keymap-set embark-file-map "r" 'find-file-read-only)
   (keymap-set embark-file-map "V" 'view-file)
