@@ -239,6 +239,24 @@ available at compile time."
   (declare (indent 0))
   `(eval ',(macroexp-progn body) ,(macroexp-quote lexical-binding)))
 
+(defun add-hook-before (hook location function &optional local)
+  "Add FUNCTION to HOOK before LOCATION.
+HOOK is a symbol, a hook variable.
+LOCATION is an existing function in HOOK; the new function is added just before it.
+FUNCTION is the function to add.
+If optional LOCAL is non-nil, make the hook buffer-local first.
+If FUNCTION is already in HOOK, do nothing.
+Return the new hook list."
+  (unless (boundp hook) (set hook nil))
+  (when local (make-local-variable hook))
+  (unless (memq function (symbol-value hook))
+    (if-let* ((val (set hook (copy-sequence (symbol-value hook))))
+              (x (memq location val)))
+        (setf (car x) function
+              (cdr x) (cons location (cdr x)))
+      (push function (cons function (symbol-value hook)))))
+  (symbol-value hook))
+
 (defvar dotemacs--project-hooks nil)
 
 (defun dotemacs--project-hook-function (hook &rest args)
