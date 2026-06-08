@@ -157,12 +157,6 @@
 
   (alist-delq! marginalia-command-categories recentf-open)
 
-  (define-completion-category 'recentf '(file)
-    "Completion category for `recentf'."
-    :styles '(flex)
-    :cycle-sort-function #'identity
-    :display-sort-function #'identity)
-
   (define-advice marginalia--annotator (:override (cat) cat-inherit)
     "Return annotation function for category CAT."
     (pcase (car (alist-get cat marginalia-annotators))
@@ -171,6 +165,34 @@
       ('nil (cl-loop for p in (get cat 'completion-category-parents)
                      thereis (marginalia--annotator p)))
       (fun fun))))
+
+;; Marginalia and embark expects recentf to be files.
+(define-completion-category 'recentf '(file)
+  "Completion category for `recentf'."
+  :styles '(flex)
+  :cycle-sort-function #'identity
+  :display-sort-function #'identity)
+
+;; The following completion categories are used by marginalia and are
+;; not built-in to Emacs.  Let them inherit from built-in categories.
+
+(define-completion-category 'symbol '(symbol-help)
+  "Completion category for symbols.")
+
+(define-completion-category 'function '(symbol)
+  "Completion category for functions.")
+
+(define-completion-category 'command '(function)
+  "Completion category for commands.")
+
+(define-completion-category 'variable '(symbol)
+  "Completion category for variables.")
+
+(define-completion-category 'minor-mode '(function)
+  "Completion category for minor modes.")
+
+(define-completion-category 'face '(symbol)
+  "Completion category for Faces.")
 
 ;;;; cursor-intangible
 
