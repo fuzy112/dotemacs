@@ -121,5 +121,11 @@ font-locking and indentation."
    "https://yhetil.org/emacs"
    query include-all))
 
+;;;; info
+
+(after-load! info
+  (keymap-set Info-mode-map "<mouse-8>" #'Info-history-back)
+  (keymap-set Info-mode-map "<mouse-9>" #'Info-history-forward))
+
 (provide 'dotemacs-help)
 ;;; dotemacs-help.el ends here
