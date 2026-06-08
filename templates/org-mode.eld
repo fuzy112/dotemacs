@@ -5,9 +5,6 @@ org-mode
 	"#+TITLE:    " (p "title") n
 	"#+AUTHOR:   " user-full-name "  <" user-mail-address ">" n
 	"#+DATE:     " (current-time-string) n
-	"#+FILETAGS: :" (string-join
-			 (completing-read-multiple "File tags: " (org-global-tags-completion-table))
-			 ":")
 	":" n
 	"#+STARTUP:  fold" n)
 
