@@ -463,7 +463,7 @@ not used, but is required by the hook."
                (side . bottom)))
 
 (add-to-list 'display-buffer-alist
-             '("\\` ?\\*\\(Org \\(Select\\|Note\\)\\|Agenda Commands\\)\\*\\'" ; the `org-capture' key selection, `org-add-log-note', and agenda dispatcher
+             '("\\` ?\\*\\(Org \\(Select\\|Note\\|Help\\)\\|Agenda Commands\\)\\*\\'" ; the `org-capture' key selection, `org-add-log-note', and agenda dispatcher
                (display-buffer-in-side-window)
                (dedicated . t)
                (side . bottom)
