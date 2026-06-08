@@ -359,6 +359,16 @@ value for USE-OVERLAYS."
              #'ansi-color-apply-text-property-face)))
       (ansi-color-apply-on-region beg end))))
 
+(defun embark-inject (str)
+  "Replace the contents of the active minibuffer with STR.
+If there is no active minibuffer, signal an error."
+  (let ((win (active-minibuffer-window)))
+    (unless win
+      (user-error "No active minibuffer"))
+    (select-window win)
+    (delete-minibuffer-contents)
+    (insert str)))
+
 (defun +embark/search-web (query)
   (interactive "sQuery: ")
   (browse-url (format "https://kagi.com/search?q=%s" query)))
@@ -450,6 +460,7 @@ targets."
 
   (alist-setq! embark-exporters-alist
     consult-location #'embark-consult-export-location-grep)
+  (keymap-set embark-general-map "J" #'embark-inject)
   (keymap-set embark-general-map "/" #'embark-history-remove)
   (keymap-set embark-general-map "W" `("Search web" . ,#'+embark/search-web))
   (keymap-set embark-file-map "#" '+embark/find-file-as-root)
