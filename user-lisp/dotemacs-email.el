@@ -32,13 +32,6 @@
   (add-hook 'completion-at-point-functions #'message-ecomplete-capf nil t))
 (add-hook 'message-mode-hook #'+message-ecompletion-capf-setup)
 
-(after-load! mm-decode
-  (setopt mm-discouraged-alternatives '("text/html" "text/richtext")))
-
-(after-load! gnus-art
-  (require 'gnus-diff))
-
-
 ;;;; telega
 
 (after-load! telega
