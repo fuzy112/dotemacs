@@ -353,10 +353,9 @@ value for USE-OVERLAYS."
       (save-restriction
         (narrow-to-region beg end)
         (xterm-color-colorize-buffer use-overlays))
-    (eval-and-compile (require 'ansi-color))
-    (let ((ansi-color-apply-face-function
-           (if use-overlays #'ansi-color-apply-overlay-face
-             #'ansi-color-apply-text-property-face)))
+    (dlet ((ansi-color-apply-face-function
+            (if use-overlays #'ansi-color-apply-overlay-face
+              #'ansi-color-apply-text-property-face)))
       (ansi-color-apply-on-region beg end))))
 
 (defun embark-inject (str)
