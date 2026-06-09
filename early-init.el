@@ -91,7 +91,7 @@
 
 (setq redisplay-skip-fontification-on-input t)
 
-(setq read-process-output-max (* 4 1024 1024))
+(setq read-process-output-max 1048576)
 
 ;;;; jkr
 
