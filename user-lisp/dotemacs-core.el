@@ -248,12 +248,11 @@ available at compile time."
 
 (defun add-hook-before (hook location function &optional local)
   "Add FUNCTION to HOOK before LOCATION.
-HOOK is a symbol, a hook variable.
-LOCATION is an existing function in HOOK; the new function is added just before it.
-FUNCTION is the function to add.
-If optional LOCAL is non-nil, make the hook buffer-local first.
-If FUNCTION is already in HOOK, do nothing.
-Return the new hook list."
+HOOK is a symbol, a hook variable. LOCATION is an existing function in
+HOOK.  The new function is added just before it. FUNCTION is the
+function to add.  If optional LOCAL is non-nil, make the hook
+buffer-local first.  If FUNCTION is already in HOOK, do nothing.  Return
+the new hook list."
   (unless (boundp hook) (set hook nil))
   (when local (make-local-variable hook))
   (unless (memq function (symbol-value hook))
