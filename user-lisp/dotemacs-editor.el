@@ -18,6 +18,14 @@
 
 (eval-when-compile (require 'dotemacs-core))
 
+;;;; kill commands
+
+(setopt kill-do-not-save-duplicates t
+        kill-append-merge-undo      t
+        yank-pop-change-selection   t
+        kill-region-dwim            nil
+        kill-whole-line             t)
+
 ;;;; indent-aux
 
 (kill-ring-deindent-mode)
