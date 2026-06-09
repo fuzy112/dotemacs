@@ -209,14 +209,14 @@ Only immediate subdirectories are examined; nested directories are ignored."
       (when (file-directory-p child)
         (if (file-directory-p (expand-file-name ".git" child))
             (condition-case err
-                (let ((remote (car (process-lines "git" "-C" child
-                                                  "remote" "get-url" "origin")))
-                      (web-url (org-protocol--normalize-git-url remote))
-                      (rewrites (org-protocol--guess-rewrites web-url))
-                      (entry (list web-url
-                                   :base-url web-url
-                                   :working-directory (file-name-as-directory child)
-                                   :rewrites rewrites)))
+                (let* ((remote (car (process-lines "git" "-C" child
+                                                   "remote" "get-url" "origin")))
+                       (web-url (org-protocol--normalize-git-url remote))
+                       (rewrites (org-protocol--guess-rewrites web-url))
+                       (entry (list web-url
+                                    :base-url web-url
+                                    :working-directory (file-name-as-directory child)
+                                    :rewrites rewrites)))
                   (setq org-protocol-project-alist
                         (cl-remove web-url org-protocol-project-alist
                                    :key (lambda (x) (plist-get (cdr x) :base-url))
