@@ -368,6 +368,11 @@ If there is no active minibuffer, signal an error."
     (delete-minibuffer-contents)
     (insert str)))
 
+(defun embark-inject-variable-value (var)
+  "Replace the minibuffer contents with the value of VAR."
+  (interactive "SVariable: ")
+  (embark-inject (string-trim (pp-to-string (symbol-value var)))))
+
 (defun +embark/search-web (query)
   (interactive "sQuery: ")
   (browse-url (format "https://kagi.com/search?q=%s" query)))
@@ -467,7 +472,8 @@ targets."
   (keymap-set embark-file-map "V" 'view-file)
   (keymap-set embark-bookmark-map "W" '+embark/eww-open-bookmark)
   (keymap-set embark-bookmark-map "u" '+embark/browse-url-open-bookmark)
-  (keymap-set embark-region-map "[" '+embark/apply-ansi-color))
+  (keymap-set embark-region-map "[" '+embark/apply-ansi-color)
+  (keymap-set embark-variable-map "I" #'embark-inject-variable-value))
 
 (defvar embark-keymap-alist)
 
