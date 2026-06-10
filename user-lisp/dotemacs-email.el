@@ -32,9 +32,6 @@
   (add-hook 'completion-at-point-functions #'message-ecomplete-capf nil t))
 (add-hook 'message-mode-hook #'+message-ecompletion-capf-setup)
 
-(after-load! mailcap
-  (setopt mailcap-user-mime-data '(("xdg-open %s" ".*" nil))))
-
 ;;;; telega
 
 (after-load! telega
