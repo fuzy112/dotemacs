@@ -78,7 +78,8 @@ also set the variable's `history-length' property to the value of
 	  (read-shell-command "Compile command: " command
 			      (if (equal (car (symbol-value hist-var)) command)
 				  (cons hist-var 1)
-				hist-var)))
+				hist-var)
+			      ""))
       (setq pch:modified t)
       (pch:-schedule-save))))
 
