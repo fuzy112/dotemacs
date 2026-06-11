@@ -87,6 +87,8 @@
   (autoload 'org--protocol-detect-protocol-server "org-protocol")
   (advice-add 'server-visit-files :around #'org--protocol-detect-protocol-server))
 
+(defvar org-protocol-project-alist)
+
 (defun org-protocol-clone-repo (info)
   "Clone the git repository at :url and register it in `org-protocol-project-alist'.
 INFO is a property list from the org-protocol request.
