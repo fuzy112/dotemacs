@@ -100,8 +100,8 @@ To use this protocol, add the following bookmarklet to your browser:
     (unless url
       (error "org-protocol-clone-repo: missing :url parameter"))
     (setq url (org-protocol-sanitize-uri url))
-    (let* ((web-url (replace-regexp-in-string "\\.git/*\\'" "" url))
-           (web-url (replace-regexp-in-string "/+\\'" "" web-url))
+    (let* ((web-url (replace-regexp-in-string "\\(//\\(?:github\\.com\\|gitlab\\.com\\|codeberg\\.org\\)/[^/]+/[^/]+\\)/.*\\'" "\\1" url))
+           (web-url (replace-regexp-in-string "\\.git\\'" "" web-url))
            (clone-url (concat web-url ".git"))
            (repo-name (file-name-nondirectory web-url))
            (default-dest (expand-file-name repo-name "~/src"))
