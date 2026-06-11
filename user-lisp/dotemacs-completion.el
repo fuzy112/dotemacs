@@ -143,7 +143,8 @@
 
 (setq! vertico-multiform-categories
        '((embark-keybinding grid)
-         (jinx grid (vertico-grid-annotate . 20) (vertico-count . 4))))
+         (jinx grid (vertico-grid-annotate . 20) (vertico-count . 4))
+         (info-manual grid)))
 
 ;;;; marginalia
 
@@ -152,7 +153,9 @@
 
 (after-load! marginalia
   (alist-setq! marginalia-prompt-categories
-    "\\<Log rev,s\\>" 'magit-rev)
+    "\\<Log rev,s\\>" 'magit-rev
+    ;; `consult-info' reads manual names without specifying category.
+    "\\<info manuals\\>" 'info-manual)
   (marginalia-mode)
 
   (alist-delq! marginalia-command-categories recentf-open)
