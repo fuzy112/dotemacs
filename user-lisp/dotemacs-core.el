@@ -27,7 +27,6 @@
 (defmacro setq! (&rest args)
   "Set variables to values, first ensuring each is defined as special.
 Works like `setq' but also calls `defvar' for each variable."
-  (declare (indent 1))
   (when (oddp (length args))
     (error "setq!: odd number of arguments"))
   (let ((forms))
