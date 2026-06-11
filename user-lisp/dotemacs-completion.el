@@ -125,24 +125,19 @@
     ;; vertico-repeat
     "M-P"   #'vertico-repeat-previous
     "M-N"   #'vertico-repeat-next
-    ;; vertico-directory
-    "RET"   #'vertico-directory-enter
-    "DEL"   #'vertico-directory-delete-char
-    "M-DEL" #'vertico-directory-delete-word
     ;; vertico-quick
     "C-q"   #'vertico-quick-insert
     "M-q"   #'vertico-quick-exit))
 
-(after-load! vertico-multiform
-  (add-to-list 'vertico-multiform-commands '(switch-to-buffer unobtrusive)))
-
 (setq! vertico-multiform-commands
        '((switch-to-buffer unobtrusive)
          (man grid)
-         (info-display-manual grid)))
+         (info-display-manual grid)
+         (dired-goto-file flat)))
 
 (setq! vertico-multiform-categories
-       '((embark-keybinding grid)
+       '((file (:keymap . vertico-directory-map))
+         (embark-keybinding grid)
          (jinx grid (vertico-grid-annotate . 20) (vertico-count . 4))
          (info-manual grid)))
 
