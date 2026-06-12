@@ -89,6 +89,21 @@
 
 (defvar org-protocol-project-alist)
 
+(defvar org-protocol-clone-repo-post-hook
+  (list #'org-protocol--remember-project
+        #'org-protocol--save-project-alist))
+
+(defun org-protocol--remember-project (entry)
+  (let* ((plist (cdr entry))
+         (base-url (plist-get plist :base-url))
+         (wdir (plist-get plist :working-directory))
+         (pr (project-current nil wdir)))
+    (project-remember-project pr)))
+
+(defun org-protocol--save-project-alist (_entry)
+  (customize-save-variable 'org-protocol-project-alist
+                           org-protocol-project-alist))
+
 (defun org-protocol-clone-repo (info)
   "Clone the git repository at :url and register it in `org-protocol-project-alist'.
 INFO is a property list from the org-protocol request.
@@ -139,8 +154,7 @@ To use this protocol, add the following bookmarklet to your browser:
                             :rewrites rewrites)))
           (setq org-protocol-project-alist
                 (cons entry org-protocol-project-alist))
-          (customize-save-variable 'org-protocol-project-alist
-                                   org-protocol-project-alist)
+          (run-hook-with-args 'org-protocol-clone-repo-post-hook entry)
           (message "Registered org-protocol project for %s" base-url)))))
   nil)
 
