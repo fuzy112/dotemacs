@@ -139,7 +139,8 @@
        '((file (:keymap . vertico-directory-map))
          (embark-keybinding grid)
          (jinx grid (vertico-grid-annotate . 20) (vertico-count . 4))
-         (info-manual grid)))
+         (info-manual grid)
+         (magit-rev grid)))
 
 ;;;; marginalia
 
