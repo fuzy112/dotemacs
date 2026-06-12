@@ -133,7 +133,8 @@
        '((switch-to-buffer unobtrusive)
          (man grid)
          (info-display-manual grid)
-         (dired-goto-file flat)))
+         (dired-goto-file flat)
+         (ibuffer-jump-to-buffer flat)))
 
 (setq! vertico-multiform-categories
        '((file (:keymap . vertico-directory-map))
