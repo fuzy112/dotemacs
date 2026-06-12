@@ -34,8 +34,10 @@
 
 (define-keymap :keymap help-map
   "H" #'+mail-to-help-gnu-emacs
-  "M" #'+gnus-read-ephemeral-emacs-search-group
-  "B" #'embark-bindings)
+  "G" #'+gnus-read-ephemeral-emacs-search-group
+  "B" #'embark-bindings
+  "I" #'consult-info
+  "M" #'consult-man)
 
 (defvar-keymap tool-map
   :doc    "Keymap for calling external tools."
@@ -144,8 +146,6 @@
   "M-x" #'consult-mode-command
   "H"   #'consult-history
   "k"   #'consult-kmacro
-  "m"   #'consult-man
-  "i"   #'consult-info
 
   "C-/" #'apheleia-format-buffer
   "C-k" #'compile
