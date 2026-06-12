@@ -403,6 +403,7 @@ targets."
 
 (defun embark-hide-which-key-indicator (fn &rest args)
   "Hide the which-key indicator immediately."
+  (require 'which-key)
   (which-key--hide-popup-ignore-command)
   (defvar embark-indicators)
   (let ((embark-indicators
