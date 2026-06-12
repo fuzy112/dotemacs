@@ -382,6 +382,12 @@ Output only the commit message, with no extra explanation or surrounding markup.
 (declare-function magit-process-git "ext:magit-process.el")
 (declare-function magit-run-git-with-editor "ext:magit-process.el")
 
+(defvar gptel-commit-dir-local-instructions-alist nil)
+
+(defun gptel-commit-get-dir-local-instruction ()
+  (let* ((root (abbreviate-file-name (magit-toplevel))))
+    (cdr (assoc root gptel-commit-dir-local-instructions-alist))))
+
 ;;;###autoload
 (defun +gptel-commit-staged (rationale &optional args)
   "Generate a commit message for staged changes using LLM, then open for editing.
@@ -393,7 +399,7 @@ in the git editor for final editing before committing."
   (with-temp-buffer
     (let ((gptel-backend gptel-backend)
 	  (gptel-model gptel-model)
-	  (dir default-directory)
+	  (dir (magit-toplevel))
 	  gptel-use-context
 	  gptel-use-tools)
       (insert "<git-status>")
@@ -409,9 +415,15 @@ in the git editor for final editing before committing."
 	(error "Failed to run git log"))
       (insert "</git-log>\n")
       (when rationale
-	(insert "<user-prompt>")
+	(insert "<rationale>")
 	(insert rationale)
-	(insert "\n</user-prompt>\n"))
+	(insert "\n</rational>\n"))
+      (when (file-readable-p (expand-file-name ".commit-guideline" dir))
+	(insert "<project-local-instruction>")
+	(insert (with-temp-buffer
+		  (insert-file-contents (expand-file-name ".commit-guideline" dir))
+		  (xml-escape-string (buffer-string))))
+	(insert "\n</project-local-instruction>\n"))
       (gptel-request
 	  (buffer-string)
 	:system (alist-get 'commit gptel-directives)
