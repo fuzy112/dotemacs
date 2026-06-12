@@ -372,7 +372,7 @@ Output only the commit message, with no extra explanation or surrounding markup.
       (setq-local gptel-backend (gptel-get-backend "Moonshot"))
       (setq-local gptel-model 'kimi-k2-0905-preview)
       (setq-local gptel-use-tools nil)
-      (setq-local gptel--system-message (alist-get 'language-learning gptel-directives))
+      (setq-local gptel-system-prompt (alist-get 'language-learning gptel-directives))
       (goto-char (point-max))
       (call-process "wl-paste" nil t t "-p")
       (newline)
@@ -381,12 +381,7 @@ Output only the commit message, with no extra explanation or surrounding markup.
 (declare-function magit-commit-arguments "ext:magit-commit.el")
 (declare-function magit-process-git "ext:magit-process.el")
 (declare-function magit-run-git-with-editor "ext:magit-process.el")
-
-(defvar gptel-commit-dir-local-instructions-alist nil)
-
-(defun gptel-commit-get-dir-local-instruction ()
-  (let* ((root (abbreviate-file-name (magit-toplevel))))
-    (cdr (assoc root gptel-commit-dir-local-instructions-alist))))
+(declare-function magit-toplevel "ext:magit")
 
 ;;;###autoload
 (defun +gptel-commit-staged (rationale &optional args)

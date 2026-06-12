@@ -83,11 +83,13 @@
 
 ;;;; org-protocol
 
-(record-time! org-protocol
-  (autoload 'org--protocol-detect-protocol-server "org-protocol")
-  (advice-add 'server-visit-files :around #'org--protocol-detect-protocol-server))
+(autoload 'org--protocol-detect-protocol-server "org-protocol")
+(advice-add 'server-visit-files :around #'org--protocol-detect-protocol-server)
 
 (defvar org-protocol-project-alist)
+
+(declare-function org-protocol-sanitize-uri "org-protocol")
+(declare-function org-protocol-parse-parameters "org-protocol")
 
 (defvar org-protocol-clone-repo-post-hook
   (list #'org-protocol--remember-project
@@ -95,7 +97,7 @@
 
 (defun org-protocol--remember-project (entry)
   (let* ((plist (cdr entry))
-         (base-url (plist-get plist :base-url))
+         ;; (base-url (plist-get plist :base-url))
          (wdir (plist-get plist :working-directory))
          (pr (project-current nil wdir)))
     (project-remember-project pr)))
