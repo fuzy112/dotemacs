@@ -139,7 +139,8 @@
          ;; have an annotated table of all the entries, so we only need
          ;; minimal display like `flat' or `unobtrusive'.
          (dired-goto-file flat)
-         (ibuffer-jump-to-buffer flat)))
+         (ibuffer-jump-to-buffer flat)
+         (meow-visit flat)))
 
 (setq! vertico-multiform-categories
        '(;; use ido-like directory navigation for `file'.
