@@ -41,11 +41,7 @@
         '(
           (file        . ((styles . (partial-completion))))
 
-          (symbol      . ((styles . (orderless+flex))))
-          (symbol-help . ((styles . (orderless+flex))))
-
-          (command     . ((styles . (orderless+initialism))))
-          (variable    . ((styles . (orderless+initialism))))
+          (symbol-help . ((styles . (orderless+initialism))))
 
           (eglot       . ((styles . (orderless))))
           (eglot-capf  . ((styles . (orderless))))
