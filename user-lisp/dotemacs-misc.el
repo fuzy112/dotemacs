@@ -248,6 +248,21 @@
               "\n"))
     (goto-char (point-min))))
 
+;;;; dired
+
+(add-hook 'dired-mode-hook #'dired-omit-mode)
+(after-load! dired
+  (setopt dired-listing-switches "-lah"
+          dired-hide-details-hide-absolute-location t
+          dired-do-revert-buffer t
+          dired-dwim-target t
+          dired-x-hands-off-my-keys nil
+          dired-auto-revert-buffer t
+          dired-mouse-drag-files t
+          dired-recursive-copies 'always
+          dired-recursive-deletes 'always
+          shell-command-prompt-show-cwd t))
+
 ;;;; uptime
 
 ;; Set up a timer to display emacs uptime every 30 min.
