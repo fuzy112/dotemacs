@@ -131,10 +131,6 @@
 
 (setq! vertico-multiform-commands
        '((switch-to-buffer unobtrusive)
-         ;; Because there are not annotations for man-pages and info manuals,
-         ;; diplaying the items in grid can save some place.
-         (man grid)
-         (info-display-manual grid)
          ;; for `dired-goto-file' and `ibuffer-jump-to-buffer' we already
          ;; have an annotated table of all the entries, so we only need
          ;; minimal display like `flat' or `unobtrusive'.
@@ -148,7 +144,6 @@
          ;; use `grid' to show more candidates
          (embark-keybinding grid)
          (jinx grid (vertico-grid-annotate . 20) (vertico-count . 4))
-         (info-manual grid)
          (nil grid)))
 
 ;;;; marginalia
@@ -157,9 +152,6 @@
 (add-hook 'minibuffer-setup-hook #'marginalia--minibuffer-setup)
 
 (after-load! marginalia
-  (alist-setq! marginalia-prompt-categories
-    ;; `consult-info' reads manual names without specifying category.
-    "\\<info manuals\\>" 'info-manual)
   (marginalia-mode)
 
   (alist-delq! marginalia-command-categories recentf-open)
