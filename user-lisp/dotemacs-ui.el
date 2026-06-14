@@ -440,6 +440,13 @@ not used, but is required by the hook."
 (add-hook 'conf-mode-hook #'breadcrumb-local-mode)    ; Enable for configuration files
 (add-hook 'prog-mode-hook #'breadcrumb-local-mode)    ; Enable for programming modes
 
+;;;; undelete frame mode
+
+(add-hook 'before-make-frame-hook
+          (defun before-make-frame-enable-undelete-frame-mode ()
+            (undelete-frame-mode)
+            (remove-hook 'before-make-frame-hook 'before-make-frame-enable-undelete-frame-mode)))
+
 ;;;; Control the display of common ancillary windows
 
 ;; Always focus common ancillary windows.  Place them in a window
