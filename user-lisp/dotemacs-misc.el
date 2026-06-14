@@ -256,7 +256,6 @@
           dired-hide-details-hide-absolute-location t
           dired-do-revert-buffer t
           dired-dwim-target t
-          dired-x-hands-off-my-keys nil
           dired-auto-revert-buffer t
           dired-mouse-drag-files t
           dired-recursive-copies 'always
