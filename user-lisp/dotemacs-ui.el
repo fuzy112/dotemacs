@@ -52,13 +52,18 @@
               (seq-union '((:eval (nerd-icons-icon-for-buffer)) " ")
                          mode-line-buffer-identification))
 
-;;;; ultra-scroll
+;;;; pixel-scroll
 
+;; If the value is greater than 100, redisplay will never recenter
+;; point, but will always scroll just enough text to bring point into
+;; view, even if you move far away.
 (setq scroll-conservatively 101)
-(if (and (featurep 'x) (not (featurep 'xinput2)))
-    (pixel-scroll-precision-mode)
-  (ultra-scroll-mode))
 
+(setq! mwheel-scroll-up-function 'pixel-scroll-up
+       mwheel-scroll-down-function 'pixel-scroll-down)
+
+(after-load! pixel-scroll
+  (pixel-scroll-precision-mode))
 
 ;;;; window
 
