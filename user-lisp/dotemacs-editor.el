@@ -296,5 +296,8 @@ BEG and END specify the region boundaries."
                            1)))))
               '((name . eol))))
 
+(setq! duplicate-region-final-position 1 ; put region around first copy
+       duplicate-line-final-position 1)  ; move point to first new line
+
 (provide 'dotemacs-editor)
 ;;; dotemacs-editor.el ends here
