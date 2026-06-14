@@ -32,7 +32,26 @@
 (define-keymap :keymap vc-prefix-map
   "." #'+vc/dir-here)
 
+;; [[https://karthinks.com/software/even-more-batteries-included-with-emacs/#the-apropos-family][Even More Batteries Included with Emacs | Karthinks]]
+(defvar-keymap help-apropos-map
+  :prefix 'help-apropos-map
+  :doc "apropos 子命令的按键映射。"
+  "a"   #'apropos
+  "l"   #'apropos-library
+  "f"   #'apropos-function
+  "x"   #'apropos-command
+  "v"   #'apropos-variable
+  "V"   #'apropos-local-variable
+  "u"   #'apropos-user-option
+  "d"   #'apropos-documentation
+  "C-f" #'customize-apropos-faces
+  "g"   #'customize-apropos-groups
+  "o"   #'customize-apropos-options
+  "c"   #'customize-apropos
+  "i"   #'info-apropos)
+
 (define-keymap :keymap help-map
+  "a" #'help-apropos-map
   "H" #'+mail-to-help-gnu-emacs
   "G" #'+gnus-read-ephemeral-emacs-search-group
   "B" #'embark-bindings
