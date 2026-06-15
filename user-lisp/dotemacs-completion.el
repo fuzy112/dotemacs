@@ -48,7 +48,10 @@
 
           (magit-rev   . ((styles . (partial-completion))))
 
-          (project-file . ((styles . (orderless+prefixes))))))
+          (project-file . ((styles . (orderless+prefixes))))
+
+          (ffap-menu . ((display-sort-function . identity)
+                        (cycle-sort-function . identity)))))
 
 (setq completion-pcm-leading-wildcard t)
 
