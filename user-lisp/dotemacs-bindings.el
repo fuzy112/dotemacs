@@ -195,7 +195,8 @@
 (declare-function consult-register "ext:consult.el")
 
 (define-keymap :keymap ctl-x-x-map
-  "/" #'apheleia-format-buffer)
+  "/" #'apheleia-format-buffer
+  "l" #'ffap-menu) ; mnemonic: "links"
 
 (define-keymap :keymap window-prefix-map
   "f 2" #'window-layout-flip-topdown
