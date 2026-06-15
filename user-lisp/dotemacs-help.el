@@ -71,6 +71,8 @@ font-locking and indentation."
    "help-gnu-emacs@gnu.org"
    (read-string "Title: ")))
 
+(put 'help-fns-edit-variable 'disabled nil)
+
 ;;;; Man
 
 (after-load! man
