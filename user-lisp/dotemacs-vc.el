@@ -232,29 +232,7 @@ Then refresh all windows displaying the current buffer."
 
 (after-load! consult-git-log-grep
   (setopt consult-git-log-grep-open-function #'+consult-git-log-grep-show-commit
-          consult-git-log-grep-preview t)
-
-  (defun consult-git-log-grep--builder (input)
-    "Build the command using INPUT and supply the highlight function."
-    (pcase-let* ((`(,arg . ,opts) (consult--command-split input))
-                 (`(,re . ,hl) (funcall consult--regexp-compiler arg 'extended 'ignore-case)))
-      (and re
-           (cons (append (list
-                          "git"
-                          "--no-pager"
-                          "log"
-                          ;; use git log's formattings padding/truncating for
-                          ;; better performance (less lisp string processing)
-                          "--pretty=format:%H@@@%<(76,mtrunc)%s@@@%aN@@@%ad"
-                          "--date=format:%Y-%m-%d %H:%M:%S"
-                          "-i"
-                          "-E"
-                          "--all-match")
-                         (mapcan (lambda (x) (list "--grep" x)) re)
-                         opts)
-                 hl)))))
-
-
+          consult-git-log-grep-preview t))
 
 ;;;; quilt
 
