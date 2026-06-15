@@ -59,6 +59,8 @@
 ;; view, even if you move far away.
 (setq scroll-conservatively 101)
 
+(dolist (cmd '(pixel-scroll-up pixel-scroll-down))
+  (autoload cmd "pixel-scroll" nil t))
 (setq! mwheel-scroll-up-function 'pixel-scroll-up
        mwheel-scroll-down-function 'pixel-scroll-down)
 
