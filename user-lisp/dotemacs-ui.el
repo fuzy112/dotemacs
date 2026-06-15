@@ -81,15 +81,6 @@
 
 ;;;; tab-bar
 
-(setopt tab-bar-tab-name-format-function
-        (lambda (tab i)
-          (tab-bar-tab-name-format-face
-           (concat " "
-                   (propertize (number-to-string i) 'face '(:weight ultra-bold :underline t))
-                   " "
-                   (alist-get 'name tab)
-                   " ")
-           tab i)))
 (add-hook 'tab-bar-mode-hook #'tab-bar-history-mode)
 
 ;;; side window
