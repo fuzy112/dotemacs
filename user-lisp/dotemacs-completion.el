@@ -661,6 +661,9 @@ except that it specifies `identity' as the `display-sort-function' and
   ;; url-only bookmark type
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow)))
 
+  (add-to-list 'consult-bookmark-narrow '(?t "Tab" tab-bookmark-handler))
+  (add-to-list 'consult-bookmark-narrow '(?V "View" bookmark-view-handler))
+
   ;; filter internal buffers
   (add-to-list 'consult-buffer-filter
                (rx (or (seq bot "*EGLOT " (+ nonl) (or "stderr" "output" "events") "*" eot)

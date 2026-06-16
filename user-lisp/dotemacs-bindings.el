@@ -190,7 +190,30 @@
 
 (define-keymap :keymap ctl-x-r-map
   "b" #'consult-bookmark ; orig. bookmark-jump
-  "u" #'url-bookmark-add)
+  "u" #'url-bookmark-add
+  "t" #'tab-bookmark-prefix-map
+  "v" #'bookmark-view-prefix-map)
+
+(defvar-keymap tab-bookmark-prefix-map
+  :prefix 'tab-bookmark-prefix-map
+  "SPC" #'string-rectangle ; originally bound to C-x r t
+  "o" #'tab-bookmark-open
+  "s" #'tab-bookmark-save
+  "d" #'tab-bookmark-delete
+  "r" #'tab-bookmark-rename
+  "+" #'tab-bookmark-push
+  "-" #'tab-bookmark-pop
+  "t" #'tab-bookmark)
+
+(defvar-keymap bookmark-view-prefix-map
+  :prefix 'bookmark-view-prefix-map
+  "o" #'bookmark-view-open
+  "s" #'bookmark-view-save
+  "d" #'bookmark-view-delete
+  "r" #'bookmark-view-rename
+  "+" #'bookmark-view-push
+  "-" #'bookmark-view-pop
+  "v" #'bookmark-view)
 
 (declare-function consult-register "ext:consult.el")
 
