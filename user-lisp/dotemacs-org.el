@@ -30,6 +30,7 @@
 
 (after-load! org
   (setopt org-modern-table nil)
+  (setopt org-insert-mode-line-in-empty-file t)
   (add-hook 'org-mode-hook #'org-modern-mode)
   ;; (setopt valign-fancy-bar t)
   (add-hook 'org-mode-hook #'valign-mode)
