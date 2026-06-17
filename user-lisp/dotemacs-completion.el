@@ -143,6 +143,7 @@
          ;; use `grid' to show more candidates
          (embark-keybinding grid)
          (jinx grid (vertico-grid-annotate . 20) (vertico-count . 4))
+         (gpg-key)
          (nil grid)))
 
 ;;;; marginalia
@@ -154,6 +155,9 @@
   (marginalia-mode)
 
   (alist-delq! marginalia-command-categories recentf-open)
+
+  (alist-setq! marginalia-prompt-categories
+    "--gpg-sign=" 'gpg-key)
 
   (define-advice marginalia--annotator (:override (cat) cat-inherit)
     "Return annotation function for category CAT."
