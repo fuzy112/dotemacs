@@ -125,7 +125,11 @@
   "f"     #'debug-on-entry
   "v"     #'debug-on-variable-change
   "c f"   #'cancel-debug-on-entry
-  "c v"   #'cancel-debug-on-variable-change)
+  "c v"   #'cancel-debug-on-variable-change
+  "t t"   #'trace-function
+  "t b"   #'trace-function-background
+  "t u"   #'untrace-function
+  "t U"   #'untrace-all)
 
 (defvar-keymap quilt-prefix-map
   :prefix 'quilt-prefix-map
