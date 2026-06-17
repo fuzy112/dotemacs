@@ -441,24 +441,6 @@ If there is no active minibuffer, signal an error."
   (keymap-set embark-region-map "[" '+embark/apply-ansi-color)
   (keymap-set embark-variable-map "I" #'embark-inject-variable-value))
 
-(defvar embark-keymap-alist)
-
-(defun embark--raw-action-keymap-symbols (type)
-  (or (alist-get type embark-keymap-alist)
-      (cl-loop for p in (get type 'completion-category-parents)
-               append (alist-get p embark-keymap-alist))))
-
-(define-advice embark--raw-action-keymap (:override (type) cat-inherit)
-  "Return raw action map for targets of given TYPE.
-This does not take into account the default action, help key or
-cycling bindings, just what's registered in
-`embark-keymap-alist'."
-  (make-composed-keymap
-   (mapcar #'symbol-value
-           (let ((actions (or (embark--raw-action-keymap-symbols type)
-                              (alist-get t embark-keymap-alist))))
-             (ensure-list actions)))))
-
 ;;;; consult
 
 (after-load! comint
