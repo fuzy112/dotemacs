@@ -128,7 +128,8 @@ To use this protocol, add the following bookmarklet to your browser:
                   (format "Clone “%s” to: " repo-name)
                   (file-name-directory default-dest)
                   default-dest
-                  nil)))
+                  nil
+                  default-dest)))
       (setq dest (directory-file-name dest))
       (message "Cloning %s into %s..." clone-url dest)
       (let ((exit (call-process "git" nil "*org-protocol-git-clone*" t
