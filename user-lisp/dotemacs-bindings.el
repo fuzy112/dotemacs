@@ -56,7 +56,9 @@
   "G" #'+gnus-read-ephemeral-emacs-search-group
   "B" #'embark-bindings
   "I" #'consult-info
-  "M" #'consult-man)
+  "M" #'consult-man
+  ;; unbind `help-for-help' so that `embark-prefix-help-command' takes effect
+  "C-h" nil)
 
 (defvar-keymap tool-map
   :doc    "Keymap for calling external tools."
