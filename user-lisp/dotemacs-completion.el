@@ -430,8 +430,6 @@ If there is no active minibuffer, signal an error."
   (alist-setq! embark-keymap-alist
     kmacro '(embark-kmacro-map))
 
-  (alist-setq! embark-exporters-alist
-    consult-location #'embark-consult-export-location-grep)
   (keymap-set embark-general-map "J" #'embark-inject)
   (keymap-set embark-general-map "/" #'embark-history-remove)
   (keymap-set embark-general-map "W" `("Search web" . ,#'+embark/search-web))
