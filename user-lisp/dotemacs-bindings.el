@@ -175,7 +175,8 @@
   "C-/" #'apheleia-format-buffer
   "C-k" #'compile
   "C-p" #'send-password-to-process
-  "C-l" #'org-insert-link-global)
+  "C-l" #'org-insert-link-global
+  "C-o" #'org-open-at-point-global)
 
 (define-keymap :keymap ctl-x-4-map
   "t" #'eat-other-window
