@@ -130,9 +130,6 @@
 
 ;;;; saveplace
 
-;; (setq save-place-file
-;;       (locate-user-emacs-file '("places.eld.zst")))
-
 (autoload 'save-place-find-file-hook "saveplace")
 (autoload 'save-place-dired-hook "saveplace")
 (add-hook 'find-file-hook #'save-place-find-file-hook)
@@ -140,6 +137,7 @@
 (after-load! saveplace
   (setopt save-place-limit 65536)
   (setopt save-place-autosave-interval 30)
+  (setopt save-place-abbreviate-file-names t)
   (save-place-mode))
 
 (define-advice save-place-find-file-hook (:after (&rest _) recenter)
