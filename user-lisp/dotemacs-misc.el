@@ -262,6 +262,12 @@
           dired-recursive-deletes 'always
           shell-command-prompt-show-cwd t))
 
+;;;; zone
+
+(after-load! zone
+  (setopt zone-all-frames t
+          zone-all-windows-in-frame t))
+
 ;;;; uptime
 
 ;; Set up a timer to display emacs uptime every 30 min.
