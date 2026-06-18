@@ -140,6 +140,11 @@
 
 (after-load! git-commit
   (setopt git-commit-major-mode #'log-edit-mode)
+  ;; TODO: figure out why setopt says "Value does not match
+  ;; git-commit-style-convention-checks’s type ‘(list :convert-widget
+  ;; custom-hook-convert-widget)’: (non-empty-second-line
+  ;; overlong-summary-line)"
+  (setq! git-commit-style-convention-checks '(non-empty-second-line overlong-summary-line))
   (add-hook 'git-commit-post-finish-hook #'log-edit-hide-buf)
   (add-hook 'git-commit-setup-hook #'+git-commit--log-edit-h 90))
 
