@@ -333,7 +333,8 @@ not used, but is required by the hook."
           ibuffer-show-empty-filter-groups nil
           ibuffer-default-sorting-mode 'filename/process
           ibuffer-use-header-line t
-          ibuffer-default-shrink-to-minimum-size nil)
+          ibuffer-default-shrink-to-minimum-size nil
+          ibuffer-human-readable-size t)
 
   (setopt ibuffer-saved-filter-groups
           '(("Main"
