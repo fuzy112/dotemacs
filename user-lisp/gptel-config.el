@@ -195,8 +195,8 @@
 
 (gptel-make-gh-copilot "Copilot")
 
-(setq-default gptel-backend (gptel-get-backend "Kimi Code"))
-(setq-default gptel-model 'kimi-for-coding)
+(setq-default gptel-backend (gptel-get-backend "DeepSeek"))
+(setq-default gptel-model 'deepseek-v4-flash)
 
 
 ;;; Tweaks
