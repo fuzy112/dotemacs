@@ -33,7 +33,7 @@
     (project-list-file			"projects.eld.zst" 	      (locate-user-emacs-file (if (>= emacs-major-version 31) '("projects.eld" "projects") "projects")))
     (recentf-save-file 		 	"recentf.eld.zst" 	      (locate-user-emacs-file '("recentf.eld" "recentf") ".recentf"))
     (project-compile-history-file  	"project-compile-history.eld.zst" (expand-file-name "project-compile-history.eld" user-emacs-directory) )
-    (tramp-persistency-file-name 	"tramp.eld.zst" 	      (locate-user-emacs-file "tramp"))
+    (tramp-persistency-file-name 	"tramp.eld" 		      (locate-user-emacs-file "tramp"))
     (ecomplete-database-file     	"ecompleterc.zst" 	      (locate-user-emacs-file "ecompleterc" "~/.ecompleterc"))
     (url-configuration-directory 	"url/" 			      (locate-user-emacs-file "url/" ".url/"))
     (devdocs-data-dir	        	"devdocs/" 		      (expand-file-name "devdocs" user-emacs-directory))
