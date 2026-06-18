@@ -607,11 +607,33 @@ except that it specifies `identity' as the `display-sort-function' and
        (setq orderless-match-faces (vconcat '(consult-highlight-match) orderless-match-faces))
        (orderless--highlight input t str)))))
 
+
+(declare-function consult--buffer-file-hash "ext:consult")
+(declare-function consult--fast-abbreviate-file-name "ext:consult")
+(defvar consult-source-file-cache
+  `( :name "FileCache"
+     :narrow ?c
+     :category file
+     :face consult-file
+     :history file-name-history
+     :state ,#'consult--file-state
+     :new ,#'consult--file-action
+     :enable ,(lambda () (bound-and-true-p file-cache-alist))
+     :items
+     ,(lambda ()
+        (let ((ht (consult--buffer-file-hash))
+              items)
+          (pcase-dolist (`(,file ,dir) (bound-and-true-p file-cache-alist) (nreverse items))
+            (setq file (concat dir file))
+            (unless (gethash file ht)
+              (push (consult--fast-abbreviate-file-name file) items)))))))
+
 (after-load! consult
   (setopt consult-preview-key "M-.")
   (setopt consult-narrow-key "<")
   (setopt consult-widen-key ">")
   (setq! consult--regexp-compiler #'+consult--orderless-regexp-compiler)
+  (add-to-list 'consult-buffer-sources 'consult-source-file-cache t)
 
   ;; consult-customize is a macro and is not autoloaded
   (with-no-compile!
