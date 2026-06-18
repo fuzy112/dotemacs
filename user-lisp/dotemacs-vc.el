@@ -27,11 +27,15 @@
 
 (after-load! vc
   (setopt
-   vc-svn-diff-switches '("-x" "-u -p")
    vc-find-revision-no-save t
    vc-deduce-backend-nonvc-modes t ;; Deduce VC backend for all buffers
-   vc-dir-auto-hide-up-to-date t
    vc-allow-async-diff t))
+
+(after-load! vc-svn
+  (setopt vc-svn-diff-switches '("-x" "-u -p")))
+
+(after-load! vc-dir
+  (setopt vc-dir-auto-hide-up-to-date t))
 
 (declare-function project-root "project.el")
 (declare-function vc-git-root "vc-git.el")
