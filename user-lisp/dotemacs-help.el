@@ -17,6 +17,11 @@
 
 (eval-when-compile (require 'dotemacs-core))
 
+;;;; eldoc
+
+(after-load! eldoc
+  (setopt eldoc-help-at-pt t))
+
 ;;;; help
 
 ;; Enable editing of variable values in help buffers
