@@ -569,10 +569,6 @@ except that it specifies `identity' as the `display-sort-function' and
              (abs-cpd (expand-file-name (or common-parent-directory "")))
              (abs-cpd-length (length abs-cpd))
              (non-essential t)          ;Avoid new Tramp connections.
-             ;; FIXME: minibuffer-completing-file-name is a variable
-             ;; used internally in minibuf.c and it may be obsolete in
-             ;; the future.
-             (minibuffer-completing-file-name t)
              ((symbol-value hist)
               (if common-parent-directory
                   (mapcan
