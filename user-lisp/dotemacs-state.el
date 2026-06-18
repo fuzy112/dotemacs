@@ -1,0 +1,63 @@
+;;; dotemacs-state.el --- State files management -*- lexical-binding: t -*-
+;; Copyright © 2026  Zhengyi Fu <i@fuzy.me>
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+;;; Code:
+
+
+;;; state files
+
+(defvar dotemacs-state-directory (concat user-emacs-directory "/var/"))
+(unless (file-directory-p dotemacs-state-directory)
+  (make-directory dotemacs-state-directory)
+  (make-directory (concat dotemacs-state-directory "removed/")))
+
+(defvar dotemacs-state-file-alist
+  ;; symbol  			new-path		   		old-path
+  '((custom-file			"custom.el.zst" 	      nil)
+    (savehist-file              	"history.eld.zst" 	      (locate-user-emacs-file "history" ".emacs-history"))
+    (save-place-file            	"places.eld.zst" 	      (locate-user-emacs-file '("places.eld" "places") ".emacs-places"))
+    (project-list-file			"projects.eld.zst" 	      (locate-user-emacs-file (if (>= emacs-major-version 31) '("projects.eld" "projects") "projects")))
+    (recentf-save-file 		 	"recentf.eld.zst" 	      (locate-user-emacs-file '("recentf.eld" "recentf") ".recentf"))
+    (project-compile-history-file  	"project-compile-history.eld.zst" (expand-file-name "project-compile-history.eld" user-emacs-directory) )
+    (tramp-persistency-file-name 	"tramp.eld.zst" 	      (locate-user-emacs-file "tramp"))
+    (ecomplete-database-file     	"ecompleterc.zst" 	      (locate-user-emacs-file "ecompleterc" "~/.ecompleterc"))
+    (url-configuration-directory 	"url/" 			      (locate-user-emacs-file "url/" ".url/"))
+    (devdocs-data-dir	        	"devdocs/" 		      (expand-file-name "devdocs" user-emacs-directory))
+    (forge-database-file 		"forge-database.sqlite"       (expand-file-name "forge-database.sqlite" user-emacs-directory))
+    (undo-fu-session-directory 		"undo-fu-session/" 	      (locate-user-emacs-file "undo-fu-session" ".emacs-undo-fu-session"))
+    (mastodon-client--token-file	 "mastodon.plstore" 	      (concat user-emacs-directory "mastodon.plstore"))
+    (eshell-directory-name 		"eshell/" 		      (locate-user-emacs-file "eshell/" ".eshell/"))
+    (org-id-locations-file 		"org_id-locations.eld.zst"    (locate-user-emacs-file ".org-id-locations"))))
+
+(defun dotemacs-state-setup ()
+  (pcase-dolist (`(,sym ,new ,old) dotemacs-state-file-alist)
+    (let ((new-path (abbreviate-file-name (expand-file-name new dotemacs-state-directory)))
+	  (old-path (eval old t)))
+      (when (and (not (file-exists-p new-path)) (file-exists-p old-path))
+	(cond ((null old))
+	      ((file-directory-p old-path)
+	       (rename-file old-path new-path))
+	      (t
+	       (with-temp-file new-path
+		 (insert-file-contents old-path))
+	       (rename-file old-path (concat dotemacs-state-directory "removed/" (file-name-nondirectory old-path))))))
+      (set-default sym new-path))))
+
+(dotemacs-state-setup)
+
+(provide 'dotemacs-state)
+;;; dotemacs-state.el ends here
