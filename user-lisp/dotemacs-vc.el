@@ -101,6 +101,8 @@
     (set-process-query-on-exit-flag
      magit-credential-cache-daemon-process nil)))
 
+(declare-function transient-set-default-level "transient")
+
 (after-load! magit
   (transient-set-default-level 'magit:--gpg-sign 1)
   (transient-set-default-level 'magit:--signoff 1)
