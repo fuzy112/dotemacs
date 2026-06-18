@@ -45,6 +45,8 @@
 (after-load! sly
   (keymap-set sly-prefix-map "M-h" #'sly-documentation-lookup))
 
+(setopt delete-pair-push-mark t)
+
 ;;;; elisp-mode
 
 (add-hook 'emacs-lisp-mode-hook #'cursor-sensor-mode)
