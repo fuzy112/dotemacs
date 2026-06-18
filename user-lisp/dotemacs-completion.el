@@ -46,8 +46,6 @@
           (eglot       . ((styles . (orderless))))
           (eglot-capf  . ((styles . (orderless))))
 
-          (magit-rev   . ((styles . (partial-completion))))
-
           (project-file . ((styles . (orderless+prefixes))))
 
           (ffap-menu . ((display-sort-function . identity)
