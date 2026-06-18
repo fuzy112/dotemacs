@@ -41,7 +41,8 @@
     (undo-fu-session-directory 		"undo-fu-session/" 	      (locate-user-emacs-file "undo-fu-session" ".emacs-undo-fu-session"))
     (mastodon-client--token-file	 "mastodon.plstore" 	      (concat user-emacs-directory "mastodon.plstore"))
     (eshell-directory-name 		"eshell/" 		      (locate-user-emacs-file "eshell/" ".eshell/"))
-    (org-id-locations-file 		"org_id-locations.eld.zst"    (locate-user-emacs-file ".org-id-locations"))))
+    (org-id-locations-file 		"org_id-locations.eld.zst"    (locate-user-emacs-file ".org-id-locations"))
+    (bookmark-default-file		"bookmarks.eld.zst"	      (locate-user-emacs-file '("bookmarks.eld" "bookmarks") ".emacs.bmk"))))
 
 (defun dotemacs-state-setup ()
   (pcase-dolist (`(,sym ,new ,old) dotemacs-state-file-alist)
