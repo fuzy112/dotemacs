@@ -95,7 +95,8 @@
 
 ;;;; jkr
 
-(setopt jka-compr-load-suffixes (seq-union '(".zst") jka-compr-load-suffixes))
+(setq jka-compr-load-suffixes (seq-union '(".zst") jka-compr-load-suffixes))
+(setq jka-compr-verbose nil)
 
 ;;;; files
 
