@@ -39,7 +39,7 @@
     (devdocs-data-dir	        	"devdocs/" 		      (expand-file-name "devdocs" user-emacs-directory))
     (forge-database-file 		"forge-database.sqlite"       (expand-file-name "forge-database.sqlite" user-emacs-directory))
     (undo-fu-session-directory 		"undo-fu-session/" 	      (locate-user-emacs-file "undo-fu-session" ".emacs-undo-fu-session"))
-    (mastodon-client--token-file	 "mastodon.plstore" 	      (concat user-emacs-directory "mastodon.plstore"))
+    (mastodon-client--token-file	"mastodon.plstore" 	      (concat user-emacs-directory "mastodon.plstore"))
     (eshell-directory-name 		"eshell/" 		      (locate-user-emacs-file "eshell/" ".eshell/"))
     (org-id-locations-file 		"org_id-locations.eld.zst"    (locate-user-emacs-file ".org-id-locations"))
     (bookmark-default-file		"bookmarks.eld.zst"	      (locate-user-emacs-file '("bookmarks.eld" "bookmarks") ".emacs.bmk"))))
@@ -48,10 +48,10 @@
   (pcase-dolist (`(,sym ,new ,old) dotemacs-state-file-alist)
     (let ((new-path (abbreviate-file-name (expand-file-name new dotemacs-state-directory)))
 	  (old-path (eval old t)))
-      (when (and (not (file-exists-p new-path)) (file-exists-p old-path))
+      (when (and old-path (not (file-exists-p new-path)) (file-exists-p old-path))
 	(cond ((null old))
 	      ((file-directory-p old-path)
-	       (rename-file old-path new-path))
+	       (rename-file old-path (directory-file-name new-path)))
 	      (t
 	       (with-temp-file new-path
 		 (insert-file-contents old-path))
