@@ -142,6 +142,7 @@
          (embark-keybinding grid)
          (jinx grid (vertico-grid-annotate . 20) (vertico-count . 4))
          (gpg-key)
+         (recentf unobtrusive)
          (nil grid)))
 
 ;;;; marginalia
@@ -169,7 +170,6 @@
 ;; Marginalia and embark expects recentf to be files.
 (define-completion-category 'recentf '(file)
   "Completion category for `recentf'."
-  :styles '(flex)
   :cycle-sort-function #'identity
   :display-sort-function #'identity)
 
