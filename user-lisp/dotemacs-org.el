@@ -251,6 +251,20 @@ Only immediate subdirectories are examined; nested directories are ignored."
       (customize-save-variable 'org-protocol-project-alist org-protocol-project-alist))
     (message "Done: %d added, %d skipped" added skipped)))
 
+(defun org-protocol-add-project-from-project-list ()
+  "Register known projects as Org protocol repositories.
+Uses `project-known-project-roots' to get a list of project root
+directories, then registers those that are Git repositories."
+  (interactive)
+  (require 'project)
+  (require 'vc-git)
+  (with-demoted-errors "Ignored error: %s"
+    (let* ((roots (project-known-project-roots)))
+      (dolist (root roots)
+        (when (and (not (file-remote-p root))
+                   (vc-git-root root))
+          (org-protocol-add-repo-project root))))))
+
 (after-load! org-protocol
   (add-to-list 'org-protocol-protocol-alist
                '("clone-repo"
