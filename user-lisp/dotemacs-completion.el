@@ -226,6 +226,7 @@
           corfu-quick2 "ueoai")
   (global-corfu-mode)
   (corfu-history-mode)
+  (corfu-echo-mode)
   (define-keymap :keymap corfu-map
     "M-m"       #'corfu-move-to-minibuffer
     "SPC"       #'corfu-insert-separator
