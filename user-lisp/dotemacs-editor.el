@@ -89,6 +89,7 @@
   "Insert the name of the file just opened or written into the recent list." )
 (add-hook 'find-file-hook #'recentf-track-opened-file)
 ;; (add-hook 'buffer-list-update-hook #'recentf-track-opened-file)
+(setq! recentf-mode t)
 (after-load! recentf
   (setopt recentf-max-saved-items 8192)
   (setopt recentf-autosave-interval 30)

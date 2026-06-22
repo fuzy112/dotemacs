@@ -650,13 +650,7 @@ except that it specifies `identity' as the `display-sort-function' and
      consult-theme
      :preview-key '(:debounce 0.4 any)
      consult-source-file-register
-     :preview-key '(:debounce 0.4 any)
-     consult-source-recent-file
-     :enabled (lambda () (require 'recentf) (default-toplevel-value 'recentf-mode))))
-
-  (define-advice consult-recent-file (:before (&rest _) enable-recentf)
-    (require 'recentf)
-    (unless recentf-mode (recentf-mode)))
+     :preview-key '(:debounce 0.4 any)))
 
   ;; url-only bookmark type
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow)))
