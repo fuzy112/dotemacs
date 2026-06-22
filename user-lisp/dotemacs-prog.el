@@ -243,7 +243,7 @@ confirmed."
              ;; expanded and not left for the shell command
              ;; to interpret.
              (localdir (file-name-unquote (file-local-name (expand-file-name dir))))
-             (command (format "%s --no-follow %s %s --type file --print0 %s ."
+             (command (format "%s --color never --no-follow %s %s --type file --print0 %s ."
                               fd-exe
                               (if dotemacs-prog--project-files-ignore-vcs
                                   "--ignore-vcs"
