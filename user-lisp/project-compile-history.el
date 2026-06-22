@@ -49,6 +49,10 @@ When nil, use `history-length', which see."
 			pch:obarray))
 	 value))
 
+(defcustom pch:no-message t
+  "Save `project-compile-history-file' without printing messages."
+  :type 'boolean)
+
 (defvar pch:obarray (obarray-make 16)
   "Obarray for project compile history variables.")
 
@@ -101,7 +105,8 @@ also set the variable's `history-length' property to the value of
 	     (pp cell (current-buffer)))
 	   pch:obarray))
 	(insert ")\n")
-	(write-region nil nil pch:file))
+	(let ((save-silently pch:no-message))
+	  (write-region nil nil pch:file)))
       (setq pch:modified nil))))
 
 (defvar pch:-save-timer nil)
