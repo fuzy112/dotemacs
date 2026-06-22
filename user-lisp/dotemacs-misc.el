@@ -281,6 +281,7 @@
 
 (put 'help-fns-edit-variable 'disabled nil)
 (put 'list-timers 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
 
 
 (provide 'dotemacs-misc)
