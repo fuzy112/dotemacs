@@ -52,7 +52,6 @@
 (require! dotemacs-tex)
 (require! dotemacs-tramp)
 (require! dotemacs-org)
-(require! dotemacs-dired)
 (require! dotemacs-vc)
 (require! dotemacs-nix)
 (require! dotemacs-lisp)
