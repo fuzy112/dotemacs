@@ -21,6 +21,7 @@
 
 (require 'dotemacs-core)
 
+(setopt telega-use-images t)   ; force enabling images for daemon mode
 (setopt telega-translate-to-language-by-default "zh")
 (setopt telega-emoji-use-images nil)
 (setopt telega-language "zh")
