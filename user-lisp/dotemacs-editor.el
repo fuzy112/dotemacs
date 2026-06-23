@@ -149,10 +149,6 @@
 ;;;; savehist
 
 (after-init!
-  (setopt savehist-ignored-variables '(buffer-name-history
-                                       consult--line-history
-                                       vertico-repeat-history
-                                       search-ring))
   (setopt savehist-autosave-interval 30)
   (savehist-mode))
 
