@@ -236,14 +236,8 @@ Then refresh all windows displaying the current buffer."
 
 ;;;; consult-git-log-grep
 
-(defun +consult-git-log-grep-show-commit (sha)
-  "Displays the result of `git show SHA' in a new buffer."
-  (let* ((default-directory (vc-git-root (or (buffer-file-name) default-directory))))
-    (magit-show-commit sha)))
-
 (after-load! consult-git-log-grep
-  (setopt consult-git-log-grep-open-function #'+consult-git-log-grep-show-commit
-          consult-git-log-grep-preview t
+  (setopt consult-git-log-grep-open-function #'magit-show-commit
           consult-git-log-grep-embark-exporter #'consult-git-log-grep--export-magit-log))
 
 ;;;; quilt
