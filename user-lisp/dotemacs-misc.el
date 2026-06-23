@@ -250,7 +250,6 @@
 
 ;;;; dired
 
-(add-hook 'dired-mode-hook #'dired-omit-mode)
 (after-load! dired
   (setopt dired-listing-switches "-lah"
           dired-hide-details-hide-absolute-location t
