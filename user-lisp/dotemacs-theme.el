@@ -193,12 +193,14 @@ already marked as safe and is not a built-in default Emacs theme."
   (mapc #'disable-theme custom-enabled-themes)
   (let ((theme (pcase mode
                  ('light 'modus-operandi)
-                 ('dark 'modus-vivendi))))
+                 ('dark 'modus-vivendi)
+                 (_ 'modus-vivendi))))
     (enable-theme theme)))
 
 (add-hook 'toolkit-theme-set-functions #'dotemacs-theme-follow-toolkit-theme)
-(after-init!
-  (dotemacs-theme-follow-toolkit-theme toolkit-theme))
+(unless (daemonp)
+  (after-init!
+    (dotemacs-theme-follow-toolkit-theme toolkit-theme)))
 
 (provide 'dotemacs-theme)
 ;;; dotemacs-theme.el ends here
