@@ -224,6 +224,15 @@
   (require 'orderless)
   (setopt corfu-cycle t
           corfu-preselect 'prompt)
+  ;; By default corfu is only enabled in minibuffer which has local
+  ;; binding for `completion-at-point-functions'.  The following
+  ;; lambda enables corfu in all minibuffers as long as no completion
+  ;; UI is active, see [[info:corfu#Completing in the minibuffer][corfu#Completing in the minibuffer]].
+  (setopt global-corfu-minibuffer
+          (lambda ()
+            (not (or (bound-and-true-p mct--active)
+	             (bound-and-true-p vertico--input)
+	             (eq (current-local-map) read-passwd-map)))))
   (setopt corfu-quick1 "htnsd"
           corfu-quick2 "ueoai")
   (global-corfu-mode)
