@@ -219,7 +219,7 @@
 
 (defvar corfu-map)
 (after-load! corfu
-  (advice-remove 'completion-in-region #'completion-in-region@corfu)
+  (advice-remove 'completion-in-region 'corfu)
   (fmakunbound 'completion-in-region@corfu)
   (require 'orderless)
   (setopt corfu-cycle t
