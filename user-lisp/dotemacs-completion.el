@@ -46,7 +46,9 @@
           (eglot       . ((styles . (orderless))))
           (eglot-capf  . ((styles . (orderless))))
 
-          (project-file . ((styles . (orderless+prefixes))))
+          (project-file . ((styles . (orderless+prefixes))
+                           (display-sort-function . identity)
+                           (cycle-sort-function . identity)))
 
           (ffap-menu . ((display-sort-function . identity)
                         (cycle-sort-function . identity)))))
