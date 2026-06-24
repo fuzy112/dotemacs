@@ -253,15 +253,16 @@
 
 (setq-default copyright-year-ranges t)
 
-(defun +copyright-update ()
+(defun update-copyright-after-save ()
   "Update copyright year in the current buffer and save it.
 This function calls `copyright-update' to update the copyright notice,
-then saves the buffer.  It skips processing in `diff-mode' and `log-edit-mode'."
+then saves the buffer.  It skips processing in `diff-mode' and
+`log-edit-mode'."
   (unless (derived-mode-p '(diff-mode log-edit-mode))
     (copyright-update)
     (save-buffer)))
 
-(add-hook 'after-save-hook #'+copyright-update)
+(add-hook 'after-save-hook #'update-copyright-after-save)
 
 
 
