@@ -145,14 +145,7 @@
 
 ;;;; bookmark
 
-(defvar pp-default-function)
-(defun +bookmark--pp-28 (&rest args)
-  (let ((pp-default-function 'pp-28))
-    (apply args)))
-
 (after-load! bookmark
-  (advice-add #'bookmark-write-file :around '+bookmark--pp-28)
-
   (setopt bookmark-save-flag 1
           bookmark-watch-bookmark-file 'silent
           bookmark-version-control t
