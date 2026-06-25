@@ -387,6 +387,22 @@ configuration until the relevant feature or file is available."
        ,(macroexp-quote feature-or-file)
      (blackout ,(macroexp-quote mode) ,replacement)))
 
+(defun dotemacs-wrap-no-messages (fn &rest args)
+  "Call FN with ARGS and suppressing all messages."
+  (let ((inhibit-message t))
+    ;; NOTE: consider setting `message-log-max' to nil and
+    ;; the function value of `minibuffer-message' to `ignore'.
+    (apply fn args)))
+
+(defmacro shut-up! (place)
+  "Advise PLACE with `dotemacs-wrap-no-messages' to suppress messages.
+PLACE should be a function symbol or a place suitable for
+`add-function'.  If PLACE is a quoted or function-quoted symbol, use
+`advice-add'; else use `add-function'."
+  (if (memq (car place) '(function quote))
+      `(advice-add ,place :around #'dotemacs-wrap-no-messages)
+    `(add-function :around ,place #'dotemacs-wrap-no-messages)))
+
 (provide 'dotemacs-core)
 
 ;; Local Variables:

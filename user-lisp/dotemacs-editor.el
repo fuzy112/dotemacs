@@ -95,6 +95,7 @@
   (setopt recentf-autosave-interval 30)
   (setopt recentf-auto-cleanup 600)
   (setopt recentf-show-messages nil)
+  (shut-up! #'recentf-cleanup)
   (recentf-mode))
 
 ;;;; backup
