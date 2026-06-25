@@ -60,7 +60,9 @@
     (shadow-info-file			"shadows"		      (locate-user-emacs-file "shadows" ".shadows"))
     (shadow-todo-file			"shadow_todo"		      (locate-user-emacs-file "shadow_todo" ".shadow_todo"))
     (calc-settings-file			"calc.el"		      (locate-user-emacs-file "calc.el" ".calc.el"))
-    (diary-file				"diary"			      (locate-user-emacs-file "diary" "diary"))))
+    (diary-file				"diary"			      (locate-user-emacs-file "diary" "diary"))
+    (hbmap:dir-user			"hyperbole/"		      (if (and (bound-and-true-p hyperb:microsoft-os-p) (not (getenv "HOME"))) "c:/_hyperb/" "~/.hyperb/"))
+    (hbmap:dir-filename			"hyperbole/HBMAP"	      (expand-file-name "HBMAP" (if (and (bound-and-true-p hyperb:microsoft-os-p) (not (getenv "HOME"))) "c:/_hyperb/" "~/.hyperb/")))))
 
 (defun dotemacs-state-setup ()
   (pcase-dolist (`(,sym ,new ,old) dotemacs-state-file-alist)
