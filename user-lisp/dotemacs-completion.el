@@ -238,6 +238,8 @@
   (global-corfu-mode)
   (corfu-history-mode)
   (corfu-echo-mode)
+  ;; FIXME: sometimes `corfu-popupinfo-map' is not correctly removed
+  ;; from `minor-mode-overriding-map-alist'.
   (corfu-popupinfo-mode)
   (define-keymap :keymap corfu-map
     "M-m"       #'corfu-move-to-minibuffer
