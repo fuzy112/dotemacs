@@ -65,17 +65,29 @@
     (hbmap:dir-filename			"hyperbole/HBMAP"	      (expand-file-name "HBMAP" (if (and (bound-and-true-p hyperb:microsoft-os-p) (not (getenv "HOME"))) "c:/_hyperb/" "~/.hyperb/")))))
 
 (defun dotemacs-state-setup ()
+  "Relocate state files to `dotemacs-state-directory'.
+
+For each entry in `dotemacs-state-file-alist', if the old path exists
+and the new path does not, copy or rename the file or directory to the
+new location.  Then set the default value of the symbol to the new
+expanded path."
   (pcase-dolist (`(,sym ,new ,old) dotemacs-state-file-alist)
-    (let ((new-path (abbreviate-file-name (expand-file-name new dotemacs-state-directory)))
+    (let ((new-path (abbreviate-file-name
+		     (expand-file-name new dotemacs-state-directory)))
 	  (old-path (eval old t)))
       (when (and old-path (not (file-exists-p new-path)) (file-exists-p old-path))
-	(cond ((null old))
-	      ((file-directory-p old-path)
-	       (rename-file old-path (directory-file-name new-path)))
-	      (t
-	       (with-temp-file new-path
-		 (insert-file-contents old-path))
-	       (rename-file old-path (concat dotemacs-state-directory "removed/" (file-name-nondirectory old-path))))))
+	(cond
+	 ((null old))
+	 ((file-directory-p old-path)
+	  (rename-file old-path (directory-file-name new-path)))
+	 (t
+	  (make-directory (file-name-directory new-path) t)
+	  (with-temp-file new-path
+	    (insert-file-contents old-path))
+	  (rename-file old-path
+		       (concat dotemacs-state-directory
+			       "removed/"
+			       (file-name-nondirectory old-path))))))
       (set-default sym new-path))))
 
 (dotemacs-state-setup)
