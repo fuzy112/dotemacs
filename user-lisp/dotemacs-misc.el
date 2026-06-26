@@ -244,7 +244,7 @@
 ;;;; dired
 
 (after-load! dired
-  (setopt dired-listing-switches "-lah"
+  (setopt dired-listing-switches "-lahFbs"
           dired-hide-details-hide-absolute-location t
           dired-do-revert-buffer t
           dired-dwim-target t
