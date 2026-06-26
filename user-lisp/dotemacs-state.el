@@ -62,7 +62,10 @@
     (calc-settings-file			"calc.el"		      (locate-user-emacs-file "calc.el" ".calc.el"))
     (diary-file				"diary"			      (locate-user-emacs-file "diary" "diary"))
     (hbmap:dir-user			"hyperbole/"		      (if (and (bound-and-true-p hyperb:microsoft-os-p) (not (getenv "HOME"))) "c:/_hyperb/" "~/.hyperb/"))
-    (hbmap:dir-filename			"hyperbole/HBMAP"	      (expand-file-name "HBMAP" (if (and (bound-and-true-p hyperb:microsoft-os-p) (not (getenv "HOME"))) "c:/_hyperb/" "~/.hyperb/")))))
+    (hbmap:dir-filename			"hyperbole/HBMAP"	      (expand-file-name "HBMAP" (if (and (bound-and-true-p hyperb:microsoft-os-p) (not (getenv "HOME"))) "c:/_hyperb/" "~/.hyperb/")))
+    (gptel-gh-github-token-file		"copilot-chat/github-token"   (expand-file-name ".cache/copilot-chat/github-token" user-emacs-directory))
+    (gptel-gh-token-file		"copilot-chat/token"	      (expand-file-name ".cache/copilot-chat/token" user-emacs-directory))
+    (magit-user-githook-file		"magit-githooks"	      (locate-user-emacs-file "magit-githooks"))))
 
 (defun dotemacs-state-setup ()
   "Relocate state files to `dotemacs-state-directory'.
