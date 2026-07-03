@@ -209,7 +209,7 @@ new record is started."
   (setopt diff-hl-margin-symbols-alist '((insert  . "增")
                                          (delete  . "刪")
                                          (change  . "改")
-                                         (unknown . "疑")
+                                         (unknown . "未")
                                          (ignored . "略")))
 
   (setopt diff-hl-update-async
