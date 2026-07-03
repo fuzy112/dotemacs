@@ -133,33 +133,40 @@ To use this protocol, add the following bookmarklet to your browser:
                   default-dest)))
       (setq dest (directory-file-name dest))
       (message "Cloning %s into %s..." clone-url dest)
-      (let ((exit (call-process "git" nil "*org-protocol-git-clone*" t
-                                "clone" "--" clone-url (expand-file-name dest))))
-        (unless (zerop exit)
-          (pop-to-buffer "*org-protocol-git-clone*")
-          (error "Git clone failed (exit %d)" exit))
-        (message "Cloned to %s" dest)
-        (let* ((base-url (concat web-url "/"))
-               (wdir (file-name-as-directory dest))
-               (rewrites
-                (cond
-                 ((string-match-p "github\\.com" web-url)
-                  (list (cons (concat "^\\(" (regexp-quote base-url)
-                                      "blob/[^/]+/\\)")
-                              "")))
-                 ((string-match-p "gitlab\\.com" web-url)
-                  (list (cons (concat "^\\(" (regexp-quote base-url)
-                                      "-/blob/[^/]+/\\)")
-                              "")))
-                 (t nil)))
-               (entry (list base-url
-                            :base-url base-url
-                            :working-directory wdir
-                            :rewrites rewrites)))
-          (setq org-protocol-project-alist
-                (cons entry org-protocol-project-alist))
-          (run-hook-with-args 'org-protocol-clone-repo-post-hook entry)
-          (message "Registered org-protocol project for %s" base-url)))))
+      (let ((process (make-process
+                      :name "org-protocol-git-clone"
+                      :buffer "*org-protocol-git-clone*"
+                      :command (list "git" "clone" "--" clone-url (expand-file-name dest))
+                      :sentinel
+                      (lambda (proc event)
+                        (unless (process-live-p proc)
+                          (let ((exit (process-exit-status proc)))
+                            (if (zerop exit)
+                                (progn
+                                  (message "Cloned to %s" dest)
+                                  (let* ((base-url (concat web-url "/"))
+                                         (wdir (file-name-as-directory dest))
+                                         (rewrites
+                                          (cond
+                                           ((string-match-p "github\\.com" web-url)
+                                            (list (cons (concat "^\\(" (regexp-quote base-url)
+                                                                "blob/[^/]+/\\)")
+                                                        "")))
+                                           ((string-match-p "gitlab\\.com" web-url)
+                                            (list (cons (concat "^\\(" (regexp-quote base-url)
+                                                                "-/blob/[^/]+/\\)")
+                                                        "")))
+                                           (t nil)))
+                                         (entry (list base-url
+                                                      :base-url base-url
+                                                      :working-directory wdir
+                                                      :rewrites rewrites)))
+                                    (setq org-protocol-project-alist
+                                          (cons entry org-protocol-project-alist))
+                                    (run-hook-with-args 'org-protocol-clone-repo-post-hook entry)
+                                    (message "Registered org-protocol project for %s" base-url)))
+                              (pop-to-buffer "*org-protocol-git-clone*")
+                              (error "Git clone failed (exit %d)" exit)))))))))))
   nil)
 
 (defun org-protocol--normalize-git-url (remote-url)
