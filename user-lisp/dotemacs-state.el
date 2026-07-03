@@ -26,11 +26,15 @@
   (make-directory (concat dotemacs-state-directory "removed/")))
 
 (defvar dotemacs-state-file-alist
-  '((custom-file
-     :new "custom.el.zst")
+  '((auto-save-list-file-prefix
+     :new "auto-save-list/.saves-")
+    (custom-file
+     :new "custom.el.zst"
+     :mode #o600)
     (savehist-file
      :new "history.eld.zst"
-     :old (locate-user-emacs-file "history" ".emacs-history"))
+     :old (locate-user-emacs-file "history" ".emacs-history")
+     :mode #o600)
     (save-place-file
      :new "places.eld.zst"
      :old (locate-user-emacs-file '("places.eld" "places") ".emacs-places"))
@@ -59,16 +63,20 @@
      :old (expand-file-name "devdocs" user-emacs-directory))
     (forge-database-file
      :new "forge-database.sqlite"
-     :old (expand-file-name "forge-database.sqlite" user-emacs-directory))
+     :old (expand-file-name "forge-database.sqlite" user-emacs-directory)
+     :mode #o600)
     (undo-fu-session-directory
      :new "undo-fu-session/"
-     :old (locate-user-emacs-file "undo-fu-session" ".emacs-undo-fu-session"))
+     :old (locate-user-emacs-file "undo-fu-session" ".emacs-undo-fu-session")
+     :mode #o700)
     (mastodon-client--token-file
      :new "mastodon.plstore"
-     :old (concat user-emacs-directory "mastodon.plstore"))
+     :old (concat user-emacs-directory "mastodon.plstore")
+     :mode #o600)
     (eshell-directory-name
      :new "eshell/"
-     :old (locate-user-emacs-file "eshell/" ".eshell/"))
+     :old (locate-user-emacs-file "eshell/" ".eshell/")
+     :mode #o700)
     (org-id-locations-file
      :new "org_id-locations.eld.zst"
      :old (locate-user-emacs-file ".org-id-locations"))
@@ -97,10 +105,12 @@
      :old (expand-file-name "multisession/" user-emacs-directory))
     (request-storage-directory
      :new "request/"
-     :old (concat (file-name-as-directory user-emacs-directory) "request"))
+     :old (concat (file-name-as-directory user-emacs-directory) "request")
+     :mode #o600)
     (nsm-settings-file
      :new "network-security.eld.zst"
-     :old (locate-user-emacs-file '("network-security.eld" "network-security.data")))
+     :old (locate-user-emacs-file '("network-security.eld" "network-security.data"))
+     :mode #o600)
     (abbrev-file-name
      :new "abbrev_defs"
      :old (locate-user-emacs-file "abbrev_defs" ".abbrev_defs"))
@@ -115,7 +125,8 @@
      :old (locate-user-emacs-file "mpc" ".mpc"))
     (remember-data-file
      :new "notes"
-     :old (locate-user-emacs-file "notes" ".notes"))
+     :old (locate-user-emacs-file "notes" ".notes")
+     :mode #o600)
     (shadow-info-file
      :new "shadows"
      :old (locate-user-emacs-file "shadows" ".shadows"))
@@ -127,7 +138,8 @@
      :old (locate-user-emacs-file "calc.el" ".calc.el"))
     (diary-file
      :new "diary"
-     :old (locate-user-emacs-file "diary" "diary"))
+     :old (locate-user-emacs-file "diary" "diary")
+     :mode #o600)
     (hbmap:dir-user
      :new "hyperbole/"
      :old (if (and (memq system-type '(ms-windows windows-nt ms-dos win32))
@@ -142,15 +154,18 @@
 				      "~/.hyperb/")))
     (gptel-gh-github-token-file
      :new "copilot-chat/github-token"
-     :old (expand-file-name ".cache/copilot-chat/github-token" user-emacs-directory))
+     :old (expand-file-name ".cache/copilot-chat/github-token" user-emacs-directory)
+     :mode #o600)
     (gptel-gh-token-file
      :new "copilot-chat/token"
-     :old (expand-file-name ".cache/copilot-chat/token" user-emacs-directory))
+     :old (expand-file-name ".cache/copilot-chat/token" user-emacs-directory)
+     :mode #o600)
     (magit-user-githook-file
      :new "magit-githooks"
      :old (locate-user-emacs-file "magit-githooks"))
     (xwidget-webkit-cookie-file
-     :new "xwidget-webkit-cookies.txt")))
+     :new "xwidget-webkit-cookies.txt"
+     :mode #o600)))
 
 (defun dotemacs-state-setup ()
   "Relocate state files to `dotemacs-state-directory'.
@@ -159,7 +174,7 @@ For each entry in `dotemacs-state-file-alist', if the old path exists
 and the new path does not, copy or rename the file or directory to the
 new location.  Then set the default value of the symbol to the new
 expanded path."
-  (pcase-dolist (`(,sym . ,(map :old :new)) dotemacs-state-file-alist)
+  (pcase-dolist (`(,sym . ,(map :old :new :mode)) dotemacs-state-file-alist)
     (let ((new-path (abbreviate-file-name
 		     (expand-file-name new dotemacs-state-directory)))
 	  (old-path (eval old t)))
@@ -176,6 +191,8 @@ expanded path."
 		       (concat dotemacs-state-directory
 			       "removed/"
 			       (file-name-nondirectory old-path))))))
+      (when (and (file-exists-p new-path) mode)
+	(set-file-modes new-path mode))
       (set-default sym new-path))))
 
 (dotemacs-state-setup)
