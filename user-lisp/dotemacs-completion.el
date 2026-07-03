@@ -57,6 +57,7 @@
 
 (setq read-file-name-completion-ignore-case t)
 (setq read-buffer-completion-ignore-case t)
+(setq completion-ignore-case t)
 
 ;; Registers an orderless dispatcher that makes
 ;; 1) the “$” suffix work together with Consult’s tofu suffixes, and
