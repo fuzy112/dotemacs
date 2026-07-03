@@ -55,6 +55,9 @@
 
 (setq completion-pcm-leading-wildcard t)
 
+(setq read-file-name-completion-ignore-case t)
+(setq read-buffer-completion-ignore-case t)
+
 ;; Registers an orderless dispatcher that makes
 ;; 1) the “$” suffix work together with Consult’s tofu suffixes, and
 ;; 2) dotted file-extension patterns of the form “.EXT”.
