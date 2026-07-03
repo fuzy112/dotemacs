@@ -74,6 +74,9 @@
    ((string-suffix-p "$" word)
     `(orderless-regexp . ,(concat (substring word 0 -1) (+orderless--consult-suffix))))
    ((and (or minibuffer-completing-file-name
+             (and-let* ((cat (completion-metadata-get (orderless--metadata) 'category)))
+               (or (memq cat '(file project-file recentf))
+                   (memq 'file (get cat 'completion-category-parents))))
              (derived-mode-p 'eshell-mode))
          (string-match-p "\\`\\.." word))
     `(orderless-regexp . ,(concat "\\." (substring word 1) (+orderless--consult-suffix))))))
