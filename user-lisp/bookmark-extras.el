@@ -78,9 +78,8 @@
 ;;;; Utility
 
 (defun bookmark-display-buffer (buffer)
-  (if (featurep 'bookmark+-1)
-      (when bmkp-jump-display-function
-        (funcall bmkp-jump-display-function buffer))
+  (if (bound-and-true-p bmkp-jump-display-function)
+      (funcall bmkp-jump-display-function buffer)
     (pop-to-buffer buffer))
   (set-buffer buffer))
 
@@ -186,6 +185,7 @@
 ;;;; Eat-mode
 
 (defvar eat-buffer-name)
+(declare-function eat--1 "ext:eat.el")
 
 (defun eat-bookmark-make-record ()
   "Create a bookmark record for `eat-mode'."
@@ -289,11 +289,15 @@
 
 ;;;###autoload(add-hook 'telega-root-mode-hook #'telega-root-bookmark-enable)
 
+(declare-function telega-chatbuf--get-create "ext:telega-chat.el")
+(declare-function telega-chat-get "ext:telega-chat.el")
+
 (defun telega-chat-bookmark-make-record ()
+  (defvar telega-chatbuf--chat)
   `(,@(bookmark-make-record-default 'no-file)
-    (buffer-name . ,(buffer-name))
-    (telega-chat-id . ,(plist-get telega-chatbuf--chat :id))
-    (handler . telega-chat-bookmark-handler)))
+      (buffer-name . ,(buffer-name))
+      (telega-chat-id . ,(plist-get telega-chatbuf--chat :id))
+      (handler . telega-chat-bookmark-handler)))
 
 ;;;###autoload
 (defun telega-chat-bookmark-handler (bookmark)
@@ -341,7 +345,6 @@
 ;;;###autoload
 (defun bookmark-extras-install ()
   (interactive)
-  (add-hook 'devdocs-mode-hook #'devdocs-bookmark-enable)
   (add-hook 'compilation-mode-hook #'compilation-bookmark-enable)
   (add-hook 'compilation-minor-mode-hook #'compilation-bookmark-enable)
   (add-hook 'compilation-shell-minor-mode-hook #'compilation-bookmark-enable)
