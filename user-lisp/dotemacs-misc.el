@@ -215,7 +215,12 @@
               (lambda ()
                 (interactive)
                 (let ((browse-url-browser-function #'eww-browse-url))
-                  (call-interactively #'elfeed-show-visit)))))
+                  (call-interactively #'elfeed-show-visit))))
+  (setopt elfeed-feeds (with-temp-buffer
+                         (insert-file-contents (dotemacs-state-file "elfeed/feeds.eld"))
+                         (goto-char (point-min))
+                         (read (current-buffer))))
+  (setopt elfeed-entry-point 'elfeed-tree))
 
 ;;;; envrc
 
