@@ -450,6 +450,7 @@ If there is no active minibuffer, signal an error."
   (keymap-set embark-general-map "J" #'embark-inject)
   (keymap-set embark-general-map "\\" #'embark-history-remove)
   (keymap-set embark-general-map "W" `("Search web" . ,#'+embark/search-web))
+  (keymap-set embark-url-map "X" #'xwidget-webkit-browse-url)
   (keymap-set embark-file-map "#" '+embark/find-file-as-root)
   (keymap-set embark-file-map "r" 'find-file-read-only)
   (keymap-set embark-file-map "V" 'view-file)
