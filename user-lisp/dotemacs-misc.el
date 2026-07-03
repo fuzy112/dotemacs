@@ -282,7 +282,21 @@
     (when (string-empty-p target)
       (user-error "No target specified"))
     (compile command)))
+
+(defun send-to/bluetooth-supported-p ()
+  (executable-find "blueman-sendto"))
+(defun send-to/bluetooth-send-items (items)
+  (let* ((files (mapcar #'send-to--convert-item-to-filename items))
+         (devices (process-lines "bluetoothctl" "devices"))
+         (table (completion-table-with-metadata devices '((category . send-to-bluetooth-target))))
+         (target (cadr (split-string (completing-read "Target: " table nil t))))
+         (command (concat "blueman-sendto -d " target " " (combine-and-quote-strings files " "))))
+    (compile command)))
 (with-eval-after-load 'send-to
+  (add-to-list 'send-to-handlers
+               '((:supported . send-to/bluetooth-supported-p)
+                 (:collect . send-to--collect-items)
+                 (:send . send-to/bluetooth-send-items)))
   (add-to-list 'send-to-handlers
                '((:supported . send-to/tailscale-supported-p)
                  (:collect . send-to--collect-items)
