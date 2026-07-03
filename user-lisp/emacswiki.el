@@ -17,13 +17,36 @@
     "dired+.el"
 
     ;; linkd
-    "linkd.el"))
+    "linkd.el"
+
+    ;; help+
+    "help+.el"
+
+    ;; help-fns+
+    "help-fns+.el"
+
+    ;; info+
+    "info+.el"
+
+    ;; thingatpt+
+    "thingatpt+.el"))
 
 ;;;###autoload
-(defun emacskiwi-update-elisp-files ()
+(defun emacswiki-update-all-elisp-files ()
+  "Update all EmacsWiki ELisp files listed in `emacswiki-elisp-files'."
   (interactive)
+  (dolist (file emacswiki-elisp-files)
+    (emacswiki-update-elisp-file file)))
+
+;;;###autoload
+(defun emacswiki-update-elisp-file (file)
+  "Download and replace FILE from EmacsWiki.
+FILE should be a filename (without directory) that exists on EmacsWiki."
+  (interactive (list (completing-read "File: " emacswiki-elisp-files)))
   (let ((default-directory (file-name-directory (or buffer-file-name load-file-name))))
-    (dolist (file emacswiki-elisp-files)
-      (let* ((url (format "https://www.emacswiki.org/emacs/download/%s" (url-hexify-string file)))
-	     (dest (file-name-nondirectory file)))
-	(url-copy-file url dest 'ok-if-already-exists)))))
+    (let* ((url (format "https://www.emacswiki.org/emacs/download/%s" (url-hexify-string file)))
+	   (dest (file-name-nondirectory file)))
+      (url-copy-file url dest 'ok-if-already-exists))))
+
+(provide 'emacswiki)
+;;; emacswiki.el ends here
