@@ -26,47 +26,131 @@
   (make-directory (concat dotemacs-state-directory "removed/")))
 
 (defvar dotemacs-state-file-alist
-  ;; symbol  			new-path		   		old-path
-  '((custom-file			"custom.el.zst" 	      nil)
-    (savehist-file              	"history.eld.zst" 	      (locate-user-emacs-file "history" ".emacs-history"))
-    (save-place-file            	"places.eld.zst" 	      (locate-user-emacs-file '("places.eld" "places") ".emacs-places"))
-    (project-list-file			"projects.eld.zst" 	      (locate-user-emacs-file (if (>= emacs-major-version 31) '("projects.eld" "projects") "projects")))
-    (recentf-save-file 		 	"recentf.eld.zst" 	      (locate-user-emacs-file '("recentf.eld" "recentf") ".recentf"))
-    (project-compile-history-file  	"project-compile-history.eld.zst" (expand-file-name "project-compile-history.eld" user-emacs-directory) )
-    (tramp-persistency-file-name 	"tramp.eld" 		      (locate-user-emacs-file "tramp"))
-    (ecomplete-database-file     	"ecompleterc.zst" 	      (locate-user-emacs-file "ecompleterc" "~/.ecompleterc"))
-    (url-configuration-directory 	"url/" 			      (locate-user-emacs-file "url/" ".url/"))
-    (devdocs-data-dir	        	"devdocs/" 		      (expand-file-name "devdocs" user-emacs-directory))
-    (forge-database-file 		"forge-database.sqlite"       (expand-file-name "forge-database.sqlite" user-emacs-directory))
-    (undo-fu-session-directory 		"undo-fu-session/" 	      (locate-user-emacs-file "undo-fu-session" ".emacs-undo-fu-session"))
-    (mastodon-client--token-file	"mastodon.plstore" 	      (concat user-emacs-directory "mastodon.plstore"))
-    (eshell-directory-name 		"eshell/" 		      (locate-user-emacs-file "eshell/" ".eshell/"))
-    (org-id-locations-file 		"org_id-locations.eld.zst"    (locate-user-emacs-file ".org-id-locations"))
-    (bookmark-default-file		"bookmarks.eld.zst"	      (locate-user-emacs-file '("bookmarks.eld" "bookmarks") ".emacs.bmk"))
-    (eww-bookmarks-directory            "/"  			      nil)
-    (+eww-bookmarks-file                "eww-bookmarks"  	      (expand-file-name "eww-bookmarks" user-emacs-directory))
-    (transient-history-file		"transient-history.eld.zst"   (locate-user-emacs-file "transient/history.el"))
-    (bangs-cache-file			"bangs.json"		      (expand-file-name "bangs.json" user-emacs-directory))
-    (ielm-history-file-name		"ielm-history.eld.zst"        (locate-user-emacs-file "ielm-history.eld"))
-    (persist--directory-location	"persist"		      (locate-user-emacs-file "persist"))
-    (multisession-directory             "multisession/" 	      (expand-file-name "multisession/" user-emacs-directory))
-    (request-storage-directory          "request/" 		      (concat (file-name-as-directory user-emacs-directory) "request"))
-    (nsm-settings-file			"network-security.eld.zst"    (locate-user-emacs-file '("network-security.eld" "network-security.data")))
-    (abbrev-file-name			"abbrev_defs" 		      (locate-user-emacs-file "abbrev_defs" ".abbrev_defs"))
-    (save-completions-file-name		"completions"		      (locate-user-emacs-file "completions" ".completions"))
-    (ido-save-directory-list-file	"ido.last"		      (locate-user-emacs-file "ido.last" ".ido.last"))
-    (mpc-data-directory			"mpc/"			      (locate-user-emacs-file "mpc" ".mpc"))
-    (remember-data-file			"notes"			      (locate-user-emacs-file "notes" ".notes"))
-    (shadow-info-file			"shadows"		      (locate-user-emacs-file "shadows" ".shadows"))
-    (shadow-todo-file			"shadow_todo"		      (locate-user-emacs-file "shadow_todo" ".shadow_todo"))
-    (calc-settings-file			"calc.el"		      (locate-user-emacs-file "calc.el" ".calc.el"))
-    (diary-file				"diary"			      (locate-user-emacs-file "diary" "diary"))
-    (hbmap:dir-user			"hyperbole/"		      (if (and (memq system-type '(ms-windows windows-nt ms-dos win32)) (not (getenv "HOME"))) "c:/_hyperb/" "~/.hyperb/"))
-    (hbmap:dir-filename			"hyperbole/HBMAP"	      (expand-file-name "HBMAP" (if (and (memq system-type '(ms-windows windows-nt ms-dos win32)) (not (getenv "HOME"))) "c:/_hyperb/" "~/.hyperb/")))
-    (gptel-gh-github-token-file		"copilot-chat/github-token"   (expand-file-name ".cache/copilot-chat/github-token" user-emacs-directory))
-    (gptel-gh-token-file		"copilot-chat/token"	      (expand-file-name ".cache/copilot-chat/token" user-emacs-directory))
-    (magit-user-githook-file		"magit-githooks"	      (locate-user-emacs-file "magit-githooks"))
-    (xwidget-webkit-cookie-file         "xwidget-webkit-cookies.txt"  nil)))
+  '((custom-file
+     :new "custom.el.zst")
+    (savehist-file
+     :new "history.eld.zst"
+     :old (locate-user-emacs-file "history" ".emacs-history"))
+    (save-place-file
+     :new "places.eld.zst"
+     :old (locate-user-emacs-file '("places.eld" "places") ".emacs-places"))
+    (project-list-file
+     :new "projects.eld.zst"
+     :old (locate-user-emacs-file (if (>= emacs-major-version 31)
+				      '("projects.eld" "projects")
+				    "projects")))
+    (recentf-save-file
+     :new "recentf.eld.zst"
+     :old (locate-user-emacs-file '("recentf.eld" "recentf") ".recentf"))
+    (project-compile-history-file
+     :new "project-compile-history.eld.zst"
+     :old (expand-file-name "project-compile-history.eld" user-emacs-directory))
+    (tramp-persistency-file-name
+     :new "tramp.eld"
+     :old (locate-user-emacs-file "tramp"))
+    (ecomplete-database-file
+     :new "ecompleterc.zst"
+     :old (locate-user-emacs-file "ecompleterc" "~/.ecompleterc"))
+    (url-configuration-directory
+     :new "url/"
+     :old (locate-user-emacs-file "url/" ".url/"))
+    (devdocs-data-dir
+     :new "devdocs/"
+     :old (expand-file-name "devdocs" user-emacs-directory))
+    (forge-database-file
+     :new "forge-database.sqlite"
+     :old (expand-file-name "forge-database.sqlite" user-emacs-directory))
+    (undo-fu-session-directory
+     :new "undo-fu-session/"
+     :old (locate-user-emacs-file "undo-fu-session" ".emacs-undo-fu-session"))
+    (mastodon-client--token-file
+     :new "mastodon.plstore"
+     :old (concat user-emacs-directory "mastodon.plstore"))
+    (eshell-directory-name
+     :new "eshell/"
+     :old (locate-user-emacs-file "eshell/" ".eshell/"))
+    (org-id-locations-file
+     :new "org_id-locations.eld.zst"
+     :old (locate-user-emacs-file ".org-id-locations"))
+    (bookmark-default-file
+     :new "bookmarks.eld.zst"
+     :old (locate-user-emacs-file '("bookmarks.eld" "bookmarks") ".emacs.bmk"))
+    (eww-bookmarks-directory
+     :new "/")
+    (+eww-bookmarks-file
+     :new "eww-bookmarks"
+     :old (expand-file-name "eww-bookmarks" user-emacs-directory))
+    (transient-history-file
+     :new "transient-history.eld.zst"
+     :old (locate-user-emacs-file "transient/history.el"))
+    (bangs-cache-file
+     :new "bangs.json"
+     :old (expand-file-name "bangs.json" user-emacs-directory))
+    (ielm-history-file-name
+     :new "ielm-history.eld.zst"
+     :old (locate-user-emacs-file "ielm-history.eld"))
+    (persist--directory-location
+     :new "persist"
+     :old (locate-user-emacs-file "persist"))
+    (multisession-directory
+     :new "multisession/"
+     :old (expand-file-name "multisession/" user-emacs-directory))
+    (request-storage-directory
+     :new "request/"
+     :old (concat (file-name-as-directory user-emacs-directory) "request"))
+    (nsm-settings-file
+     :new "network-security.eld.zst"
+     :old (locate-user-emacs-file '("network-security.eld" "network-security.data")))
+    (abbrev-file-name
+     :new "abbrev_defs"
+     :old (locate-user-emacs-file "abbrev_defs" ".abbrev_defs"))
+    (save-completions-file-name
+     :new "completions"
+     :old (locate-user-emacs-file "completions" ".completions"))
+    (ido-save-directory-list-file
+     :new "ido.last"
+     :old (locate-user-emacs-file "ido.last" ".ido.last"))
+    (mpc-data-directory
+     :new "mpc/"
+     :old (locate-user-emacs-file "mpc" ".mpc"))
+    (remember-data-file
+     :new "notes"
+     :old (locate-user-emacs-file "notes" ".notes"))
+    (shadow-info-file
+     :new "shadows"
+     :old (locate-user-emacs-file "shadows" ".shadows"))
+    (shadow-todo-file
+     :new "shadow_todo"
+     :old (locate-user-emacs-file "shadow_todo" ".shadow_todo"))
+    (calc-settings-file
+     :new "calc.el"
+     :old (locate-user-emacs-file "calc.el" ".calc.el"))
+    (diary-file
+     :new "diary"
+     :old (locate-user-emacs-file "diary" "diary"))
+    (hbmap:dir-user
+     :new "hyperbole/"
+     :old (if (and (memq system-type '(ms-windows windows-nt ms-dos win32))
+		   (not (getenv "HOME")))
+	      "c:/_hyperb/"
+	    "~/.hyperb/"))
+    (hbmap:dir-filename
+     :new "hyperbole/HBMAP"
+     :old (expand-file-name "HBMAP" (if (and (memq system-type '(ms-windows windows-nt ms-dos win32))
+					     (not (getenv "HOME")))
+					"c:/_hyperb/"
+				      "~/.hyperb/")))
+    (gptel-gh-github-token-file
+     :new "copilot-chat/github-token"
+     :old (expand-file-name ".cache/copilot-chat/github-token" user-emacs-directory))
+    (gptel-gh-token-file
+     :new "copilot-chat/token"
+     :old (expand-file-name ".cache/copilot-chat/token" user-emacs-directory))
+    (magit-user-githook-file
+     :new "magit-githooks"
+     :old (locate-user-emacs-file "magit-githooks"))
+    (xwidget-webkit-cookie-file
+     :new "xwidget-webkit-cookies.txt")))
 
 (defun dotemacs-state-setup ()
   "Relocate state files to `dotemacs-state-directory'.
@@ -75,7 +159,7 @@ For each entry in `dotemacs-state-file-alist', if the old path exists
 and the new path does not, copy or rename the file or directory to the
 new location.  Then set the default value of the symbol to the new
 expanded path."
-  (pcase-dolist (`(,sym ,new ,old) dotemacs-state-file-alist)
+  (pcase-dolist (`(,sym . ,(map :old :new)) dotemacs-state-file-alist)
     (let ((new-path (abbreviate-file-name
 		     (expand-file-name new dotemacs-state-directory)))
 	  (old-path (eval old t)))
