@@ -265,6 +265,29 @@
   (setopt zone-all-frames t
           zone-all-windows-in-frame t))
 
+;;;; send-to
+
+(define-completion-category 'send-to-tailscale-target ()
+  "Completion category for `send-to/tailscale-send-items' targets."
+  :style '(substring))
+
+(defun send-to/tailscale-supported-p ()
+  (executable-find "tailscale"))
+(defun send-to/tailscale-send-items (items)
+  (let* ((files (mapcar #'send-to--convert-item-to-filename items))
+         (candidates (process-lines "tailscale" "file" "cp" "--targets"))
+         (table (completion-table-with-metadata candidates '((category . send-to-tailscale-target))))
+         (target (car (split-string (completing-read "Target: " table nil t))))
+         (command (concat "tailscale file cp " (combine-and-quote-strings files " ") " " target ":")))
+    (when (string-empty-p target)
+      (user-error "No target specified"))
+    (compile command)))
+(with-eval-after-load 'send-to
+  (add-to-list 'send-to-handlers
+               '((:supported . send-to/tailscale-supported-p)
+                 (:collect . send-to--collect-items)
+                 (:send . send-to/tailscale-send-items))))
+
 ;;;; uptime
 
 ;; Set up a timer to display emacs uptime every 30 min.
