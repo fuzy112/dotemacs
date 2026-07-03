@@ -84,36 +84,6 @@
     (pop-to-buffer buffer))
   (set-buffer buffer))
 
-;;;; DevDocs
-
-(defvar devdocs--stack)
-(declare-function devdocs--render "ext:devdocs.el")
-
-(defun devdocs-bookmark-make-record ()
-  "Create a bookmark record."
-  (let ((entry (car devdocs--stack)))
-    `(,(format "DevDocs: %s" (alist-get 'name entry))
-      ,@(bookmark-make-record-default 'no-file 'no-context)
-      (entry . ,entry)
-      (handler . ,#'devdocs-bookmark-handler))))
-
-;;;###autoload
-(defun devdocs-bookmark-handler (bookmark)
-  "Jump to BOOKMARK entry."
-  (require 'devdocs)
-  (let-alist bookmark
-    (let ((buf (devdocs--render .entry)))
-      (bookmark-display-buffer buf)
-      (goto-char .position))))
-
-;;;###autoload
-(defun devdocs-bookmark-enable ()
-  "Enable devdocs-bookmark support."
-  (setq-local bookmark-make-record-function
-              #'devdocs-bookmark-make-record))
-
-;;;###autoload(add-hook 'devdocs-mode-hook #'devdocs-bookmark-enable)
-
 ;;;; Mu4e
 (declare-function mu4e "ext:mu4e.el")
 
