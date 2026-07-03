@@ -135,5 +135,15 @@ font-locking and indentation."
   (keymap-set Info-mode-map "<mouse-8>" #'Info-history-back)
   (keymap-set Info-mode-map "<mouse-9>" #'Info-history-forward))
 
+(defun info-buffer-auto-rename ()
+  (interactive nil Info-mode)
+  (when Info-current-file
+    (let* ((name (format "info<%s>"
+                         (file-name-sans-extension
+                          (file-name-nondirectory Info-current-file)))))
+      (rename-buffer name t))))
+
+(add-hook 'Info-selection-hook #'info-buffer-auto-rename)
+
 (provide 'dotemacs-help)
 ;;; dotemacs-help.el ends here
