@@ -494,10 +494,21 @@ not used, but is required by the hook."
 
 
 (defun smart-kill-buffer ()
+  "Kill the current buffer with prefix argument control.
+
+With a single \\[universal-argument] (C-u), prompt for a buffer to kill
+using `kill-buffer'.  With \\[universal-argument] \\[universal-argument] \\[universal-argument] kill the current
+buffer without running `kill-buffer-hook'.  Without prefix
+argument, kill the current buffer normally via `kill-current-buffer'."
   (interactive)
-  (if current-prefix-arg
-      (call-interactively #'kill-buffer)
-    (call-interactively #'kill-current-buffer)))
+  (pcase current-prefix-arg
+    ('(64)                             ; C-u C-u C-u
+     (setq-local kill-buffer-hook nil)
+     (call-interactively #'kill-current-buffer))
+    ('(4)                              ; C-u
+     (call-interactively #'kill-buffer))
+    (_
+     (call-interactively #'kill-current-buffer))))
 
 (provide 'dotemacs-ui)
 ;;; dotemacs-ui.el ends here
