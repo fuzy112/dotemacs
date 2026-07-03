@@ -52,29 +52,6 @@
   "Enhancements to bookmark functionality."
   :group 'bookmark)
 
-;;;; Bookmark-save debounce
-
-;; When using `bookmark-delete' etc. with `embark-act-all', the
-;; bookmark file is saved many times, which is very slow.  The
-;; following code debounces the `bookmark-save' call, in the specified
-;; functions, to optimise the performance.
-
-(defcustom bookmark-save-delay 1.5
-  "The number of seconds to wait before running `bookmark-save'."
-  :type 'number
-  :set (lambda (sym val)
-         (set-default sym val)
-         (if bookmark-save-delay
-             (advice-add #'bookmark-save :around #'bookmark-save-debounce)
-           (advice-remove #'bookmark-save #'bookmark-save-debounce))))
-
-(defvar bookmark-save-debounce-timer nil)
-
-(defun bookmark-save-debounce (&rest args)
-  (when (timerp bookmark-save-debounce-timer)
-    (cancel-timer bookmark-save-debounce-timer))
-  (setq bookmark-save-debounce-timer (apply #'run-with-timer bookmark-save-delay nil args)))
-
 ;;;; Utility
 
 (defun bookmark-display-buffer (buffer)
