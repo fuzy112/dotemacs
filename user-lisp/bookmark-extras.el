@@ -75,6 +75,15 @@
     (cancel-timer bookmark-save-debounce-timer))
   (setq bookmark-save-debounce-timer (apply #'run-with-timer bookmark-save-delay nil args)))
 
+;;;; Utility
+
+(defun bookmark-display-buffer (buffer)
+  (if (featurep 'bookmark+-1)
+      (when bmkp-jump-display-function
+        (funcall bmkp-jump-display-function buffer))
+    (pop-to-buffer buffer))
+  (set-buffer buffer))
+
 ;;;; DevDocs
 
 (defvar devdocs--stack)
@@ -94,7 +103,7 @@
   (require 'devdocs)
   (let-alist bookmark
     (let ((buf (devdocs--render .entry)))
-      (set-buffer buf)
+      (bookmark-display-buffer buf)
       (goto-char .position))))
 
 ;;;###autoload
@@ -118,7 +127,7 @@
 (defun mu4e-bookmark-main-handler (bookmark)
   "Jump to BOOKMARK entry."
   (require 'mu4e)
-  (set-buffer
+  (bookmark-display-buffer
    (save-window-excursion
      (mu4e)
      (current-buffer)))
@@ -218,7 +227,7 @@
   (let-alist bookmark
     (let ((default-directory .default-directory)
           (eat-buffer-name .buffer-name))
-      (set-buffer (eat)))))
+      (bookmark-display-buffer (eat)))))
 
 ;;;###autoload
 (defun eat-bookmark-enable ()
@@ -265,7 +274,7 @@
                  .search-term
                  .directory
                  .initial-filename)))
-      (funcall deadgrep-display-buffer-function buf)
+      (bookmark-display-buffer buf)
       (with-current-buffer buf
         (setq imenu-create-index-function #'deadgrep--create-imenu-index)
         (setq next-error-function #'deadgrep-next-error)
@@ -298,7 +307,7 @@
 ;;;###autoload
 (defun telega-root-bookmark-handler (bookmark)
   (let ((telega-root-buffer-name (bookmark-prop-get bookmark 'buffer-name)))
-    (set-buffer (telega))))
+    (bookmark-display-buffer (telega))))
 
 ;;;###autoload
 (defun telega-root-bookmark-enable ()
@@ -318,7 +327,7 @@
   (telega t)
   (let* ((id (bookmark-prop-get bookmark 'telega-chat-id))
          (chat (telega-chat-get id)))
-    (set-buffer
+    (bookmark-display-buffer
      (telega-chatbuf--get-create chat))))
 
 ;;;###autoload
