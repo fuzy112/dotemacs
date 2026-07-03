@@ -140,6 +140,8 @@
   (setopt save-place-limit 65536)
   (setopt save-place-autosave-interval 30)
   (setopt save-place-abbreviate-file-names t)
+  ;; Add /run/user/*/gvfs/
+  (setopt save-place-skip-check-regexp "\\`/\\(?:cdrom\\|floppy\\|mnt\\|run/user/[[:digit:]]+/gvfs/\\|\\(?:[^@/:]*@\\)?[^@/:]*[^@/:.]:\\)")
   (save-place-mode))
 
 (define-advice save-place-find-file-hook (:after (&rest _) recenter)
