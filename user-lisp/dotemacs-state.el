@@ -170,6 +170,9 @@
      :new "elfeed"
      :old (locate-user-emacs-file "elfeed" "~/.elfeed"))))
 
+(defun dotemacs-state-file (name)
+  (expand-file-name name dotemacs-state-directory))
+
 (defun dotemacs-state-setup ()
   "Relocate state files to `dotemacs-state-directory'.
 
@@ -178,8 +181,7 @@ and the new path does not, copy or rename the file or directory to the
 new location.  Then set the default value of the symbol to the new
 expanded path."
   (pcase-dolist (`(,sym . ,(map :old :new :mode)) dotemacs-state-file-alist)
-    (let ((new-path (abbreviate-file-name
-		     (expand-file-name new dotemacs-state-directory)))
+    (let ((new-path (abbreviate-file-name (dotemacs-state-file new)))
 	  (old-path (eval old t)))
       (when (and old-path (not (file-exists-p new-path)) (file-exists-p old-path))
 	(cond
