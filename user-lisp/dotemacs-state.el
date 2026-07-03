@@ -165,7 +165,10 @@
      :old (locate-user-emacs-file "magit-githooks"))
     (xwidget-webkit-cookie-file
      :new "xwidget-webkit-cookies.txt"
-     :mode #o600)))
+     :mode #o600)
+    (elfeed-db-directory
+     :new "elfeed"
+     :old (locate-user-emacs-file "elfeed" "~/.elfeed"))))
 
 (defun dotemacs-state-setup ()
   "Relocate state files to `dotemacs-state-directory'.
