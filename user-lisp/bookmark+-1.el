@@ -11117,6 +11117,7 @@ BOOKMARK is a bookmark name or a bookmark record."
             (filename . ,dir) (dired-directory . ,dired-directory)
             (dired-marked . ,mark-alist) (dired-switches . ,dired-actual-switches)
             (dired-subdirs . ,subdirs) (dired-hidden-dirs . ,hidden-dirs)
+            (dired-omit-mode . ,(bound-and-true-p dired-omit-mode))
             (handler . bmkp-jump-dired)))
       (save-excursion                 ; Hide subdirs that were hidden.
         (dolist (dir  hidden-dirs)  (when (dired-goto-subdir dir) (dired-hide-subdir 1)))))))
@@ -11144,7 +11145,8 @@ BOOKMARK is a bookmark name or a bookmark record."
         (mark-alist   (bookmark-prop-get bookmark 'dired-marked))
         (switches     (bookmark-prop-get bookmark 'dired-switches))
         (subdirs      (bookmark-prop-get bookmark 'dired-subdirs))
-        (hidden-dirs  (bookmark-prop-get bookmark 'dired-hidden-dirs)))
+        (hidden-dirs  (bookmark-prop-get bookmark 'dired-hidden-dirs))
+        (omit-mode    (bookmark-prop-get bookmark 'dired-omit-mode)))
     (cl-case bmkp-jump-display-function
       ((nil bmkp--pop-to-buffer-same-window display-buffer)
        (dired dir switches))
@@ -11161,6 +11163,8 @@ BOOKMARK is a bookmark name or a bookmark record."
         (dired-mark-remembered mark-alist)) ; New format
       (save-excursion
         (dolist (dir  hidden-dirs) (when (dired-goto-subdir dir) (dired-hide-subdir 1)))))
+    (when (and omit-mode (fboundp 'dired-omit-mode))
+      (dired-omit-mode))
     (let ((pos  (bookmark-get-position bookmark))) (when pos (goto-char pos)))))
 
 ;;;###autoload (autoload 'bmkp-bookmark-all-dired-buffers "bookmark+")
