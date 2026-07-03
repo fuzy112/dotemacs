@@ -152,6 +152,7 @@
          (jinx grid (vertico-grid-annotate . 20) (vertico-count . 4))
          (gpg-key)
          (recentf unobtrusive)
+         (consult-history)
          (nil grid)))
 
 ;;;; marginalia
@@ -529,6 +530,16 @@ If there is no active minibuffer, signal an error."
      consult-source-project-buffer
      consult-source-buffer-register
      :preview-key '(:debounce 0.2 any)
+     consult-history
+     :category (and (minibufferp)
+                    (pcase minibuffer-history-variable
+                      ('extended-command-history 'command)
+                      ('buffer-name-history 'buffer)
+                      ('face-name-history 'face)
+                      ('read-envvar-name-history 'environment-variable)
+                      ('bookmark-history 'bookmark)
+                      ('file-name-history 'file)
+                      (_ 'consult-history)))
      consult-xref
      consult-ripgrep consult-grep consult-git-grep consult-ugrep
      consult-theme
