@@ -551,9 +551,18 @@ If there is no active minibuffer, signal an error."
   ;; url-only bookmark type
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow)))
 
+  (cl-pushnew #'eat-bookmark-handler (cddr (assoc ?s consult-bookmark-narrow)))
+  (cl-pushnew #'bmkp-jump-eww (cddr (assoc ?w consult-bookmark-narrow)))
+  (cl-pushnew #'bmkp-jump-gnus (cddr (assoc ?m consult-bookmark-narrow)))
+  (cl-pushnew #'pdf-view-mode (cddr (assoc ?d consult-bookmark-narrow)))
+  (cl-pushnew #'reader-bookmark-jump (cddr (assoc ?d consult-bookmark-narrow)))
+
   (add-to-list 'consult-bookmark-narrow '(?t "Tab" tab-bookmark-handler))
   (add-to-list 'consult-bookmark-narrow '(?V "View" bookmark-view-handler))
   (add-to-list 'consult-bookmark-narrow '(?g "Magit" magit--handle-bookmark))
+  (add-to-list 'consult-bookmark-narrow '(?c "Compilation" compilation-bookmark-handler))
+  (add-to-list 'consult-bookmark-narrow '(?D "Dired" bmkp-jump-dired))
+  (add-to-list 'consult-bookmark-narrow '(?T "Telega" telega-chat-bookmark-handler telega-root-bookmark-handler))
 
   ;; filter internal buffers
   (add-to-list 'consult-buffer-filter
