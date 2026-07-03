@@ -237,7 +237,8 @@ Then refresh all windows displaying the current buffer."
 ;;;; consult-git-log-grep
 
 (after-load! consult-git-log-grep
-  (setopt consult-git-log-grep-open-function #'magit-show-commit
+  (setopt consult-git-log-grep-preview t
+          consult-git-log-grep-open-function #'magit-show-commit
           consult-git-log-grep-embark-exporter #'consult-git-log-grep--export-magit-log))
 
 ;;;; quilt
