@@ -401,7 +401,9 @@ PLACE should be a function symbol or a place suitable for
 `add-function'.  If PLACE is a quoted or function-quoted symbol, use
 `advice-add'; else use `add-function'."
   (if (memq (car place) '(function quote))
-      `(advice-add ,place :around #'dotemacs-wrap-no-messages)
+      (if (symbolp (cadr place))
+          `(advice-add ,place :around #'dotemacs-wrap-no-messages)
+        (byte-compile-warn "(shut-up! %S): Unsupported place" place))
     `(add-function :around ,place #'dotemacs-wrap-no-messages)))
 
 (provide 'dotemacs-core)
