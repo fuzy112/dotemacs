@@ -160,15 +160,15 @@
 (defun compilation-bookmark-handler (bookmark)
   "Jump to a BOOKMARK entry."
   (let-alist bookmark
-    (with-current-buffer (get-buffer-create .buffer-name)
-      (setq default-directory .directory)
-      (funcall .major-mode)
-      (setq-local compilation-arguments .compilation-arguments)
-      (when compilation-minor-mode
-        (compilation-minor-mode +1))
-      (when compilation-shell-minor-mode
-        (compilation-shell-minor-mode +1))
-      (apply #'compilation-start compilation-arguments))))
+    (bookmark-display-buffer (get-buffer-create .buffer-name))
+    (setq default-directory .directory)
+    (funcall .major-mode)
+    (setq-local compilation-arguments .compilation-arguments)
+    (when compilation-minor-mode
+      (compilation-minor-mode +1))
+    (when compilation-shell-minor-mode
+      (compilation-shell-minor-mode +1))
+    (apply #'compilation-start compilation-arguments)))
 
 ;;;###autoload
 (defun compilation-bookmark-enable (&optional _)
@@ -198,8 +198,12 @@
 (defun shell-bookmark-handler (bookmark)
   "Jump to a BOOKMARK entry."
   (let-alist bookmark
-    (let ((default-directory .default-directory))
-      (shell .buffer-name))))
+    (let ((default-directory .default-directory)
+          shell-buffer)
+      (save-window-excursion
+        (shell .buffer-name)
+        (setq shell-buffer (current-buffer)))
+      (bookmark-display-buffer shell-buffer))))
 
 ;;;###autoload
 (defun shell-bookmark-enable ()
@@ -216,9 +220,9 @@
 (defun eat-bookmark-make-record ()
   "Create a bookmark record for `eat-mode'."
   `(,@(bookmark-make-record-default 'no-file 'no-context)
-    (default-directory . ,default-directory)
-    (buffer-name . ,(buffer-name))
-    (handler . ,#'eat-bookmark-handler)))
+      (default-directory . ,default-directory)
+      (buffer-name . ,(buffer-name))
+      (handler . ,#'eat-bookmark-handler)))
 
 ;;;###autoload
 (defun eat-bookmark-handler (bookmark)
@@ -227,7 +231,7 @@
   (let-alist bookmark
     (let ((default-directory .default-directory)
           (eat-buffer-name .buffer-name))
-      (bookmark-display-buffer (eat)))))
+      (eat--1 nil nil #'bookmark-display-buffer))))
 
 ;;;###autoload
 (defun eat-bookmark-enable ()
@@ -307,7 +311,7 @@
 ;;;###autoload
 (defun telega-root-bookmark-handler (bookmark)
   (let ((telega-root-buffer-name (bookmark-prop-get bookmark 'buffer-name)))
-    (bookmark-display-buffer (telega))))
+    (bookmark-display-buffer (telega 'no-pop))))
 
 ;;;###autoload
 (defun telega-root-bookmark-enable ()
