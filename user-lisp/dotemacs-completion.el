@@ -541,6 +541,7 @@ If there is no active minibuffer, signal an error."
 
   (add-to-list 'consult-bookmark-narrow '(?t "Tab" tab-bookmark-handler))
   (add-to-list 'consult-bookmark-narrow '(?V "View" bookmark-view-handler))
+  (add-to-list 'consult-bookmark-narrow '(?g "Magit" magit--handle-bookmark))
 
   ;; filter internal buffers
   (add-to-list 'consult-buffer-filter
