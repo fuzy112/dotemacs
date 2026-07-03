@@ -65,7 +65,8 @@
     (hbmap:dir-filename			"hyperbole/HBMAP"	      (expand-file-name "HBMAP" (if (and (memq system-type '(ms-windows windows-nt ms-dos win32)) (not (getenv "HOME"))) "c:/_hyperb/" "~/.hyperb/")))
     (gptel-gh-github-token-file		"copilot-chat/github-token"   (expand-file-name ".cache/copilot-chat/github-token" user-emacs-directory))
     (gptel-gh-token-file		"copilot-chat/token"	      (expand-file-name ".cache/copilot-chat/token" user-emacs-directory))
-    (magit-user-githook-file		"magit-githooks"	      (locate-user-emacs-file "magit-githooks"))))
+    (magit-user-githook-file		"magit-githooks"	      (locate-user-emacs-file "magit-githooks"))
+    (xwidget-webkit-cookie-file         "xwidget-webkit-cookies.txt"  nil)))
 
 (defun dotemacs-state-setup ()
   "Relocate state files to `dotemacs-state-directory'.
