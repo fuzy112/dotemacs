@@ -1,4 +1,4 @@
-;;; linkd.el --- Make hypertext with active links in any buffer
+;;; linkd.el --- Make hypertext with active links in any buffer  -*- lexical-binding: t; -*-
 ;;
 ;; Filename: linkd.el
 ;; Description: Make hypertext with active links in any buffer
@@ -18,7 +18,7 @@
 ;; URL: http://www.emacswiki.org/cgi-bin/wiki/linkd.el
 ;; URL: http://www.emacswiki.org/emacs/linkd.tar.gz
 ;; Keywords: hypermedia help
-;; Compatibility: GNU Emacs 21.x, GNU Emacs 22.x
+;; Compatibility: GNU Emacs 25.x .. 31.1
 ;;
 ;; Features that might be required by this library:
 ;;
@@ -73,6 +73,8 @@
 ;;
 ;;; Change log:
 ;;
+;; 2026/07/02 zhengyi
+;;     Modernize the codebase.
 ;; 2018/12/01 awehmann
 ;;     linkd-match
 ;;     added failure return when search failed or when sexp exceeded limit or when symbol test failed
@@ -160,8 +162,9 @@
 ;;
 ;;; Code:
 
-(eval-when-compile (require 'cl)) ;; block, case
 (require 'easymenu) ;; easy-menu-define
+(require 'compat nil t)
+(eval-when-compile (require 'cl-lib)) ;; cl-block
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -421,7 +424,7 @@ Return non-nil if a link is found.  Set `match-data' appropriately."
       (unless (search-forward "(@" limit t) (throw 'linkd-match nil))
       (backward-char 2)
       (let ((begin-point  (point)))
-	(condition-case nil (setq sexp  (read (current-buffer))) ((error nil)))
+	(ignore-errors (setq sexp  (read (current-buffer))))
 	(when (> (point) limit) (throw 'linkd-match nil))
 	(unless (and (symbolp (car-safe sexp))
 		     (string-match "@.*" (symbol-name (car-safe sexp))))
@@ -521,7 +524,7 @@ Return non-nil if a link is found.  Set `match-data' appropriately."
   "Move point to the next link, if any."
   (interactive)
   (forward-char 1)
-  (let ((inhibit-point-motion-hooks nil))
+  (let ((cursor-sensor-inhibit nil))
     ;; get out of the current overlay if needed
     (when (get-char-property (point) 'linkd)
       (while (and (not (eobp)) (get-char-property (point) 'linkd))
@@ -536,7 +539,7 @@ Return non-nil if a link is found.  Set `match-data' appropriately."
 (defun linkd-previous-link ()
   "Move point to the previous link, if any."
   (interactive)
-  (let ((inhibit-point-motion-hooks nil))
+  (let ((cursor-sensor-inhibit nil))
     ;; get out of the current overlay if needed
     (when (get-char-property (point) 'linkd)
       (while (and (not (bobp)) (get-char-property (point) 'linkd))
@@ -644,7 +647,7 @@ Optional arg CURRENT-VALUES is a property list of current values."
 ;; linkd-style overlays to the text of a link.
 
 (defun linkd-overlay (beg end display-text
-                      &optional display-face bullet-text bullet-face bullet-icon)
+                          &optional display-face bullet-text bullet-face bullet-icon)
   "Apply Linkd overlay to link text.
 $$$$$ FIXME: document args."
   (let ((overlay (make-overlay beg end)))
@@ -665,9 +668,9 @@ $$$$$ FIXME: document args."
         (overlay-put overlay 'before-string (concat b2 " "))))
     (overlay-put overlay 'evaporate t)
     (overlay-put overlay 'modification-hooks ; defontify if the user edits the text
-                 (list (lambda (ov foo beg end &rest ignore)
+                 (list (lambda (ov _foo _beg _end &rest _ignore)
                          (delete-overlay ov)
-                         (remove-text-properties (point-at-bol) (point-at-eol)
+                         (remove-text-properties (line-beginning-position) (line-end-position)
                                                  (list 'fontified nil
                                                        'linkd-fontified nil
                                                        'linkd nil)))))))
@@ -733,7 +736,7 @@ Returns the file-name to the icon image file."
   (let* ((regexp (concat "\(\@\\(\*\\|>\\) \"" (regexp-quote name)))
          (found-position
           (save-excursion
-            (goto-char (point-at-eol))
+            (goto-char (line-end-position))
             (if (re-search-forward regexp nil t)
                 (match-beginning 0)
               (goto-char (point-min)) ; start over at the beginning of the buffer
@@ -855,13 +858,13 @@ ACTION is :end, deactivate the datablock."
            (datablock-end (progn (search-forward "(^end)") (match-end 0)))
            (activate (symbol-function type-symbol)))
       (goto-char datablock-begin)
-      (case action
+      (pcase action
         (:begin ; insert markers; datablock display happens in between them
          (let* ((inhibit-read-only t)
                 (beg (make-marker))
                 (end (make-marker)))
-           (set-marker beg (save-excursion (goto-char datablock-begin) (point-at-eol)))
-           (set-marker end (save-excursion (goto-char datablock-end) (point-at-bol)))
+           (set-marker beg (save-excursion (goto-char datablock-begin) (line-end-position)))
+           (set-marker end (save-excursion (goto-char datablock-end) (line-beginning-position)))
            ;; make the delimiters invisible
            (add-text-properties datablock-begin beg '(invisible t))
            (add-text-properties end datablock-end '(invisible t))
@@ -877,7 +880,7 @@ ACTION is :end, deactivate the datablock."
          (forward-line)
          (let ((object (funcall activate :end datablock-object))
                (inhibit-read-only t)
-               (inhibit-point-motion-hooks t))
+               (cursor-sensor-inhibit t))
            (delete-region datablock-begin datablock-end)
            (insert (format (concat "(^" "begin %S)\n%S\n(^end)") type-symbol object))))))))
 
@@ -1002,21 +1005,21 @@ ACTION is :end, deactivate the datablock."
         ;; delete everything before first heading
         (goto-char (point-min))
         (re-search-forward linkd-export-heading-regexp)
-        (previous-line)
+        (forward-line -1)
         (end-of-line)
         (delete-region (point-min) (point))
         ;; now process each block in turn.
         (while (and (not (eobp)) (re-search-forward linkd-export-heading-regexp nil nil))
           (let ((title (match-string 1)))
-            (delete-region (point-at-bol) (point-at-eol))
+            (delete-region (line-beginning-position) (line-end-position))
             (linkd-latex-do-section title)
             (forward-line)
-            (block processing
+            (cl-block processing
               (while (not (eobp))
                 (cond ((string-match linkd-export-heading-regexp ; heading
-                                     (buffer-substring (point-at-bol) (point-at-eol)))
+                                     (buffer-substring (line-beginning-position) (line-end-position)))
                        (when linkd-latex-in-verbatim (linkd-latex-end-verbatim))
-                       (return-from processing))
+                       (cl-return-from processing))
                       ((looking-at linkd-export-commentary-regexp) ; commentary
                        ;; get rid of comment delimiter
                        (delete-region (match-beginning 0) (match-end 0))
@@ -1039,6 +1042,8 @@ ACTION is :end, deactivate the datablock."
 ;; This functionality is built on top of Hrvoje Niksic's htmlize.el:
 ;; http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el
 
+(declare-function htmlize-buffer "ext:htmlize.el")
+
 (defun linkd-html-export ()
   "Convert the current buffer to HTML using htmlize.el and some
 extra rules. Return the buffer."
@@ -1050,8 +1055,9 @@ extra rules. Return the buffer."
         (goto-char (point-min))
         (let ((star-regexp
                (concat "<span class=\"linkd-generic\">(" "@" "\\* \"\\(.*\\)\")</span>"))
-              (sexp-regexp
-               (concat "<span class=\"linkd-generic\">(" "@" "[^ ].* \"\\(.*\\)\")</span>")))
+              ;; (sexp-regexp
+              ;;  (concat "<span class=\"linkd-generic\">(" "@" "[^ ].* \"\\(.*\\)\")</span>"))
+              )
           (while (re-search-forward star-regexp nil t)
             (replace-match
              (concat "<img src=\"/images/linkd-star.xpm.png\"> "
@@ -1174,13 +1180,13 @@ extra rules. Return the buffer."
   "Find Linkd wiki page named PAGE-NAME."
   (interactive "s")
   (let ((page-file
-         (block testing
+         (cl-block testing
            (dolist (extension linkd-wiki-extensions)
              (let ((test-filename (concat (file-name-as-directory linkd-wiki-directory)
                                           page-name "." extension)))
                (if (file-exists-p test-filename)
-                   (return-from testing test-filename)
-                 (return-from testing nil)))))))
+                   (cl-return-from testing test-filename)
+                 (cl-return-from testing nil)))))))
     (if page-file
         (find-file page-file)
       ;; otherwise, query the user which file extension to create
@@ -1204,7 +1210,7 @@ extra rules. Return the buffer."
 ;; `C-c' followed by one of a set of reserved punctuation characters.
 
 (define-minor-mode linkd-mode
-    "Create or follow hypertext links.
+  "Create or follow hypertext links.
 These link navigation commands are available:
 
 \\<linkd-map>\\[linkd-follow-at-point]		- follow link under cursor
@@ -1216,7 +1222,7 @@ These link navigation commands are available:
 These key bindings are in effect on a link:\n
 \\{linkd-overlay-map}These key bindings are effect everywhere:\n
 \\{linkd-map}"
-  nil :lighter " Linkd" :keymap linkd-map (if linkd-mode (linkd-enable) (linkd-disable)))
+  :lighter " Linkd" :keymap linkd-map (if linkd-mode (linkd-enable) (linkd-disable)))
 
 (defun linkd-enable ()
   "Enable Linkd mode."
@@ -1224,7 +1230,7 @@ These key bindings are in effect on a link:\n
     (add-hook 'before-save-hook 'linkd-deactivate-all-datablocks :append :local)
     (add-hook 'after-save-hook 'linkd-activate-all-datablocks :append :local)
     (linkd-do-font-lock 'font-lock-add-keywords)
-    (font-lock-fontify-buffer)
+    (font-lock-flush)
     (set-buffer-modified-p modified-p)))
 
 (defun linkd-disable ()
@@ -1233,14 +1239,14 @@ These key bindings are in effect on a link:\n
     (remove-hook 'before-save-hook 'linkd-deactivate-all-datablocks)
     (remove-hook 'after-save-hook 'linkd-activate-all-datablocks)
     ;; remove all linkd's overlays
-    (mapcar (lambda (overlay)
-              (when (get-text-property (overlay-start overlay) 'linkd-fontified)
-                (delete-overlay overlay)))
-            (overlays-in (point-min) (point-max)))
+    (mapc (lambda (overlay)
+            (when (get-text-property (overlay-start overlay) 'linkd-fontified)
+              (delete-overlay overlay)))
+          (overlays-in (point-min) (point-max)))
     ;; remove font-lock rules, textprops, and then refontify the buffer
     (linkd-do-font-lock 'font-lock-remove-keywords)
     (remove-text-properties (point-min) (point-max) '(linkd-fontified))
-    (font-lock-fontify-buffer)
+    (font-lock-flush)
     (set-buffer-modified-p modified-p)))
 
 
