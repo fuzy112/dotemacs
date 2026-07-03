@@ -174,6 +174,7 @@ Otherwise, equality is tested by `equal'."
 (defmacro require! (feature)
   (let ((err-var (make-symbol "err")))
     `(record-time! ,feature
+       (eval-when-compile (require ,(macroexp-quote feature)))
        (condition-case-unless-debug ,err-var
            (require ,(macroexp-quote feature))
          (t (delay-warning
