@@ -94,11 +94,11 @@
 
 (defvar org-protocol-clone-repo-post-hook
   (list #'org-protocol--remember-project
-        #'org-protocol--save-project-alist))
+        #'org-protocol--save-project-alist
+        #'org-protocol--show-repo-with-magit))
 
 (defun org-protocol--remember-project (entry)
   (let* ((plist (cdr entry))
-         ;; (base-url (plist-get plist :base-url))
          (wdir (plist-get plist :working-directory))
          (pr (project-current nil wdir)))
     (project-remember-project pr)))
@@ -106,6 +106,12 @@
 (defun org-protocol--save-project-alist (_entry)
   (customize-save-variable 'org-protocol-project-alist
                            org-protocol-project-alist))
+
+(defun org-protocol--show-repo-with-magit (entry)
+  (let* ((plist (cdr entry))
+         (wdir (plist-get plist :working-directory)))
+    (when wdir
+      (magit-status-setup-buffer wdir))))
 
 (defun org-protocol-clone-repo (info)
   "Clone the git repository at :url and register it in `org-protocol-project-alist'.
