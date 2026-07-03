@@ -8,23 +8,25 @@
 
 ;;; Commentary:
 
-;; This package saves all Emacs echo area messages in a fixed-size ring buffer,
-;; letting you quickly retrieve and copy transient messages that would otherwise
-;; scroll out of view or disappear entirely.
+;; This package saves all Emacs echo area messages in a fixed-size
+;; ring buffer, letting you quickly retrieve and copy transient
+;; messages that would otherwise scroll out of view or disappear
+;; entirely.
 
-;; Enable the global minor mode `message-ring-mode' to automatically collect all
-;; echo-area messages into the ring.
+;; Enable the global minor mode `message-ring-mode' to automatically
+;; collect all echo-area messages into the ring.
 
 ;; The main interactive command is `copy-message':
 ;;
-;; - `M-x copy-message' (no prefix argument): copies the most recent message
-;;   directly to the kill ring.
-;; - `C-u M-x copy-message': prompts you to select any recent message from the
-;;   completion list before copying it to the kill ring.
-
-;; Messages matching any of the regular expressions in `message-ring-inhibit-regexps'
-;; are automatically excluded from the ring, to avoid cluttering it with unimportant
-;; transient messages.
+;; - `M-x copy-message' (no prefix argument): copies the most recent
+;;   message directly to the kill ring.
+;;
+;; - `C-u M-x copy-message': prompts you to select any recent message
+;;   from the completion list before copying it to the kill ring.
+;;
+;; Messages matching any of the regular expressions in
+;; `message-ring-inhibit-regexps' are automatically excluded from the
+;; ring, to avoid cluttering it with unimportant transient messages.
 
 ;;; Code:
 
