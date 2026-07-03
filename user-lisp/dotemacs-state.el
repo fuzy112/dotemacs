@@ -17,6 +17,8 @@
 ;;; Commentary:
 ;;; Code:
 
+(eval-when-compile
+  (require 'dotemacs-core))
 
 ;;; state files
 
@@ -208,6 +210,9 @@ expanded path."
       (set-default sym new-path))))
 
 (dotemacs-state-setup)
+
+(make-directory (dotemacs-state-file "desktop/") t)
+(setq! desktop-path (list (dotemacs-state-file "desktop/")))
 
 (provide 'dotemacs-state)
 ;;; dotemacs-state.el ends here
