@@ -97,6 +97,13 @@
     (ielm-history-file-name
      :new "ielm-history.eld.zst"
      :old (locate-user-emacs-file "ielm-history.eld"))
+    (image-dired-dir
+     :new "image-dired/"
+     :old (locate-user-emacs-file "image-dired/"))
+    (image-dired-tags-db-file
+     :new "image-dired/.image-dired_db")
+    (image-dired-temp-rotate-image-file
+     :new "image-dired/.image-dired_rotated_temp")
     (persist--directory-location
      :new "persist"
      :old (locate-user-emacs-file "persist"))
