@@ -131,34 +131,6 @@
 
 ;;;###autoload(add-hook 'compilation-shell-minor-mode-hook #'compilation-bookmark-enable)
 
-;;;; Shell-Mode
-
-(defun shell-bookmark-make-record ()
-  "Create a bookmark record."
-  `(,@(bookmark-make-record-default 'no-file 'no-context)
-    (default-directory . ,default-directory)
-    (buffer-name . ,(buffer-name))
-    (handler . ,#'shell-bookmark-handler)))
-
-;;;###autoload
-(defun shell-bookmark-handler (bookmark)
-  "Jump to a BOOKMARK entry."
-  (let-alist bookmark
-    (let ((default-directory .default-directory)
-          shell-buffer)
-      (save-window-excursion
-        (shell .buffer-name)
-        (setq shell-buffer (current-buffer)))
-      (bookmark-display-buffer shell-buffer))))
-
-;;;###autoload
-(defun shell-bookmark-enable ()
-  "Enable bookmark support for `shell-mode'."
-  (setq-local bookmark-make-record-function
-              #'shell-bookmark-make-record))
-
-;;;###autoload(add-hook 'shell-mode-hook #'shell-bookmark-enable)
-
 ;;;; Eat-mode
 
 (defvar eat-buffer-name)
@@ -325,7 +297,6 @@
   (add-hook 'compilation-mode-hook #'compilation-bookmark-enable)
   (add-hook 'compilation-minor-mode-hook #'compilation-bookmark-enable)
   (add-hook 'compilation-shell-minor-mode-hook #'compilation-bookmark-enable)
-  (add-hook 'shell-mode-hook #'shell-bookmark-enable)
   (add-hook 'eat-mode-hook #'eat-bookmark-enable)
   (add-hook 'deadgrep-mode-hook #'deadgrep-bookmark-enable)
   (telega-bookmark-install))
