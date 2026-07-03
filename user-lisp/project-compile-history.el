@@ -93,7 +93,7 @@ also set the variable's `history-length' property to the value of
   (interactive)
   (when (or pch:modified current-prefix-arg)
     (let ((pch:-saving t))
-      (with-work-buffer
+      (with-temp-buffer
 	(insert ";; project-compile-history-file -*- coding: utf-8-emacs; -*-\n\n")
 	(insert "(\n")
 	(let ((pp-max-width 200)
@@ -105,8 +105,11 @@ also set the variable's `history-length' property to the value of
 	     (pp cell (current-buffer)))
 	   pch:obarray))
 	(insert ")\n")
-	(let ((save-silently pch:no-message))
-	  (write-region nil nil pch:file)))
+	(set-visited-file-name pch:file)
+	(unwind-protect
+	    (let ((save-silently pch:no-message))
+	      (save-buffer))
+	  (set-visited-file-name nil)))
       (setq pch:modified nil))))
 
 (defvar pch:-save-timer nil)
