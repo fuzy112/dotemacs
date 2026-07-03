@@ -115,9 +115,11 @@
     (cancel-timer auto-save-on-focus-out-timer))
   (setq auto-save-on-focus-out-timer nil))
 
+(defalias 'auto-save-on-focus-out-do-auto-save #'do-auto-save)
+
 (defun auto-save-on-focus-out-start-timer ()
   (setq auto-save-on-focus-out-timer
-        (run-with-idle-timer 1 nil #'do-auto-save)))
+        (run-with-idle-timer 1 nil #'auto-save-on-focus-out-do-auto-save)))
 
 (defun auto-save-on-focus-out ()
   (if (catch 'found-focus
