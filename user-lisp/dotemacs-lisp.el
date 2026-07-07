@@ -108,6 +108,21 @@ With no active region, operate on the whole buffer."
        (pp-to-string
 	(json-parse-string str :object-type 'alist))))))
 
+
+(defun profile-function-call (symbol)
+  "Profile one call of SYMBOL using `profiler-start' and display report.
+This temporarily advises SYMBOL to profile one call, then removes the
+advice and shows the profiler report."
+  (interactive "aFunction: ")
+  (advice-add symbol :around
+	      (lambda (fn &rest args)
+		(profiler-start 'cpu+mem)
+		(unwind-protect
+		    (apply fn args)
+		  (profiler-stop)
+		  (advice-remove symbol 'profile-function-call)
+		  (run-at-time 0 nil #'profiler-report)))
+	      '((name . profile-function-call))))
 
 (provide 'dotemacs-lisp)
 ;;; dotemacs-lisp.el ends here
