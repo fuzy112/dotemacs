@@ -297,9 +297,21 @@
 (defun org-link-bookmark-jump (bookmark)
   (require 'ol)
   (defvar org-link-elisp-confirm-function)
-  (let ((link (bookmark-prop-get bookmark 'org-link))
-        (org-link-elisp-confirm-function #'always))
-    (org-link-open-from-string link)))
+  (prog1
+      (let ((link (bookmark-prop-get bookmark 'org-link))
+            (org-link-elisp-confirm-function #'always))
+        (org-link-open-from-string link))
+    ;; bookmark-jump runs the bookmark handler with
+    ;; `save-window-excursion', so we need to save the window
+    ;; configuration and restore it in `bookmark-after-jump-hook'.
+    ;; The same idiom is used by `bookmark-view' and pdf-tools.  See
+    ;; also
+    ;; [[https://lists.gnu.org/archive/html/emacs-devel/2022-08/msg00500.html]].
+    (let ((wind-conf (current-window-configuration)))
+      (letrec ((hook (lambda ()
+                       (setq bookmark-after-jump-hook (delq hook bookmark-after-jump-hook))
+                       (set-window-configuration wind-conf))))
+        (push hook bookmark-after-jump-hook)))))
 
 (defun org-link-bookmark--parse-link (link-string)
   (with-temp-buffer
