@@ -166,6 +166,15 @@ Otherwise, equality is tested by `equal'."
         (list (alist-delq--form var keys)
               (funcall setter var))))))
 
+(defmacro dlet* (binders &rest body)
+  "Like `let*' but using dynamic scoping."
+  (declare (indent 1) (debug let))
+  `(let (_)
+     ,@(mapcar (lambda (binder)
+                 `(defvar ,(if (consp binder) (car binder) binder)))
+               binders)
+     (let* ,binders ,@body)))
+
 ;;;###autoload
 (defvar dotemacs-time-alist nil)
 
