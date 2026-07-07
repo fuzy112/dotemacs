@@ -588,6 +588,7 @@ into account.")
   (add-to-list 'consult-bookmark-narrow '(?c "Compilation" compilation-bookmark-handler))
   (add-to-list 'consult-bookmark-narrow '(?D "Dired" bmkp-jump-dired))
   (add-to-list 'consult-bookmark-narrow '(?T "Telega" telega-chat-bookmark-handler telega-root-bookmark-handler))
+  (add-to-list 'consult-bookmark-narrow '(?o "Org-link" org-link-bookmark-jump))
 
   ;; filter internal buffers
   (add-to-list 'consult-buffer-filter
