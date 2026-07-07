@@ -301,35 +301,44 @@
         (org-link-elisp-confirm-function #'always))
     (org-link-open-from-string link)))
 
+(defun org-link-bookmark--parse-link (link-string)
+  (with-temp-buffer
+    (insert link-string)
+    (org-mode)
+    (goto-char (point-min))
+    (let ((link (org-element-link-parser)))
+      (when-let* ((beg (org-element-property link :contents-begin))
+                  (end (org-element-property link :contents-end)))
+        (setf (org-element-property link :contents) (buffer-substring-no-properties beg end)))
+      link)))
+
+(defun org-link-bookmark--read-link ()
+  (with-temp-buffer
+    (org-insert-link-global)
+    (buffer-string)))
+
 ;;;###autoload
-(defun org-link-bookmark-set (&optional no-overwrite)
+(defun org-link-bookmark-set (link-string &optional no-overwrite)
   "Set a bookmark for an Org link.
 Prompt for a bookmark name, defaulting to the link description if any.
 The bookmark stores the link information and uses
 `org-link-bookmark-jump' as handler."
-  (interactive "P")
+  (interactive (list (org-link-bookmark--read-link) current-prefix-arg))
   (require 'ol)
-  (with-temp-buffer
-    (setq-local org-link-file-path-type 'absolute)
-    (org-insert-link-global)
-    (org-mode)
-    (goto-char (point-min))
-    (let* ((link (org-element-link-parser))
-           (type (org-element-property :type link))
-           (path (org-element-property :path link))
-           (cbeg (org-element-property :contents-begin link))
-           (cend (org-element-property :contents-end link))
-           (desc (and cbeg cend (buffer-substring-no-properties cbeg cend)))
-           (name (read-string
-                  (format-prompt "Bookmark name" desc)
-                  nil nil desc))
-           (record `((org-link . ,(buffer-substring-no-properties (point-min) (point-max)))
-                     (handler . ,#'org-link-bookmark-jump)
-                     ,@(when (string= type "file")
-                         `((filename . ,path)))
-                     ,@(when (member type '("http" "https"))
-                         `((location . ,path))))))
-      (bookmark-store name record no-overwrite))))
+  (let* ((link (org-link-bookmark--parse-link link-string))
+         (type (org-element-property :type link))
+         (path (org-element-property :path link))
+         (desc (org-element-property :contents link))
+         (name (read-string
+                (format-prompt "Bookmark name" desc)
+                nil nil desc))
+         (record `((org-link . ,link-string)
+                   (handler . ,#'org-link-bookmark-jump)
+                   ,@(when (string= type "file")
+                       `((filename . ,path)))
+                   ,@(when (member type '("http" "https"))
+                       `((location . ,path))))))
+    (bookmark-store name record no-overwrite)))
 
 
 ;;;###autoload
