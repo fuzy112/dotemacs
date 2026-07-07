@@ -48,12 +48,21 @@
 (defun +insert-pass ()
   (interactive)
   (require 'auth-source-pass)
-  (when-let* ((entry (completing-read
-                      "Select pass entry: "
-                      (auth-source-pass-entries)))
-              (info (auth-source-pass-search :host entry)))
-    (cl-assert (length= info 1))
-    (insert (auth-info-password (car info)))))
+  (let* ((entry (completing-read
+                 "Select pass entry: "
+                 (auth-source-pass-entries)))
+         (passwd (auth-source-pass-get 'secret entry))
+         (passwdlen (length passwd)))
+    (add-text-properties 0 passwdlen
+                         `(display ,(make-string passwdlen (or read-hide-char ?*)))
+                         passwd)
+    (unless (minibufferp)
+      (error "Not in minibuffer"))
+    (unless (bound-and-true-p read-passwd-mode)
+      (error "Not in `read-passwd-mode'"))
+    (delete-minibuffer-contents)
+    (insert passwd)
+    (exit-minibuffer)))
 
 (defun send-password-to-process (process)
   "Read a password and send it to the PROCESS.
