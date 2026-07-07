@@ -43,7 +43,7 @@
   "Download and replace FILE from EmacsWiki.
 FILE should be a filename (without directory) that exists on EmacsWiki."
   (interactive (list (completing-read "File: " emacswiki-elisp-files)))
-  (let ((default-directory (file-name-directory (or (eval-when-compile load-file-name) buffer-file-name))))
+  (let ((default-directory user-lisp-directory))
     (let* ((url (format "https://www.emacswiki.org/emacs/download/%s" (url-hexify-string file)))
 	   (dest (file-name-nondirectory file)))
       (url-copy-file url dest 'ok-if-already-exists))))
