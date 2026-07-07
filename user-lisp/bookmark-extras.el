@@ -22,24 +22,22 @@
 
 ;;; Commentary:
 
-;; This Emacs package, `bookmark-extras.el', provides bookmark support
-;; for various modes.  It defines functions for creating bookmark
-;; records and handlers for jumping to bookmarked entries in each
-;; mode.  Additionally, it sets up autoloads and enables bookmark
-;; functionality for the corresponding modes.
+;; This Emacs package, `bookmark-extras.el', provides bookmark
+;; support for various modes and defines new bookmark types.  It
+;; includes functions for creating bookmark records and handlers for
+;; jumping to bookmarked entries.
 
-;; Currently supported modes:
-;;  - devdocs-mode
+;; Supported modes:
 ;;  - mu4e-main-mode
-;;  - compilation-mode
-;;  - shell-mode
+;;  - compilation-mode (including compilation-minor-mode and
+;;    compilation-shell-minor-mode)
 ;;  - eat-mode
 ;;  - deadgrep-mode
-;;
-;; An browser independent URL bookmark type is also supported.
-;;
-;; This package also debounces call to `bookmark-save' in
-;; `bookmark-save-debounce-functions'.
+;;  - telega-root-mode and telega-chat-mode
+
+;; Additionally, it provides a browser‑independent URL bookmark type
+;; (`url-bookmark-jump' / `url-bookmark-add') and an Org link bookmark
+;; type (`org-link-bookmark-jump' / `org-link-bookmark-set').
 
 ;;; Code:
 
