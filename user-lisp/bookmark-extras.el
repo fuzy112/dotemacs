@@ -333,10 +333,15 @@
 
 ;;;###autoload
 (defun org-link-bookmark-set (link-string &optional no-overwrite)
-  "Set a bookmark for an Org link.
-Prompt for a bookmark name, defaulting to the link description if any.
-The bookmark stores the link information and uses
-`org-link-bookmark-jump' as handler."
+  "Create a bookmark for an Org link.
+
+The bookmark stores the link string and allows jumping to it using
+`bookmark-jump'.  The bookmark record includes the link's type and
+path, and for file links the filename, for URL links the location.
+
+LINK-STRING is an Org link string such as \"[[file:~/doc.org][Doc]]\".
+With optional prefix argument NO-OVERWRITE, do not overwrite an
+existing bookmark with the same name."
   (interactive (list (org-link-bookmark--read-link) current-prefix-arg))
   (require 'ol)
   (let* ((link (org-link-bookmark--parse-link link-string))
