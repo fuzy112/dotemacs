@@ -101,7 +101,10 @@ If NOCONFIRM is non-nil, do not ask for confirmation."
 
 (defun backup-list--bookmark-handler (bookmark)
   (let ((file (alist-get 'real-file bookmark)))
-    (set-buffer (backup-list-backups file))))
+    (funcall (or (bound-and-true-p bmkp-jump-display-function)
+		 #'pop-to-buffer-same-window)
+	     (save-window-excursion
+	       (backup-list-backups file)))))
 
 (declare-function bookmark-make-record-default "bookmark.el")
 
