@@ -514,12 +514,37 @@ If there is no active minibuffer, signal an error."
             (unless (gethash file ht)
               (push (consult--fast-abbreviate-file-name file) items)))))))
 
+
+(defvar consult-source-xwidget-webkit-buffer
+  `( :name     "Xwidget Webkit"
+     :narrow   ?x
+     :hidden   t
+     :category buffer
+     :face     consult-buffer
+     :history  buffer-name-history
+     :state    ,#'consult--buffer-state
+     :enabled  ,(lambda () (featurep 'xwidget))
+     :items
+     ,(lambda ()
+        (let ((local (consult--string-hash (consult--buffer-query))))
+          (consult--buffer-query :sort 'visibility
+                                 :predicate (lambda (buf) (buffer-match-p '(derived-mode . xwidget-webkit-mode) buf))
+                                 :as #'consult--buffer-pair
+                                 :exclude nil))))
+  "Source for `consult-buffer' for buffers from other frames or tabs.
+The source is hidden by default and can be summoned via its narrow key.
+Only buffers returned by the `consult-buffer-list-function' are taken
+into account.")
+
+
 (after-load! consult
   (setopt consult-preview-key "M-.")
   (setopt consult-narrow-key "<")
   (setopt consult-widen-key ">")
   (setq! consult--regexp-compiler #'+consult--orderless-regexp-compiler)
   (add-to-list 'consult-buffer-sources 'consult-source-file-cache t)
+  (add-to-list 'consult-buffer-sources 'consult-source-xwidget-webkit-buffer t)
+
 
   ;; consult-customize is a macro and is not autoloaded
   (with-no-compile!
@@ -568,6 +593,7 @@ If there is no active minibuffer, signal an error."
   (add-to-list 'consult-buffer-filter
                (rx (or (seq bot "*EGLOT " (+ nonl) (or "stderr" "output" "events") "*" eot)
                        (seq bot "magit-process: " (+ nonl) eot)
+                       (seq bot "*xwidget-webkit: " (+ nonl) eot)
                        (seq bot (+ nonl) ".~" (repeat 7 (in "a-f0-9")) "~" eot)
                        (seq bot (or "*Async-native-compile-log*" "nix-edit" "*envrc*"
                                     "*Compile-Log*" "*Pp Eval Output*" "*log-edit-files*"
