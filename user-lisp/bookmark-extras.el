@@ -314,7 +314,9 @@
 
 (defun org-link-bookmark--read-link ()
   (with-temp-buffer
-    (org-insert-link-global)
+    (defvar org-link-file-path-type)
+    (let ((org-link-file-path-type 'absolute))
+      (org-insert-link-global))
     (buffer-string)))
 
 ;;;###autoload
@@ -329,9 +331,10 @@ The bookmark stores the link information and uses
          (type (org-element-property :type link))
          (path (org-element-property :path link))
          (desc (org-element-property :contents link))
-         (name (read-string
-                (format-prompt "Bookmark name" desc)
-                nil nil desc))
+         (name (or desc
+                   (let ((default (concat type ":" path)))
+                     (read-string (format-prompt "Bookmark name" default)
+                                  nil nil default))))
          (record `((org-link . ,link-string)
                    (handler . ,#'org-link-bookmark-jump)
                    ,@(when (string= type "file")
