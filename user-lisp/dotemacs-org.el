@@ -79,7 +79,7 @@
                           "<%<%Y-%m-%d %a %H:00>>")))
 
   (add-to-list 'org-capture-templates
-               '("j" "Journal" entry (file+datetree "journal.org")
+               '("j" "Journal" entry (file+olp+datetree "journal.org")
                  "* %U - %^{Heading} %^g\n%?\n")))
 
 ;;;; org-protocol
