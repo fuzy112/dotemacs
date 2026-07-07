@@ -99,6 +99,7 @@ If NOCONFIRM is non-nil, do not ask for confirmation."
     (goto-char saved-point)
     nil))
 
+;;;###autoload
 (defun backup-list--bookmark-handler (bookmark)
   (let ((file (alist-get 'real-file bookmark)))
     (funcall (or (bound-and-true-p bmkp-jump-display-function)
