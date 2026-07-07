@@ -310,6 +310,7 @@ The bookmark stores the link information and uses
   (interactive "P")
   (require 'ol)
   (with-temp-buffer
+    (setq-local org-link-file-path-type 'absolute)
     (org-insert-link-global)
     (org-mode)
     (goto-char (point-min))
