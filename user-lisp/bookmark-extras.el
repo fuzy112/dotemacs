@@ -362,6 +362,11 @@ existing bookmark with the same name."
                        `((handler . ,#'org-link-bookmark-jump))))))
     (bookmark-store name record no-overwrite)))
 
+(with-eval-after-load 'embark
+  (cl-pushnew #'embark--allow-edit
+              (alist-get 'org-link-bookmark-set
+                         embark-target-injection-hooks)))
+
 
 ;;;###autoload
 (defun bookmark-extras-install ()
