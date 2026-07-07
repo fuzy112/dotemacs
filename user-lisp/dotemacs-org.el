@@ -278,11 +278,37 @@ directories, then registers those that are Git repositories."
                    (vc-git-root root))
           (org-protocol-add-repo-project root))))))
 
+(declare-function eww "eww")
+
+(defun org-protocol-eww (info)
+  "Open the URL in `eww' via `org-protocol'.
+INFO is a property list from the org-protocol request.
+
+The expected URL format is:
+
+    org-protocol://eww?url=<URL>
+
+Use this bookmarklet in Firefox:
+
+    javascript:(function(){location.href='org-protocol://eww?'+new URLSearchParams({url:location.href});})();"
+  (let* ((parts (org-protocol-parse-parameters info))
+         (url (plist-get parts :url)))
+    (unless url
+      (error "org-protocol-eww: missing :url parameter"))
+    (eww url)
+    (select-frame-set-input-focus (selected-frame))
+    t))
+
 (after-load! org-protocol
   (add-to-list 'org-protocol-protocol-alist
                '("clone-repo"
                  :protocol "clone-repo"
                  :function org-protocol-clone-repo
+                 :kill-client t))
+  (add-to-list 'org-protocol-protocol-alist
+               '("eww"
+                 :protocol "eww"
+                 :function org-protocol-eww
                  :kill-client t)))
 
 (provide 'dotemacs-org)
