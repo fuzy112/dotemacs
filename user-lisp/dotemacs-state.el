@@ -115,7 +115,7 @@
     (request-storage-directory
      :new "request/"
      :old (concat (file-name-as-directory user-emacs-directory) "request")
-     :mode #o600)
+     :mode #o700)
     (nsm-settings-file
      :new "network-security.eld.zst"
      :old (locate-user-emacs-file '("network-security.eld" "network-security.data"))
