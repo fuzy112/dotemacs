@@ -219,6 +219,13 @@ new record is started."
   (setopt diff-hl-disable-on-remote t)
   (add-hook 'diff-hl-margin-mode-hook #'diff-hl-margin-ensure-visible))
 
+;; `diff-hl-changes-from-buffer' fails on compressed files.
+(advice-add 'diff-hl-changes-from-buffer
+            :around
+            (lambda (&rest args)
+              (ignore-errors (apply args)))
+            '((name . ignore-errors)))
+
 (define-advice diff-hl-margin-ensure-visible (:override () auto-width)
   "Ensure that diff-hl margin is wide enough to display all symbols.
 Calculate the maximum width of all symbols in `diff-hl-margin-symbols-alist'
