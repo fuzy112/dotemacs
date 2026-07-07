@@ -74,6 +74,8 @@ Return the documentation buffer or nil if option not found."
 
 (consult--define-state nixos-option)
 
+(defvar consult-nixos--history nil)
+
 ;;;###autoload
 (defun consult-nixos-option (&optional initial)
   "Browse and select NixOS options using consult.
@@ -87,7 +89,8 @@ Selecting an option displays its documentation."
    :initial initial
    :category 'consult-nixos-option
    :annotate #'consult--nixos-option-annotate
-   :state (consult--nixos-option-state)))
+   :state (consult--nixos-option-state)
+   :history '(:input consult-nixos--history)))
 
 (provide 'consult-nixos)
 ;;; consult-nixos.el ends here
