@@ -80,7 +80,7 @@
      :old (locate-user-emacs-file "eshell/" ".eshell/")
      :mode #o700)
     (org-id-locations-file
-     :new "org_id-locations.eld.zst"
+     :new "org-id-locations.eld.zst"
      :old (locate-user-emacs-file ".org-id-locations"))
     (bookmark-default-file
      :new "bookmarks.eld.zst"
