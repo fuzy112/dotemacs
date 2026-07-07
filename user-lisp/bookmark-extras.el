@@ -290,6 +290,46 @@
     (let ((bookmark `((location . ,url)
                       (handler . ,#'url-bookmark-jump))))
       (bookmark-store name bookmark t))))
+
+;;;; Org link bookmark
+
+;;;###autoload
+(defun org-link-bookmark-jump (bookmark)
+  (require 'ol)
+  (defvar org-link-elisp-confirm-function)
+  (let ((link (bookmark-prop-get bookmark 'org-link))
+        (org-link-elisp-confirm-function #'always))
+    (org-link-open-from-string link)))
+
+;;;###autoload
+(defun org-link-bookmark-set (&optional no-overwrite)
+  "Set a bookmark for an Org link.
+Prompt for a bookmark name, defaulting to the link description if any.
+The bookmark stores the link information and uses
+`org-link-bookmark-jump' as handler."
+  (interactive "P")
+  (require 'ol)
+  (with-temp-buffer
+    (org-insert-link-global)
+    (org-mode)
+    (goto-char (point-min))
+    (let* ((link (org-element-link-parser))
+           (type (org-element-property :type link))
+           (path (org-element-property :path link))
+           (cbeg (org-element-property :contents-begin link))
+           (cend (org-element-property :contents-end link))
+           (desc (and cbeg cend (buffer-substring-no-properties cbeg cend)))
+           (name (read-string
+                  (format-prompt "Bookmark name" desc)
+                  nil nil desc))
+           (record `((org-link . ,(buffer-substring-no-properties (point-min) (point-max)))
+                     (handler . ,#'org-link-bookmark-jump)
+                     ,@(when (string= type "file")
+                         `((filename . ,path)))
+                     ,@(when (member type '("http" "https"))
+                         `((location . ,path))))))
+      (bookmark-store name record no-overwrite))))
+
 
 ;;;###autoload
 (defun bookmark-extras-install ()
