@@ -314,6 +314,7 @@
         (push hook bookmark-after-jump-hook)))))
 
 (defun org-link-bookmark--parse-link (link-string)
+  (require 'org-element)
   (with-temp-buffer
     (insert link-string)
     (org-mode)
