@@ -319,9 +319,9 @@
     (org-mode)
     (goto-char (point-min))
     (let ((link (org-element-link-parser)))
-      (when-let* ((beg (org-element-property link :contents-begin))
-                  (end (org-element-property link :contents-end)))
-        (setf (org-element-property link :contents) (buffer-substring-no-properties beg end)))
+      (when-let* ((beg (org-element-property :contents-begin link))
+                  (end (org-element-property :contents-end link)))
+        (setf (org-element-property :contents link) (buffer-substring-no-properties beg end)))
       link)))
 
 (defun org-link-bookmark--read-link ()
