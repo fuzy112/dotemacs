@@ -221,7 +221,9 @@ SPEC could be
   "Similar to `after-load-1!', but suppress warnings in BODY.
 See `after-load-1!' for SPEC."
   (declare (indent 1))
-  `(after-load-1! ,spec (record-time! ,spec ,@body)))
+  `(after-load-1! ,spec
+     (record-time! ,spec
+       (with-no-warnings ,@body))))
 
 ;;;###autoload
 (defun run-after-init (func)
