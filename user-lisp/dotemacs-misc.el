@@ -189,6 +189,15 @@
 
 (add-hook 'eww-after-render-hook 'eww+miniflux-trim)
 
+(defun eww+redirect-to-old-reddit (url)
+  (replace-regexp-in-string
+   "\\`https?://\\(www\\.\\)?reddit\\.com\\(\\'\\|/\\)"
+   "https://old.reddit.com/"
+   url))
+
+(with-eval-after-load 'eww
+  (add-hook 'eww-url-transformers #'eww+redirect-to-old-reddit))
+
 ;;;; bangs
 
 (after-load! bangs
