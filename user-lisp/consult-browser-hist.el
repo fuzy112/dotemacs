@@ -177,7 +177,7 @@
    :prompt "Browser history: "
    :sort nil
    :require-match t
-   :history 'cbh-history))
+   :history '(:input cbh-history)))
 
 (with-eval-after-load 'embark
   (defvar-keymap embark-consult-browser-hist-url-map
