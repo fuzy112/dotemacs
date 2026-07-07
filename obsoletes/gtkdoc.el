@@ -1,5 +1,5 @@
 ;;; gtkdoc.el --- Look up symbols in devhelp -*- lexical-binding: t -*-
-;; Copyright © 2024, 2025  Zhengyi Fu <i@fuzy.me>
+;; Copyright © 2024, 2025, 2026, 2026  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
 ;; Version: 0.2.4
@@ -89,7 +89,7 @@
   (delete-directory gtkdoc-cache-directory t))
 
 (defmacro gtkdoc--with-url-file-handler (&rest body)
-  (declare (indent 0) (debug fbody))
+  (declare (indent 0) (debug t))
   `(cl-letf (((alist-get url-handler-regexp file-name-handler-alist)
               #'url-file-handler))
      ,@body))
@@ -101,9 +101,9 @@
 
 (cl-defmethod gtkdoc--parse-xml (url)
   (gtkdoc--with-url-file-handler
-   (with-temp-buffer
-     (insert-file-contents url)
-     (libxml-parse-xml-region  nil nil url))))
+    (with-temp-buffer
+      (insert-file-contents url)
+      (libxml-parse-xml-region  nil nil url))))
 
 (cl-defmethod gtkdoc--extract-symbols (url)
   (unless (and (file-exists-p gtkdoc-cache-directory)

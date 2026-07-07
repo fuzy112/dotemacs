@@ -1,5 +1,5 @@
 ;;; gptel-tools.el --- Agentic tools for gptel  -*- lexical-binding: t -*-
-;; Copyright © 2025  Zhengyi Fu <i@fuzy.me>
+;; Copyright © 2025, 2026  Zhengyi Fu <i@fuzy.me>
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -76,6 +76,7 @@ keybinding, DESC is the description, and BODY is the code to execute
 when KEY is selected.
 
 See also `gptel-tools--popup-1'."
+  (declare (debug (form (form form &rest body))))
   `(gptel-tools--popup-1
     ,prompt
     (list ,@(mapcar
