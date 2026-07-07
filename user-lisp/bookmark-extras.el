@@ -351,7 +351,7 @@ The bookmark stores the link information and uses
                    (handler . ,#'org-link-bookmark-jump)
                    ,@(when (string= type "file")
                        `((filename . ,path)))
-                   ,@(when (member type '("http" "https"))
+                   ,@(when (member type '("http" "https" "ftp"))
                        `((location . ,path))))))
     (bookmark-store name record no-overwrite)))
 
