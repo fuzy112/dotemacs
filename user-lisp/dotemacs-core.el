@@ -27,6 +27,7 @@
 (defmacro setq! (&rest args)
   "Set variables to values, first ensuring each is defined as special.
 Works like `setq' but also calls `defvar' for each variable."
+  (declare (debug setq))
   (when (oddp (length args))
     (error "setq!: odd number of arguments"))
   (let ((forms))
@@ -45,6 +46,7 @@ The list stored in PLACE is destructively modified.
 
 This is morally equivalent to (setf PLACE (delq ELT PLACE)), except that
 PLACE is evaluated only once (after ELT)."
+  (declare (debug (form place)))
   (macroexp-let2 macroexp-copyable-p x elt
     (gv-letplace (getter setter) place
       (funcall setter `(delq ,x ,getter)))))
@@ -57,6 +59,7 @@ PLACE is a generalized variable.
 
 This is morally equivalent to (setf PLACE (remq ELT PLACE)), except that
 PLACE is evaluated only once (after ELT)."
+  (declare (debug (form place)))
   (macroexp-let2 macroexp-copyable-p x elt
     (gv-letplace (getter setter) place
       (funcall setter `(remq ,x ,getter)))))
@@ -69,6 +72,7 @@ destructively modified if the sequence is a list.
 
 This is morally equivalent to (setf PLACE (delete ELT PLACE)), except
 that PLACE is evaluated only once (after ELT)."
+  (declare (debug (form place)))
   (macroexp-let2 macroexp-copyable-p x elt
     (gv-letplace (getter setter) place
       (funcall setter `(delete ,x ,getter)))))
@@ -81,6 +85,7 @@ PLACE must be a generalized variable whose value is a sequence.
 
 This is morally equivalent to (setf PLACE (remove ELT PLACE)), except
 that PLACE is evaluated only once (after ELT)."
+  (declare (debug (form place)))
   (macroexp-let2 macroexp-copyable-p x elt
     (gv-letplace (getter setter) place
       (funcall setter `(remove ,x ,getter)))))
@@ -88,11 +93,13 @@ that PLACE is evaluated only once (after ELT)."
 (defmacro alist-set! (alist key value &optional testfn)
   "Associate KEY with VALUE in ALIST.
 Equality with KEY is tested by TESTFN, defaulting to `eq'."
+  (declare (debug (place form form &optional form)))
   `(setf (alist-get ,key ,alist nil nil ,testfn) ,value))
 
 (defmacro alist-del! (alist key &optional testfn)
   "Remove all elements of ALIST whose `car' equals KEY.
 Equality with KEY is tested by TESTFN, defaulting to `eq'."
+  (declare (debug (place form &optional testfn)))
   (macroexp-let2* macroexp-copyable-p
       ((k key)
        (test `(or ,testfn #'eq)))
@@ -125,7 +132,7 @@ If KEY is an integer, equality is tested by `eql'.
 Otherwise, equality is tested by `equal'.
 
 \(fn ALIST &rest [KEY VALUE]...)"
-  (declare (indent 1))
+  (declare (indent 1) (debug (place &rest [sexp form])))
   (if (symbolp alist)
       (alist-setq--form alist args)
     (gv-letplace (getter setter) alist
@@ -151,7 +158,7 @@ Otherwise, equality is tested by `equal'.
 If the key is a symbol, equality is tested by `eq'.
 If the key is an integer, equality is tested by `eql'.
 Otherwise, equality is tested by `equal'."
-  (declare (indent 1))
+  (declare (indent 1) (debug (place &rest sexp)))
   (if (symbolp alist)
       (alist-delq--form alist keys)
     (gv-letplace (getter setter) alist
@@ -163,7 +170,7 @@ Otherwise, equality is tested by `equal'."
 (defvar dotemacs-time-alist nil)
 
 (defmacro record-time! (label &rest body)
-  (declare (indent 1))
+  (declare (indent 1) (debug (sexp body)))
   (macroexp-let2 nil start-time '(current-time)
     `(unwind-protect
          ,(macroexp-progn body)
@@ -172,6 +179,7 @@ Otherwise, equality is tested by `equal'."
                  dotemacs-time-alist)))))
 
 (defmacro require! (feature)
+  (declare (debug (symbolp)))
   (let ((err-var (make-symbol "err")))
     `(record-time! ,feature
        (eval-when-compile (require ,(macroexp-quote feature)))
@@ -190,7 +198,7 @@ SPEC could be
 - (SPECS...)
 - (:and SPECS...)
 - (:or SPEC...)."
-  (declare (indent 1))
+  (declare (indent 1) (debug (sexp body)))
   (unless lexical-binding
     (error "after-load! requires lexical-binding to be t"))
   (pcase-exhaustive spec
@@ -220,7 +228,7 @@ SPEC could be
 (defmacro after-load! (spec &rest body)
   "Similar to `after-load-1!', but suppress warnings in BODY.
 See `after-load-1!' for SPEC."
-  (declare (indent 1))
+  (declare (indent 1) (debug after-load-1!))
   `(after-load-1! ,spec
      (record-time! ,spec
        (with-no-warnings ,@body))))
@@ -237,7 +245,7 @@ Otherwise, add FUNC to `after-init-hook'."
 (defmacro after-init! (&rest body)
   "Execute BODY after Emacs has finished initialization.
 See `after-init'."
-  (declare (indent 0))
+  (declare (indent 0) (debug body))
   `(run-after-init (lambda () (record-time! ,(gensym "after-init-") ,@body))))
 
 (defmacro with-no-compile! (&rest body)
@@ -245,7 +253,7 @@ See `after-init'."
 This can be useful for code that should not be byte-compiled.
 For example, code that uses macros which might not be
 available at compile time."
-  (declare (indent 0))
+  (declare (indent 0) (debug body))
   `(eval ',(macroexp-progn body) ,(macroexp-quote lexical-binding)))
 
 (defun add-hook-before (hook location function &optional local)
@@ -386,6 +394,7 @@ MODE's indicator entirely.
 
 This wraps `blackout' in `with-eval-after-load' to safely defer
 configuration until the relevant feature or file is available."
+  (declare (debug (sexp symbolp &optional form)))
   `(with-eval-after-load
        ,(macroexp-quote feature-or-file)
      (blackout ,(macroexp-quote mode) ,replacement)))
@@ -402,6 +411,7 @@ configuration until the relevant feature or file is available."
 PLACE should be a function symbol or a place suitable for
 `add-function'.  If PLACE is a quoted or function-quoted symbol, use
 `advice-add'; else use `add-function'."
+  (declare (debug (form)))
   (if (memq (car place) '(function quote))
       (if (symbolp (cadr place))
           `(advice-add ,place :around #'dotemacs-wrap-no-messages)
