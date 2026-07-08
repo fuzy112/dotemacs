@@ -217,7 +217,6 @@ SPEC could be
      `(after-load-1! ,unquoted ,@body))
     ((or (pred stringp) (pred symbolp))
      `(with-eval-after-load ,(macroexp-quote spec)
-        (eval-when-compile (require ,(macroexp-quote spec)))
         ,@body))
     (`(:or . ,sub-specs)
      (let ((lambda-var (make-symbol "body-")))
