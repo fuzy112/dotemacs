@@ -291,6 +291,12 @@
 
 ;;;; Org link bookmark
 
+(declare-function org-insert-link-global "ol.el")
+(declare-function org-link-open-from-string "ol.el")
+(declare-function org-element-property "org-element-ast.el")
+(declare-function org-element-put-property "org-element-ast.el")
+(declare-function org-element-link-parser "org-element.el")
+
 ;;;###autoload
 (defun org-link-bookmark-jump (bookmark)
   (require 'ol)
@@ -313,6 +319,7 @@
 
 (defun org-link-bookmark--parse-link (link-string)
   (require 'org-element)
+  (require 'org-element-ast)
   (with-temp-buffer
     (insert link-string)
     (org-mode)
@@ -320,7 +327,7 @@
     (let ((link (org-element-link-parser)))
       (when-let* ((beg (org-element-property :contents-begin link))
                   (end (org-element-property :contents-end link)))
-        (setf (org-element-property :contents link) (buffer-substring-no-properties beg end)))
+        (org-element-put-property link :contents (buffer-substring-no-properties beg end)))
       link)))
 
 (defun org-link-bookmark--read-link ()
@@ -360,6 +367,8 @@ existing bookmark with the same name."
                        `((handler . ,#'org-link-bookmark-jump))))))
     (bookmark-store name record no-overwrite)))
 
+(defvar embark-target-injection-hooks)
+(declare-function embark--allow-edit "ext:embark.el")
 (with-eval-after-load 'embark
   (cl-pushnew #'embark--allow-edit
               (alist-get 'org-link-bookmark-set
