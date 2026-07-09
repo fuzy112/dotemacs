@@ -58,6 +58,16 @@
     (pop-to-buffer-same-window buffer))
   (set-buffer buffer))
 
+(defun bookmark-completing-read* (handler prompt &optional default)
+  (bookmark-maybe-load-default-file)
+  (let ((bookmark-alist
+         (map-filter (lambda (_ record)
+                       (eq (alist-get 'handler record) handler))
+                     bookmark-alist)))
+    (unless default
+      (setq default (caar bookmark-alist)))
+    (bookmark-completing-read prompt default)))
+
 ;;;; Default
 
 ;; Add region to bookmark.
@@ -126,15 +136,16 @@
      (dired-directory . ,dired-directory)
      (dired-subdirs . ,(mapcar #'car dired-subdir-alist))
      (mode . ,major-mode)
-     (buffer . ,(buffer-name))
+     (buffer-name . ,(buffer-name))
      (handler . ,#'dired-bookmark-jump)))
 
 ;;;###autoload
 (defun dired-bookmark-jump (bookmark)
-  (let-alist bookmark
+  (interactive (list (bookmark-completing-read* #'dired-bookmark-jump "Jump to bookmark")))
+  (let-alist (bookmark-get-bookmark-record bookmark)
     (bookmark-display-buffer (dired-noselect .dired-directory .dired-switches))
-    (unless (string= .buffer (buffer-name))
-      (rename-buffer .buffer t)
+    (when (and .buffer-name (not (string-equal .buffer-name (buffer-name))))
+      (rename-buffer .buffer-name t)
       (dired-unadvertise default-directory))
     (dired-hide-details-mode (if .dired-hide-details-mode +1 -1))
     (dired-omit-mode (if .dired-omit-mode +1 -1))
