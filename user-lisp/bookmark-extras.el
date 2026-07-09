@@ -176,6 +176,9 @@
 ;;;; EWW
 
 (define-advice eww-bookmark-jump  (:after (bookmark) pos-and-mark)
+  (interactive
+   (list (bookmark-completing-read*
+          #'eww-bookmark-jump "Jump to bookmark")))
   (let ((buf (current-buffer))
         (record (bookmark-get-bookmark-record bookmark)))
     (setq record `(,@record
@@ -224,12 +227,16 @@
      (highlight-regexp . ,(caddr compilation-arguments))
      (directory . ,default-directory)
      (buffer-name . ,(buffer-name))
-     (handler . ,#'compilation-bookmark-handler)))
+     (handler . ,#'compilation-bookmark-jump)))
 
 ;;;###autoload
-(defun compilation-bookmark-handler (bookmark)
+(defun compilation-bookmark-jump (bookmark)
   "Jump to a BOOKMARK entry."
-  (let-alist bookmark
+  (interactive
+   (list (bookmark-completing-read*
+          #'compilation-bookmark-handler
+          "Jump to bookmark")))
+  (let-alist (bookmark-get-bookmark-record bookmark)
     (let ((default-directory .directory))
       (set-buffer
        (compilation-start
@@ -237,6 +244,9 @@
         .mode
         (lambda (_mode) .buffer-name)
         .highlight-regexp)))))
+
+;;;###autoload
+(defalias 'compilation-bookmark-handler #'compilation-bookmark-jump)
 
 ;;;###autoload
 (defun compilation-bookmark-enable (&optional _)
@@ -263,13 +273,17 @@
   `(,@(bookmark-make-record-default 'no-file 'no-context)
       (default-directory . ,default-directory)
       (buffer-name . ,(buffer-name))
-      (handler . ,#'eat-bookmark-handler)))
+      (handler . ,#'eat-bookmark-jump)))
 
 ;;;###autoload
-(defun eat-bookmark-handler (bookmark)
+(defun eat-bookmark-jump (bookmark)
   "Jump to a BOOKMARK entry of an Eat buffer."
+  (interactive
+   (list (bookmark-completing-read*
+          #'eat-bookmark-jump
+          "Jump to bookmark")))
   (require 'eat)
-  (let-alist bookmark
+  (let-alist (bookmark-get-bookmark-record bookmark)
     (let ((default-directory .default-directory)
           (eat-buffer-name .buffer-name))
       (eat--1 nil nil #'bookmark-display-buffer))))
@@ -424,6 +438,10 @@
 
 ;;;###autoload
 (defun org-link-bookmark-jump (bookmark)
+  (interactive
+   (list (bookmark-completing-read*
+          #'org-link-bookmark-jump
+          "Jump to bookmark")))
   (require 'ol)
   (defvar org-link-elisp-confirm-function)
   (defvar org-link-frame-setup)
