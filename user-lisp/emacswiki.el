@@ -19,12 +19,6 @@
     ;; linkd
     "linkd.el"
 
-    ;; help+
-    "help+.el"
-
-    ;; help-fns+
-    "help-fns+.el"
-
     ;; info+
     "info+.el"
 
