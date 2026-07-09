@@ -349,12 +349,6 @@
     (find-file sudo-file-name)))
 
 (declare-function bookmark-prop-get "bookmark.el")
-(defun +embark/eww-open-bookmark (bookmark)
-  "Open BOOKMARK with `eww'."
-  (if (bookmark-prop-get bookmark 'location)
-      (eww-bookmark-jump bookmark)
-    (user-error "Bookmark %s doesn't have a location" bookmark)))
-
 (defun +embark/browse-url-open-bookmark (bookmark)
   "Open BOOKMARK with `browse-url'."
   (browse-url (or (bookmark-prop-get bookmark 'location)
@@ -426,6 +420,16 @@ If there is no active minibuffer, signal an error."
   (let ((last-kbd-macro (kbd kmacro)))
     (kmacro-bind-to-key nil)))
 
+(define-advice eww-bookmark-jump (:filter-args (args) normalize)
+  (let ((bookmark (car args)))
+    (list
+     (if (bookmark-prop-get bookmark 'location)
+         bookmark
+       (append
+        (bookmark-get-bookmark-record bookmark)
+        `((location . ,(or (bookmark-prop-get bookmark 'filename)
+                           (bookmark-prop-get bookmark 'page)))))))))
+
 (after-load! embark
   (setopt embark-help-key "C-h")
   (setopt embark-cycle-key "C-.")
@@ -454,7 +458,7 @@ If there is no active minibuffer, signal an error."
   (keymap-set embark-file-map "#" '+embark/find-file-as-root)
   (keymap-set embark-file-map "r" 'find-file-read-only)
   (keymap-set embark-file-map "V" 'view-file)
-  (keymap-set embark-bookmark-map "W" '+embark/eww-open-bookmark)
+  (keymap-set embark-bookmark-map "W" 'eww-bookmark-jump)
   (keymap-set embark-bookmark-map "u" '+embark/browse-url-open-bookmark)
   (keymap-set embark-region-map "[" '+embark/apply-ansi-color)
   (keymap-set embark-variable-map "I" #'embark-inject-variable-value))
