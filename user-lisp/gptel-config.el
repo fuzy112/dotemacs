@@ -598,8 +598,7 @@ callback that inserts the response into the minibuffer."
 (defvar gptel-autosuggest-alist nil)
 
 ;;;###autoload
-(eval-and-compile
-  (cl-defun gptel-autosuggest-define
+(cl-defun gptel-autosuggest-define
       (command &key system context match-prompt (name 'autosuggest) backend model)
     "Add GPTel-based auto-suggestion functionality to COMMAND.
 COMMAND is an interactive function symbol.  SYSTEM is the system prompt
@@ -614,6 +613,7 @@ modify COMMAND.  If NAME is non-nil, the advice is named
     (declare (indent 1))
     (let ((advice-symbol (intern (format "%s@%s" command name))))
       (fset advice-symbol (lambda (orig-fn &rest args)
+			    (require 'gptel-config)
 			    (let* ((computed-context
 				    (cond
 				     ((functionp context) (funcall context))
@@ -635,11 +635,10 @@ modify COMMAND.  If NAME is non-nil, the advice is named
 					      (string-match-p match-prompt (minibuffer-prompt)))
 				      (gptel-request-minibuffer-input computed-context :system computed-system)))
 				(apply orig-fn args)))))
-      (advice-add command :around advice-symbol))))
+      (advice-add command :around advice-symbol)))
 
 (declare-function which-function "which-func.el")
 
-;;;###autoload
 (gptel-autosuggest-define 'bookmark-set
   :system
   "You are helping the user create a clear, descriptive bookmark name for their current position in a code/text file.
