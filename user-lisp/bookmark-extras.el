@@ -58,6 +58,52 @@
     (pop-to-buffer-same-window buffer))
   (set-buffer buffer))
 
+;;;; Default
+
+;; Add region to bookmark.
+
+(defcustom bookmark-save-regions t
+  "Save and restore regions in bookmark."
+  :type 'boolean)
+
+(define-advice bookmark-make-record-default
+    (:around (fn &optional no-file no-context posn) region)
+  (let ((mark (mark)))
+    `( ,@(funcall fn no-file no-context posn)
+       ,@(when bookmark-save-regions
+           `((mark . ,mark)
+             (region-active . ,(region-active-p))
+             ,@(unless no-context
+                 `((mark-front-context-string
+                    . ,(if (>= (- (point-max) mark)
+	                       bookmark-search-size)
+	                   (buffer-substring-no-properties
+	                    mark
+                            (+ mark))
+	                 nil))))
+             ,@(unless no-context
+                 `((mark-rear-context-string
+                    . ,(if (>= (- mark (point-min))
+	                       bookmark-search-size)
+	                   (buffer-substring-no-properties
+	                    mark
+                            (- mark bookmark-search-size))
+	                 nil)))))))))
+
+(define-advice bookmark-default-handler (:after (record) region)
+  (let ((mark (bookmark-prop-get record 'mark))
+        (region-active (bookmark-prop-get record 'region-active))
+        (forward-str (bookmark-prop-get record 'mark-rear-context-string))
+        (behind-str (bookmark-prop-get record 'mark-front-context-string)))
+    (save-excursion
+      (and mark
+           (goto-char mark))
+      (when (and forward-str (search-forward forward-str (point-max) t))
+        (goto-char (match-beginning 0)))
+      (when (and behind-str (search-backward behind-str (point-min) t))
+        (goto-char (match-end 0)))
+      (push-mark (point) 'NO-MESSAGE region-active))))
+
 ;;:; Dired
 
 (declare-function dired-mark "dired.el")
