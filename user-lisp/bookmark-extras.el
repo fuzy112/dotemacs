@@ -58,6 +58,40 @@
     (pop-to-buffer-same-window buffer))
   (set-buffer buffer))
 
+;;:; Dired
+
+(defun dired-bookmark-make-record ()
+  `( ,@(bookmark-make-record-default)
+     (dired-switches . ,dired-actual-switches)
+     (dired-marked . ,(dired-get-marked-files nil 'marked))
+     (dired-hide-details-mode . ,(bound-and-true-p dired-hide-details-mode))
+     (dired-omit-mode . ,(bound-and-true-p dired-omit-mode))
+     (dired-directory . ,dired-directory)
+     (dired-subdirs . ,(mapcar #'car dired-subdir-alist))
+     (mode . ,major-mode)
+     (buffer . ,(buffer-name))
+     (handler . ,#'dired-bookmark-jump)))
+
+;;;###autoload
+(defun dired-bookmark-jump (bookmark)
+  (let-alist bookmark
+    (bookmark-display-buffer (dired-noselect .dired-directory .dired-switches))
+    (unless (string= .buffer (buffer-name))
+      (rename-buffer .buffer t)
+      (dired-unadvertise default-directory))
+    (dired-hide-details-mode (if .dired-hide-details-mode +1 -1))
+    (dired-omit-mode (if .dired-omit-mode +1 -1))
+    (mapc #'dired-maybe-insert-subdir .dired-subdirs)
+    (dolist (file .dired-marked)
+      (when (dired-goto-file file)
+        (dired-mark nil)))))
+
+;;;###autoload
+(defun dired-bookmark-enable ()
+  (setq-local bookmark-make-record-function #'dired-bookmark-make-record))
+
+;;;###autoload(add-hook 'dired-mode-hook #'dired-bookmark-enable)
+
 ;;;; Mu4e
 (declare-function mu4e "ext:mu4e.el")
 
@@ -379,6 +413,7 @@ existing bookmark with the same name."
 ;;;###autoload
 (defun bookmark-extras-install ()
   (interactive)
+  (add-hook 'dired-mode-hook #'dired-bookmark-enable)
   (add-hook 'compilation-mode-hook #'compilation-bookmark-enable)
   (add-hook 'compilation-minor-mode-hook #'compilation-bookmark-enable)
   (add-hook 'compilation-shell-minor-mode-hook #'compilation-bookmark-enable)
