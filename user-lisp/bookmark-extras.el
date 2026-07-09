@@ -68,9 +68,9 @@
 
 (define-advice bookmark-make-record-default
     (:around (fn &optional no-file no-context posn) region)
-  (let ((mark (mark)))
+  (let ((mark (mark t)))
     `( ,@(funcall fn no-file no-context posn)
-       ,@(when bookmark-save-regions
+       ,@(when (and mark bookmark-save-regions)
            `((mark . ,mark)
              (region-active . ,(region-active-p))
              ,@(unless no-context
