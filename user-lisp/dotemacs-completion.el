@@ -577,8 +577,6 @@ into account.")
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow)))
 
   (cl-pushnew #'eat-bookmark-handler (cddr (assoc ?s consult-bookmark-narrow)))
-  (cl-pushnew #'bmkp-jump-eww (cddr (assoc ?w consult-bookmark-narrow)))
-  (cl-pushnew #'bmkp-jump-gnus (cddr (assoc ?m consult-bookmark-narrow)))
   (cl-pushnew #'pdf-view-mode (cddr (assoc ?d consult-bookmark-narrow)))
   (cl-pushnew #'reader-bookmark-jump (cddr (assoc ?d consult-bookmark-narrow)))
 
@@ -586,7 +584,7 @@ into account.")
   (add-to-list 'consult-bookmark-narrow '(?V "View" bookmark-view-handler))
   (add-to-list 'consult-bookmark-narrow '(?g "Magit" magit--handle-bookmark))
   (add-to-list 'consult-bookmark-narrow '(?c "Compilation" compilation-bookmark-handler))
-  (add-to-list 'consult-bookmark-narrow '(?D "Dired" bmkp-jump-dired))
+  (add-to-list 'consult-bookmark-narrow '(?D "Dired" dired-bookmark-jump))
   (add-to-list 'consult-bookmark-narrow '(?T "Telega" telega-chat-bookmark-handler telega-root-bookmark-handler))
   (add-to-list 'consult-bookmark-narrow '(?o "Org-link" org-link-bookmark-jump))
 
