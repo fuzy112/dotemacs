@@ -55,7 +55,7 @@
 (defun bookmark-display-buffer (buffer)
   (if (bound-and-true-p bmkp-jump-display-function)
       (funcall bmkp-jump-display-function buffer)
-    (pop-to-buffer buffer))
+    (pop-to-buffer-same-window buffer))
   (set-buffer buffer))
 
 ;;;; Mu4e
@@ -298,9 +298,13 @@
 (defun org-link-bookmark-jump (bookmark)
   (require 'ol)
   (defvar org-link-elisp-confirm-function)
+  (defvar org-link-frame-setup)
   (prog1
-      (let ((link (bookmark-prop-get bookmark 'org-link))
-            (org-link-elisp-confirm-function #'always))
+      (cl-letf ((link (bookmark-prop-get bookmark 'org-link))
+                (org-link-elisp-confirm-function #'always)
+                ((alist-get 'file org-link-frame-setup)
+                 (lambda (file)
+                   (bookmark-display-buffer (find-file-noselect file)))))
         (org-link-open-from-string link))
     ;; bookmark-jump runs the bookmark handler with
     ;; `save-window-excursion', so we need to save the window
