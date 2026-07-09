@@ -188,6 +188,10 @@
                      (bookmark-default-handler record))))
       (add-hook 'eww-after-render-hook hook nil t))))
 
+;;;; Xwidget webkit
+
+(put 'xwidget-webkit-bookmark-jump-handler 'bookmark-handler-type "Xwidget")
+
 ;;;; Mu4e
 (declare-function mu4e "ext:mu4e.el")
 
