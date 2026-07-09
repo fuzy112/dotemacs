@@ -101,6 +101,19 @@
 (defun dired-bookmark-enable ()
   (setq-local bookmark-make-record-function #'dired-bookmark-make-record))
 
+(defun dired-bookmark-upgrade ()
+  (when-let* ((name bookmark-current-bookmark)
+              ((memq (bookmark-get-handler name) '(nil bookmark-default-handler)))
+              (filename (bookmark-get-filename name))
+              ((eq major-mode 'dired-mode))
+              ((stringp dired-directory))
+              ((equal (expand-file-name dired-directory) (expand-file-name filename)))
+              ((yes-or-no-p "This is a file bookmark.  Upgrade it to dired bookmark?"))
+              ((eq bookmark-make-record-function #'dired-bookmark-make-record)))
+    (bookmark-set name)))
+
+(add-hook 'bookmark-after-jump-hook #'dired-bookmark-upgrade)
+
 ;;;###autoload(add-hook 'dired-mode-hook #'dired-bookmark-enable)
 
 ;;;; Mu4e
