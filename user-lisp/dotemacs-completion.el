@@ -580,14 +580,14 @@ into account.")
   ;; url-only bookmark type
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow)))
 
-  (cl-pushnew #'eat-bookmark-handler (cddr (assoc ?s consult-bookmark-narrow)))
+  (cl-pushnew #'eat-bookmark-jump (cddr (assoc ?s consult-bookmark-narrow)))
   (cl-pushnew #'pdf-view-mode (cddr (assoc ?d consult-bookmark-narrow)))
   (cl-pushnew #'reader-bookmark-jump (cddr (assoc ?d consult-bookmark-narrow)))
 
   (add-to-list 'consult-bookmark-narrow '(?t "Tab" tab-bookmark-handler))
   (add-to-list 'consult-bookmark-narrow '(?V "View" bookmark-view-handler))
   (add-to-list 'consult-bookmark-narrow '(?g "Magit" magit--handle-bookmark))
-  (add-to-list 'consult-bookmark-narrow '(?c "Compilation" compilation-bookmark-handler))
+  (add-to-list 'consult-bookmark-narrow '(?c "Compilation" compilation-bookmark-jump))
   (add-to-list 'consult-bookmark-narrow '(?D "Dired" dired-bookmark-jump))
   (add-to-list 'consult-bookmark-narrow '(?T "Telega" telega-chat-bookmark-handler telega-root-bookmark-handler))
   (add-to-list 'consult-bookmark-narrow '(?o "Org-link" org-link-bookmark-jump))
