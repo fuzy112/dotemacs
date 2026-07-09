@@ -22,22 +22,31 @@
 
 ;;; Commentary:
 
-;; This Emacs package, `bookmark-extras.el', provides bookmark
-;; support for various modes and defines new bookmark types.  It
-;; includes functions for creating bookmark records and handlers for
-;; jumping to bookmarked entries.
-
+;; This Emacs package, `bookmark-extras.el', enhances the standard
+;; bookmark system by providing bookmark support for various modes
+;; and defining new bookmark types.  It includes functions for
+;; creating bookmark records and handlers for jumping to bookmarked
+;; entries.
+;;
 ;; Supported modes:
+;;  - dired-mode
+;;  - eww-mode (via advice on `eww-bookmark-jump')
 ;;  - mu4e-main-mode
 ;;  - compilation-mode (including compilation-minor-mode and
 ;;    compilation-shell-minor-mode)
 ;;  - eat-mode
 ;;  - deadgrep-mode
 ;;  - telega-root-mode and telega-chat-mode
-
-;; Additionally, it provides a browser‑independent URL bookmark type
-;; (`url-bookmark-jump' / `url-bookmark-add') and an Org link bookmark
-;; type (`org-link-bookmark-jump' / `org-link-bookmark-set').
+;;
+;; Additionally, it provides:
+;;  - A browser‑independent URL bookmark type (`url-bookmark-jump' /
+;;    `url-bookmark-add')
+;;  - An Org link bookmark type (`org-link-bookmark-jump' /
+;;    `org-link-bookmark-set')
+;;
+;; Use `bookmark-extras-install' to enable all modes at once, or
+;; activate each mode individually by adding the appropriate enable
+;; function to its mode hook.
 
 ;;; Code:
 
@@ -322,9 +331,9 @@ Interactively, prompt for a bookmark using `bookmark-completing-read*'."
 (defun eat-bookmark-make-record ()
   "Create a bookmark record for `eat-mode'."
   `(,@(bookmark-make-record-default 'no-file 'no-context)
-      (default-directory . ,default-directory)
-      (buffer-name . ,(buffer-name))
-      (handler . ,#'eat-bookmark-jump)))
+    (default-directory . ,default-directory)
+    (buffer-name . ,(buffer-name))
+    (handler . ,#'eat-bookmark-jump)))
 
 ;;;###autoload
 (defun eat-bookmark-jump (bookmark)
@@ -433,9 +442,9 @@ Interactively, prompt for a bookmark to jump to using completion."
 (defun telega-chat-bookmark-make-record ()
   (defvar telega-chatbuf--chat)
   `(,@(bookmark-make-record-default 'no-file)
-      (buffer-name . ,(buffer-name))
-      (telega-chat-id . ,(plist-get telega-chatbuf--chat :id))
-      (handler . telega-chat-bookmark-handler)))
+    (buffer-name . ,(buffer-name))
+    (telega-chat-id . ,(plist-get telega-chatbuf--chat :id))
+    (handler . telega-chat-bookmark-handler)))
 
 ;;;###autoload
 (defun telega-chat-bookmark-handler (bookmark)
