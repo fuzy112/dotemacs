@@ -162,6 +162,18 @@
 
 ;;;###autoload(add-hook 'dired-mode-hook #'dired-bookmark-enable)
 
+;;;; EWW
+
+(define-advice eww-bookmark-jump  (:after (bookmark) pos-and-mark)
+  (let ((buf (current-buffer))
+        (record (bookmark-get-bookmark-record bookmark)))
+    (setq record `(,@record
+                   (buffer . ,buf)))
+    (letrec ((hook (lambda ()
+                     (remove-hook 'eww-after-render-hook hook t)
+                     (bookmark-default-handler record))))
+      (add-hook 'eww-after-render-hook hook nil t))))
+
 ;;;; Mu4e
 (declare-function mu4e "ext:mu4e.el")
 

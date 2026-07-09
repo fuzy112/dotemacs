@@ -351,9 +351,9 @@
 (declare-function bookmark-prop-get "bookmark.el")
 (defun +embark/eww-open-bookmark (bookmark)
   "Open BOOKMARK with `eww'."
-  (eww (or (bookmark-prop-get bookmark 'location)
-           (bookmark-prop-get bookmark 'filename)
-           (user-error "Bookmark `%s' doesn't have a location" bookmark))))
+  (if (bookmark-prop-get bookmark 'location)
+      (eww-bookmark-jump bookmark)
+    (user-error "Bookmark %s doesn't have a location" bookmark)))
 
 (defun +embark/browse-url-open-bookmark (bookmark)
   "Open BOOKMARK with `browse-url'."
