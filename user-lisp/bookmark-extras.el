@@ -53,20 +53,35 @@
 ;;;; Utility
 
 (defun bookmark-display-buffer (buffer)
+  "Display BUFFER using `bmkp-jump-display-function' if bound and non-nil,
+otherwise use `pop-to-buffer-same-window'.  Then set BUFFER as current."
   (if (bound-and-true-p bmkp-jump-display-function)
       (funcall bmkp-jump-display-function buffer)
     (pop-to-buffer-same-window buffer))
   (set-buffer buffer))
 
 (defun bookmark-completing-read* (handler prompt &optional default)
-  (bookmark-maybe-load-default-file)
-  (let ((bookmark-alist
-         (map-filter (lambda (_ record)
-                       (eq (alist-get 'handler record) handler))
-                     bookmark-alist)))
-    (unless default
-      (setq default (caar bookmark-alist)))
-    (bookmark-completing-read prompt default)))
+  "Read a bookmark name with completion, filtering by HANDLER.
+
+HANDLER is a symbol or list of symbols; only bookmarks whose `handler'
+property matches are offered.  PROMPT is the minibuffer prompt.  DEFAULT
+is the default bookmark name; if nil or empty, the first bookmark in
+`bookmark-alist' is used.  If the user enters an empty string, signal
+`user-error'."
+  (minibuffer-with-setup-hook
+      (:append
+       (lambda ()
+         (setq-local minibuffer-completion-predicate
+                     (lambda (cand)
+                       (memq (alist-get 'handler (cdr cand))
+                             (ensure-list handler))))))
+    (when (or (null default) (string-empty-p default))
+      (bookmark-maybe-load-default-file)
+      (setq default (or default (caar bookmark-alist))))
+    (let ((selected (bookmark-completing-read prompt)))
+      (when (string-empty-p selected)
+        (user-error "User selected nothing"))
+      selected)))
 
 ;;;; Default
 
@@ -78,6 +93,11 @@
 
 (define-advice bookmark-make-record-default
     (:around (fn &optional no-file no-context posn) region)
+  "Add region information to the default bookmark record.
+When `bookmark-save-regions' is non-nil, this advice appends
+the current mark position, region activation state, and context
+strings (if not in no-context mode) to the bookmark record
+created by `bookmark-make-record-default'."
   (let ((mark (mark t)))
     `( ,@(funcall fn no-file no-context posn)
        ,@(when (and mark bookmark-save-regions)
@@ -89,7 +109,7 @@
 	                       bookmark-search-size)
 	                   (buffer-substring-no-properties
 	                    mark
-                            (+ mark))
+                            (+ mark bookmark-search-size))
 	                 nil))))
              ,@(unless no-context
                  `((mark-rear-context-string
@@ -101,6 +121,8 @@
 	                 nil)))))))))
 
 (define-advice bookmark-default-handler (:after (record) region)
+  "Restore the mark and region after jumping to a bookmark.
+See `bookmark-default-handler@region'."
   (let ((mark (bookmark-prop-get record 'mark))
         (region-active (bookmark-prop-get record 'region-active))
         (forward-str (bookmark-prop-get record 'mark-rear-context-string))
@@ -128,6 +150,9 @@
 (defvar dired-subdir-alist)
 
 (defun dired-bookmark-make-record ()
+  ;; TODO: should I add NO-FILE here?  If I pass NO-FILE,
+  ;; dired-bookmark-jump can delegate some work to
+  ;; `bookmark-default-handler'.
   `( ,@(bookmark-make-record-default)
      (dired-switches . ,dired-actual-switches)
      (dired-marked . ,(dired-get-marked-files nil 'marked))
@@ -141,6 +166,14 @@
 
 ;;;###autoload
 (defun dired-bookmark-jump (bookmark)
+  "Jump to a dired bookmark.
+
+Display the directory and restore the saved switches, subdirectories,
+hidden-details mode, omit mode, and marked files as saved in the
+bookmark.
+
+Interactively, prompt for a bookmark name using completion limited to
+dired bookmarks."
   (interactive (list (bookmark-completing-read* #'dired-bookmark-jump "Jump to bookmark")))
   (let-alist (bookmark-get-bookmark-record bookmark)
     (bookmark-display-buffer (dired-noselect .dired-directory .dired-switches))
@@ -159,6 +192,14 @@
   (setq-local bookmark-make-record-function #'dired-bookmark-make-record))
 
 (defun dired-bookmark-upgrade ()
+  "Upgrade a file bookmark to a dired bookmark if appropriate.
+This function is intended to be added to `bookmark-after-jump-hook'.
+When invoked after jumping to a bookmark, it checks if the bookmark
+is a simple file bookmark (i.e., using `bookmark-default-handler' or
+nil handler) whose filename matches the current `dired-directory'
+in a Dired buffer.  If so, it prompts the user to upgrade the bookmark
+to use `dired-bookmark-make-record' as the bookmark creation function,
+so that later jumps will restore the Dired state correctly."
   (when-let* ((name bookmark-current-bookmark)
               ((memq (bookmark-get-handler name) '(nil bookmark-default-handler)))
               (filename (bookmark-get-filename name))
@@ -175,10 +216,15 @@
 
 ;;;; EWW
 
-(define-advice eww-bookmark-jump  (:after (bookmark) pos-and-mark)
+(define-advice eww-bookmark-jump (:after (bookmark) pos-and-mark)
+  "Restore point and mark after EWW bookmark page loads.
+Also allows interactive bookmark selection."
   (interactive
    (list (bookmark-completing-read*
-          #'eww-bookmark-jump "Jump to bookmark")))
+          '(eww-bookmark-jump
+            url-bookmark-jump
+            xwidget-webkit-bookmark-jump-handler)
+          "Jump to bookmark")))
   (let ((buf (current-buffer))
         (record (bookmark-get-bookmark-record bookmark)))
     (setq record `(,@record
@@ -235,7 +281,8 @@
 
 ;;;###autoload
 (defun compilation-bookmark-jump (bookmark)
-  "Jump to a BOOKMARK entry."
+  "Jump to a compilation bookmark.
+Interactively, prompt for a bookmark using `bookmark-completing-read*'."
   (interactive
    (list (bookmark-completing-read*
           #'compilation-bookmark-handler
@@ -281,7 +328,8 @@
 
 ;;;###autoload
 (defun eat-bookmark-jump (bookmark)
-  "Jump to a BOOKMARK entry of an Eat buffer."
+  "Jump to a bookmark in an Eat buffer.
+Interactively, prompt for a bookmark to jump to using completion."
   (interactive
    (list (bookmark-completing-read*
           #'eat-bookmark-jump
@@ -413,6 +461,16 @@
 
 ;;;###autoload
 (defun url-bookmark-jump (bookmark)
+  "Jump to a URL bookmark using the configured browser.
+When called interactively, prompt for a bookmark among those
+compatible with `url-bookmark-jump', `eww-bookmark-jump', or
+`xwidget-webkit-bookmark-jump-handler'."
+  (interactive
+   (list (bookmark-completing-read*
+          '(url-bookmark-jump
+            eww-bookmark-jump
+            xwidget-webkit-bookmark-jump-handler)
+          "Jump to bookmark")))
   (let ((pos (bookmark-prop-get bookmark 'location)))
     (pcase browse-url-browser-function
       ('eww-browse-url (eww-bookmark-jump bookmark))
@@ -442,6 +500,9 @@
 
 ;;;###autoload
 (defun org-link-bookmark-jump (bookmark)
+  "Jump to an Org link stored in a bookmark.
+When called interactively, prompt for a bookmark using
+`bookmark-completing-read*' and jump to the link stored in it."
   (interactive
    (list (bookmark-completing-read*
           #'org-link-bookmark-jump
