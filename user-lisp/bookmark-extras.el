@@ -91,28 +91,25 @@
 
 (defun compilation-bookmark-make-record ()
   "Create a bookmark record for compilation mode."
-  `(,@(bookmark-make-record-default 'no-file 'no-context)
-    (compilation-arguments . ,compilation-arguments)
-    (directory . ,default-directory)
-    (major-mode . ,major-mode)
-    (compilation-minor-mode . ,compilation-minor-mode)
-    (compilation-shell-minor-mode . ,compilation-shell-minor-mode)
-    (buffer-name . ,(buffer-name))
-    (handler . ,#'compilation-bookmark-handler)))
+  `( ,@(bookmark-make-record-default 'no-file 'no-context)
+     (command . ,(car compilation-arguments))
+     (mode . ,(cadr compilation-arguments))
+     (highlight-regexp . ,(caddr compilation-arguments))
+     (directory . ,default-directory)
+     (buffer-name . ,(buffer-name))
+     (handler . ,#'compilation-bookmark-handler)))
 
 ;;;###autoload
 (defun compilation-bookmark-handler (bookmark)
   "Jump to a BOOKMARK entry."
   (let-alist bookmark
-    (bookmark-display-buffer (get-buffer-create .buffer-name))
-    (setq default-directory .directory)
-    (funcall .major-mode)
-    (setq-local compilation-arguments .compilation-arguments)
-    (when compilation-minor-mode
-      (compilation-minor-mode +1))
-    (when compilation-shell-minor-mode
-      (compilation-shell-minor-mode +1))
-    (apply #'compilation-start compilation-arguments)))
+    (let ((default-directory .directory))
+      (set-buffer
+       (compilation-start
+        .command
+        .mode
+        (lambda (_mode) .buffer-name)
+        .highlight-regexp)))))
 
 ;;;###autoload
 (defun compilation-bookmark-enable (&optional _)
