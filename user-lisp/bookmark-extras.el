@@ -60,6 +60,17 @@
 
 ;;:; Dired
 
+(declare-function dired-mark "dired.el")
+(declare-function dired-goto-file "dired.el")
+(declare-function dired-maybe-insert-subdir "dired.el")
+(declare-function dired-omit-mode "dired.el")
+(declare-function dired-hide-details-mode "dired.el")
+(declare-function dired-unadvertise "dired.el")
+(declare-function dired-get-marked-files "dired.el")
+
+(defvar dired-actual-switches)
+(defvar dired-subdir-alist)
+
 (defun dired-bookmark-make-record ()
   `( ,@(bookmark-make-record-default)
      (dired-switches . ,dired-actual-switches)
@@ -250,6 +261,7 @@
 ;;;; Telega
 
 (defvar telega-root-buffer-name)
+(declare-function telega "ext:telega.el")
 
 (defun telega-root-bookmark-make-record ()
   `(,@(bookmark-make-record-default 'no-file 'no-context)
