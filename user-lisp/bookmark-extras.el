@@ -75,8 +75,9 @@ BUFFER and BOOKMARK."
     (bookmark-default-handler
      `(""
        (buffer . ,buffer)
-       ,@(map-remove (apply-partially 'eq 'filename)
-                      (bookmark-get-bookmark-record bookmark)))))))
+       ,@(map-remove
+          (lambda (key _) (eq key 'filename))
+          (bookmark-get-bookmark-record bookmark)))))))
 
 (defun bookmark-completing-read* (handler prompt &optional default)
   "Read a bookmark name with completion, filtering by HANDLER.
