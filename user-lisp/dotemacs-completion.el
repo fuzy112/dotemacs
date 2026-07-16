@@ -51,7 +51,9 @@
                            (cycle-sort-function . identity)))
 
           (ffap-menu . ((display-sort-function . identity)
-                        (cycle-sort-function . identity)))))
+                        (cycle-sort-function . identity)))
+
+          (embark-keybinding . ((styles . (orderless+prefixes))))))
 
 (setq completion-pcm-leading-wildcard t)
 
