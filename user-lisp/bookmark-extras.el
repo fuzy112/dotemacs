@@ -232,32 +232,31 @@ so that later jumps will restore the Dired state correctly."
 
 ;;;; EWW
 
-(define-advice eww-bookmark-jump (:after (bookmark) pos-and-mark)
+(define-advice eww-bookmark-jump (:after (record) pos-and-mark)
   "Restore point and mark after EWW bookmark page loads.
 Also allows interactive bookmark selection."
   (interactive
-   (list (bookmark-completing-read*
-          '(eww-bookmark-jump
-            url-bookmark-jump
-            xwidget-webkit-bookmark-jump-handler)
-          "Jump to bookmark")))
-  (let ((buf (current-buffer))
-        (record (bookmark-get-bookmark-record bookmark)))
-    (setq record `(,@record
-                   (buffer . ,buf)))
+   (list (bookmark-get-bookmark
+          (bookmark-completing-read*
+           '(eww-bookmark-jump
+             url-bookmark-jump
+             xwidget-webkit-bookmark-jump-handler)
+           "Jump to record"))))
+  (let ((buf (current-buffer)))
     (letrec ((hook (lambda ()
                      (remove-hook 'eww-after-render-hook hook t)
-                     (bookmark-default-handler record))))
+                     (bookmark-display-buffer buf record))))
       (add-hook 'eww-after-render-hook hook nil t))))
 
 ;;;; Help
 
-(define-advice help-bookmark-jump (:after (bookmark) restore-point)
+(define-advice help-bookmark-jump (:after (record) restore-point)
   (interactive
-   (list (bookmark-completing-read*
-          '(help-bookmark-jump)
-          "Jump to bookmark")))
-  (bookmark-display-buffer (current-buffer) bookmark))
+   (list (bookmark-get-bookmark
+          (bookmark-completing-read*
+           '(help-bookmark-jump)
+           "Jump to bookmark"))))
+  (bookmark-display-buffer (current-buffer) record))
 
 ;;;; Xwidget webkit
 
@@ -486,11 +485,12 @@ When called interactively, prompt for a bookmark among those
 compatible with `url-bookmark-jump', `eww-bookmark-jump', or
 `xwidget-webkit-bookmark-jump-handler'."
   (interactive
-   (list (bookmark-completing-read*
-          '(url-bookmark-jump
-            eww-bookmark-jump
-            xwidget-webkit-bookmark-jump-handler)
-          "Jump to bookmark")))
+   (list (bookmark-get-bookmark
+          (bookmark-completing-read*
+           '(url-bookmark-jump
+             eww-bookmark-jump
+             xwidget-webkit-bookmark-jump-handler)
+           "Jump to bookmark"))))
   (let ((pos (bookmark-prop-get bookmark 'location)))
     (pcase browse-url-browser-function
       ('eww-browse-url (eww-bookmark-jump bookmark))
