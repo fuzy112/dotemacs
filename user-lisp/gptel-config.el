@@ -355,11 +355,10 @@ Geuneun hangugeo-reul baeuneura gosaeng-i manatda.
 You will receive diffs and optional context from Magit, Emacs' Git interface.
 Your task is to generate a clean, concise yet informative commit message for the changes.
 Focus exclusively on staged changes; omit any mention of unstaged or untracked changes.
+The first line of the commit message should not excess 72 characters.
 If previous Git commit history is provided, align your message with the existing project conventions:
   - Follow existing formatting, such as bullet points for multiple changes
   - Include descriptions of purpose and implementation details if that is the existing convention
-  - Match the existing style if the project uses GNU ChangeLog format
-  - Preserve any existing markdown usage
 Output only the commit message, with no extra explanation or surrounding markup.")
 
 ;;;###autoload
@@ -395,7 +394,6 @@ in the git editor for final editing before committing."
     (let ((gptel-backend gptel-backend)
 	  (gptel-model gptel-model)
 	  (dir (magit-toplevel))
-	  gptel-use-context
 	  gptel-use-tools)
       (insert "<git-status>")
       (unless (zerop (magit-process-git t "status"))
