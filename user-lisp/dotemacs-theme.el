@@ -130,12 +130,14 @@ attributes."
   (interactive)
   (push 'dotemacs custom-enabled-themes)
   (disable-theme 'dotemacs)
-  (remove-hook 'server-after-make-frame-hook #'dotemacs-theme-refresh)
   (remove-hook 'enable-theme-functions #'dotemacs-theme-refresh))
 
 (when (daemonp)
   ;; Refresh theme for new frames in server mode
-  (add-hook 'server-after-make-frame-hook #'dotemacs-theme-refresh t))
+  (letrec ((hook (lambda ()
+                   (remove-hook 'server-after-make-frame-hook hook)
+                   (dotemacs-theme-refresh))))
+    (add-hook 'server-after-make-frame-hook hook 5)))
 
 (after-init!
   (dotemacs-theme-refresh))
