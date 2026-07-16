@@ -371,7 +371,7 @@ value for USE-OVERLAYS."
               #'ansi-color-apply-text-property-face)))
       (ansi-color-apply-on-region beg end))))
 
-(defun embark-inject (str)
+(defun embark-inject (str-or-list)
   "Replace the contents of the active minibuffer with STR.
 If there is no active minibuffer, signal an error."
   (let ((win (active-minibuffer-window)))
@@ -379,7 +379,14 @@ If there is no active minibuffer, signal an error."
       (user-error "No active minibuffer"))
     (select-window win)
     (delete-minibuffer-contents)
-    (insert str)))
+    (if (stringp str-or-list)
+        (insert str-or-list)
+      (let ((separator (or (get-text-property 0 'separatar crm-separator)
+                           (cl-loop for s in '(" " ":" "\t" ";" "." "-")
+                                    thereis (string-match-p crm-separator s)))))
+        (cl-loop for str in str-or-list
+                 for sep = "" then separator
+                 do (insert sep str))))))
 
 (defun embark-inject-variable-value (var)
   "Replace the minibuffer contents with the value of VAR."
@@ -450,6 +457,8 @@ If there is no active minibuffer, signal an error."
 
   (alist-setq! embark-keymap-alist
     kmacro '(embark-kmacro-map))
+
+  (add-to-list 'embark-multitarget-actions #'embark-inject)
 
   (keymap-set embark-general-map "J" #'embark-inject)
   (keymap-set embark-general-map "\\" #'embark-history-remove)
