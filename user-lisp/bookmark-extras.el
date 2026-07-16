@@ -665,6 +665,8 @@ for the bookmark named by `bookmark-edit-bookmark-name'."
                   nil)
   (quit-window))
 
+(keymap-set bookmark-map "E" #'bookmark-edit-bookmark-record)
+
 
 
 (defvar embark-target-injection-hooks)
