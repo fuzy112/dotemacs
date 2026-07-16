@@ -51,7 +51,7 @@
 ;;; Code:
 
 (require 'bookmark)
-
+(require 'map)
 (eval-when-compile
   (require 'let-alist))
 
@@ -61,13 +61,22 @@
 
 ;;;; Utility
 
-(defun bookmark-display-buffer (buffer)
-  "Display BUFFER using `bmkp-jump-display-function' if bound and non-nil,
-otherwise use `pop-to-buffer-same-window'.  Then set BUFFER as current."
-  (if (bound-and-true-p bmkp-jump-display-function)
-      (funcall bmkp-jump-display-function buffer)
-    (pop-to-buffer-same-window buffer))
-  (set-buffer buffer))
+(defun bookmark-display-buffer (buffer &optional bookmark)
+  "Display BUFFER, optionally using BOOKMARK's display settings.
+If `bmkp-jump-display-function' is bound and non-nil, call it with
+BUFFER and then switch to the buffer.  Otherwise, use
+`bookmark-default-handler' with a bookmark record constructed from
+BUFFER and BOOKMARK."
+  (cond
+   ((bound-and-true-p bmkp-jump-display-function)
+    (funcall bmkp-jump-display-function buffer)
+    (set-buffer buffer))
+   (t
+    (bookmark-default-handler
+     `(""
+       (buffer . ,buffer)
+       ,@(map-remove (apply-partially 'eq 'filename)
+                      (bookmark-get-bookmark-record bookmark)))))))
 
 (defun bookmark-completing-read* (handler prompt &optional default)
   "Read a bookmark name with completion, filtering by HANDLER.
@@ -107,38 +116,38 @@ When `bookmark-save-regions' is non-nil, this advice appends
 the current mark position, region activation state, and context
 strings (if not in no-context mode) to the bookmark record
 created by `bookmark-make-record-default'."
-  (let ((mark (mark t)))
-    `( ,@(funcall fn no-file no-context posn)
-       ,@(when (and mark bookmark-save-regions)
-           `((mark . ,mark)
-             (region-active . ,(region-active-p))
-             ,@(unless no-context
-                 `((mark-front-context-string
-                    . ,(if (>= (- (point-max) mark)
-	                       bookmark-search-size)
-	                   (buffer-substring-no-properties
-	                    mark
-                            (+ mark bookmark-search-size))
-	                 nil))))
-             ,@(unless no-context
-                 `((mark-rear-context-string
-                    . ,(if (>= (- mark (point-min))
-	                       bookmark-search-size)
-	                   (buffer-substring-no-properties
-	                    mark
-                            (- mark bookmark-search-size))
-	                 nil)))))))))
+  `( ,@(funcall fn no-file no-context posn)
+     ,@(when-let* ((mark (mark t))
+                   ((and bookmark-save-regions
+                         (or (not posn) (= posn (point))))))
+         `((mark . ,mark)
+           (region-active . ,(region-active-p))
+           ,@(unless no-context
+               `((mark-front-context-string
+                  . ,(if (>= (- (point-max) mark)
+	                     bookmark-search-size)
+	                 (buffer-substring-no-properties
+	                  mark
+                          (+ mark bookmark-search-size))
+	               nil))))
+           ,@(unless no-context
+               `((mark-rear-context-string
+                  . ,(if (>= (- mark (point-min))
+	                     bookmark-search-size)
+	                 (buffer-substring-no-properties
+	                  mark
+                          (- mark bookmark-search-size))
+	               nil))))))))
 
 (define-advice bookmark-default-handler (:after (record) region)
-  "Restore the mark and region after jumping to a bookmark.
-See `bookmark-default-handler@region'."
+  "Restore the mark and region after jumping to a bookmark."
   (let ((mark (bookmark-prop-get record 'mark))
         (region-active (bookmark-prop-get record 'region-active))
-        (forward-str (bookmark-prop-get record 'mark-rear-context-string))
-        (behind-str (bookmark-prop-get record 'mark-front-context-string)))
+        (forward-str (bookmark-prop-get record 'mark-front-context-string))
+        (behind-str (bookmark-prop-get record 'mark-rear-context-string)))
     (save-excursion
-      (and mark
-           (goto-char mark))
+      (when mark
+        (goto-char mark))
       (when (and forward-str (search-forward forward-str (point-max) t))
         (goto-char (match-beginning 0)))
       (when (and behind-str (search-backward behind-str (point-min) t))
@@ -159,19 +168,16 @@ See `bookmark-default-handler@region'."
 (defvar dired-subdir-alist)
 
 (defun dired-bookmark-make-record ()
-  ;; TODO: should I add NO-FILE here?  If I pass NO-FILE,
-  ;; dired-bookmark-jump can delegate some work to
-  ;; `bookmark-default-handler'.
   `( ,@(bookmark-make-record-default)
-     (dired-switches . ,dired-actual-switches)
-     (dired-marked . ,(dired-get-marked-files nil 'marked))
+     (dired-switches          . ,dired-actual-switches)
+     (dired-marked            . ,(dired-get-marked-files nil 'marked))
      (dired-hide-details-mode . ,(bound-and-true-p dired-hide-details-mode))
-     (dired-omit-mode . ,(bound-and-true-p dired-omit-mode))
-     (dired-directory . ,dired-directory)
-     (dired-subdirs . ,(mapcar #'car dired-subdir-alist))
-     (mode . ,major-mode)
-     (buffer-name . ,(buffer-name))
-     (handler . ,#'dired-bookmark-jump)))
+     (dired-omit-mode         . ,(bound-and-true-p dired-omit-mode))
+     (dired-directory         . ,dired-directory)
+     (dired-subdirs           . ,(mapcar #'car dired-subdir-alist))
+     (mode                    . ,major-mode)
+     (buffer-name             . ,(buffer-name))
+     (handler                 . ,#'dired-bookmark-jump)))
 
 ;;;###autoload
 (defun dired-bookmark-jump (bookmark)
@@ -243,6 +249,15 @@ Also allows interactive bookmark selection."
                      (bookmark-default-handler record))))
       (add-hook 'eww-after-render-hook hook nil t))))
 
+;;;; Help
+
+(define-advice help-bookmark-jump (:after (bookmark) restore-point)
+  (interactive
+   (list (bookmark-completing-read*
+          '(help-bookmark-jump)
+          "Jump to bookmark")))
+  (bookmark-display-buffer (current-buffer) bookmark))
+
 ;;;; Xwidget webkit
 
 (put 'xwidget-webkit-bookmark-jump-handler 'bookmark-handler-type "Xwidget")
@@ -281,12 +296,12 @@ Also allows interactive bookmark selection."
 (defun compilation-bookmark-make-record ()
   "Create a bookmark record for compilation mode."
   `( ,@(bookmark-make-record-default 'no-file 'no-context)
-     (command . ,(car compilation-arguments))
-     (mode . ,(cadr compilation-arguments))
+     (command          . ,(car compilation-arguments))
+     (mode             . ,(cadr compilation-arguments))
      (highlight-regexp . ,(caddr compilation-arguments))
-     (directory . ,default-directory)
-     (buffer-name . ,(buffer-name))
-     (handler . ,#'compilation-bookmark-jump)))
+     (directory        . ,default-directory)
+     (buffer-name      . ,(buffer-name))
+     (handler          . ,#'compilation-bookmark-jump)))
 
 ;;;###autoload
 (defun compilation-bookmark-jump (bookmark)
@@ -344,10 +359,12 @@ Interactively, prompt for a bookmark to jump to using completion."
           #'eat-bookmark-jump
           "Jump to bookmark")))
   (require 'eat)
-  (let-alist (bookmark-get-bookmark-record bookmark)
-    (let ((default-directory .default-directory)
-          (eat-buffer-name .buffer-name))
-      (eat--1 nil nil #'bookmark-display-buffer))))
+  (let* ((default-directory (bookmark-prop-get bookmark 'default-directory))
+         (buffer-name (bookmark-prop-get bookmark 'buffer-name))
+         (buffer (eat--1 nil nil #'ignore)))
+    (with-current-buffer buffer
+      (rename-buffer buffer-name 'UNIQUE))
+    (bookmark-display-buffer buffer bookmark)))
 
 ;;;###autoload
 (defun eat-bookmark-enable ()
@@ -375,37 +392,30 @@ Interactively, prompt for a bookmark to jump to using completion."
 (defun deadgrep-bookmark-make-record ()
   "Create a bookmark record for deadgrep buffer."
   `(,@(bookmark-make-record-default 'no-file 'no-context)
-    (directory . ,default-directory)
+    (directory        . ,default-directory)
     (initial-filename . ,deadgrep--initial-filename)
-    (search-term . ,deadgrep--search-term)
-    (search-type . ,deadgrep--search-type)
-    (search-case  . ,deadgrep--search-case)
-    (file-type . ,deadgrep--file-type)
-    (context . ,deadgrep--context)
-    (buffer-name . ,(buffer-name))
-    (handler . ,#'deadgrep-bookmark-handler)))
+    (search-term      . ,deadgrep--search-term)
+    (search-type      . ,deadgrep--search-type)
+    (search-case      . ,deadgrep--search-case)
+    (file-type        . ,deadgrep--file-type)
+    (context          . ,deadgrep--context)
+    (buffer-name      . ,(buffer-name))
+    (handler          . ,#'deadgrep-bookmark-handler)))
 
 ;;;###autoload
 (defun deadgrep-bookmark-handler (bookmark)
   "Jump to BOOKMARK."
   (require 'deadgrep)
   (let-alist bookmark
-    (let* ((buf (deadgrep--buffer
-                 .search-term
-                 .directory
-                 .initial-filename)))
-      (bookmark-display-buffer buf)
+    (let* ((buf (deadgrep--buffer .search-term .directory .initial-filename)))
       (with-current-buffer buf
         (setq imenu-create-index-function #'deadgrep--create-imenu-index)
         (setq next-error-function #'deadgrep-next-error)
         (let ((deadgrep--file-type .file-type)
               (deadgrep--context .context))
           (deadgrep--write-heading)
-          (deadgrep--start
-           .search-term
-           .search-type
-           .search-case)))
-      buf)))
+          (deadgrep--start .search-term .search-type .search-case)))
+      (bookmark-display-buffer buf))))
 
 ;;;###autoload
 (defun deadgrep-bookmark-enable ()
@@ -524,7 +534,7 @@ When called interactively, prompt for a bookmark using
                 (org-link-elisp-confirm-function #'always)
                 ((alist-get 'file org-link-frame-setup)
                  (lambda (file)
-                   (bookmark-display-buffer (find-file-noselect file)))))
+                   (bookmark-display-buffer (find-file-noselect file) bookmark))))
         (org-link-open-from-string link))
     ;; bookmark-jump runs the bookmark handler with
     ;; `save-window-excursion', so we need to save the window
