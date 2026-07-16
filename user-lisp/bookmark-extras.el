@@ -599,12 +599,82 @@ existing bookmark with the same name."
                        `((handler . ,#'org-link-bookmark-jump))))))
     (bookmark-store name record no-overwrite)))
 
+;;;; Editing bookmark record
+
+(defvar-keymap bookmark-edit-bookmark-record-mode-map
+  "C-c C-c" #'bookmark-edit-bookmark-record-finish
+  "C-c C-k" #'kill-current-buffer)
+
+(define-minor-mode bookmark-edit-bookmark-record-mode
+  "Minor mode for editing a bookmark record in a dedicated buffer.
+
+\\{bookmark-edit-bookmark-record-mode-map}"
+  :keymap bookmark-edit-bookmark-record-mode-map
+  :interactive nil)
+
+(defvar-local bookmark-edit-bookmark-name nil
+  "Name of the bookmark being edited in the current buffer.")
+
+(defun bookmark-edit-bookmark-record (bookmark)
+  "Edit the record of BOOKMARK in a new buffer.
+
+Interactively, read a bookmark name with completion,
+defaulting to `bookmark-current-bookmark'.
+
+\\<bookmark-edit-bookmark-record-mode-map>
+The buffer is set up in `lisp-data-mode' with the bookmark
+record pretty-printed.  Save changes with \\[bookmark-edit-bookmark-record-finish]
+or abort with \\[kill-current-buffer]."
+  (interactive
+   (list
+    (bookmark-completing-read
+     "Edit bookmark record: "
+     (list bookmark-current-bookmark))))
+  (let ((record (bookmark-get-bookmark-record bookmark))
+        (buf (generate-new-buffer (format "*Bookmark Edit: %s*" bookmark))))
+    (with-current-buffer buf
+      (lisp-data-mode)
+      (bookmark-edit-bookmark-record-mode)
+      (let ((hint (substitute-command-keys
+                   "Type \\[bookmark-edit-bookmark-record-finish] when done. \
+Type \\[kill-current-buffer] to cancel.")
+                  ))
+        (insert ";; -*- mode: lisp-data; coding: utf-8-emacs; -*-\n\n"
+                ";; You are editing the bookmark record for bookmark `"
+                bookmark "'.\n"
+                ";; All lines which start with a `;' will be ignored.\n"
+                ";; " hint "\n\n")
+        (setq-local header-line-format hint))
+      (let ((pp-default-function #'pp-28))
+        (pp record (current-buffer)))
+      (newline)
+      (setq-local bookmark-edit-bookmark-name bookmark))
+    (pop-to-buffer buf)))
+
+(defun bookmark-edit-bookmark-record-finish ()
+  "Finish editing the bookmark record.
+
+Read the contents of the current buffer starting from the first
+non-comment, non-whitespace sexp and store it as the new record
+for the bookmark named by `bookmark-edit-bookmark-name'."
+  (interactive nil bookmark-edit-bookmark-record-mode)
+  (bookmark-store bookmark-edit-bookmark-name
+                  (save-excursion
+                    (goto-char (point-min))
+                    (read (current-buffer)))
+                  nil)
+  (quit-window))
+
+
+
 (defvar embark-target-injection-hooks)
 (declare-function embark--allow-edit "ext:embark.el")
 (with-eval-after-load 'embark
   (cl-pushnew #'embark--allow-edit
               (alist-get 'org-link-bookmark-set
-                         embark-target-injection-hooks)))
+                         embark-target-injection-hooks))
+
+  (keymap-set embark-bookmark-map "m" 'bookmark-edit-bookmark-record))
 
 
 ;;;###autoload
