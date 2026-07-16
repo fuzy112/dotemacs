@@ -597,8 +597,8 @@ callback that inserts the response into the minibuffer."
 
 ;;;###autoload
 (cl-defun gptel-autosuggest-define
-      (command &key system context match-prompt (name 'autosuggest) backend model)
-    "Add GPTel-based auto-suggestion functionality to COMMAND.
+    (command &key system context match-prompt (name 'autosuggest) backend model)
+  "Add GPTel-based auto-suggestion functionality to COMMAND.
 COMMAND is an interactive function symbol.  SYSTEM is the system prompt
 string.  CONTEXT can be a string or a function of no arguments that
 returns a context string.  MATCH-PROMPT is an optional regexp: if
@@ -608,32 +608,35 @@ object or a string name; defaults to `gptel-backend'.  MODEL is the
 model to use; defaults to `gptel-model'.  This function uses advice to
 modify COMMAND.  If NAME is non-nil, the advice is named
 `COMMAND@NAME'."
-    (declare (indent 1))
-    (let ((advice-symbol (intern (format "%s@%s" command name))))
-      (fset advice-symbol (lambda (orig-fn &rest args)
-			    (require 'gptel-config)
-			    (let* ((computed-context
-				    (cond
-				     ((functionp context) (funcall context))
-				     ((stringp context) context)
-				     (t (error "Invalid context: expected string or function"))))
-				   (computed-system system)
-				   (params (alist-get command gptel-autosuggest-alist))
-				   (backend (or (alist-get 'backend params) backend))
-				   (model (or (alist-get 'model params) model))
-				   (gptel-backend (cond
-						   ((stringp backend)
-						    (gptel-get-backend backend))
-						   (backend backend)
-						   (t gptel-backend)))
-				   (gptel-model (or model gptel-model)))
-			      (minibuffer-with-setup-hook
-				  (lambda ()
-				    (when (or (not match-prompt)
-					      (string-match-p match-prompt (minibuffer-prompt)))
-				      (gptel-request-minibuffer-input computed-context :system computed-system)))
-				(apply orig-fn args)))))
-      (advice-add command :around advice-symbol)))
+  (declare (indent 1))
+  (let ((advice-symbol (intern (format "%s@%s" command name))))
+    (fset advice-symbol
+	  (lambda (orig-fn &rest args)
+	    (require 'gptel-config)
+	    (let* ((computed-context
+		    (cond
+		     ((functionp context) (funcall context))
+		     ((stringp context) context)
+		     (t (error "Invalid context: expected string or function"))))
+		   (computed-system system)
+		   (params (alist-get command gptel-autosuggest-alist))
+		   (backend (or (alist-get 'backend params) backend))
+		   (model (or (alist-get 'model params) model))
+		   (gptel-backend (cond
+				   ((stringp backend)
+				    (gptel-get-backend backend))
+				   (backend backend)
+				   (t gptel-backend)))
+		   (gptel-model (or model gptel-model)))
+	      (minibuffer-with-setup-hook
+		  (lambda ()
+		    (when (or (not match-prompt)
+			      (string-match-p
+			       match-prompt (minibuffer-prompt)))
+		      (gptel-request-minibuffer-input
+		       computed-context :system computed-system)))
+		(apply orig-fn args)))))
+    (advice-add command :around advice-symbol)))
 
 (declare-function which-function "which-func.el")
 
