@@ -236,7 +236,7 @@ confirmed."
   (let* ((dir (file-name-as-directory dir))
          (default-directory dir)
          (fd-exe (or (executable-find "fd" t)
-                     (executable-find "fd-find" t)))
+                     (executable-find "fdfind" t)))
          ;; Make sure ~/ etc. in local directory name is
          ;; expanded and not left for the shell command
          ;; to interpret.
