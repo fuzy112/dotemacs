@@ -254,9 +254,10 @@ confirmed."
     (if (not fd-exe)
         (funcall orig-fn dir ignores files)
       (with-temp-buffer
-        (let ((status
-               (process-file-shell-command command nil t))
-              (pt (point-min)))
+        (let* ((gc-cons-threshold most-positive-fixnum)
+               (status
+                (process-file-shell-command command nil t))
+               (pt (point-min)))
           (unless (zerop status)
             (goto-char (point-min))
             (if (and
