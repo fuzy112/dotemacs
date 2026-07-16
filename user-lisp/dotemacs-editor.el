@@ -119,6 +119,13 @@
 (defvar auto-save-on-focus-out-timer
   (run-with-idle-timer 2 t #'auto-save-if-no-focus))
 
+(setq auto-save-visited-predicate
+      (lambda ()
+        (and buffer-file-name
+             vc-mode)))
+
+(auto-save-visited-mode)
+
 ;;;; saveplace
 
 (autoload 'save-place-find-file-hook "saveplace")
