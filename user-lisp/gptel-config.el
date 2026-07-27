@@ -626,6 +626,7 @@ modify COMMAND.  If NAME is non-nil, the advice is named
 		   (params (alist-get command gptel-autosuggest-alist))
 		   (backend (or (alist-get 'backend params) backend))
 		   (model (or (alist-get 'model params) model))
+		   (disabled (alist-get 'disabled params))
 		   (gptel-backend (cond
 				   ((stringp backend)
 				    (gptel-get-backend backend))
@@ -634,9 +635,10 @@ modify COMMAND.  If NAME is non-nil, the advice is named
 		   (gptel-model (or model gptel-model)))
 	      (minibuffer-with-setup-hook
 		  (lambda ()
-		    (when (or (not match-prompt)
-			      (string-match-p
-			       match-prompt (minibuffer-prompt)))
+		    (when (and (not disabled)
+			       (or (not match-prompt)
+				   (string-match-p
+				    match-prompt (minibuffer-prompt))))
 		      (gptel-request-minibuffer-input
 		       computed-context :system computed-system)))
 		(apply orig-fn args)))))
