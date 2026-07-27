@@ -245,7 +245,10 @@ Also allows interactive bookmark selection."
   (let ((buf (current-buffer)))
     (letrec ((hook (lambda ()
                      (remove-hook 'eww-after-render-hook hook t)
-                     (bookmark-display-buffer buf record))))
+                     (bookmark-display-buffer buf record)
+                     (when bookmark-fringe-mark
+                       (bookmark--set-fringe-mark))
+                     (run-hooks 'bookmark-after-jump-hook))))
       (add-hook 'eww-after-render-hook hook nil t))))
 
 ;;;; Help
