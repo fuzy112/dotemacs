@@ -127,12 +127,16 @@
 		("X-Client-Name" . "claude-code"))))
   :stream t
   :key #'gptel-api-key-from-auth-source
-  :models '((kimi-for-coding
-	     :description "Kimi Code - specialized coding model"
+  :models '((k3
+	     :description "Kimi K3"
+	     :capabilities (reasoning tool-use json)
+	     :context-window 1024)
+	    (kimi-for-coding
+	     :description "Kimi K2.7 Code"
 	     :capabilities (reasoning tool-use json)
 	     :context-window 256)
-	    (kimi-k2-thinking
-	     :description "Kimi K2 Thinking - reasoning model (undocumented)"
+	    (kimi-for-coding-highspeed
+	     :description "Kimi K2.7 Code (highspeed, x3)"
 	     :capabilities (reasoning tool-use json)
 	     :context-window 256)))
 
