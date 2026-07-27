@@ -174,7 +174,7 @@
 
   "C-/" #'apheleia-format-buffer
   "C-k" #'compile
-  "C-p" #'send-password-to-process
+  "P"   #'send-password-to-process
   "C-l" #'org-insert-link-global
   "C-o" #'org-open-at-point-global)
 
