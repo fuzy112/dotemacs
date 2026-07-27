@@ -195,7 +195,14 @@
   "L" #'find-library-other-window
   "g" #'magit-status-other-window)
 
+(defun ctl-x-5-r ()
+  (interactive)
+  (prefix-command-preserve-state)
+  (let ((inhibit-message t)) (other-frame-prefix))
+  (set-transient-map ctl-x-r-map))
+
 (define-keymap :keymap ctl-x-5-map
+  "r" #'ctl-x-5-r
   "F" #'find-function-other-frame
   "V" #'find-variable-other-frame
   "K" #'find-function-on-key-other-frame
