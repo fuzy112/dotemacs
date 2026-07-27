@@ -73,16 +73,16 @@
      (load custom-file t))
 
 
+;;;; _
+
+(provide 'init)
+
 ;;;; post-init
 
 (defvar post-init-file (locate-user-emacs-file "post-init.el"))
 
 (when (file-exists-p post-init-file)
   (load post-init-file nil t))
-
-;;;; _
-
-(provide 'init)
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil

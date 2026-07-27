@@ -139,6 +139,9 @@ to revert the temporary large value set during initialization."
 (setq custom-file (locate-user-emacs-file "var/custom.el.zst"))
 
 
+(provide 'early-init)
+
+
 ;;;; post-early-init
 
 (defvar post-early-init-file (locate-user-emacs-file "post-early-init.el")
@@ -146,9 +149,6 @@ to revert the temporary large value set during initialization."
 
 (when (file-exists-p post-early-init-file)
   (load post-early-init-file nil t))
-
-
-(provide 'early-init)
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
