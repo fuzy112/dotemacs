@@ -32,21 +32,26 @@
 (defvar gc-threshold-initialized nil
   "Non-nil when `init-gc-threshold' has been executed.")
 
+(defun reevaluate-setting-default-toplevel-value (symbol)
+  "Reset the toplevel default value of SYMBOL to its standard value."
+  (set-default-toplevel-value
+   symbol
+   (eval (car (get symbol 'standard-value)))))
+
 (defun init-gc-threshold ()
   "Restore `gc-cons-threshold' to its default value.
 This function is intended to be called once after Emacs startup
 to revert the temporary large value set during initialization."
-  ;; Reset gc-cons-threshold to the default compiled-in value.
-  (set-default-toplevel-value
-   'gc-cons-threshold
-   (eval (car (get 'gc-cons-threshold 'standard-value))))
+  (reevaluate-setting-default-toplevel-value 'gc-cons-percentage)
+  (reevaluate-setting-default-toplevel-value 'gc-cons-threshold)
   ;; Mark as initialized so the guard below won't reapply the temporary value.
   (setq gc-threshold-initialized t))
 
 ;; During startup, set gc-cons-threshold to a very large value to
 ;; avoid excessive garbage collection.  This is a common optimisation.
 (unless gc-threshold-initialized
-  (setq gc-cons-threshold most-positive-fixnum)
+  (setq gc-cons-threshold most-positive-fixnum
+        gc-cons-percentage 0.5)
   ;; Schedule restoration of the default threshold after init.
   (if noninteractive
       ;; In batch mode, emacs-startup-hook is not run.
