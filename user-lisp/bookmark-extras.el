@@ -642,10 +642,11 @@ or abort with \\[kill-current-buffer]."
 Type \\[kill-current-buffer] to cancel.")
                   ))
         (insert ";; -*- mode: lisp-data; coding: utf-8-emacs; -*-\n\n"
-                ";; You are editing the bookmark record for bookmark `"
-                bookmark "'.\n"
-                ";; All lines which start with a `;' will be ignored.\n"
-                ";; " hint "\n\n")
+                ";; You are editing the bookmark record for bookmark ‘"
+                bookmark "’.\n"
+                ";; " hint)
+        (fill-comment-paragraph)
+        (newline 2)
         (setq-local header-line-format hint))
       (let ((pp-default-function #'pp-28))
         (pp record (current-buffer)))
