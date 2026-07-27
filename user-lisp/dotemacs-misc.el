@@ -321,6 +321,14 @@
 (defvar uptime-notification-timer
   (run-with-timer 1800 1800 #'uptime-notify))
 
+;;;; Disable GC before running other kill-emacs-hook functions
+
+(defun kill-emacs/disable-gc ()
+  (setq gc-cons-threshold most-positive-fixnum
+        gc-cons-percentage 1.0))
+
+(add-hook 'kill-emacs-hook #'kill-emacs/disable-gc -20)
+
 
 (put 'help-fns-edit-variable 'disabled nil)
 (put 'list-timers 'disabled nil)
