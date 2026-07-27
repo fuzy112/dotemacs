@@ -26,9 +26,32 @@
 
 ;;;; gc
 
-(setq gc-cons-threshold 25600000)
 (when (fboundp 'igc-start-idle-timer)
   (add-hook 'emacs-startup-hook #'igc-start-idle-timer))
+
+(defvar gc-threshold-initialized nil
+  "Non-nil when `init-gc-threshold' has been executed.")
+
+(defun init-gc-threshold ()
+  "Restore `gc-cons-threshold' to its default value.
+This function is intended to be called once after Emacs startup
+to revert the temporary large value set during initialization."
+  ;; Reset gc-cons-threshold to the default compiled-in value.
+  (set-default-toplevel-value
+   'gc-cons-threshold
+   (eval (car (get 'gc-cons-threshold 'standard-value))))
+  ;; Mark as initialized so the guard below won't reapply the temporary value.
+  (setq gc-threshold-initialized t))
+
+;; During startup, set gc-cons-threshold to a very large value to
+;; avoid excessive garbage collection.  This is a common optimisation.
+(unless gc-threshold-initialized
+  (setq gc-cons-threshold most-positive-fixnum)
+  ;; Schedule restoration of the default threshold after init.
+  (if noninteractive
+      ;; In batch mode, emacs-startup-hook is not run.
+      (add-hook 'after-init-hook 'init-gc-threshold)
+    (add-hook 'emacs-startup-hook 'init-gc-threshold)))
 
 ;;;; File loading
 
