@@ -299,7 +299,7 @@ Also allows interactive bookmark selection."
      (command          . ,(car compilation-arguments))
      (mode             . ,(cadr compilation-arguments))
      (highlight-regexp . ,(caddr compilation-arguments))
-     (directory        . ,default-directory)
+     (filename         . ,default-directory)
      (buffer-name      . ,(buffer-name))
      (handler          . ,#'compilation-bookmark-jump)))
 
@@ -311,14 +311,14 @@ Interactively, prompt for a bookmark using `bookmark-completing-read*'."
    (list (bookmark-completing-read*
           #'compilation-bookmark-handler
           "Jump to bookmark")))
-  (let-alist (bookmark-get-bookmark-record bookmark)
-    (let ((default-directory .directory))
-      (set-buffer
-       (compilation-start
-        .command
-        .mode
-        (lambda (_mode) .buffer-name)
-        .highlight-regexp)))))
+  (let ((default-directory (or (bookmark-prop-get bookmark 'filename)
+                               (bookmark-prop-get bookmark 'directory))))
+    (bookmark-display-buffer
+     (compilation-start (bookmark-prop-get bookmark 'command)
+                        (bookmark-prop-get bookmark 'mode)
+                        (let ((buffer-name (bookmark-prop-get bookmark 'buffer-name)))
+                          (lambda (_) buffer-name))
+                        (bookmark-prop-get bookmark 'highlight-regexp)))))
 
 ;;;###autoload
 (defalias 'compilation-bookmark-handler #'compilation-bookmark-jump)
@@ -345,10 +345,10 @@ Interactively, prompt for a bookmark using `bookmark-completing-read*'."
 
 (defun eat-bookmark-make-record ()
   "Create a bookmark record for `eat-mode'."
-  `(,@(bookmark-make-record-default 'no-file 'no-context)
-    (default-directory . ,default-directory)
-    (buffer-name . ,(buffer-name))
-    (handler . ,#'eat-bookmark-jump)))
+  `( ,@(bookmark-make-record-default 'no-file 'no-context)
+     (filename . ,default-directory)
+     (buffer-name . ,(buffer-name))
+     (handler . ,#'eat-bookmark-jump)))
 
 ;;;###autoload
 (defun eat-bookmark-jump (bookmark)
@@ -359,7 +359,9 @@ Interactively, prompt for a bookmark to jump to using completion."
           #'eat-bookmark-jump
           "Jump to bookmark")))
   (require 'eat)
-  (let* ((default-directory (bookmark-prop-get bookmark 'default-directory))
+  (let* ((default-directory
+          (or (bookmark-prop-get bookmark 'filename)
+              (bookmark-prop-get bookmark 'default-directory)))
          (buffer-name (bookmark-prop-get bookmark 'buffer-name))
          (buffer (eat--1 nil nil #'ignore)))
     (with-current-buffer buffer
