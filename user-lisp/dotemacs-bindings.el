@@ -186,15 +186,16 @@
   (message "Display next command buffer in a new window..."))
 
 (define-keymap :keymap ctl-x-4-map
-  "r" #'ctl-x-4-r	    ; orig. `find-file-read-only-other-window'
-  "t" #'eat-other-window
-  "e" #'+eshell/other-window
-  "b" #'consult-buffer-other-window
-  "F" #'find-function-other-window
-  "V" #'find-variable-other-window
-  "K" #'find-function-on-key-other-window
-  "L" #'find-library-other-window
-  "g" #'magit-status-other-window)
+  "r"   #'ctl-x-4-r         ; orig. `find-file-read-only-other-window'
+  "C-r" #'find-file-read-only-other-window
+  "t"   #'eat-other-window
+  "e"   #'+eshell/other-window
+  "b"   #'consult-buffer-other-window
+  "F"   #'find-function-other-window
+  "V"   #'find-variable-other-window
+  "K"   #'find-function-on-key-other-window
+  "L"   #'find-library-other-window
+  "g"   #'magit-status-other-window)
 
 (defun ctl-x-5-r ()
   (interactive)
