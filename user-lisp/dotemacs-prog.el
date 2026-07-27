@@ -348,8 +348,45 @@ Interactively, prompt for a ripgrep command with a default prefix."
 
 ;;;; Ediff
 
+(defvar ediff-saved-window-configuration nil
+  "Window configuration saved before Ediff starts.
+Used by `ediff-restore-window-config-mode'.")
+
+(defun ediff-restore-window-config-before-setup ()
+  "Save the current window configuration before Ediff setup.
+Intended for use in `ediff-before-setup-hook'."
+  (setq ediff-saved-window-configuration (current-window-configuration)))
+
+(defun ediff-restore-window-config-startup ()
+  "Install hooks to restore the saved window configuration.
+ Intended for use in `ediff-startup-hook'."
+  (let* ((win-conf ediff-saved-window-configuration)
+         (restore-fn (lambda () (run-at-time 0 nil #'set-window-configuration win-conf))))
+    (setq ediff-saved-window-configuration nil) ; Prevent retaining reference
+    (add-hook 'ediff-quit-hook restore-fn nil t)
+    (add-hook 'ediff-suspend-hook restore-fn nil t)))
+
+(define-minor-mode ediff-restore-window-config-mode
+  "Toggle automatic window configuration restoration for Ediff.
+ When enabled, the window configuration before Ediff is saved and
+ restored after Ediff quits or suspends."
+  :global t
+  :group 'ediff
+  (if ediff-restore-window-config-mode
+      (progn
+        (add-hook 'ediff-before-setup-hook
+                  #'ediff-restore-window-config-before-setup)
+        (add-hook 'ediff-startup-hook
+                  #'ediff-restore-window-config-startup))
+    (remove-hook 'ediff-before-setup-hook
+                 #'ediff-restore-window-config-before-setup)
+    (remove-hook 'ediff-startup-hook
+                 #'ediff-restore-window-config-startup)
+    (setq ediff-saved-window-configuration nil)))
+
 (after-load! ediff-wind
   (ediff-enable-chinese-help)
+  (ediff-restore-window-config-mode)
   (setopt ediff-window-setup-function #'ediff-setup-windows-plain)
   (setopt ediff-split-window-function #'split-window-sensibly))
 
