@@ -1,5 +1,5 @@
 ;;; check-hooks.el --- Check usage of hooks -*- lexical-binding: t -*-
-;; Copyright © 2025  Zhengyi Fu <i@fuzy.me>
+;; Copyright © 2025, 2026  Zhengyi Fu <i@fuzy.me>
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -46,9 +46,9 @@
 (defun check-hooks-in-buffer ()
   "Check the usage of `add-hook' in the current buffer.
 For each found hook, if the file defining the hook has not been
-preloaded and the hook has a standard value, prompt the user whether to
-enter a recursive edit for inspection. This allows examining the hook's
-context before proceeding with the buffer analysis."
+preloaded and the hook has a non-nil standard value, prompt the user
+whether to enter a recursive edit for inspection. This allows examining
+the hook's context before proceeding with the buffer analysis."
   (interactive)
   (save-excursion
     (goto-char (point-min))
