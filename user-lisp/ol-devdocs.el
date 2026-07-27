@@ -14,6 +14,7 @@
 
 (defvar devdocs--stack)
 (declare-function devdocs-goto-page "ext:devdocs.el")
+(declare-function devdocs--installed-docs "ext:devdocs.el")
 
 ;;;###autoload
 (defun ol-devdocs-open (path _)

@@ -393,6 +393,8 @@ When called interactively, the symbol at point is used as the initial query."
 	  (when (file-exists-p dir)
 	    (project-switch-project dir)))))))
 
+(declare-function project--write-project-list "project")
+
 ;;;###autoload
 (defun tui-switch-project ()
   (interactive)
