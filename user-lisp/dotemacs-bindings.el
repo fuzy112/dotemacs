@@ -182,7 +182,8 @@
   (interactive)
   (prefix-command-preserve-state)
   (let ((inhibit-message t)) (other-window-prefix))
-  (set-transient-map ctl-x-r-map))
+  (set-transient-map ctl-x-r-map)
+  (message "Display next command buffer in a new window..."))
 
 (define-keymap :keymap ctl-x-4-map
   "r" #'ctl-x-4-r	    ; orig. `find-file-read-only-other-window'
@@ -199,7 +200,8 @@
   (interactive)
   (prefix-command-preserve-state)
   (let ((inhibit-message t)) (other-frame-prefix))
-  (set-transient-map ctl-x-r-map))
+  (set-transient-map ctl-x-r-map)
+  (message "Display next command buffer in a new window..."))
 
 (define-keymap :keymap ctl-x-5-map
   "r" #'ctl-x-5-r
