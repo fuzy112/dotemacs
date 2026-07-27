@@ -178,7 +178,14 @@
   "C-l" #'org-insert-link-global
   "C-o" #'org-open-at-point-global)
 
+(defun ctl-x-4-r ()
+  (interactive)
+  (prefix-command-preserve-state)
+  (let ((inhibit-message t)) (other-window-prefix))
+  (set-transient-map ctl-x-r-map))
+
 (define-keymap :keymap ctl-x-4-map
+  "r" #'ctl-x-4-r	    ; orig. `find-file-read-only-other-window'
   "t" #'eat-other-window
   "e" #'+eshell/other-window
   "b" #'consult-buffer-other-window
@@ -203,7 +210,7 @@
 
 (defvar-keymap tab-bookmark-prefix-map
   :prefix 'tab-bookmark-prefix-map
-  "SPC" #'string-rectangle ; originally bound to C-x r t
+  "SPC" #'string-rectangle		; originally bound to C-x r t
   "o" #'tab-bookmark-open
   "s" #'tab-bookmark-save
   "d" #'tab-bookmark-delete
