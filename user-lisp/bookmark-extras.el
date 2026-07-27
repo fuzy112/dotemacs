@@ -593,11 +593,11 @@ existing bookmark with the same name."
                      (read-string (format-prompt "Bookmark name" default)
                                   nil nil default))))
          (record `((org-link . ,link-string)
+                   (location . ,(concat type ":" path))
                    ,@(when (string= type "file")
                        `((filename . ,path)))
                    ,@(if (member type '("http" "https" "ftp"))
-                         `((location . ,(concat type ":" path))
-                           (handler . ,#'url-bookmark-jump))
+                         `((handler . ,#'url-bookmark-jump))
                        `((handler . ,#'org-link-bookmark-jump))))))
     (bookmark-store name record no-overwrite)))
 
