@@ -673,6 +673,7 @@ for the bookmark named by `bookmark-edit-bookmark-name'."
 
 
 (defvar embark-target-injection-hooks)
+(defvar embark-bookmark-map)
 (declare-function embark--allow-edit "ext:embark.el")
 (with-eval-after-load 'embark
   (cl-pushnew #'embark--allow-edit
