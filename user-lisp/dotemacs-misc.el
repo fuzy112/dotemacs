@@ -321,6 +321,48 @@
 (defvar uptime-notification-timer
   (run-with-timer 1800 1800 #'uptime-notify))
 
+;;;; ffap-menu
+
+(defvar ffap-menu-alist)
+
+(define-advice ffap-menu-rescan (:around (&rest args) shr)
+  (let ((inhibit-message t))
+    (apply args)
+    (save-excursion
+      (goto-char (point-min))
+      (while (text-property-search-forward 'shr-tab-stop nil nil t)
+        (when-let ((item (shr-url-at-point t)))
+          (push (cons item (point)) ffap-menu-alist))))
+    ;; deduplicate
+    (setq ffap-menu-alist
+          (sort ffap-menu-alist
+                (lambda (a b) (string-lessp (car a) (car b)))))
+    (let ((ptr ffap-menu-alist))
+      (while (cdr ptr)
+        (if (equal (car (car ptr)) (car (car (cdr ptr))))
+            (setcdr ptr (cdr (cdr ptr))))
+        (setq ptr  (cdr ptr))))
+    ;; sort
+    (setq ffap-menu-alist
+          (sort ffap-menu-alist (lambda (a b) (< (cdr a) (cdr b)))))))
+
+(defun ffap-menu--post-command-preview ()
+  (with-selected-window (active-minibuffer-window)
+    (when-let* ((cand (minibuffer-selected-candidate)))
+      (with-minibuffer-selected-window
+        (when-let* ((pos (alist-get cand ffap-menu-alist nil nil #'string=)))
+          (goto-char pos)
+          (recenter)
+          (pulse-momentary-highlight-one-line))))))
+
+(define-advice ffap-menu-ask (:around (&rest args) preview)
+  (let ((alist ffap-menu-alist))
+    (minibuffer-with-setup-hook
+        (lambda ()
+          (add-hook 'post-command-hook #'ffap-menu--post-command-preview 50 t))
+      (save-excursion
+        (apply args)))))
+
 ;;;; Disable GC before running other kill-emacs-hook functions
 
 (defun kill-emacs/disable-gc ()

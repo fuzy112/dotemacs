@@ -636,5 +636,14 @@ into account.")
 
 (setq! completion-preview-sort-function #'prescient-completion-sort)
 
+;;;; Minibuffer abstraction
+
+(cl-defgeneric minibuffer-selected-candidate ()
+  (or (completion--selected-candidate)
+      (car (completion-all-sorted-completions))))
+
+(cl-defmethod minibuffer-selected-candidate (&context (vertico-mode (eql t)))
+  (vertico--candidate))
+
 (provide 'dotemacs-completion)
 ;;; dotemacs-completion.el ends here
