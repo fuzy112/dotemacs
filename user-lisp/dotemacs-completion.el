@@ -570,6 +570,8 @@ into account.")
      consult-source-buffer
      consult-source-project-buffer
      consult-source-buffer-register
+     consult-global-mark
+     consult-mark
      :preview-key '(:debounce 0.2 any)
      consult-history
      :category (and (minibufferp)
