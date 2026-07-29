@@ -82,13 +82,17 @@
 
 ;;;; magit
 
+(defvar magit-display-buffer-function)
+
 (defun magit-status-other-window ()
   (interactive)
-  (dlet ((magit-display-buffer-function #'display-buffer)
-         (display-buffer-overriding-action '((display-buffer-reuse-mode-window
-                                              display-buffer-in-previous-window)
-                                             (inhibit-same-window . t)
-                                             (inhibit-switch-frame . t))))
+  (let ((magit-display-buffer-function
+         (lambda (buffer)
+           (display-buffer buffer
+                           '((display-buffer-reuse-mode-window
+                              display-buffer-in-previous-window)
+                             (inhibit-same-window . t)
+                             (inhibit-switch-frame . t))))))
     (magit-status-setup-buffer)))
 
 (after-load! project

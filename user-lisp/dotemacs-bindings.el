@@ -265,7 +265,7 @@
   "K"   #'find-function-on-key
   "L"   #'find-library
   "k"   #'smart-kill-buffer
-  "g"   #'magit-status-quick
+  "g"   #'magit-status-here
   "M-g" #'magit-dispatch
   "M-:" #'consult-complex-command ; orig. repeat-complex-command
   "C-d" #'consult-dir)
