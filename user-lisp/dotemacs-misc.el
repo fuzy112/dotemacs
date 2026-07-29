@@ -301,7 +301,7 @@
          (target (cadr (split-string (completing-read "Target: " table nil t))))
          (command (concat "blueman-sendto -d " target " " (combine-and-quote-strings files " "))))
     (compile command)))
-(with-eval-after-load 'send-to
+(after-load! send-to
   (add-to-list 'send-to-handlers
                '((:supported . send-to/bluetooth-supported-p)
                  (:collect . send-to--collect-items)
@@ -325,6 +325,8 @@
 
 (defvar ffap-menu-alist)
 
+(declare-function shr-url-at-point "shr")
+
 (define-advice ffap-menu-rescan (:around (&rest args) shr)
   (let ((inhibit-message t))
     (apply args)
@@ -346,6 +348,8 @@
     (setq ffap-menu-alist
           (sort ffap-menu-alist (lambda (a b) (< (cdr a) (cdr b)))))))
 
+(declare-function minibuffer-selected-candidate "dotemacs-completion")
+
 (defun ffap-menu--post-command-preview ()
   (with-selected-window (active-minibuffer-window)
     (when-let* ((cand (minibuffer-selected-candidate)))
@@ -356,12 +360,15 @@
           (pulse-momentary-highlight-one-line))))))
 
 (define-advice ffap-menu-ask (:around (&rest args) preview)
+  (require 'dotemacs-completion)
   (let ((alist ffap-menu-alist))
     (minibuffer-with-setup-hook
         (lambda ()
           (add-hook 'post-command-hook #'ffap-menu--post-command-preview 50 t))
       (save-excursion
         (apply args)))))
+
+(declare-function url-type "url-parse")
 
 (defun ffap-menu-to-url (_type target)
   (let ((urlobj (url-generic-parse-url target)))
@@ -371,8 +378,9 @@
       (t
        (cons 'url target)))))
 
-(with-eval-after-load 'embark
-  (add-to-list 'embark-transformer-alist `(,'ffap-menu . ,#'ffap-menu-to-url)))
+(after-load! embark
+  (alist-setq! embark-transformer-alist
+    ffap-menu #'ffap-menu-to-url))
 
 ;;;; Disable GC before running other kill-emacs-hook functions
 
