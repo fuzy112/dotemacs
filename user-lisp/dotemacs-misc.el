@@ -363,6 +363,17 @@
       (save-excursion
         (apply args)))))
 
+(defun ffap-menu-to-url (_type target)
+  (let ((urlobj (url-generic-parse-url target)))
+    (pcase (url-type urlobj)
+      ((or 'file 'nil)
+       (cons 'file target))
+      (t
+       (cons 'url target)))))
+
+(with-eval-after-load 'embark
+  (add-to-list 'embark-transformer-alist `(,'ffap-menu . ,#'ffap-menu-to-url)))
+
 ;;;; Disable GC before running other kill-emacs-hook functions
 
 (defun kill-emacs/disable-gc ()
