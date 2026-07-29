@@ -246,6 +246,7 @@
   "l" #'ffap-menu) ; mnemonic: "links"
 
 (define-keymap :keymap window-prefix-map
+  "1"   #'display-next-command-in-same-window
   "f 2" #'window-layout-flip-topdown
   "f 3" #'window-layout-flip-leftright
   "r r" #'window-layout-rotate-clockwise

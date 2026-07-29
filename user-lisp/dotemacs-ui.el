@@ -79,6 +79,18 @@
                    (list 'magit-diff-mode 'magit-revision-mode
                          'xref--xref-buffer-mode 'ediff-mode))))
 
+(defun display-next-command-in-same-window ()
+  "Displays the buffer of the next command in the same window."
+  (interactive)
+  (prefix-command-preserve-state)
+  (display-buffer-override-next-command
+   (lambda (buffer alist)
+     (cons (display-buffer-same-window
+	    buffer alist)
+	   'reuse))
+   nil "[same-window]")
+  (message "Display next command buffer the same window..."))
+
 ;;;; tab-bar
 
 (add-hook 'tab-bar-mode-hook #'tab-bar-history-mode)
