@@ -54,5 +54,11 @@
 
 (add-hook 'telega-chat-mode-hook #'telega-completions-setup-capf)
 
+
+(add-to-list 'display-buffer-alist
+             '("\\*Telegram Sticker\\(?: Set\\|s\\)\\*"
+               (display-buffer-reuse-mode-window display-buffer-below-selected)
+               (inhibit-switch-frame . t)))
+
 (provide 'telega-config)
 ;;; telega-config.el ends here
