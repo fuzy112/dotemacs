@@ -332,8 +332,9 @@
     (apply args)
     (save-excursion
       (goto-char (point-min))
-      (while (text-property-search-forward 'shr-tab-stop nil nil t)
-        (when-let ((item (shr-url-at-point t)))
+      (while-let ((match (text-property-search-forward 'shr-tab-stop nil nil t)))
+        (goto-char (prop-match-beginning match))
+        (when-let* ((item (get-text-property (point) 'shr-url)))
           (push (cons item (point)) ffap-menu-alist))))
     ;; deduplicate
     (setq ffap-menu-alist
@@ -371,12 +372,17 @@
 (declare-function url-type "url-parse")
 
 (defun ffap-menu-to-url (_type target)
-  (let ((urlobj (url-generic-parse-url target)))
+  (and-let* ((url (with-minibuffer-selected-window
+                    (save-excursion
+                      (goto-char (cdr (assoc target ffap-menu-alist)))
+                      (or (ffap-url-at-point)
+                          (shr-url-at-point nil)))))
+             (urlobj (url-generic-parse-url url)))
     (pcase (url-type urlobj)
       ((or 'file 'nil)
-       (cons 'file target))
+       (cons 'file url))
       (t
-       (cons 'url target)))))
+       (cons 'url url)))))
 
 (after-load! embark
   (alist-setq! embark-transformer-alist
