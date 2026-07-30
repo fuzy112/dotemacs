@@ -31,6 +31,7 @@
 ;;;; nerd-icons
 
 (after-load! nerd-icons
+  (setopt marginalia-align-offset 4)
   (setopt nerd-icons-font-family "Symbols Nerd Font Mono"))
 
 (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
