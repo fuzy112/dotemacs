@@ -399,7 +399,7 @@
     (pcase (url-type urlobj)
       ((or 'file 'nil)
        (cons 'file url))
-      (t
+      (_
        (cons 'url url)))))
 
 (after-load! embark
