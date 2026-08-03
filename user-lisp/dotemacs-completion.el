@@ -551,6 +551,15 @@ The source is hidden by default and can be summoned via its narrow key.
 Only buffers returned by the `consult-buffer-list-function' are taken
 into account.")
 
+(defvar consult-source-view
+  `( :name  "View"
+     :narrow ?v
+     :category bookmark
+     :face consult-bookmark
+     :items ,(lambda () (seq-filter (lambda (bmk)
+                                 (eq (bookmark-get-handler bmk) 'bookmark-view-handler))
+                               (bookmark-all-names)))
+     :state ,#'consult--bookmark-state))
 
 (after-load! consult
   (setopt consult-preview-key "M-.")
@@ -559,6 +568,7 @@ into account.")
   (setq! consult--regexp-compiler #'+consult--orderless-regexp-compiler)
   (add-to-list 'consult-buffer-sources 'consult-source-file-cache t)
   (add-to-list 'consult-buffer-sources 'consult-source-xwidget-webkit-buffer t)
+  (add-to-list 'consult-buffer-sources 'consult-source-view t)
 
 
   ;; consult-customize is a macro and is not autoloaded
