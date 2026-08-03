@@ -351,21 +351,39 @@
 
 (declare-function minibuffer-selected-candidate "dotemacs-completion")
 
+(defvar-local ffap-menu--alist nil)
+(defvar-local ffap-menu--preview-window nil)
+(defvar-local ffap-menu--preview-buffer nil)
+
 (defun ffap-menu--post-command-preview ()
-  (with-selected-window (active-minibuffer-window)
-    (when-let* ((cand (minibuffer-selected-candidate)))
-      (with-minibuffer-selected-window
-        (when-let* ((pos (alist-get cand ffap-menu-alist nil nil #'string=)))
-          (goto-char pos)
-          (recenter)
-          (pulse-momentary-highlight-one-line))))))
+  (when-let* (((buffer-live-p ffap-menu--preview-buffer))
+              (cand (minibuffer-selected-candidate))
+              (pos (alist-get cand ffap-menu--alist nil nil #'string=)))
+    (if (window-live-p ffap-menu--preview-window)
+        (set-window-buffer ffap-menu--preview-window
+                           ffap-menu--preview-buffer)
+      (setq-local ffap-menu--preview-window
+                  (display-buffer ffap-menu--preview-buffer)))
+    (with-selected-window ffap-menu--preview-window
+      (unless (= (point) pos)
+        (goto-char pos)
+        (recenter)
+        (pulse-momentary-highlight-one-line)))))
+
+(when (fboundp 'timeout-debounce)
+  (timeout-debounce 'ffap-menu--post-command-preview))
 
 (define-advice ffap-menu-ask (:around (&rest args) preview)
   (require 'dotemacs-completion)
-  (let ((alist ffap-menu-alist))
+  (let ((alist ffap-menu-alist)
+        (preview-window (selected-window))
+        (preview-buffer (current-buffer)))
     (minibuffer-with-setup-hook
         (lambda ()
-          (add-hook 'post-command-hook #'ffap-menu--post-command-preview 50 t))
+          (setq-local ffap-menu--alist alist
+                      ffap-menu--preview-window preview-window
+                      ffap-menu--preview-buffer preview-buffer)
+          (add-hook 'post-command-hook #'ffap-menu--post-command-preview nil t))
       (save-excursion
         (apply args)))))
 
