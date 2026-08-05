@@ -346,6 +346,13 @@ Interactively, prompt for a ripgrep command with a default prefix."
                              'grep-history)))
   (grep command-args))
 
+;;;; Diff
+
+(after-load! diff-mode
+  ;; Unbind M-o (diff-goto-source) because we bind M-o globally to
+  ;; other-window.  diff-goto-source is also available on C-c C-c.
+  (keymap-unset diff-mode-map "M-o"))
+
 ;;;; Ediff
 
 (defvar ediff-saved-window-configuration nil
