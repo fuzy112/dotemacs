@@ -156,6 +156,7 @@ also set the variable's `history-length' property to the value of
   (when (file-notify-valid-p pch:-watch-descriptor)
     (file-notify-rm-watch pch:-watch-descriptor))
   (setq pch:-watch-descriptor nil)
+  (advice-remove #'project-recompile #'pch:-advice)
   (advice-remove #'project-compile #'pch:-advice)
   (remove-hook 'kill-emacs-hook #'pch:save)
   (when (timerp pch:-save-timer)
@@ -165,6 +166,7 @@ also set the variable's `history-length' property to the value of
     (pch:save))
   (when pch:mode
     (advice-add #'project-compile :around #'pch:-advice)
+    (advice-add #'project-recompile :around #'pch:-advice)
     (add-hook 'kill-emacs-hook #'pch:save)
     (pch:load)
     (when pch:autorevert
