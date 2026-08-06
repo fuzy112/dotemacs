@@ -23,6 +23,7 @@
 
 (define-keymap :keymap project-prefix-map
   "m" #'magit-project-status
+  "M" #'magit-project-dispatch
   "=" #'+project/vc-diff
   "b" #'consult-project-buffer ; orig. project-switch-to-buffer
   "C-b" nil ; orig. `project-list-buffers'
