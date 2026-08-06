@@ -26,8 +26,14 @@
   (defun agent-shell--init-comint-input-ring ()
     (let ((history-dir (agent-shell--dot-subdir "history")))
       (setq-local comint-input-ring-file-name (expand-file-name "comint-history.eld" history-dir))
-      (comint-read-input-ring)
-      (add-hook 'kill-buffer-hook #'comint-write-input-ring nil t)))
+      (let ((coding-system-for-read 'no-conversion))
+	(comint-read-input-ring))
+      (add-hook 'kill-buffer-hook #'agent-shell--write-comint-input-ring nil t)))
+
+  (defun agent-shell--write-comint-input-ring ()
+    (let ((coding-system-for-write 'no-conversion))
+      (comint-write-input-ring)))
+
   (add-hook 'agent-shell-mode-hook #'agent-shell--init-comint-input-ring))
 
 (provide 'dotemacs-llm)
