@@ -37,12 +37,12 @@
 (after-load! rime
   (setopt rime-share-data-dir "/run/current-system/sw/share/rime-data/")
   (setopt rime-disable-predicates
-          '(meow-normal-mode-p
-            ;; meow-keypad-mode-p
-            ;; meow-motion-mode-p
-            ;; meow-beacon-mode-p
-            rime-predicate-prog-in-code-p
-            rime-predicate-after-ascii-char-p))
+          (seq-filter #'fboundp '(meow-normal-mode-p
+                                  ;; meow-keypad-mode-p
+                                  ;; meow-motion-mode-p
+                                  ;; meow-beacon-mode-p
+                                  rime-predicate-prog-in-code-p
+                                  rime-predicate-after-ascii-char-p)))
   (setopt rime-inline-predicates
           '(rime-predicate-space-after-cc-p)))
 
