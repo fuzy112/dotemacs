@@ -175,6 +175,8 @@
     (pcase (car (alist-get cat marginalia-annotators))
       ('none #'ignore)
       ('builtin nil)
+      ;; FIXME: consider annotation-functions from
+      ;; completion-category-default and completion-category-overrides
       ('nil (cl-loop for p in (get cat 'completion-category-parents)
                      thereis (marginalia--annotator p)))
       (fun fun))))
