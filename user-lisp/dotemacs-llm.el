@@ -25,7 +25,8 @@
 (after-load! agent-shell
   (defun agent-shell--init-comint-input-ring ()
     (let ((history-dir (agent-shell--dot-subdir "history")))
-      (setq-local comint-input-ring-file-name (expand-file-name "comint-history.eld" history-dir))
+      (setq-local comint-input-ring-file-name (expand-file-name "comint-history.eld" history-dir)
+		  comint-input-ring-separator "\n---agent-shell-separator---\n")
       (let ((coding-system-for-read 'no-conversion))
 	(comint-read-input-ring))
       (add-hook 'kill-buffer-hook #'agent-shell--write-comint-input-ring nil t)))
