@@ -561,6 +561,43 @@ into account.")
                                (bookmark-all-names)))
      :state ,#'consult--bookmark-state))
 
+(defvar agent-shell--state)
+
+(with-no-compile!
+  (defun consult-source-agent-shell--annotate (cand)
+    "Annotate agent-shell buffer candidate CAND with its status and title."
+    (when-let* ((buffer (get-buffer cand)))
+      (marginalia--fields
+       ((marginalia--buffer-status buffer))
+       ((with-current-buffer buffer
+          (let ((title (string-trim
+                        (car (split-string
+                              (or (map-nested-elt agent-shell--state
+                                                  '(:session :title))
+                                  "")
+                              "\n")))))
+            (propertize title
+                        'face 'agent-shell-session-title))))))))
+
+(defvar consult-source-agent-shell
+  `( :name "Agent-shell"
+     :narrow ?a
+     :category agent-shell
+     :hidden t
+     :face agent-shell-buffer-name
+     :history buffer-name-history
+     :state ,#'consult--buffer-state
+     :enabled ,(lambda () (featurep 'agent-shell))
+     :annotate ,#'consult-source-agent-shell--annotate
+     :items
+     ,(lambda () (consult--buffer-query :sort 'visibility
+                                        :predicate (apply-partially
+                                                    #'buffer-match-p
+                                                    '(derived-mode . agent-shell-mode))
+                                        :as #'consult--buffer-pair)))
+  "Source for `consult-buffer' for `agent-shell-mode' buffers.
+The source is hidden by default and can be summoned via its narrow key.")
+
 (after-load! consult
   (setopt consult-preview-key "M-.")
   (setopt consult-narrow-key "<")
@@ -569,6 +606,7 @@ into account.")
   (add-to-list 'consult-buffer-sources 'consult-source-file-cache t)
   (add-to-list 'consult-buffer-sources 'consult-source-xwidget-webkit-buffer t)
   (add-to-list 'consult-buffer-sources 'consult-source-view t)
+  (add-to-list 'consult-buffer-sources 'consult-source-agent-shell t)
 
 
   ;; consult-customize is a macro and is not autoloaded
