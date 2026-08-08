@@ -545,11 +545,7 @@ If there is no active minibuffer, signal an error."
           (consult--buffer-query :sort 'visibility
                                  :predicate (lambda (buf) (buffer-match-p '(derived-mode . xwidget-webkit-mode) buf))
                                  :as #'consult--buffer-pair
-                                 :exclude nil))))
-  "Source for `consult-buffer' for buffers from other frames or tabs.
-The source is hidden by default and can be summoned via its narrow key.
-Only buffers returned by the `consult-buffer-list-function' are taken
-into account.")
+                                 :exclude nil)))))
 
 (defvar consult-source-view
   `( :name  "View"
