@@ -27,10 +27,17 @@
           auth-source-gpg-encrypt-to (list "0xBBE2757FC7BFC23B"))
   (setopt plstore-encrypt-to auth-source-gpg-encrypt-to)
   (auth-source-forget-all-cached)
-  (keymap-set read-passwd-map "C-c C-p" #'+insert-pass)
-  (defun read-passwd-disable-kill-ring ()
-    (setopt-local kill-transform-function #'ignore))
-  (add-hook 'read-passwd-mode-hook #'read-passwd-disable-kill-ring))
+  (keymap-set read-passwd-map "C-c C-p" #'+insert-pass))
+
+(define-advice read-passwd (:around (&rest app) secure-kill)
+  (let ((kill-ring nil)
+        (interprogram-cut-function #'ignore))
+    (unwind-protect
+        (apply app)
+      (dolist (s kill-ring)
+        (if (stringp s)
+            (clear-string s)
+          (warn "non-string element in kill-ring"))))))
 
 ;;;; epg
 
