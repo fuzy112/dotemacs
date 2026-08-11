@@ -53,6 +53,17 @@
               (seq-union '((:eval (nerd-icons-icon-for-buffer)) " ")
                          mode-line-buffer-identification))
 
+(after-load! nerd-icons-ibuffer
+  (setopt nerd-icons-ibuffer-formats
+	  `((mark modified read-only locked
+		  " " (icon 2 2)
+		  (name 18 18 :left :elide)
+		  #(" " 0 1 (display (space :align-to 26)))
+                  (size-h 9 -1 :right)
+		  " " (mode+ 16 16 :left :elide)
+		  " " filename-and-process+)
+	    (mark " " (name 16 -1) " " filename))))
+
 ;;;; pixel-scroll
 
 ;; If the value is greater than 100, redisplay will never recenter
