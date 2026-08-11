@@ -54,6 +54,9 @@
 
 (add-hook 'telega-chat-mode-hook #'telega-completions-setup-capf)
 
+(when (listp quit-window-kill-buffer)
+  (add-to-list 'quit-window-kill-buffer 'telega-chat-mode))
+
 
 (add-to-list 'display-buffer-alist
              '("\\*Telegram Sticker\\(?: Set\\|s\\)\\*"
