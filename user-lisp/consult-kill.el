@@ -1,5 +1,5 @@
 ;;; consult-kill.el --- Interactively kill a process -*- lexical-binding: t -*-
-;; Copyright © 2024, 2025  Zhengyi Fu <i@fuzy.me>
+;; Copyright © 2024, 2025, 2026  Zhengyi Fu <i@fuzy.me>
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
 ;; Version: 0.1.0
@@ -16,9 +16,14 @@
 (require 'consult)
 
 ;;;###autoload
-(defun consult-kill (&optional initial)
-  "Search and kill a process given INITIAL input."
-  (interactive)
+(defun consult-kill (&optional initial signal)
+  "Read a process with given INITIAL input and send SIGNAL to it."
+  (interactive
+   (list nil (if current-prefix-arg
+		 (completing-read "Signal: "
+				  (signal-names)
+				  nil t)
+	       "INT")))
   (let ((pid
 	 (consult--read
 	  (cdr (process-lines "ps" "-ef"))
@@ -28,7 +33,7 @@
 	  :category 'consult-kill
 	  :lookup (lambda (cand _ _ _)
 		    (string-to-number (nth 1 (split-string cand " " t)))))))
-    (shell-command (format "( kill %d && sleep 4 && kill -KILL %1$d || true ) &" pid))))
+    (shell-command (format "( kill -%s %d" signal pid))))
 
 (provide 'consult-kill)
 ;;; consult-kill.el ends here
