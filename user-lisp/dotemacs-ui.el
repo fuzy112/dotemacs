@@ -374,10 +374,9 @@ not used, but is required by the hook."
 
 ;;;; undelete frame mode
 
-(add-hook 'before-make-frame-hook
-          (defun before-make-frame-enable-undelete-frame-mode ()
-            (undelete-frame-mode)
-            (remove-hook 'before-make-frame-hook 'before-make-frame-enable-undelete-frame-mode)))
+(autoload 'undelete-frame--save-deleted-frame "frame")
+(setq! undelete-frame-mode t)
+(add-hook 'delete-frame-functions #'undelete-frame--save-deleted-frame -75)
 
 ;;;; Control the display of common ancillary windows
 
