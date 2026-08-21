@@ -312,7 +312,7 @@ Also allows interactive bookmark selection."
 Interactively, prompt for a bookmark using `bookmark-completing-read*'."
   (interactive
    (list (bookmark-completing-read*
-          #'compilation-bookmark-handler
+          #'compilation-bookmark-jump
           "Jump to bookmark")))
   (let ((default-directory (or (bookmark-prop-get bookmark 'filename)
                                (bookmark-prop-get bookmark 'directory))))

@@ -260,7 +260,13 @@
   "b" #'consult-buffer-other-tab ; orig. switch-to-buffer-other-tab
   )
 
+(define-keymap :keymap bookmark-map
+  "b" #'url-bookmark-jump
+  "e" #'eww-bookmark-jump
+  "c" #'compilation-bookmark-jump)
+
 (define-keymap :keymap ctl-x-map
+  "m"   bookmark-map
   "F"   #'find-function
   "V"   #'find-variable
   "K"   #'find-function-on-key
@@ -268,7 +274,7 @@
   "k"   #'smart-kill-buffer
   "g"   #'magit-status-here
   "M-g" #'magit-dispatch
-  "M-:" #'consult-complex-command ; orig. repeat-complex-command
+  "M-:" #'consult-complex-command	; orig. repeat-complex-command
   "C-d" #'consult-dir)
 
 (define-keymap :keymap minibuffer-local-map
