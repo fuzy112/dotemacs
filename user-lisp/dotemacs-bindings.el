@@ -190,7 +190,6 @@
   "r"   #'ctl-x-4-r         ; orig. `find-file-read-only-other-window'
   "C-r" #'find-file-read-only-other-window
   "t"   #'eat-other-window
-  "e"   #'+eshell/other-window
   "b"   #'consult-buffer-other-window
   "F"   #'find-function-other-window
   "V"   #'find-variable-other-window
