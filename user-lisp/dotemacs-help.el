@@ -70,6 +70,28 @@ font-locking and indentation."
         (insert "\n\n"))
     (error nil)))
 
+(define-advice advice--make-single-doc
+    (:around (oldfun flist function macrop) remove-button)
+  "Append a \"[Remove]\" button to the documentation string.
+
+The button lets the user remove the advice described by FLIST
+directly from the *Help* buffer.  Clicking the button calls
+`advice-remove' on FUNCTION and the advised function, then
+reverts the help buffer to reflect the change."
+  (let ((str (funcall oldfun flist function macrop)))
+    (with-temp-buffer
+      (insert str)
+      (delete-indentation)
+      (insert ?\s)
+      (insert-text-button
+       "[Remove]"
+       'action (lambda (_button)
+                 (advice-remove function (advice--car flist))
+                 (revert-buffer))
+       'follow-link t)
+      (newline)
+      (buffer-string))))
+
 ;;;###autoload
 (defun +mail-to-help-gnu-emacs ()
   (interactive)
