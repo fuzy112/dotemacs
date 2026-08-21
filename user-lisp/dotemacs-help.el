@@ -56,12 +56,14 @@ font-locking and indentation."
                         (find-function-noselect function))))
                    (text (with-current-buffer buffer
                            (save-excursion
-                             (goto-char point)
-                             (end-of-defun)
-                             (let ((end (point)))
-                               (beginning-of-defun)
-                               (font-lock-ensure (point) end)
-                               (buffer-substring (point) end))))))
+                             (save-restriction
+                               (widen)
+                               (goto-char point)
+                               (end-of-defun)
+                               (let ((end (point)))
+                                 (beginning-of-defun)
+                                 (font-lock-ensure (point) end)
+                                 (buffer-substring (point) end)))))))
         (add-text-properties 0 (length text)
                              '(line-prefix (space :align-to 2))
                              text)
