@@ -87,6 +87,9 @@
 (autoload 'org--protocol-detect-protocol-server "org-protocol")
 (advice-add 'server-visit-files :around #'org--protocol-detect-protocol-server)
 
+(define-advice org-protocol-capture (:before (&rest _) raise-frame)
+  (select-frame-set-input-focus (selected-frame)))
+
 (defvar org-protocol-project-alist)
 
 (declare-function org-protocol-sanitize-uri "org-protocol")
