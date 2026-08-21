@@ -128,6 +128,7 @@
 
 ;;;; saveplace
 
+(setq-default save-place-mode t)
 (autoload 'save-place-find-file-hook "saveplace")
 (autoload 'save-place-dired-hook "saveplace")
 (add-hook 'find-file-hook #'save-place-find-file-hook)
@@ -135,13 +136,12 @@
 (after-load! saveplace
   (setopt save-place-limit 65536)
   (setopt save-place-autosave-interval 30)
-  (setopt save-place-abbreviate-file-names t)
   ;; Add /run/user/*/gvfs/
   (setopt save-place-skip-check-regexp "\\`/\\(?:cdrom\\|floppy\\|mnt\\|run/user/[[:digit:]]+/gvfs/\\|\\(?:[^@/:]*@\\)?[^@/:]*[^@/:.]:\\)")
   (save-place-mode))
 
 (define-advice save-place-find-file-hook (:after (&rest _) recenter)
-  (when buffer-file-name
+  (when (and buffer-file-name (buffer-live-p (current-buffer)))
     (ignore-errors
       (reposition-window))))
 
