@@ -386,8 +386,7 @@ not used, but is required by the hook."
 (add-to-list 'display-buffer-alist
              '((or . ((derived-mode . occur-mode)
                       (derived-mode . grep-mode)
-                      (derived-mode . Buffer-menu-mode)
-                      (derived-mode . log-view-mode)))
+                      (derived-mode . Buffer-menu-mode)))
                (display-buffer-reuse-mode-window display-buffer-below-selected)
                (body-function . select-window)))
 
