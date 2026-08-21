@@ -339,6 +339,7 @@
   "."		#'embark-dwim)
 
 (define-keymap :keymap global-map
+  "C-<Hangul>"			#'toggle-input-method
   "<f5>"			#'compile
   "C-S-d"			#'duplicate-dwim
   "C-z"				#'zap-up-to-char
