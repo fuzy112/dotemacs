@@ -108,9 +108,7 @@
 (declare-function transient-set-default-level "transient")
 
 (after-load! magit
-  (transient-set-default-level 'magit:--gpg-sign 1)
-  (transient-set-default-level 'magit:--signoff 1)
-
+  (setopt transient-default-level 5)
   (require! magit-wip))
 
 (after-load! magit-wip

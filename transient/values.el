@@ -1,3 +1,5 @@
 ((gptel-menu)
+ (magit-diff:magit-revision-mode "--show-signature" "--stat" "--no-ext-diff")
  (magit-fetch "--prune" "--tags")
- (magit-pull "--autostash"))
+ (magit-pull "--autostash")
+ (magit-rebase "--autostash"))
