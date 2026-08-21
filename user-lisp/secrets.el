@@ -337,7 +337,8 @@ A session path `secrets-empty-path' indicates there is no open session.")
 (defvar secrets-session-algorithm nil
   "The algorithm used by the session.")
 
-(defconst secrets-dh-prime #xFFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B139B22514A08798E3404DDEF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245E485B576625E7EC6F44C42E9A637ED6B0BFF5CB6F406B7EDEE386BFB5A899FA5AE9F24117C4B1FE649286651ECE65381FFFFFFFFFFFFFFFF)
+(defconst secrets-dh-prime #xFFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B139B22514A08798E3404DDEF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245E485B576625E7EC6F44C42E9A637ED6B0BFF5CB6F406B7EDEE386BFB5A899FA5AE9F24117C4B1FE649286651ECE65381FFFFFFFFFFFFFFFF
+  "Diffie-Hellman prime number used for secure key exchange.")
 
 (defun secrets-integer-to-unibyte-string (integer length endian)
   "Convert INTEGER to a unibyte string with LENGTH bytes.
@@ -405,16 +406,9 @@ ENDIAN is `big' or `little'."
          (aes-key (substring (gnutls-hash-mac "SHA256" shared-key "") 0 16)))
     aes-key))
 
-(defun secrets-unibyte-string-to-byte-array (ustr)
-  "Convert unibyte string USTR to a D-Bus byte array."
-  (cons :array
-        (mapcan (lambda (byte)
-                  (list :byte byte))
-                ustr)))
-
 (defun secrets-pkcs7-pad (data)
   "Pad DATA to 128 bits."
-  (let ((padding (- 16 (mod (length data) 16))))
+  (let ((padding (- 16 (mod (string-bytes data) 16))))
     (prog1
         (concat data (make-string padding padding))
       (clear-string data))))
@@ -473,7 +467,7 @@ ENDIAN is `big' or `little'."
   (condition-case err
       (pcase-let* ((priv-key (secrets-generate-priv-key))
                    (pub-key (secrets-priv-key-to-pub-key priv-key))
-                   (pub-key (secrets-unibyte-string-to-byte-array pub-key))
+                   (pub-key (dbus-string-to-byte-array pub-key))
                    (`((,server-pub-key) ,path)
                     (dbus-call-method
                      :session secrets-service secrets-path
@@ -486,7 +480,7 @@ ENDIAN is `big' or `little'."
     (dbus-error
      (if (string= (cadr err) "org.freedesktop.DBus.Error.NotSupported")
          nil
-       (signal err)))))
+       (signal 'dbus-error (cdr err))))))
 
 (defun secrets-open-session (&optional reopen)
   "Open a new session with \"plain\" algorithm.
@@ -817,8 +811,8 @@ The object path of the created item is returned."
 			       (:variant ,(append '(:array) props))))))
 	     ;; Secret.
              `(:struct :object-path ,secrets-session-path
-                       ,(secrets-unibyte-string-to-byte-array parameter)
-                       ,(secrets-unibyte-string-to-byte-array password)
+                       ,(dbus-string-to-byte-array parameter)
+                       ,(dbus-string-to-byte-array password)
                        ,secrets-struct-secret-content-type)
 	     ;; Do not replace. Replace does not seem to work.
 	     nil))
@@ -1069,11 +1063,14 @@ to their attributes."
    :session dbus-service-dbus dbus-path-dbus
    dbus-interface-dbus "NameOwnerChanged"
    (lambda (&rest args)
-     (when secrets-debug (message "Secret Service has changed: %S" args))
-     (setq secrets-session-path secrets-empty-path
-	   secrets-prompt-signal nil
-	   secrets-collection-paths nil))
-   secrets-service)
+     ;; The flatpak version of Emacs shows also signals from
+     ;; "org.freedesktop.portal.Flatpak".  (Bug#80977)
+     (when (and (stringp (car args)) (string-equal secrets-service (car args)))
+       (when secrets-debug (message "Secret Service has changed: %S" args))
+       (setq secrets-session-path secrets-empty-path
+	     secrets-prompt-signal nil
+	     secrets-collection-paths nil)))
+   :arg-namespace secrets-service)
 
   ;; We want to refresh our cache, when there is a change in
   ;; collections.
