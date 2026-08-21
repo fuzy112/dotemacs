@@ -100,7 +100,9 @@
 
 ;;;; backup
 
-(setopt backup-by-copying-when-linked t)
+(setopt backup-by-copying-when-linked t
+        vc-make-backup-files make-backup-files)
+(setq backup-directory-alist `(("." . ,(dotemacs-state-file "backup"))))
 
 ;;;; auto-save-mode
 
