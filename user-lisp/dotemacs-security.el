@@ -30,7 +30,7 @@
   (keymap-set read-passwd-map "C-c C-p" #'+insert-pass))
 
 (define-advice read-passwd (:around (&rest app) secure-kill)
-  (let ((kill-ring nil)
+  (let ((kill-ring (mapcar #'substring kill-ring))
         (interprogram-cut-function #'ignore))
     (unwind-protect
         (apply app)
