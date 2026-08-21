@@ -125,6 +125,7 @@ To use this protocol, add the following bookmarklet to your browser:
          (url (plist-get parts :url)))
     (unless url
       (error "org-protocol-clone-repo: missing :url parameter"))
+    (select-frame-set-input-focus (selected-frame))
     (setq url (org-protocol-sanitize-uri url))
     (let* ((web-url (replace-regexp-in-string "\\(//\\(?:github\\.com\\|gitlab\\.com\\|codeberg\\.org\\)/[^/]+/[^/]+\\)/.*\\'" "\\1" url))
            (web-url (replace-regexp-in-string "\\.git\\'" "" web-url))
@@ -134,9 +135,8 @@ To use this protocol, add the following bookmarklet to your browser:
            (dest (read-directory-name
                   (format "Clone “%s” to: " repo-name)
                   (file-name-directory default-dest)
-                  default-dest
-                  nil
-                  default-dest)))
+                  nil nil
+                  (file-name-nondirectory default-dest))))
       (setq dest (directory-file-name dest))
       (message "Cloning %s into %s..." clone-url dest)
       (let ((process (make-process
