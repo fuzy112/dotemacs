@@ -513,14 +513,14 @@ If there is no active minibuffer, signal an error."
 (declare-function consult--buffer-file-hash "ext:consult")
 (declare-function consult--fast-abbreviate-file-name "ext:consult")
 (defvar consult-source-file-cache
-  `( :name "FileCache"
-     :narrow ?c
+  `( :name     "FileCache"
+     :narrow   ?c
+     :hidden   t
      :category file
-     :face consult-file
-     :history file-name-history
-     :state ,#'consult--file-state
-     :new ,#'consult--file-action
-     :enable ,(lambda () (bound-and-true-p file-cache-alist))
+     :face     consult-file
+     :history  file-name-history
+     :state    ,#'consult--file-state
+     :enable   ,(lambda () (bound-and-true-p file-cache-alist))
      :items
      ,(lambda ()
         (let ((ht (consult--buffer-file-hash))
@@ -528,7 +528,8 @@ If there is no active minibuffer, signal an error."
           (pcase-dolist (`(,file ,dir) (bound-and-true-p file-cache-alist) (nreverse items))
             (setq file (concat dir file))
             (unless (gethash file ht)
-              (push (consult--fast-abbreviate-file-name file) items)))))))
+              (push (consult--fast-abbreviate-file-name file) items))))))
+  "Source for `consult-buffer' for file cache.")
 
 
 (defvar consult-source-xwidget-webkit-buffer
@@ -543,20 +544,25 @@ If there is no active minibuffer, signal an error."
      :items
      ,(lambda ()
         (let ((local (consult--string-hash (consult--buffer-query))))
-          (consult--buffer-query :sort 'visibility
-                                 :predicate (lambda (buf) (buffer-match-p '(derived-mode . xwidget-webkit-mode) buf))
-                                 :as #'consult--buffer-pair
-                                 :exclude nil)))))
+          (consult--buffer-query
+           :sort 'visibility
+           :predicate (apply-partially #'buffer-match-p
+                                       '(derived-mode . xwidget-webkit-mode))
+           :as #'consult--buffer-pair
+           :exclude nil))))
+  "Source for `consult-buffer' for Xwidget webkit buffers.")
 
 (defvar consult-source-view
-  `( :name  "View"
-     :narrow ?v
+  `( :name    "View"
+     :narrow   ?v
+     :hidden   t
      :category bookmark
-     :face consult-bookmark
-     :items ,(lambda () (seq-filter (lambda (bmk)
-                                 (eq (bookmark-get-handler bmk) 'bookmark-view-handler))
-                               (bookmark-all-names)))
-     :state ,#'consult--bookmark-state))
+     :face     consult-bookmark
+     :items    ,(lambda () (seq-filter (lambda (bmk)
+                                    (eq (bookmark-get-handler bmk) 'bookmark-view-handler))
+                                  (bookmark-all-names)))
+     :state    ,#'consult--bookmark-state)
+  "Source for `consult-buffer' for bookmarked window configurations.")
 
 (defvar agent-shell--state)
 
@@ -577,21 +583,21 @@ If there is no active minibuffer, signal an error."
                         'face 'agent-shell-session-title))))))))
 
 (defvar consult-source-agent-shell
-  `( :name "Agent-shell"
-     :narrow ?a
+  `( :name    "Agent-shell"
+     :narrow   ?a
      :category agent-shell
-     :hidden t
-     :face agent-shell-buffer-name
-     :history buffer-name-history
-     :state ,#'consult--buffer-state
-     :enabled ,(lambda () (featurep 'agent-shell))
+     :hidden   t
+     :face     agent-shell-buffer-name
+     :history  buffer-name-history
+     :state    ,#'consult--buffer-state
+     :enabled  ,(lambda () (featurep 'agent-shell))
      :annotate ,#'consult-source-agent-shell--annotate
      :items
-     ,(lambda () (consult--buffer-query :sort 'visibility
-                                        :predicate (apply-partially
-                                                    #'buffer-match-p
-                                                    '(derived-mode . agent-shell-mode))
-                                        :as #'consult--buffer-pair)))
+     ,(lambda () (consult--buffer-query
+             :sort 'visibility
+             :predicate (apply-partially #'buffer-match-p
+                                         '(derived-mode . agent-shell-mode))
+             :as #'consult--buffer-pair)))
   "Source for `consult-buffer' for `agent-shell-mode' buffers.
 The source is hidden by default and can be summoned via its narrow key.")
 
