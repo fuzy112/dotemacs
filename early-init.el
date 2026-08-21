@@ -129,7 +129,7 @@ to revert the temporary large value set during initialization."
 ;;;; files
 
 (setq version-control     t
-      delete-old-versions t
+      delete-old-versions -1
       kept-old-versions   9
       kept-new-versions   9
       require-final-newline 'ask)
