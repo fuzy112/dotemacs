@@ -61,13 +61,15 @@ When nil, use `history-length', which see."
 (defun pch:variable (project)
   "Return the per-project history variable symbol for PROJECT.
 The variable name is derived from the abbreviated file name of PROJECT's
-root directory, interned in the obarray `project-compile-history-obarray'.
+root directory, interned in the obarray
+`project-compile-history-obarray'.
 
 If the returned variable is unbound when this function is called,
 initialize it to nil.  When `project-compile-history-length' is non-nil,
 also set the variable's `history-length' property to the value of
 `project-compile-history-length' during initialization."
-  (let* ((root (abbreviate-file-name (project-root project)))
+  (let* ((root (abbreviate-file-name
+		(expand-file-name (project-root project))))
 	 (hist-var (intern root pch:obarray)))
     (unless (boundp hist-var)
       (set hist-var nil)
