@@ -502,7 +502,12 @@ compatible with `url-bookmark-jump', `eww-bookmark-jump', or
       (fn
        (require 'browse-url)
        (set-buffer (get-buffer-create (format " *browse-url : %s*" pos)))
-       (funcall fn pos)))))
+       (let ((wincfg (current-window-configuration)))
+         (letrec ((fun (lambda ()
+                         (remove-hook 'bookmark-after-jump-hook fun)
+                         (set-window-configuration wincfg))))
+           (funcall fn pos)
+           (add-hook 'bookmark-after-jump-hook fun wincfg)))))))
 
 (put 'url-bookmark-jump 'bookmark-handler-type "URL")
 
