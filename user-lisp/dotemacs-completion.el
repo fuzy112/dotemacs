@@ -633,7 +633,9 @@ The source is hidden by default and can be summoned via its narrow key.")
      consult-theme
      :preview-key '(:debounce 0.4 any)
      consult-source-file-register
-     :preview-key '(:debounce 0.4 any)))
+     :preview-key '(:debounce 0.4 any)
+     consult-source-recent-file
+     :enabled (lambda () (recentf-mode 1) t)))
 
   ;; url-only bookmark type
   (cl-pushnew #'url-bookmark-jump (cddr (assoc ?w consult-bookmark-narrow)))
