@@ -662,6 +662,20 @@ The source is hidden by default and can be summoned via its narrow key.")
                                     "*Messages*" "*Warnings" ".newsrc-dribble")
                             eot)))))
 
+;;;; Consult-Dir
+
+(define-advice consult-dir--bookmark-dirs (:override () dired)
+  (bookmark-maybe-load-default-file)
+  (let (dirs)
+    (dolist (cand bookmark-alist)
+      (when-let* (((memq (bookmark-get-handler cand) '(nil dired-bookmark-jump)))
+                  (file (bookmark-get-filename cand))
+                  ((if (file-remote-p file)
+                       (string-suffix-p "/" file)
+                     (file-directory-p file))))
+        (push (propertize (car cand) 'consult--type ?f) dirs)))
+    (nreverse dirs)))
+
 ;;;; Prescent
 
 (after-load! prescient
