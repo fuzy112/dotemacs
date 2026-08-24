@@ -60,7 +60,7 @@
 (require! dotemacs-help)
 (require! dotemacs-email)
 (require! dotemacs-text)
-(require! dotemacs-modal)
+;; (require! dotemacs-modal)
 (require! dotemacs-theme)
 (require! dotemacs-chinese)
 (require! dotemacs-treesit)
