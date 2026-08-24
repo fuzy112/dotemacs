@@ -102,7 +102,23 @@
 
 (setopt backup-by-copying-when-linked t
         vc-make-backup-files make-backup-files)
-(setq backup-directory-alist `(("." . ,(dotemacs-state-file "backup"))))
+;; A nil DIRECTORY in `backup-directory-alist' means the backup is made
+;; in the original file's directory (undocumented, but explicit in
+;; `make-backup-file-name-1').  /run is tmpfs, so keep backups local.
+(setq backup-directory-alist `(("\\`/run/" . nil)
+                               ("\\`/var/run/" . nil)
+                               ("\\`/mnt/" . nil)
+                               ("\\`/media/" . nil)
+                               ("." . ,(dotemacs-state-file "backup"))))
+(add-function :around backup-enable-predicate
+              (lambda (fn name)
+                (and (funcall fn name)
+                     (let ((local-name (file-local-name name)))
+                       (not (or (string-prefix-p "/dev/" local-name)
+                                (string-prefix-p "/tmp/" local-name)
+                                (string-prefix-p temporary-file-directory
+                                                 local-name))))))
+              '((name . exclude-dev-tmp)))
 
 ;;;; auto-save-mode
 
