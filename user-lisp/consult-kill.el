@@ -33,7 +33,7 @@
 	  :category 'consult-kill
 	  :lookup (lambda (cand _ _ _)
 		    (string-to-number (nth 1 (split-string cand " " t)))))))
-    (shell-command (format "( kill -%s %d" signal pid))))
+    (shell-command (format "kill -%s %d" signal pid))))
 
 (provide 'consult-kill)
 ;;; consult-kill.el ends here
