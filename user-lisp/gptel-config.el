@@ -383,75 +383,7 @@ If you find anything is wrong or unclear, stop immediately without outputing any
       (newline)
       (gptel-send))))
 
-(declare-function magit-commit-arguments "ext:magit-commit.el")
-(declare-function magit-process-git "ext:magit-process.el")
-(declare-function magit-run-git-with-editor "ext:magit-process.el")
-(declare-function magit-toplevel "ext:magit")
-
-(defvar gptel-commit-backend nil)
-(put 'gptel-commit-backend 'safe-local-variable 'stringp)
-(defvar gptel-commit-model nil)
-(put 'gptel-commit-model 'safe-local-variable 'symbolp)
-
 ;;;###autoload
-(defun +gptel-commit-staged (rationale &optional args)
-  "Generate a commit message for staged changes using LLM, then open for editing.
-
-Queries LLM with the current git status, staged diff, and recent git log
-to generate an appropriate commit message. Then opens the generated message
-in the git editor for final editing before committing."
-  (interactive (list nil (magit-commit-arguments)))
-  (with-temp-buffer
-    (let ((gptel-backend (if gptel-commit-backend
-			     (gptel-get-backend gptel-commit-backend)
-			   gptel-backend))
-	  (gptel-model (or gptel-commit-model gptel-model))
-	  (dir (magit-toplevel))
-	  gptel-use-tools)
-      (insert "<git-status>")
-      (unless (zerop (magit-process-git t "status"))
-	(error "Failed to run git status"))
-      (insert "</git-status>\n")
-      (insert "<git-diff-staged>")
-      (unless (zerop (magit-process-git t "diff" "--cached" "--no-textconv"))
-	(error "Failed to run git diff --cached"))
-      (insert "</git-diff-staged>\n")
-      (insert "<git-log>")
-      (unless (zerop (magit-process-git t "log" "-n10" "--stat"))
-	(error "Failed to run git log"))
-      (insert "</git-log>\n")
-      (when rationale
-	(insert "<rationale>")
-	(insert rationale)
-	(insert "\n</rational>\n"))
-      (when (file-readable-p (expand-file-name ".commit-guideline" dir))
-	(insert "<project-local-instruction>")
-	(insert (with-temp-buffer
-		  (insert-file-contents (expand-file-name ".commit-guideline" dir))
-		  (xml-escape-string (buffer-string))))
-	(insert "\n</project-local-instruction>\n"))
-      (gptel-request
-       (buffer-string)
-       :system (alist-get 'commit gptel-directives)
-       :callback (lambda (response _info)
-		   (if (stringp response)
-		       (let ((default-directory dir))
-			 (apply #'magit-run-git-with-editor "commit" "-m" response "--edit" args))
-		     (message "Failed to query LLM")))))))
-
-(defun +gptel-commit-staged-with-rationale (&optional args)
-  (interactive (list (magit-commit-arguments)))
-  (+gptel-commit-staged
-   (read-string "Rationale: ")
-   args))
-
-;;;###autoload
-(with-eval-after-load 'magit-commit
-  (transient-append-suffix 'magit-commit "c"
-    '("g" "Generate message" +gptel-commit-staged))
-  (transient-append-suffix 'magit-commit "g"
-    '("r" "Generate with rationale" +gptel-commit-staged-with-rationale)))
-
 (defvar log-edit-listfun)
 (defvar log-edit-diff-function)
 
