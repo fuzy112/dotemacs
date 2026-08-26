@@ -388,6 +388,11 @@ If you find anything is wrong or unclear, stop immediately without outputing any
 (declare-function magit-run-git-with-editor "ext:magit-process.el")
 (declare-function magit-toplevel "ext:magit")
 
+(defvar gptel-commit-backend nil)
+(put 'gptel-commit-backend 'safe-local-variable 'stringp)
+(defvar gptel-commit-model nil)
+(put 'gptel-commit-model 'safe-local-variable 'symbolp)
+
 ;;;###autoload
 (defun +gptel-commit-staged (rationale &optional args)
   "Generate a commit message for staged changes using LLM, then open for editing.
@@ -397,8 +402,10 @@ to generate an appropriate commit message. Then opens the generated message
 in the git editor for final editing before committing."
   (interactive (list nil (magit-commit-arguments)))
   (with-temp-buffer
-    (let ((gptel-backend gptel-backend)
-	  (gptel-model gptel-model)
+    (let ((gptel-backend (if gptel-commit-backend
+			     (gptel-get-backend gptel-commit-backend)
+			   gptel-backend))
+	  (gptel-model (or gptel-commit-model gptel-model))
 	  (dir (magit-toplevel))
 	  gptel-use-tools)
       (insert "<git-status>")
@@ -424,13 +431,13 @@ in the git editor for final editing before committing."
 		  (xml-escape-string (buffer-string))))
 	(insert "\n</project-local-instruction>\n"))
       (gptel-request
-	  (buffer-string)
-	:system (alist-get 'commit gptel-directives)
-	:callback (lambda (response _info)
-		    (if (stringp response)
-			(let ((default-directory dir))
-			  (apply #'magit-run-git-with-editor "commit" "-m" response "--edit" args))
-		      (message "Failed to query LLM")))))))
+       (buffer-string)
+       :system (alist-get 'commit gptel-directives)
+       :callback (lambda (response _info)
+		   (if (stringp response)
+		       (let ((default-directory dir))
+			 (apply #'magit-run-git-with-editor "commit" "-m" response "--edit" args))
+		     (message "Failed to query LLM")))))))
 
 (defun +gptel-commit-staged-with-rationale (&optional args)
   (interactive (list (magit-commit-arguments)))
