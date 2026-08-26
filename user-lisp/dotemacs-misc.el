@@ -230,7 +230,7 @@
 
 ;;;; envrc
 
-(after-init!
+(after-init! envrc
   (envrc-global-mode))
 
 ;;;; time report

@@ -117,7 +117,7 @@
   (set-face-attribute 'fixed-pitch nil :family "Iosevka Term Slab" :weight 'medium :fontset "fontset-term")
   (set-face-attribute 'fixed-pitch-serif nil :family "Iosevka Term Slab" :weight 'medium :fontset "fontset-term")
 
-  (after-init!
+  (after-init! run-fontset-initialize-hook
     (run-hooks '+fontsets-initialize-hook)))
 
 (defvar +fontsets-initialized nil)
@@ -129,7 +129,7 @@
          (+init-fontsets)
          (setq +fontsets-initialized t))))
 
-(after-init!
+(after-init! may-init-fontset
   (catch 'quit
     (dolist (frame (frame-list))
       (with-selected-frame frame

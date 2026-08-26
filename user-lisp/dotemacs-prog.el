@@ -280,11 +280,11 @@ confirmed."
 
 ;;;; compile
 
+(setq! compilation-always-kill t
+       compilation-ask-about-save t
+       compilation-scroll-output 'first-error)
+
 (after-load! compile
-  (setq compilation-always-kill t
-        compilation-ask-about-save t
-        compilation-scroll-output 'first-error)
-  (add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
   (setopt compilation-error-regexp-alist
           '(bash
             python-tracebacks-and-caml
@@ -305,22 +305,29 @@ confirmed."
             typescript-tsc-plain
             typescript-tsc-pretty)))
 
+;;;; ansi-osc and color
+
+(add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
+(add-hook 'compilation-filter-hook #'ansi-osc-compilation-filter)
+
+(setq! ansi-osc-for-compilation-buffer t
+       ansi-color-for-compilation-mode t
+       ansi-color-for-comint-mode t)
+
 ;;;; comint
 
-(after-load! comint
-  (add-hook 'comint-output-filter-functions #'comint-osc-process-output)
-  (setq comint-prompt-read-only t
-        comint-buffer-maximum-size 2048)
-  (setq comint-input-ring-size 10000
-        comint-input-ignoredups t
-        comint-history-isearch 'dwim
-        comint-input-autoexpand t
-        comint-insert-previous-argument-from-end t
-        comint-buffer-maximum-size 20000
-        comint-scroll-to-bottom-on-input t
-        comint-move-point-for-output nil
-        comint-scroll-show-maximum-output nil
-        comint-pager "cat"))
+(add-hook 'comint-output-filter-functions #'comint-osc-process-output)
+(setq! comint-prompt-read-only t
+       comint-input-ring-size 10000
+       comint-input-ignoredups t
+       comint-history-isearch 'dwim
+       comint-input-autoexpand t
+       comint-insert-previous-argument-from-end t
+       comint-buffer-maximum-size 20000
+       comint-scroll-to-bottom-on-input t
+       comint-move-point-for-output nil
+       comint-scroll-show-maximum-output nil
+       comint-pager "cat")
 
 ;;;; grep
 

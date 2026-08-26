@@ -250,11 +250,16 @@ Otherwise, add FUNC to `after-init-hook'."
       (funcall func)
     (add-hook 'after-init-hook func 50)))
 
-(defmacro after-init! (&rest body)
+(defmacro after-init! (label &rest body)
   "Execute BODY after Emacs has finished initialization.
 See `after-init'."
-  (declare (indent 0) (debug body))
-  `(run-after-init (lambda () (record-time! ,(gensym "after-init-") ,@body))))
+  (declare (indent 1) (debug (symbolp body)))
+  `(run-after-init (lambda ()
+                     (record-time!
+                         ,(if (symbolp label) label
+                            (gensym "after-init-"))
+                       ,@(unless (symbolp label) (list label))
+                       ,@body))))
 
 (defmacro with-no-compile! (&rest body)
   "Evaluate BODY without byte-compiling it.

@@ -30,7 +30,9 @@
 
 ;;;; nerd-icons
 
-(setq! marginalia-align-offset 4)
+(after-load! (:and nerd-icons marginalia)
+  (when (< marginalia-align-offset 4)
+    (setq marginalia-align-offset 4)))
 (setq! nerd-icons-font-family "Symbols Nerd Font Mono")
 
 (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
@@ -337,9 +339,8 @@ not used, but is required by the hook."
 ;;;; mode-line
 
 (setq! doom-modeline-gnus t
-       doom-modeline-irc t
-       doom-modeline-modal-icon doom-modeline-icon)
-(after-init!
+       doom-modeline-irc t)
+(after-init! doom-modeline
   (doom-modeline-mode))
 
 ;;; message-ring

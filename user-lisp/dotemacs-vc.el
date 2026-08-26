@@ -24,12 +24,12 @@
 
 (setq! vc-follow-symlinks t
        vc-use-incoming-outgoing-prefixes t
-       vc-auto-revert-mode t)
+       vc-find-revision-no-save t
+       vc-deduce-backend-nonvc-modes t ;; Deduce VC backend for all buffers
+       vc-allow-async-diff t)
 
 (after-load! vc
-  (setq vc-find-revision-no-save t
-        vc-deduce-backend-nonvc-modes t ;; Deduce VC backend for all buffers
-        vc-allow-async-diff t))
+  (vc-auto-revert-mode))
 
 (setq! vc-svn-diff-switches '("-x" "-u -p"))
 
@@ -106,12 +106,9 @@
 (declare-function transient-set-default-level "transient")
 
 (after-load! magit
-  (setq transient-default-level 5)
-  (require! magit-wip))
-
-(after-load! magit-wip
-  (setq magit-wip-mode-lighter "")
-  (magit-wip-mode))
+  (setq! transient-default-level 5)
+  (magit-wip-mode)
+  (setq magit-wip-mode-lighter ""))
 
 (setq! magit-format-file-function #'magit-format-file-nerd-icons)
 (setq! magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)

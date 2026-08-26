@@ -164,7 +164,7 @@
 
 ;;;; savehist
 
-(after-init!
+(after-init! savehist
   (setq! savehist-autosave-interval 30)
   (savehist-mode))
 
@@ -248,9 +248,8 @@
   (add-hook 'find-file-hook #'undo-fu-session--recover-safe)
   (add-hook 'write-file-functions #'undo-fu-session--save-safe))
 
-(after-load! undo-fu-session
-  (setq undo-fu-session-compression 'zst)
-  (undo-fu-session-global-mode))
+(setq! undo-fu-session-compression 'zst)
+(undo-fu-session-global-mode)
 
 ;;;; vundo
 

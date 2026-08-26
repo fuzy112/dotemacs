@@ -106,7 +106,7 @@ reverts the help buffer to reflect the change."
 
 ;;;; Man
 
-(setq! Man-notify-method 'aggressive)
+(setq! Man-notify-method 'pushy)
 
 
 (defvar url-http-response-status)

@@ -48,11 +48,8 @@
          (border-mode-line-active    fg-dim)
          (bg-mode-line-inactive      bg-dim)
          (border-mode-line-inactive  bg-active)))
-(after-load! modus-themes
-  (load-theme 'modus-operandi t t)
-  (load-theme 'modus-vivendi t t))
 
-(after-init!
+(after-init! init-load-theme
   (when (not custom-enabled-themes)
     (require 'modus-themes)
     (load-theme 'modus-operandi t)))
@@ -139,7 +136,7 @@ attributes."
                    (dotemacs-theme-refresh))))
     (add-hook 'server-after-make-frame-hook hook 5)))
 
-(after-init!
+(after-init! dotemacs-theme-refresh
   (dotemacs-theme-refresh))
 
 ;; Refresh theme when themes are enabled
@@ -201,7 +198,7 @@ already marked as safe and is not a built-in default Emacs theme."
 
 (add-hook 'toolkit-theme-set-functions #'dotemacs-theme-follow-toolkit-theme)
 (unless (daemonp)
-  (after-init!
+  (after-init! follow-toolkit-theme
     (dotemacs-theme-follow-toolkit-theme toolkit-theme)))
 
 (provide 'dotemacs-theme)
