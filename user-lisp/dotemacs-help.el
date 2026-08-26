@@ -19,17 +19,18 @@
 
 ;;;; eldoc
 
-(after-load! eldoc
-  (setopt eldoc-help-at-pt t))
+(setq eldoc-help-at-pt t)
 
 ;;;; help
 
 ;; Enable editing of variable values in help buffers
-(setopt help-enable-variable-value-editing t
-        help-enable-completion-autoload nil
-        help-window-select t
-        help-window-keep-selected t
-        view-lossage-auto-refresh t)
+(setq help-window-select t
+      help-window-keep-selected t
+      view-lossage-auto-refresh t)
+
+;; help-fns
+(setq! help-enable-variable-value-editing t
+       help-enable-completion-autoload nil)
 
 ;; Add shortdoc examples to function help if available
 (when (fboundp 'shortdoc-help-fns-examples-function)
@@ -105,8 +106,7 @@ reverts the help buffer to reflect the change."
 
 ;;;; Man
 
-(after-load! man
-  (setopt Man-notify-method 'aggressive))
+(setq! Man-notify-method 'aggressive)
 
 
 (defvar url-http-response-status)

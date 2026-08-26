@@ -22,10 +22,10 @@
 (after-load! auth-source
   (require! auth-source-pass)
   (when (custom--standard-value-p 'auth-sources auth-sources)
-    (setopt auth-sources '("~/.authinfo.gpg" password-store)))
-  (setopt auth-source-save-behavior t
-          auth-source-gpg-encrypt-to (list "0xBBE2757FC7BFC23B"))
-  (setopt plstore-encrypt-to auth-source-gpg-encrypt-to)
+    (setq auth-sources '("~/.authinfo.gpg" password-store)))
+  (setq auth-source-save-behavior t
+        auth-source-gpg-encrypt-to (list "0xBBE2757FC7BFC23B"))
+  (setq! plstore-encrypt-to auth-source-gpg-encrypt-to)
   (auth-source-forget-all-cached)
   (keymap-set read-passwd-map "C-c C-p" #'+insert-pass))
 
@@ -41,13 +41,11 @@
 
 ;;;; epg
 
-(after-load! epa
-  (setopt epa-keys-select-method 'minibuffer))
+(setq! epa-keys-select-method 'minibuffer)
 
 ;;;; plstore
 
-(after-load! plstore
-  (setopt plstore-select-keys nil))
+(setq! plstore-select-keys nil)
 
 
 (declare-function auth-source-pass-search "auth-source-pass")

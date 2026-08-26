@@ -35,18 +35,18 @@
 ;;;; rime
 
 (after-load! rime
-  (setopt rime-share-data-dir "/run/current-system/sw/share/rime-data/")
-  (setopt rime-disable-predicates
-          (seq-filter #'fboundp '(meow-normal-mode-p
-                                  ;; meow-keypad-mode-p
-                                  ;; meow-motion-mode-p
-                                  ;; meow-beacon-mode-p
-                                  rime-predicate-prog-in-code-p
-                                  rime-predicate-after-ascii-char-p)))
-  (setopt rime-inline-predicates
-          '(rime-predicate-space-after-cc-p)))
+  (setq rime-share-data-dir "/run/current-system/sw/share/rime-data/")
+  (setq rime-disable-predicates
+        (seq-filter #'fboundp '(meow-normal-mode-p
+                                ;; meow-keypad-mode-p
+                                ;; meow-motion-mode-p
+                                ;; meow-beacon-mode-p
+                                rime-predicate-prog-in-code-p
+                                rime-predicate-after-ascii-char-p)))
+  (setq rime-inline-predicates
+        '(rime-predicate-space-after-cc-p)))
 
-(setopt default-input-method "rime")
+(setq! default-input-method "rime")
 
 ;;;; kinsoku
 

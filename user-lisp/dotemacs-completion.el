@@ -33,27 +33,27 @@
                                orderless-literal
                                orderless-regexp)))
 
-(setopt completion-styles '(orderless basic))
+(setq completion-styles '(orderless basic))
 
-(setopt completion-category-defaults nil)
+(setq completion-category-defaults nil)
 
-(setopt completion-category-overrides
-        '(
-          (file        . ((styles . (partial-completion))))
+(setq completion-category-overrides
+      '(
+        (file        . ((styles . (partial-completion))))
 
-          (symbol-help . ((styles . (orderless+initialism))))
+        (symbol-help . ((styles . (orderless+initialism))))
 
-          (eglot       . ((styles . (orderless))))
-          (eglot-capf  . ((styles . (orderless))))
+        (eglot       . ((styles . (orderless))))
+        (eglot-capf  . ((styles . (orderless))))
 
-          (project-file . ((styles . (orderless+prefixes))
-                           (display-sort-function . identity)
-                           (cycle-sort-function . identity)))
+        (project-file . ((styles . (orderless+prefixes))
+                         (display-sort-function . identity)
+                         (cycle-sort-function . identity)))
 
-          (ffap-menu . ((display-sort-function . identity)
-                        (cycle-sort-function . identity)))
+        (ffap-menu . ((display-sort-function . identity)
+                      (cycle-sort-function . identity)))
 
-          (embark-keybinding . ((styles . (orderless+prefixes))))))
+        (embark-keybinding . ((styles . (orderless+prefixes))))))
 
 (setq completion-pcm-leading-wildcard t)
 
@@ -88,17 +88,17 @@
 
 ;;;; Default completion UI
 
-(setopt completions-format 'one-column
-        completions-detailed t
-        completions-group t
-        completions-sort 'historical
-        completions-max-height 15
-        minibuffer-visible-completions 'up-down
-        completion-eager-update t
-        completion-eager-display t
-        completion-auto-help 'always
-        completion-show-help nil
-        completion-show-inline-help nil)
+(setq completions-format 'one-column
+      completions-detailed t
+      completions-group t
+      completions-sort 'historical
+      completions-max-height 15
+      minibuffer-visible-completions 'up-down
+      completion-eager-update t
+      completion-eager-display t
+      completion-auto-help 'always
+      completion-show-help nil
+      completion-show-inline-help nil)
 
 (keymap-unset minibuffer-local-completion-map "SPC")
 
@@ -106,13 +106,13 @@
 
 ;; Allow recursive minibuffers, so commands invoked from within the minibuffer
 ;; (e.g., C-x C-f followed by M-:) can themselves use the minibuffer.
-(setopt enable-recursive-minibuffers t)
+(setq! enable-recursive-minibuffers t)
 (minibuffer-depth-indicate-mode)
-(setopt minibuffer-depth-indicator-function
-        (lambda (depth)
-          (propertize
-           (concat (make-string depth ?⮐) " ")
-           'face 'minibuffer-depth-indicator)))
+(setq! minibuffer-depth-indicator-function
+       (lambda (depth)
+         (propertize
+          (concat (make-string depth ?⮐) " ")
+          'face 'minibuffer-depth-indicator)))
 
 ;; Autoload Vertico's main advice function and apply it around the two core
 ;; completing-read entry points, ensuring Vertico is used everywhere Emacs
@@ -123,8 +123,8 @@
 
 (after-load! vertico
   (require 'orderless)
-  (setopt vertico-quick1 "htnsd"
-          vertico-quick2 "ueoai")
+  (setq vertico-quick1 "htnsd"
+        vertico-quick2 "ueoai")
   (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
   (vertico-mode)
   (vertico-multiform-mode)
@@ -212,15 +212,15 @@
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
 ;; Prevent typing before the prompt.
-(setopt minibuffer-prompt-properties '(read-only t face minibuffer-prompt cursor-intangible t))
+(setq! minibuffer-prompt-properties '(read-only t face minibuffer-prompt cursor-intangible t))
 
 
 ;;;; corfu
 
-(setopt completion-cycle-threshold nil
-        tab-always-indent 'complete
-        text-mode-ispell-word-completion nil
-        read-extended-command-predicate #'command-completion-default-include-p)
+(setq completion-cycle-threshold nil
+      tab-always-indent 'complete
+      text-mode-ispell-word-completion nil
+      read-extended-command-predicate #'command-completion-default-include-p)
 
 (define-advice completion-in-region (:before (&rest _) corfu)
   (require 'corfu))
@@ -233,19 +233,19 @@
   (advice-remove 'completion-in-region 'corfu)
   (fmakunbound 'completion-in-region@corfu)
   (require 'orderless)
-  (setopt corfu-cycle t
-          corfu-preselect 'prompt)
+  (setq corfu-cycle t
+        corfu-preselect 'prompt)
   ;; By default corfu is only enabled in minibuffer which has local
   ;; binding for `completion-at-point-functions'.  The following
   ;; lambda enables corfu in all minibuffers as long as no completion
   ;; UI is active, see [[info:corfu#Completing in the minibuffer][corfu#Completing in the minibuffer]].
-  (setopt global-corfu-minibuffer
-          (lambda ()
-            (not (or (bound-and-true-p mct--active)
-	             (bound-and-true-p vertico--input)
-	             (eq (current-local-map) read-passwd-map)))))
-  (setopt corfu-quick1 "htnsd"
-          corfu-quick2 "ueoai")
+  (setq global-corfu-minibuffer
+        (lambda ()
+          (not (or (bound-and-true-p mct--active)
+	           (bound-and-true-p vertico--input)
+	           (eq (current-local-map) read-passwd-map)))))
+  (setq corfu-quick1 "htnsd"
+        corfu-quick2 "ueoai")
   (global-corfu-mode)
   (corfu-history-mode)
   (corfu-echo-mode)
@@ -277,10 +277,10 @@
 (defun +corfu-auto-suspend ()
   (when (boundp 'corfu-auto)
     (setq-local +corfu-auto-saved corfu-auto)
-    (setopt-local corfu-auto nil)))
+    (setq-local corfu-auto nil)))
 (defun +corfu-auto-restore ()
   (if (boundp 'corfu-auto)
-      (setopt-local corfu-auto +corfu-auto-saved)))
+      (setq-local corfu-auto +corfu-auto-saved)))
 
 (add-hook 'input-method-activate-hook '+corfu-auto-suspend)
 (add-hook 'input-method-deactivate-hook '+corfu-auto-restore)
@@ -305,7 +305,7 @@
 ;;;; tempel
 
 (defun tempel-setup-capf ()
-  (setopt-local completion-at-point-functions
+  (setq-local completion-at-point-functions
                 (cons #'tempel-expand
                       completion-at-point-functions)))
 (add-hook 'conf-mode-hook 'tempel-setup-capf)
@@ -320,7 +320,7 @@
       (message "Template %s not found" (cadr elt))
       nil)))
 (after-load! tempel
-  (setopt tempel-path (concat user-emacs-directory "/templates/*.eld"))
+  (setq tempel-path (concat user-emacs-directory "/templates/*.eld"))
   (add-to-list 'tempel-user-elements #'tempel-include))
 
 (add-hook 'abbrev-mode-hook #'tempel-abbrev-mode)
@@ -441,13 +441,13 @@ If there is no active minibuffer, signal an error."
                            (bookmark-prop-get bookmark 'page)))))))))
 
 (after-load! embark
-  (setopt embark-help-key "C-h")
-  (setopt embark-cycle-key "C-.")
-  (setopt embark-prompter #'embark-keymap-prompter)
-  (setopt embark-mixed-indicator-delay 2)
-  (setopt embark-indicators '(embark-mixed-indicator
-                              embark-highlight-indicator
-                              embark-isearch-highlight-indicator))
+  (setq embark-help-key "C-h")
+  (setq embark-cycle-key "C-.")
+  (setq embark-prompter #'embark-keymap-prompter)
+  (setq embark-mixed-indicator-delay 2)
+  (setq embark-indicators '(embark-mixed-indicator
+                            embark-highlight-indicator
+                            embark-isearch-highlight-indicator))
   (add-to-list 'embark-target-finders 'embark-kmacro-target)
 
   (defvar-keymap embark-kmacro-map
@@ -487,7 +487,7 @@ If there is no active minibuffer, signal an error."
     eat-mode '(eat--line-input-ring eat--line-input-ring-index beginning-of-line))
   (add-hook 'consult-after-jump-hook #'pulse-momentary-highlight-one-line))
 
-(setopt register-preview-delay 0.5)
+(setq! register-preview-delay 0.5)
 (setq! register-preview-function #'consult-register-format)
 
 (advice-add #'register-preview :override #'consult-register-window)
@@ -543,13 +543,12 @@ If there is no active minibuffer, signal an error."
      :enabled  ,(lambda () (featurep 'xwidget))
      :items
      ,(lambda ()
-        (let ((local (consult--string-hash (consult--buffer-query))))
-          (consult--buffer-query
-           :sort 'visibility
-           :predicate (apply-partially #'buffer-match-p
-                                       '(derived-mode . xwidget-webkit-mode))
-           :as #'consult--buffer-pair
-           :exclude nil))))
+        (consult--buffer-query
+         :sort 'visibility
+         :predicate (apply-partially #'buffer-match-p
+                                     '(derived-mode . xwidget-webkit-mode))
+         :as #'consult--buffer-pair
+         :exclude nil)))
   "Source for `consult-buffer' for Xwidget webkit buffers.")
 
 (defvar consult-source-view
@@ -602,9 +601,9 @@ If there is no active minibuffer, signal an error."
 The source is hidden by default and can be summoned via its narrow key.")
 
 (after-load! consult
-  (setopt consult-preview-key "M-.")
-  (setopt consult-narrow-key "<")
-  (setopt consult-widen-key ">")
+  (setq consult-preview-key "M-.")
+  (setq consult-narrow-key "<")
+  (setq consult-widen-key ">")
   (setq! consult--regexp-compiler #'+consult--orderless-regexp-compiler)
   (add-to-list 'consult-buffer-sources 'consult-source-file-cache t)
   (add-to-list 'consult-buffer-sources 'consult-source-xwidget-webkit-buffer t)
@@ -694,11 +693,11 @@ The source is hidden by default and can be summoned via its narrow key.")
 
 (after-load! vertico
   ;; disable prescient's filtering since we use orderless
-  (setopt vertico-prescient-enable-filtering nil)
+  (setq vertico-prescient-enable-filtering nil)
   (vertico-prescient-mode))
 
 (after-load! corfu
-  (setopt corfu-prescient-enable-filtering nil)
+  (setq corfu-prescient-enable-filtering nil)
   (corfu-prescient-mode))
 
 (setq! completion-preview-sort-function #'prescient-completion-sort)

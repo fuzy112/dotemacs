@@ -20,11 +20,11 @@
 
 ;;;; kill commands
 
-(setopt kill-do-not-save-duplicates t
-        kill-append-merge-undo      t
-        yank-pop-change-selection   t
-        kill-region-dwim            nil
-        kill-whole-line             t)
+(setq kill-do-not-save-duplicates t
+      kill-append-merge-undo      t
+      yank-pop-change-selection   t
+      kill-region-dwim            nil
+      kill-whole-line             t)
 
 ;;;; indent-aux
 
@@ -43,22 +43,21 @@
 ;;;; ws-butler
 
 (require! ws-butler)
-(setopt ws-butler-keep-whitespace-before-point nil
-        ws-butler-convert-leading-tabs-or-spaces nil)
+(setq ws-butler-keep-whitespace-before-point nil
+      ws-butler-convert-leading-tabs-or-spaces nil)
 (add-to-list 'ws-butler-global-exempt-modes 'diff-mode)
 (ws-butler-global-mode)
 
 ;;;; whitespace
 
 (defun turn-on-whitespace-mode-for-prog-mode ()
-  (setopt-local whitespace-style '( face trailing empty indentation
-                                    space-before-tab space-after-tab
-                                    missing-newline-at-eof))
+  (setq-local whitespace-style '( face trailing empty indentation
+                                  space-before-tab space-after-tab
+                                  missing-newline-at-eof))
   (whitespace-mode))
 
 (dolist (hook '(prog-mode-hook conf-mode-hook yaml-mode-hook))
   (add-hook hook #'turn-on-whitespace-mode-for-prog-mode))
-
 
 ;;;; indent-tabs-mode
 
@@ -91,17 +90,17 @@
 ;; (add-hook 'buffer-list-update-hook #'recentf-track-opened-file)
 (setq! recentf-mode t)
 (after-load! recentf
-  (setopt recentf-max-saved-items 8192)
-  (setopt recentf-autosave-interval 30)
-  (setopt recentf-auto-cleanup 600)
-  (setopt recentf-show-messages nil)
+  (setq recentf-max-saved-items 8192)
+  (setq recentf-autosave-interval 30)
+  (setq recentf-auto-cleanup 600)
+  (setq recentf-show-messages nil)
   (shut-up! #'recentf-cleanup)
   (recentf-mode))
 
 ;;;; backup
 
-(setopt backup-by-copying-when-linked t
-        vc-make-backup-files make-backup-files)
+(setq backup-by-copying-when-linked t
+      vc-make-backup-files make-backup-files)
 ;; A nil DIRECTORY in `backup-directory-alist' means the backup is made
 ;; in the original file's directory (undocumented, but explicit in
 ;; `make-backup-file-name-1').  /run is tmpfs, so keep backups local.
@@ -152,10 +151,10 @@
 (add-hook 'find-file-hook #'save-place-find-file-hook)
 (add-hook 'dired-initial-position-hook #'save-place-dired-hook)
 (after-load! saveplace
-  (setopt save-place-limit 65536)
-  (setopt save-place-autosave-interval 30)
+  (setq save-place-limit 65536)
+  (setq save-place-autosave-interval 30)
   ;; Add /run/user/*/gvfs/
-  (setopt save-place-skip-check-regexp "\\`/\\(?:cdrom\\|floppy\\|mnt\\|run/user/[[:digit:]]+/gvfs/\\|\\(?:[^@/:]*@\\)?[^@/:]*[^@/:.]:\\)")
+  (setq save-place-skip-check-regexp "\\`/\\(?:cdrom\\|floppy\\|mnt\\|run/user/[[:digit:]]+/gvfs/\\|\\(?:[^@/:]*@\\)?[^@/:]*[^@/:.]:\\)")
   (save-place-mode))
 
 (define-advice save-place-find-file-hook (:after (&rest _) recenter)
@@ -166,7 +165,7 @@
 ;;;; savehist
 
 (after-init!
-  (setopt savehist-autosave-interval 30)
+  (setq! savehist-autosave-interval 30)
   (savehist-mode))
 
 ;;;; repeat
@@ -205,7 +204,7 @@
 (defun +visual-fill-column/toggle-visual-fill-and-center ()
   (interactive)
   (visual-fill-column-mode 'toggle)
-  (setopt visual-fill-column-center-text (bound-and-true-p visual-fill-column-mode)))
+  (setq! visual-fill-column-center-text (bound-and-true-p visual-fill-column-mode)))
 
 ;;;; hl-todo
 
@@ -230,8 +229,7 @@
 
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'conf-mode-hook #'display-line-numbers-mode)
-(after-load! display-line-numbers
-  (setopt display-line-numbers-type 'relative))
+(setq! display-line-numbers-type 'relative)
 
 ;;;; elec-pair
 
@@ -239,8 +237,7 @@
 
 ;;;; Re-builder
 
-(after-load! re-builder
-  (setopt reb-re-syntax 'string))
+(setq! reb-re-syntax 'string)
 
 ;;;; undo-fu-session
 
@@ -252,13 +249,13 @@
   (add-hook 'write-file-functions #'undo-fu-session--save-safe))
 
 (after-load! undo-fu-session
-  (setopt undo-fu-session-compression 'zst)
+  (setq undo-fu-session-compression 'zst)
   (undo-fu-session-global-mode))
 
 ;;;; vundo
 
 (after-load! vundo
-  (setopt vundo-glyph-alist vundo-unicode-symbols))
+  (setq vundo-glyph-alist vundo-unicode-symbols))
 
 (autoload 'vundo--popup-advice "vundo-popup")
 (setq! vundo-popup-mode t)

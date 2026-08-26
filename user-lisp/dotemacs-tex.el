@@ -20,10 +20,9 @@
 
 ;;;; TeX
 
-(after-load! auctex
-  (setopt TeX-auto-save t)
-  (setopt TeX-parse-self t)
-  (setopt TeX-master nil))
+(setq! TeX-auto-save t)
+(setq! TeX-parse-self t)
+(setq! TeX-master nil)
 
 (add-hook 'LaTeX-mode-hook #'turn-on-reftex) ; AUCTeX
 (add-hook 'latex-mode-hook #'turn-on-reftex) ; Emacs latex mode

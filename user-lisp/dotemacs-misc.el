@@ -29,8 +29,8 @@
 ;;;; eat
 
 (after-load! eat
-  (setopt eat-enable-auto-line-mode t)
-  (setopt eat-kill-buffer-on-exit t)
+  (setq eat-enable-auto-line-mode t)
+  (setq eat-kill-buffer-on-exit t)
   (setopt eat-semi-char-non-bound-keys
           (seq-union '([?\e ?o])
                      eat-semi-char-non-bound-keys))
@@ -43,7 +43,7 @@
   )
 
 (unless (memq system-type '(ms-dos windows-nt))
-  (setopt eshell-visual-commands nil)
+  (setq! eshell-visual-commands nil)
   (add-hook 'eshell-load-hook #'eat-eshell-mode))
 
 (defvar eat-terminal)
@@ -96,9 +96,8 @@
 
 ;;;; xterm
 
-(after-load! term/xterm
-  (setopt xterm-set-window-title t
-          xterm-update-cursor t))
+(setq! xterm-set-window-title t
+       xterm-update-cursor t)
 
 (add-hook 'tty-setup-hook #'xterm-mouse-mode)
 (after-load! xt-mouse
@@ -145,12 +144,12 @@
 
 ;;;; bookmark
 
-(after-load! bookmark
-  (setopt bookmark-save-flag 1
-          bookmark-watch-bookmark-file 'silent
-          bookmark-version-control t
-          bookmark-fringe-mark nil)
+(setq! bookmark-save-flag 1
+       bookmark-watch-bookmark-file 'silent
+       bookmark-version-control t
+       bookmark-fringe-mark nil)
 
+(after-load! bookmark
   (require 'bookmark-extras))
 
 ;;;; proced
@@ -165,15 +164,13 @@
        " ")
     args))
 
-(after-load! proced
-  (setopt proced-auto-update-flag 'visible)
-  (setopt proced-auto-update-interval 1))
+(setq! proced-auto-update-flag 'visible)
+(setq! proced-auto-update-interval 1)
 
 ;;;; SHR
 
-(after-load! shr
-  (setopt shr-use-colors nil)
-  (setopt shr-use-fonts nil))
+(setq! shr-use-colors nil)
+(setq! shr-use-fonts nil)
 
 ;;;; EWW
 
@@ -257,28 +254,28 @@
 
 ;;;; dired
 
-(after-load! dired
-  (setopt dired-listing-switches "-lahFbs"
-          dired-hide-details-hide-absolute-location t
-          dired-do-revert-buffer t
-          dired-dwim-target t
-          dired-auto-revert-buffer t
-          dired-mouse-drag-files t
-          dired-recursive-copies 'always
-          dired-recursive-deletes 'always
-          shell-command-prompt-show-cwd t))
+(setq! dired-listing-switches "-lahFbs"
+       dired-hide-details-hide-absolute-location t
+       dired-do-revert-buffer t
+       dired-dwim-target t
+       dired-auto-revert-buffer t
+       dired-mouse-drag-files t
+       dired-recursive-copies 'always
+       dired-recursive-deletes 'always
+       shell-command-prompt-show-cwd t)
 
 ;;;; zone
 
-(after-load! zone
-  (setopt zone-all-frames t
-          zone-all-windows-in-frame t))
+(setq! zone-all-frames t
+       zone-all-windows-in-frame t)
 
 ;;;; send-to
 
 (define-completion-category 'send-to-tailscale-target ()
   "Completion category for `send-to/tailscale-send-items' targets."
   :style '(substring))
+
+(declare-function send-to--convert-item-to-filename "send-to")
 
 (defun send-to/tailscale-supported-p ()
   (executable-find "tailscale"))

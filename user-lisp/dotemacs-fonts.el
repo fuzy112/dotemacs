@@ -138,8 +138,8 @@
 
 (add-hook 'server-after-make-frame-hook #'+maybe-init-fontset)
 
-(setopt xft-ignore-color-fonts nil
-        face-ignored-fonts nil)
+(setq! xft-ignore-color-fonts nil
+       face-ignored-fonts nil)
 
 ;;; _
 

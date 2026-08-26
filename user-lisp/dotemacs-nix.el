@@ -25,11 +25,11 @@
 (add-to-list 'major-mode-remap-alist '(nix-mode . nix-ts-mode))
 
 (defun nix-repl-setup ()
-  (setopt-local comint-indirect-setup-function #'nix-mode)
+  (setq-local comint-indirect-setup-function #'nix-mode)
   (comint-fontify-input-mode)
 
-  (setopt-local indent-line-function #'comint-indent-input-line-default)
-  (setopt-local indent-region-function #'comint-indent-input-region-default))
+  (setq-local indent-line-function #'comint-indent-input-line-default)
+  (setq-local indent-region-function #'comint-indent-input-region-default))
 
 (add-hook 'nix-repl-mode-hook #'nix-repl-setup)
 

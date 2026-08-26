@@ -45,13 +45,13 @@
 (after-load! sly
   (keymap-set sly-prefix-map "M-h" #'sly-documentation-lookup))
 
-(setopt delete-pair-push-mark t)
+(setq! delete-pair-push-mark t)
 
 ;;;; elisp-mode
 
 (add-hook 'emacs-lisp-mode-hook #'cursor-sensor-mode)
 
-(setopt elisp-fontify-semantically t)
+(setq! elisp-fontify-semantically t)
 (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
 
 (when (boundp 'trusted-content)
@@ -68,8 +68,7 @@
 
 (keymap-set emacs-lisp-mode-map "C-c C-f" #'async-byte-compile-this-file)
 
-(after-load! find-func
-  (setopt find-library-include-other-files nil))
+(setq! find-library-include-other-files nil)
 
 ;;;; libraries
 (after-load! (:or dash elisp-mode)

@@ -21,18 +21,17 @@
 
 ;; mouse
 
-(setopt context-menu-mode t
-        mouse-yank-at-point t
-        mouse-drag-and-drop-region t
-        mouse-drag-and-drop-region-cross-program t
-        mouse-drag-mode-line-buffer t)
+(setq mouse-yank-at-point t
+      mouse-drag-and-drop-region t
+      mouse-drag-and-drop-region-cross-program t
+      mouse-drag-mode-line-buffer t)
 
+(setopt context-menu-mode t)
 
 ;;;; nerd-icons
 
-(after-load! nerd-icons
-  (setopt marginalia-align-offset 4)
-  (setopt nerd-icons-font-family "Symbols Nerd Font Mono"))
+(setq! marginalia-align-offset 4)
+(setq! nerd-icons-font-family "Symbols Nerd Font Mono")
 
 (add-hook 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
 (add-hook 'marginalia-mode-hook    #'nerd-icons-completion-mode)
@@ -53,16 +52,15 @@
               (seq-union '((:eval (nerd-icons-icon-for-buffer)) " ")
                          mode-line-buffer-identification))
 
-(after-load! nerd-icons-ibuffer
-  (setopt nerd-icons-ibuffer-formats
-	  `((mark modified read-only locked
-		  " " (icon 2 2)
-		  (name 18 18 :left :elide)
-		  #(" " 0 1 (display (space :align-to 26)))
-                  (size-h 9 -1 :right)
-		  " " (mode+ 16 16 :left :elide)
-		  " " filename-and-process+)
-	    (mark " " (name 16 -1) " " filename))))
+(setq! nerd-icons-ibuffer-formats
+       `((mark modified read-only locked
+	       " " (icon 2 2)
+	       (name 18 18 :left :elide)
+	       #(" " 0 1 (display (space :align-to 26)))
+               (size-h 9 -1 :right)
+	       " " (mode+ 16 16 :left :elide)
+	       " " filename-and-process+)
+	 (mark " " (name 16 -1) " " filename)))
 
 ;;;; pixel-scroll
 
@@ -81,9 +79,9 @@
 
 ;;;; window
 
-(setopt kill-buffer-quit-windows t
-        quit-restore-window-no-switch t
-        frame-auto-hide-function #'delete-frame)
+(setq kill-buffer-quit-windows t
+      quit-restore-window-no-switch t
+      frame-auto-hide-function #'delete-frame)
 
 (when (and (boundp 'quit-window-kill-buffer) (listp quit-window-kill-buffer))
   (setq quit-window-kill-buffer
@@ -260,7 +258,7 @@ Otherwise disable it."
 (defun +lin--setup-face-for-theme (&optional theme)
   (when-let* ((theme (or theme (car custom-enabled-themes) 'default))
               (match (assq theme +lin--theme-face-alist)))
-    (setopt lin-face (cdr match))))
+    (setq! lin-face (cdr match))))
 
 (after-load! lin
   (run-after-init #'+lin--setup-face-for-theme)
@@ -338,10 +336,9 @@ not used, but is required by the hook."
 
 ;;;; mode-line
 
-(after-load! doom-modeline
-  (setopt doom-modeline-gnus t
-          doom-modeline-irc t
-          doom-modeline-modal-icon doom-modeline-icon))
+(setq! doom-modeline-gnus t
+       doom-modeline-irc t
+       doom-modeline-modal-icon doom-modeline-icon)
 (after-init!
   (doom-modeline-mode))
 
@@ -352,13 +349,12 @@ not used, but is required by the hook."
 
 ;;;; ibuffer
 
-(after-load! ibuffer
-  (setopt ibuffer-expert t
-          ibuffer-show-empty-filter-groups t
-          ibuffer-default-sorting-mode 'filename/process
-          ibuffer-use-header-line t
-          ibuffer-default-shrink-to-minimum-size nil
-          ibuffer-human-readable-size t))
+(setq! ibuffer-expert t
+       ibuffer-show-empty-filter-groups t
+       ibuffer-default-sorting-mode 'filename/process
+       ibuffer-use-header-line t
+       ibuffer-default-shrink-to-minimum-size nil
+       ibuffer-human-readable-size t)
 
 ;;;; Goggles
 

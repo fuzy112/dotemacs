@@ -43,7 +43,7 @@
 
 ;;; Models
 
-(setopt gptel-default-mode 'org-mode)
+(setq gptel-default-mode 'org-mode)
 
 (defun +gptel-mode-h ()
   (when (derived-mode-p 'org-mode)

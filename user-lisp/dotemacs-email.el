@@ -20,13 +20,11 @@
 
 ;;;; email and gnus
 
-(after-load! gnus
-  (setopt gnus-verbose 5
-          gnus-verbose-backends 5))
-(setopt mail-user-agent 'gnus-user-agent)
+(setq! gnus-verbose 5
+       gnus-verbose-backends 5)
+(setq mail-user-agent 'gnus-user-agent)
 
-(after-load! message
-  (setopt message-mail-alias-type 'ecomplete))
+(setq! message-mail-alias-type 'ecomplete)
 (declare-function message-ecomplete-capf "message.el")
 (defun +message-ecompletion-capf-setup ()
   (add-hook 'completion-at-point-functions #'message-ecomplete-capf nil t))

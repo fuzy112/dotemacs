@@ -29,8 +29,8 @@
   (font-lock-flush))
 
 (after-load! org
-  (setopt org-modern-table nil)
-  (setopt org-insert-mode-line-in-empty-file t)
+  (setq! org-modern-table nil)
+  (setq! org-insert-mode-line-in-empty-file t)
   (add-hook 'org-mode-hook #'org-modern-mode)
   ;; (setopt valign-fancy-bar t)
   (add-hook 'org-mode-hook #'valign-mode)
@@ -49,11 +49,11 @@
   ;; - |: Separator marks transition from open to closed states
   ;; - DONE: Completed task, accessible via 'd' key
   ;; - CANCEL: Abandoned task, accessible via 'c' key; automatically records note when entering this state
-  (setopt org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d)" "CANCEL(c@)")))
+  (setq org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d)" "CANCEL(c@)")))
 
   ;; Set persistent agenda file registry: store list of agenda-enabled files in a dedicated
   ;; plaintext file in the org root directory, for easy manual editing and persistence across sessions
-  (setopt org-agenda-files (expand-file-name ".agenda-files.txt" org-directory)))
+  (setq org-agenda-files (expand-file-name ".agenda-files.txt" org-directory)))
 
 (declare-function org-element-parse-buffer "org-element.el")
 (declare-function org-element-map "org-element.el")

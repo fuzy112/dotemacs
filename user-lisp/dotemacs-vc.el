@@ -21,21 +21,19 @@
 ;;;; vc
 
 ;; vc-hooks
-(setopt vc-follow-symlinks t
-        vc-use-incoming-outgoing-prefixes t
-        vc-auto-revert-mode t)
+
+(setq! vc-follow-symlinks t
+       vc-use-incoming-outgoing-prefixes t
+       vc-auto-revert-mode t)
 
 (after-load! vc
-  (setopt
-   vc-find-revision-no-save t
-   vc-deduce-backend-nonvc-modes t ;; Deduce VC backend for all buffers
-   vc-allow-async-diff t))
+  (setq vc-find-revision-no-save t
+        vc-deduce-backend-nonvc-modes t ;; Deduce VC backend for all buffers
+        vc-allow-async-diff t))
 
-(after-load! vc-svn
-  (setopt vc-svn-diff-switches '("-x" "-u -p")))
+(setq! vc-svn-diff-switches '("-x" "-u -p"))
 
-(after-load! vc-dir
-  (setopt vc-dir-auto-hide-up-to-date t))
+(setq! vc-dir-auto-hide-up-to-date t)
 
 (declare-function project-root "project.el")
 (declare-function vc-git-root "vc-git.el")
@@ -108,18 +106,15 @@
 (declare-function transient-set-default-level "transient")
 
 (after-load! magit
-  (setopt transient-default-level 5)
+  (setq transient-default-level 5)
   (require! magit-wip))
 
 (after-load! magit-wip
-  (setopt magit-wip-mode-lighter "")
+  (setq magit-wip-mode-lighter "")
   (magit-wip-mode))
 
-(after-load! magit-diff
-  (setopt magit-format-file-function #'magit-format-file-nerd-icons))
-
-(after-load! magit-mode
-  (setopt magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+(setq! magit-format-file-function #'magit-format-file-nerd-icons)
+(setq! magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
 
 (after-load! magit-status
   (cl-pushnew "--show-signature" (get 'magit-status-mode 'magit-log-default-arguments) :test #'string=))
@@ -143,7 +138,7 @@
       (save-buffer))))
 
 (after-load! git-commit
-  (setopt git-commit-major-mode #'log-edit-mode)
+  (setq git-commit-major-mode #'log-edit-mode)
   ;; TODO: figure out why setopt says "Value does not match
   ;; git-commit-style-convention-checks’s type ‘(list :convert-widget
   ;; custom-hook-convert-widget)’: (non-empty-second-line
@@ -208,17 +203,17 @@ new record is started."
 
 (after-load! diff-hl
   (diff-hl-flydiff-mode)
-  (setopt diff-hl-margin-symbols-alist '((insert  . "增")
-                                         (delete  . "刪")
-                                         (change  . "改")
-                                         (unknown . "未")
-                                         (ignored . "略")))
+  (setq diff-hl-margin-symbols-alist '((insert  . "增")
+                                       (delete  . "刪")
+                                       (change  . "改")
+                                       (unknown . "未")
+                                       (ignored . "略")))
 
   (setopt diff-hl-update-async
           (cond ((version<= "31" emacs-version) t)
                 ((fboundp 'make-thread) 'thread)
                 (t nil)))
-  (setopt diff-hl-disable-on-remote t)
+  (setq diff-hl-disable-on-remote t)
   (add-hook 'diff-hl-margin-mode-hook #'diff-hl-margin-ensure-visible))
 
 ;; `diff-hl-changes-from-buffer' fails on compressed files.
@@ -245,10 +240,9 @@ Then refresh all windows displaying the current buffer."
 
 ;;;; consult-git-log-grep
 
-(after-load! consult-git-log-grep
-  (setopt consult-git-log-grep-preview t
-          consult-git-log-grep-open-function #'magit-show-commit
-          consult-git-log-grep-embark-exporter #'consult-git-log-grep--export-magit-log))
+(setq! consult-git-log-grep-preview t
+       consult-git-log-grep-open-function #'magit-show-commit
+       consult-git-log-grep-embark-exporter 'consult-git-log-grep--export-magit-log)
 
 ;;;; quilt
 

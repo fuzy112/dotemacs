@@ -20,9 +20,8 @@
 
 ;;;; tramp
 
-(after-load! tramp
-  (setopt tramp-use-connection-share nil)
-  (setopt tramp-verbose 2))
+(setq! tramp-use-connection-share nil
+       tramp-verbose 2)
 
 (defvar tramp-persistency-file-name)
 (define-advice tramp-dump-connection-properties (:after () chmod)

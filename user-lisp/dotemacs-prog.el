@@ -45,14 +45,14 @@ See `xref-show-xrefs' for FETCHER and ALIST."
      (consult-xref fetcher alist))))
 
 (after-load! xref
-  (setopt xref-search-program
-          (cond ((executable-find "rg") 'ripgrep)
-                ((executable-find "ugrep") 'ugrep)
-                (t 'grep))
-          xref-show-definitions-function #'+xref--show-definition
-          xref-auto-jump-to-first-definition t)
-  (setopt xref-after-jump-hook
-          (cl-nsubstitute #'reposition-window #'recenter xref-after-jump-hook))
+  (setq xref-search-program
+        (cond ((executable-find "rg") 'ripgrep)
+              ((executable-find "ugrep") 'ugrep)
+              (t 'grep))
+        xref-show-definitions-function #'+xref--show-definition
+        xref-auto-jump-to-first-definition t)
+  (setq xref-after-jump-hook
+        (cl-nsubstitute #'reposition-window #'recenter xref-after-jump-hook))
 
   (global-xref-mouse-mode)
   (define-keymap :keymap xref-mouse-mode-map
@@ -68,9 +68,8 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 
 ;;;; cc-mode
 
-(after-load! cc-vars
-  (setopt c-tab-always-indent nil
-          c-insert-tab-function #'completion-at-point))
+(setq! c-tab-always-indent nil
+       c-insert-tab-function #'completion-at-point)
 (defun +cc-mode--hook ()
   (add-hook 'flymake-diagnostic-functions #'flymake-clang-tidy nil t))
 (add-hook 'c-mode-common-hook '+cc-mode--hook)
@@ -134,7 +133,7 @@ confirmed."
 
 (define-advice js-jsx-enable (:after () comments)
   "Enable JSX comments."
-  (setopt-local comment-region-function #'js-jsx--comment-region))
+  (setq-local comment-region-function #'js-jsx--comment-region))
 
 (define-advice js-jsx-enable (:after () sgml)
   "Enable sgml commands in JSX buffers."
@@ -211,14 +210,13 @@ confirmed."
     (project--clear-cache)))
 
 (after-load! project
-  (setopt project-switch-commands 'project-prefix-or-any-command)
+  (setq project-switch-commands 'project-prefix-or-any-command)
   (setq-default project-vc-external-roots-function #'+project--external-roots)
-  (setopt project-compilation-buffer-name-function #'project-prefixed-buffer-name)
-
-  (setopt project-vc-ignores (seq-union project-vc-ignores '(".pc")))
-  (setopt project-vc-extra-root-markers
-          (seq-union project-vc-extra-root-markers
-                     '(".emacs-project" "configure.ac" "Cargo.toml" "package.json")))
+  (setq project-compilation-buffer-name-function #'project-prefixed-buffer-name)
+  (setq project-vc-ignores (seq-union project-vc-ignores '(".pc")))
+  (setq project-vc-extra-root-markers
+        (seq-union project-vc-extra-root-markers
+                   '(".emacs-project" "configure.ac" "Cargo.toml" "package.json")))
 
   (project-compile-history-mode))
 
@@ -283,9 +281,9 @@ confirmed."
 ;;;; compile
 
 (after-load! compile
-  (setopt compilation-always-kill t
-          compilation-ask-about-save t
-          compilation-scroll-output 'first-error)
+  (setq compilation-always-kill t
+        compilation-ask-about-save t
+        compilation-scroll-output 'first-error)
   (add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
   (setopt compilation-error-regexp-alist
           '(bash
@@ -311,22 +309,22 @@ confirmed."
 
 (after-load! comint
   (add-hook 'comint-output-filter-functions #'comint-osc-process-output)
-  (setopt comint-prompt-read-only t
-          comint-buffer-maximum-size 2048)
-  (setopt comint-input-ring-size 10000
-          comint-input-ignoredups t
-          comint-history-isearch 'dwim
-          comint-input-autoexpand t
-          comint-insert-previous-argument-from-end t
-          comint-buffer-maximum-size 20000
-          comint-scroll-to-bottom-on-input t
-          comint-move-point-for-output nil
-          comint-scroll-show-maximum-output nil
-          comint-pager "cat"))
+  (setq comint-prompt-read-only t
+        comint-buffer-maximum-size 2048)
+  (setq comint-input-ring-size 10000
+        comint-input-ignoredups t
+        comint-history-isearch 'dwim
+        comint-input-autoexpand t
+        comint-insert-previous-argument-from-end t
+        comint-buffer-maximum-size 20000
+        comint-scroll-to-bottom-on-input t
+        comint-move-point-for-output nil
+        comint-scroll-show-maximum-output nil
+        comint-pager "cat"))
 
 ;;;; grep
-(after-load! grep
-  (setopt grep-use-headings t))
+
+(setq! grep-use-headings t)
 
 (defun ugrep (command-args)
   "Run ugrep with COMMAND-ARGS.
@@ -394,8 +392,8 @@ Intended for use in `ediff-before-setup-hook'."
 (after-load! ediff-wind
   (ediff-enable-chinese-help)
   (ediff-restore-window-config-mode)
-  (setopt ediff-window-setup-function #'ediff-setup-windows-plain)
-  (setopt ediff-split-window-function #'split-window-sensibly))
+  (setq ediff-window-setup-function #'ediff-setup-windows-plain)
+  (setq ediff-split-window-function #'split-window-sensibly))
 
 (provide 'dotemacs-prog)
 ;;; dotemacs-prog.el ends here

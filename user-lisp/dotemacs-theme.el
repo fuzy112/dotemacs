@@ -24,7 +24,7 @@
 
 ;; Any Elisp file can run arbitrary code, so there is no reason to
 ;; handle themes differently.
-(setopt custom-safe-themes t)
+(setq custom-safe-themes t)
 
 (defun +inhibit-implied-resize (&rest args)
   "Prevent implied resize when switching themes."
@@ -36,19 +36,19 @@
 
 ;;;; modus-theme
 
+(setq! modus-themes-mixed-fonts        t
+       modus-themes-bold-constructs    t
+       modus-themes-slanted-constructs t
+       modus-themes-variable-pitch-ui  nil
+       modus-themes-to-toggle          '(modus-vivendi modus-operandi))
+(setq! modus-themes-common-palette-overrides
+       '((fg-region unspecified)))
+(setq! modus-vivendi-palette-overrides
+       '((bg-mode-line-active        bg-inactive)
+         (border-mode-line-active    fg-dim)
+         (bg-mode-line-inactive      bg-dim)
+         (border-mode-line-inactive  bg-active)))
 (after-load! modus-themes
-  (setopt modus-themes-mixed-fonts        t
-          modus-themes-bold-constructs    t
-          modus-themes-slanted-constructs t
-          modus-themes-variable-pitch-ui  nil
-          modus-themes-to-toggle          '(modus-vivendi modus-operandi))
-  (setopt modus-themes-common-palette-overrides
-          '((fg-region unspecified)))
-  (setopt modus-vivendi-palette-overrides
-          '((bg-mode-line-active        bg-inactive)
-            (border-mode-line-active    fg-dim)
-            (bg-mode-line-inactive      bg-dim)
-            (border-mode-line-inactive  bg-active)))
   (load-theme 'modus-operandi t t)
   (load-theme 'modus-vivendi t t))
 
