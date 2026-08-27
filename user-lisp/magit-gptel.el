@@ -198,9 +198,6 @@ non-interactively with `magit-run-git-with-editor'."
 					  (gptel-abort (current-buffer)))
 					(pcase (gptel-fsm-state fsm)
 					  ('DONE
-					   (while-let ((match (text-property-search-forward 'gptel 'ignore t)))
-					     (delete-region (prop-match-beginning match)
-							    (prop-match-end match)))
 					   t)
 					  ('ERRS
 					   (message "gptel request failed")
