@@ -160,15 +160,25 @@ non-interactively with `magit-run-git-with-editor'."
 					      (goto-char marker)
 					      (insert response)))
 					   (`(reasoning . t)
-					    (let ((reasoning-text (buffer-substring-no-properties start-marker marker)))
-					      (delete-region start-marker marker)
-					      (goto-char marker)
-					      (insert (propertize " " 'display (propertize reasoning-text 'face 'shadow) ))
-					      (newline)))
+					    (save-excursion
+					      (goto-char start-marker)
+					      (let ((reasoning-text ""))
+						(while-let ((match (text-property-search-forward 'gptel 'ignore 'eq))
+							    (beg (prop-match-beginning match))
+							    (end (prop-match-end match))
+							    (text (buffer-substring-no-properties beg end)))
+						  (delete-region beg end)
+						  (setq reasoning-text (concat reasoning-text text)))
+						(goto-char start-marker)
+						(insert (propertize " "
+								    'display
+								    (propertize reasoning-text
+										'face 'shadow)))
+						(newline))))
 					   (`(reasoning . ,text)
 					    (save-excursion
 					      (goto-char marker)
-					      (insert (propertize text 'face 'shadow))))))))
+					      (insert (propertize text 'face 'shadow 'gptel 'ignore))))))))
 			   (fsm (gptel-request
 				    (magit-gptel--context rationale args)
 				  :system magit-gptel-system-message
@@ -193,7 +203,7 @@ non-interactively with `magit-run-git-with-editor'."
 					   nil))))
 			   (pre-cancel (lambda ()
 					 (gptel-abort buf)
-					 (erase-buffer buf))))
+					 (erase-buffer))))
 		      (add-hook 'with-editor-finish-query-functions query-fun nil t)
 		      (add-hook 'with-editor-pre-cancel-hook pre-cancel nil t))
 		    (message "Querying %s:%s..."
