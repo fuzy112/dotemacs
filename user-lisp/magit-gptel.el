@@ -89,7 +89,7 @@ If you find anything is wrong or unclear, stop immediately without outputing any
       (let ((commit (if (member "--amend" args)
 			"HEAD~"
 		      "HEAD")))
-	(magit-gptel--run-git "diff" "--cached" "--no-textconv" commit))
+	(magit-gptel--run-git "diff" "--cached" "--no-textconv" "-W" commit))
       (insert "</git-diff-staged>\n")
       (insert "<recent-commits>")
       (magit-gptel--run-git "log" "-n10" "--stat")
