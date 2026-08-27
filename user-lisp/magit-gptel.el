@@ -178,7 +178,7 @@ non-interactively with `magit-run-git-with-editor'."
 		    (message "Querying %s:%s..."
 			     (gptel-backend-name gptel-backend)
 			     gptel-model )))))
-	(add-hook hook fun 10)
+	(add-hook hook fun 91)
 	(magit-commit-create))
     (magit-gptel--with-backend
       (let ((topdir (magit-toplevel))
