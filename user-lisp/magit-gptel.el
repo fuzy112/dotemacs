@@ -144,39 +144,38 @@ non-interactively with `magit-run-git-with-editor'."
       (letrec ((hook 'git-commit-setup-hook)
 	       (fun
 		(lambda ()
-		  (when (eq (current-buffer) (magit-commit-message-buffer))
-		    (remove-hook hook fun)
-		    (kill-region (point-min) (point-max))
-		    (magit-gptel--with-backend
-		      (let* ((fsm (gptel-request
-				      (magit-gptel--context rationale args)
-				    :system magit-gptel-system-message
-				    :stream t))
-			     (query-fun (lambda (force)
-					  (when force
-					    (gptel-abort (current-buffer)))
-					  (pcase (gptel-fsm-state fsm)
-					    ('DONE
-					     (goto-char (point-min))
-					     (while-let ((match (text-property-search-forward 'gptel 'ignore t)))
-					       (delete-region (prop-match-beginning match)
-							      (prop-match-end match)))
-					     t)
-					    ('ERRS
-					     (message "gptel request failed")
-					     (not force))
-					    ('ABRT
-					     t)
-					    (t
-					     (message "gptel request has not finished")
-					     nil))))
-			     (pre-cancel (lambda ()
-					   (gptel-abort (current-buffer)))))
-			(add-hook 'with-editor-finish-query-functions query-fun nil t)
-			(add-hook 'with-editor-pre-cancel-hook pre-cancel nil t))
-		      (message "Querying %s:%s..."
-			       (gptel-backend-name gptel-backend)
-			       gptel-model ))))))
+		  (remove-hook hook fun)
+		  (kill-region (point-min) (point-max))
+		  (magit-gptel--with-backend
+		    (let* ((fsm (gptel-request
+				    (magit-gptel--context rationale args)
+				  :system magit-gptel-system-message
+				  :stream t))
+			   (query-fun (lambda (force)
+					(when force
+					  (gptel-abort (current-buffer)))
+					(pcase (gptel-fsm-state fsm)
+					  ('DONE
+					   (goto-char (point-min))
+					   (while-let ((match (text-property-search-forward 'gptel 'ignore t)))
+					     (delete-region (prop-match-beginning match)
+							    (prop-match-end match)))
+					   t)
+					  ('ERRS
+					   (message "gptel request failed")
+					   (not force))
+					  ('ABRT
+					   t)
+					  (_
+					   (message "gptel request has not finished")
+					   nil))))
+			   (pre-cancel (lambda ()
+					 (gptel-abort (current-buffer)))))
+		      (add-hook 'with-editor-finish-query-functions query-fun nil t)
+		      (add-hook 'with-editor-pre-cancel-hook pre-cancel nil t))
+		    (message "Querying %s:%s..."
+			     (gptel-backend-name gptel-backend)
+			     gptel-model )))))
 	(add-hook hook fun 10)
 	(magit-commit-create))
     (magit-gptel--with-backend
