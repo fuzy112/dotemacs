@@ -141,10 +141,11 @@ buffer.  Otherwise the message is generated and the commit is made
 non-interactively with `magit-run-git-with-editor'."
   (interactive (list nil (magit-commit-arguments)))
   (if magit-gptel-use-streaming
-      (letrec ((fun
+      (letrec ((hook 'git-commit-setup-hook)
+	       (fun
 		(lambda ()
 		  (when (eq (current-buffer) (magit-commit-message-buffer))
-		    (remove-hook 'find-file-hook fun)
+		    (remove-hook hook fun)
 		    (kill-region (point-min) (point-max))
 		    (magit-gptel--with-backend
 		      (let* ((fsm (gptel-request
@@ -176,7 +177,7 @@ non-interactively with `magit-run-git-with-editor'."
 		      (message "Querying %s:%s..."
 			       (gptel-backend-name gptel-backend)
 			       gptel-model ))))))
-	(add-hook 'find-file-hook fun 10)
+	(add-hook hook fun 10)
 	(magit-commit-create))
     (magit-gptel--with-backend
       (let ((topdir (magit-toplevel))
