@@ -243,11 +243,18 @@ non-interactively with `magit-run-git-with-editor'."
   (magit-gptel-commit (read-string "Rationale: ") args))
 
 ;;;###autoload
+(defun magit-gptel-amend (&optional args)
+  (interactive (list (magit-commit-arguments)))
+  (magit-gptel-commit nil (cons "--amend" args)))
+
+;;;###autoload
 (with-eval-after-load 'magit-commit
   (transient-append-suffix 'magit-commit "c"
-    '("g" "Generate commit" magit-gptel-commit))
+    '("g" "Commit with gptel" magit-gptel-commit))
   (transient-append-suffix 'magit-commit "g"
-    '("r" "Commit with rationale" magit-gptel-commit-with-rationale)))
+    '("r" "Commit with gptel (rationale)" magit-gptel-commit-with-rationale))
+  (transient-append-suffix 'magit-commit "a"
+    '("A" "Amend with gptel" magit-gptel-amend)))
 
 (provide 'magit-gptel)
 ;;; magit-gptel.el ends here
