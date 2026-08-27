@@ -174,7 +174,8 @@ non-interactively with `magit-run-git-with-editor'."
 								    'display
 								    (propertize reasoning-text
 										'face 'shadow)))
-						(newline))))
+						(newline)))
+					    (goto-char marker))
 					   (`(reasoning . ,text)
 					    (save-excursion
 					      (goto-char marker)
