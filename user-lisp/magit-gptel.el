@@ -33,6 +33,9 @@
   :group 'magit
   :prefix "magit-gptel-")
 
+;;;###autoload (put 'magit-gptel-backend 'safe-local-variable #'always)
+;;;###autoload (put 'magit-gptel-model 'safe-local-variable #'always)
+
 (defcustom magit-gptel-backend nil
   "Gptel backend used for magit-gptel.
 See `gptel-backend'."
