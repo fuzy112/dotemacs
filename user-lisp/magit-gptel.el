@@ -135,6 +135,39 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
        (setq gptel-model magit-gptel-model))
      ,@body))
 
+(defun magit-gptel--stream-callback (response info)
+  (let* ((gptel-buffer (plist-get info :buffer))
+	 (start-marker (plist-get info :position))
+	 (tracking-marker (plist-get info :tracking-marker)))
+    (unless (markerp tracking-marker)
+      (setq tracking-marker (copy-marker (or tracking-marker start-marker) t))
+      (plist-put info :tracking-marker tracking-marker))
+    (pcase response
+      ((pred stringp)
+       (with-current-buffer (marker-buffer start-marker)
+	 (save-excursion
+	   (goto-char tracking-marker)
+	   (insert response))))
+      (`(reasoning . t)
+       (with-current-buffer (marker-buffer start-marker)
+	 (goto-char start-marker)
+	 (let ((reasoning-text ""))
+	   (while-let ((match (text-property-search-forward 'gptel 'ignore 'eq))
+		       (beg (prop-match-beginning match))
+		       (end (prop-match-end match))
+		       (text (buffer-substring-no-properties beg end)))
+	     (delete-region beg end)
+	     (setq reasoning-text (concat reasoning-text text)))
+	   (insert (propertize " "
+			       'display
+			       (propertize reasoning-text
+					   'face 'shadow)))
+	   (newline))))
+      (`(reasoning . ,text)
+       (with-current-buffer (marker-buffer start-marker)
+	 (save-excursion
+	   (goto-char tracking-marker)
+	   (insert (propertize text 'face 'shadow 'gptel 'ignore))))))))
 
 ;;;###autoload
 (defun magit-gptel-commit (rationale &rest args)
@@ -155,45 +188,14 @@ non-interactively with `magit-run-git-with-editor'."
 		  (remove-hook hook fun)
 		  (kill-region (point-min) (point-max))
 		  (magit-gptel--with-backend
-		    (let* ((buf (current-buffer))
-			   (start-marker (point-min-marker))
-			   (marker (copy-marker (point) t))
-			   (callback (lambda (response info)
-				       (with-current-buffer buf
-					 (pcase response
-					   ((pred stringp)
-					    (save-excursion
-					      (goto-char marker)
-					      (insert response)))
-					   (`(reasoning . t)
-					    (save-excursion
-					      (goto-char start-marker)
-					      (let ((reasoning-text ""))
-						(while-let ((match (text-property-search-forward 'gptel 'ignore 'eq))
-							    (beg (prop-match-beginning match))
-							    (end (prop-match-end match))
-							    (text (buffer-substring-no-properties beg end)))
-						  (delete-region beg end)
-						  (setq reasoning-text (concat reasoning-text text)))
-						(goto-char start-marker)
-						(insert (propertize " "
-								    'display
-								    (propertize reasoning-text
-										'face 'shadow)))
-						(newline)))
-					    (goto-char marker))
-					   (`(reasoning . ,text)
-					    (save-excursion
-					      (goto-char marker)
-					      (insert (propertize text 'face 'shadow 'gptel 'ignore))))))))
-			   (fsm (gptel-request
+		    (let* ((fsm (gptel-request
 				    (magit-gptel--context rationale args)
 				  :system magit-gptel-system-message
 				  :stream t
-				  :callback callback))
+				  :callback #'magit-gptel--stream-callback))
 			   (query-fun (lambda (force)
 					(when force
-					  (gptel-abort buf))
+					  (gptel-abort (current-buffer)))
 					(pcase (gptel-fsm-state fsm)
 					  ('DONE
 					   (while-let ((match (text-property-search-forward 'gptel 'ignore t)))
@@ -209,7 +211,7 @@ non-interactively with `magit-run-git-with-editor'."
 					   (message "gptel request has not finished")
 					   nil))))
 			   (pre-cancel (lambda ()
-					 (gptel-abort buf)
+					 (gptel-abort (current-buffer))
 					 (erase-buffer))))
 		      (add-hook 'with-editor-finish-query-functions query-fun nil t)
 		      (add-hook 'with-editor-pre-cancel-hook pre-cancel nil t))
