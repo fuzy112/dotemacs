@@ -73,7 +73,9 @@ If you find anything is wrong or unclear, stop immediately without outputing any
 (defun magit-gptel--run-git (&rest args)
   (let ((status (apply #'magit-process-git t args)))
     (unless (zerop status)
-      (error "git %s exited with %s" (string-join args " ") status))))
+      (let ((msg (format "git %s exited with %s" (string-join args " ") status)))
+	(insert msg)
+	(message "%s" msg)))))
 
 (defun magit-gptel--context (rationale &optional args)
   (let ((dir (magit-toplevel)))
