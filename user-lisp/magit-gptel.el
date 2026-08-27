@@ -120,7 +120,8 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
   `(let ((gptel-backend gptel-backend)
 	 (gptel-model gptel-model)
 	 (gptel-include-reasoning 'ignore)
-	 (gptel-use-tools nil))
+	 (gptel-use-tools nil)
+	 (gptel-max-tokens 4096))
      (when magit-gptel-backend
        (setq gptel-backend (if (stringp magit-gptel-backend)
 			       (gptel-get-backend magit-gptel-backend)
