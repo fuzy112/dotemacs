@@ -112,6 +112,11 @@ If you find anything is wrong or unclear, stop immediately without outputing any
   "Whether to use streaming for gptel commit message generation."
   :type 'boolean)
 
+(defcustom magit-gptel-max-tokens 4096
+  "Maximum number of tokens for gptel requests from magit-gptel."
+  :type 'integer
+  :group 'magit-gptel)
+
 (defmacro magit-gptel--with-backend (&rest body)
   "Evaluate BODY with gptel backend and model bound to magit-gptel values.
 If `magit-gptel-backend' is set, `gptel-backend' is bound to the matching
@@ -121,7 +126,7 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 	 (gptel-model gptel-model)
 	 (gptel-include-reasoning 'ignore)
 	 (gptel-use-tools nil)
-	 (gptel-max-tokens 4096))
+	 (gptel-max-tokens magit-gptel-max-tokens))
      (when magit-gptel-backend
        (setq gptel-backend (if (stringp magit-gptel-backend)
 			       (gptel-get-backend magit-gptel-backend)
