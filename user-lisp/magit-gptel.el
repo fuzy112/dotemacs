@@ -77,6 +77,14 @@ If you find anything is wrong or unclear, stop immediately without outputing any
   "System message for magit-gptel-commit."
   :type 'string)
 
+(defface magit-gptel-thinking-heading
+  '((t :inherit outline-1))
+  "Face for the thinking heading.")
+
+(defface magit-gptel-thinking-text
+  '((t :inherit shadow))
+  "Face for the thinking text.")
+
 (defun magit-gptel--run-git (&rest args)
   (let ((status (apply #'magit-process-git t args)))
     (unless (zerop status)
@@ -157,7 +165,7 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 	  (insert "\n")
 	  (setq thinking-overlay (make-overlay start-marker (point)))
 	  (plist-put info :thinking-overlay thinking-overlay)
-	  (overlay-put thinking-overlay 'display (propertize "* thinking\n" 'face 'outline-2))
+	  (overlay-put thinking-overlay 'display (propertize "* thinking\n" 'face 'magit-gptel-thinking-heading))
 	  (overlay-put thinking-overlay 'after-string "\n"))))
     (pcase-exhaustive response
       ((pred stringp)
@@ -175,7 +183,7 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 	   (goto-char tracking-marker)
 	   (overlay-put thinking-overlay 'display
 			(concat (overlay-get thinking-overlay 'display)
-				(propertize text 'face 'shadow))))))
+				(propertize text 'face 'magit-gptel-thinking-text))))))
       (`(reasoning . t)
        (when-let* ((buf (marker-buffer start-marker))
 		   (win (get-buffer-window buf 0)))
