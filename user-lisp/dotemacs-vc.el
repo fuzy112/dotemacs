@@ -125,17 +125,19 @@
 
 (declare-function magit-staged-files "ext:magit-commit.el")
 (defun +git-commit--log-edit-h ()
-  (when (string-empty-p (buffer-substring-no-properties (point-min) (line-end-position 1)))
-    (let ((params
-           `((log-edit-listfun . ,#'magit-staged-files)
-             (log-edit-diff-function . ,#'magit-diff-while-committing))))
-      (dolist (crt params)
-        (set-local (car crt) (cdr crt)))
-      (run-hooks 'log-edit-hook)
-      (save-buffer))))
+  (when (derived-mode-p 'log-edit-mode)
+    (add-hook 'with-editor-pre-cancel-hook 'log-edit-hide-buf nil t)
+    (when (string-empty-p (buffer-substring-no-properties (point-min) (line-end-position 1)))
+      (let ((params
+             `((log-edit-listfun . ,#'magit-staged-files)
+               (log-edit-diff-function . ,#'magit-diff-while-committing))))
+        (dolist (crt params)
+          (set-local (car crt) (cdr crt)))
+        (run-hooks 'log-edit-hook)
+        (save-buffer)))))
 
 (after-load! git-commit
-  (setq git-commit-major-mode #'log-edit-mode)
+  ;; (setq git-commit-major-mode #'log-edit-mode)
   ;; TODO: figure out why setopt says "Value does not match
   ;; git-commit-style-convention-checks’s type ‘(list :convert-widget
   ;; custom-hook-convert-widget)’: (non-empty-second-line
