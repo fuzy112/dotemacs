@@ -297,7 +297,8 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 	(add-hook 'with-editor-pre-cancel-hook pre-cancel nil t))
       (message "Querying %s:%s..."
 	       (gptel-backend-name gptel-backend)
-	       gptel-model))))
+	       gptel-model))
+    (setq magit-gptel--flag nil)))
 
 (add-hook 'with-editor-filter-visit-hook #'magit-gptel-generate-commit-message 10)
 (add-hook 'server-switch-hook #'magit-gptel-generate-commit-message 10)
