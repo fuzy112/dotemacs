@@ -158,6 +158,11 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
        (message "LLM query aborted"))
       ('t
        (message "LLM query finished"))
+      (`(reasoning . ,(and text (pred stringp)))
+       (with-current-buffer (marker-buffer start-marker)
+	 (save-excursion
+	   (goto-char tracking-marker)
+	   (insert (propertize text 'face 'shadow 'gptel 'ignore)))))
       (`(reasoning . t)
        (with-current-buffer (marker-buffer start-marker)
 	 (goto-char start-marker)
@@ -172,12 +177,7 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 			       'display
 			       (propertize reasoning-text
 					   'face 'shadow)))
-	   (newline))))
-      (`(reasoning . ,text)
-       (with-current-buffer (marker-buffer start-marker)
-	 (save-excursion
-	   (goto-char tracking-marker)
-	   (insert (propertize text 'face 'shadow 'gptel 'ignore))))))))
+	   (newline)))))))
 
 (defvar magit-gptel--flag nil)
 
