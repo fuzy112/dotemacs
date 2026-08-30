@@ -157,7 +157,8 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 	  (insert "\n")
 	  (setq thinking-overlay (make-overlay start-marker (point)))
 	  (plist-put info :thinking-overlay thinking-overlay)
-	  (overlay-put thinking-overlay 'display (propertize "* thinking\n" 'face 'outline-2)))))
+	  (overlay-put thinking-overlay 'display (propertize "* thinking\n" 'face 'outline-2))
+	  (overlay-put thinking-overlay 'after-string "\n"))))
     (pcase-exhaustive response
       ((pred stringp)
        (with-current-buffer (marker-buffer start-marker)
@@ -176,10 +177,11 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 			(concat (overlay-get thinking-overlay 'display)
 				(propertize text 'face 'shadow))))))
       (`(reasoning . t)
-       (with-current-buffer (marker-buffer start-marker)
-	 (save-excursion
+       (when-let* ((buf (marker-buffer start-marker))
+		   (win (get-buffer-window buf 0)))
+	 (with-selected-window win
 	   (goto-char tracking-marker)
-	   (newline)))))))
+	   (recenter 1)))))))
 
 (defvar magit-gptel--flag nil)
 
