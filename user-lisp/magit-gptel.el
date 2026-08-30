@@ -197,6 +197,16 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
   :description "Enable gptel commit message generation"
   :class 'transient-lisp-variable
   :variable 'magit-gptel--flag
+  :reader (lambda (prompt initial-input _history)
+	    (let* ((c (car (read-multiple-choice prompt
+						 '((?y "yes")
+						   (?n "no")
+						   (?r "specify rationale"))))))
+	      (if (eql c ?r)
+		  (read-string prompt
+			       (if (stringp initial-input)
+				   initial-input))
+		(eql c ?y))))
   :key "=g")
 
 (transient-append-suffix 'magit-commit "-c" '(magit-gptel:=g))
