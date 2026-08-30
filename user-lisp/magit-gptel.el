@@ -176,6 +176,8 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 	   (insert response))))
       ('abort
        (message "LLM query aborted"))
+      ('nil
+       (message "LLM query error: %s" (plist-get info :status)))
       ('t
        (message "LLM query finished"))
       (`(reasoning . ,(and text (pred stringp)))
