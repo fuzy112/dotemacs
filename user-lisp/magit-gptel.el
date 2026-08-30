@@ -27,7 +27,8 @@
 (require 'magit-commit)
 (require 'magit-diff)
 (require 'gptel-request)
-(eval-when-compile (require 'transient))
+(require 'gptel-transient)
+(require 'transient)
 
 (defgroup magit-gptel nil
   "Gptel integration for Magit."
@@ -193,7 +194,7 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 
 (defvar magit-gptel--flag nil)
 
-(transient-define-infix magit-gptel:=g ()
+(transient-define-infix magit-gptel:/g ()
   :description "Enable gptel commit message generation"
   :class 'transient-lisp-variable
   :variable 'magit-gptel--flag
@@ -207,9 +208,59 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 			       (if (stringp initial-input)
 				   initial-input))
 		(eql c ?y))))
-  :key "=g")
+  :key "/g")
 
-(transient-append-suffix 'magit-commit "-c" '(magit-gptel:=g))
+(transient-define-infix magit-gptel:/m ()
+  :description "magit gptel model"
+  :class 'gptel-provider-variable
+  :prompt "Model: "
+  :variable 'magit-gptel-model
+  :set-value #'gptel--set-with-scope
+  :backend 'magit-gptel-backend
+  :key "/m"
+  :reader (lambda (prompt &rest _)
+	    (cl-loop
+	     for (name . backend) in gptel--known-backends
+	     nconc (cl-loop for model in (gptel-backend-models backend)
+			    collect (list (concat name ":" (gptel--model-name model))
+					  backend model))
+	     into models-alist
+	     with completion-extra-properties =
+	     `(:annotation-function
+	       ,(lambda (comp)
+		  (let* ((model (nth 2 (assoc comp models-alist)))
+			 (desc (get model :description))
+			 (caps (get model :capabilities))
+			 (context (get model :context-window))
+			 (input-cost (get model :input-cost))
+			 (output-cost (get model :output-cost))
+			 (cutoff (get model :cutoff-date)))
+		    (when (or desc caps context input-cost output-cost cutoff)
+		      (concat
+		       (propertize " " 'display `(space :align-to 40))
+		       (when desc (truncate-string-to-width desc 70 nil ? t t))
+		       " " (propertize " " 'display `(space :align-to 112))
+		       (when caps (truncate-string-to-width (prin1-to-string caps) 21 nil ? t t))
+		       " " (propertize " " 'display `(space :align-to 134))
+		       (when context (format "%5dk" context))
+		       " " (propertize " " 'display `(space :align-to 142))
+		       (when input-cost (format "$%5.2f in" input-cost))
+		       (if (and input-cost output-cost) "," " ")
+		       " " (propertize " " 'display `(space :align-to 153))
+		       (when output-cost (format "$%6.2f out" output-cost))
+		       " " (propertize " " 'display `(space :align-to 166))
+		       cutoff)))))
+	     finally return
+	     (cdr (assoc (completing-read prompt models-alist nil t nil nil
+					  (concat (gptel-backend-name magit-gptel-backend) ":"
+						  (gptel--model-name magit-gptel-model)))
+			 models-alist)))))
+
+(unless (transient--locate-child 'magit-commit "/g")
+  (transient-append-suffix 'magit-commit [0]
+    [["gptel backend"
+      (magit-gptel:/g)
+      (magit-gptel:/m)]]))
 
 (defun magit-gptel-generate-commit-message ()
   (unless (eq (current-buffer) (magit-commit-message-buffer))
