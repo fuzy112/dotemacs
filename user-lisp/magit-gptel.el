@@ -100,14 +100,13 @@ If you find anything is wrong or unclear, stop immediately without outputing any
 	    (car (magit-diff-arguments))
 	    (list rev)))))
 
-(defun magit-gptel--context (rationale &optional args)
+(defun magit-gptel--context (rationale)
   (let ((dir (magit-toplevel)))
     (with-current-buffer (get-buffer-create " *magit-gptel*")
       (setq-local default-directory dir)
       (erase-buffer)
-      (insert "<git-command>git commit")
-      (dolist (arg args)
-	(insert " " arg))
+      (insert "<git-command>")
+      (insert (format "%s" (magit-repository-local-get 'last-commit-command)))
       (insert "</git-command>\n")
       (insert "<git-status>")
       (magit-gptel--run-git "status")
@@ -271,8 +270,7 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
     (magit-gptel--with-backend
       (let* ((fsm (gptel-request
 		      (magit-gptel--context
-		       (if (stringp magit-gptel--flag) magit-gptel--flag)
-		       (magit-commit-arguments))
+		       (and (stringp magit-gptel--flag) magit-gptel--flag))
 		    :system magit-gptel-system-message
 		    :stream t
 		    :callback #'magit-gptel--stream-callback))
