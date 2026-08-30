@@ -82,6 +82,9 @@ If you find anything is wrong or unclear, stop immediately without outputing any
     (with-current-buffer (get-buffer-create " *magit-gptel*")
       (setq-local default-directory dir)
       (erase-buffer)
+      (insert "<git-status>")
+      (magit-gptel--run-git "status")
+      (insert "</git-status>\n")
       (insert "<git-diff-staged>")
       (let ((commit (if (member "--amend" args)
 			"HEAD~"
