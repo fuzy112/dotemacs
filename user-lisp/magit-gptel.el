@@ -298,8 +298,8 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 	       (gptel-backend-name gptel-backend)
 	       gptel-model))))
 
-(with-eval-after-load 'git-commit
-  (add-hook 'git-commit-setup-hook #'magit-gptel-generate-commit-message 91))
+(add-hook 'with-editor-filter-visit-hook #'magit-gptel-generate-commit-message 10)
+(add-hook 'server-switch-hook #'magit-gptel-generate-commit-message 10)
 
 (provide 'magit-gptel)
 ;;; magit-gptel.el ends here
