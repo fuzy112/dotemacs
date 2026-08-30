@@ -144,10 +144,20 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 (defun magit-gptel--stream-callback (response info)
   (let* ((gptel-buffer (plist-get info :buffer))
 	 (start-marker (plist-get info :position))
-	 (tracking-marker (plist-get info :tracking-marker)))
+	 (tracking-marker (plist-get info :tracking-marker))
+	 (thinking-overlay (plist-get info :thinking-overlay))
+	 move-point)
     (unless (markerp tracking-marker)
       (setq tracking-marker (copy-marker (or tracking-marker start-marker) t))
       (plist-put info :tracking-marker tracking-marker))
+    (unless thinking-overlay
+      (with-current-buffer (marker-buffer start-marker)
+	(save-excursion
+	  (goto-char tracking-marker)
+	  (insert "\n")
+	  (setq thinking-overlay (make-overlay start-marker (point)))
+	  (plist-put info :thinking-overlay thinking-overlay)
+	  (overlay-put thinking-overlay 'display (propertize "* thinking\n" 'face 'outline-2)))))
     (pcase-exhaustive response
       ((pred stringp)
        (with-current-buffer (marker-buffer start-marker)
@@ -162,21 +172,13 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
        (with-current-buffer (marker-buffer start-marker)
 	 (save-excursion
 	   (goto-char tracking-marker)
-	   (insert (propertize text 'face 'shadow 'gptel 'ignore)))))
+	   (overlay-put thinking-overlay 'display
+			(concat (overlay-get thinking-overlay 'display)
+				(propertize text 'face 'shadow))))))
       (`(reasoning . t)
        (with-current-buffer (marker-buffer start-marker)
-	 (goto-char start-marker)
-	 (let ((reasoning-text ""))
-	   (while-let ((match (text-property-search-forward 'gptel 'ignore 'eq))
-		       (beg (prop-match-beginning match))
-		       (end (prop-match-end match))
-		       (text (buffer-substring-no-properties beg end)))
-	     (delete-region beg end)
-	     (setq reasoning-text (concat reasoning-text text)))
-	   (insert (propertize " "
-			       'display
-			       (propertize reasoning-text
-					   'face 'shadow)))
+	 (save-excursion
+	   (goto-char tracking-marker)
 	   (newline)))))))
 
 (defvar magit-gptel--flag nil)
