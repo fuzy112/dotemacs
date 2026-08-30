@@ -148,7 +148,7 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
     (unless (markerp tracking-marker)
       (setq tracking-marker (copy-marker (or tracking-marker start-marker) t))
       (plist-put info :tracking-marker tracking-marker))
-    (pcase response
+    (pcase-exhaustive response
       ((pred stringp)
        (with-current-buffer (marker-buffer start-marker)
 	 (save-excursion
