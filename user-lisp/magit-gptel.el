@@ -265,9 +265,8 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
       (magit-gptel:/m)]]))
 
 (defun magit-gptel-generate-commit-message ()
-  (unless (eq (current-buffer) (magit-commit-message-buffer))
-    (user-error "Not in commit buffer"))
-  (when magit-gptel--flag
+  (when (and magit-gptel--flag
+	     (eq (current-buffer) (magit-commit-message-buffer)))
     (kill-region (point-min) (point-max))
     (magit-gptel--with-backend
       (let* ((fsm (gptel-request
