@@ -317,17 +317,18 @@ Interactively, prompt for a bookmark using `bookmark-completing-read*'."
    (list (bookmark-completing-read*
           #'compilation-bookmark-jump
           "Jump to bookmark")))
-  (let ((default-directory (or (bookmark-prop-get bookmark 'filename)
-                               (bookmark-prop-get bookmark 'directory))))
-    (bookmark-display-buffer
-     (compilation-start (bookmark-prop-get bookmark 'command)
-                        (bookmark-prop-get bookmark 'mode)
-                        (let ((buffer-name (bookmark-prop-get bookmark 'buffer-name)))
-                          (lambda (_) buffer-name))
-                        (bookmark-prop-get bookmark 'highlight-regexp)))))
+  (when-let* ((default-directory (or (bookmark-prop-get bookmark 'filename)
+                                     (bookmark-prop-get bookmark 'directory)))
+              (buf (compilation-start (bookmark-prop-get bookmark 'command)
+                                      (bookmark-prop-get bookmark 'mode)
+                                      (let ((buffer-name (bookmark-prop-get bookmark 'buffer-name)))
+                                        (lambda (_) buffer-name))
+                                      (bookmark-prop-get bookmark 'highlight-regexp)))
+              (win (get-buffer-window buf 0)))
+    (select-window win)))
 
 ;;;###autoload
-(defalias 'compilation-bookmark-handler #'compilation-bookmark-jump)
+ (defalias 'compilation-bookmark-handler #'compilation-bookmark-jump)
 
 ;;;###autoload
 (defun compilation-bookmark-enable (&optional _)
