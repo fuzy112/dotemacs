@@ -178,9 +178,16 @@
      :mode #o600)
     (elfeed-db-directory
      :new "elfeed"
-     :old (locate-user-emacs-file "elfeed" "~/.elfeed"))))
+     :old (locate-user-emacs-file "elfeed" "~/.elfeed")))
+  "Alist of Emacs state files to relocate into `dotemacs-state-directory'.
+
+Each entry is (VARIABLE . PLIST), where PLIST may contain:
+:new  - relative path within the state directory.
+:old  - original path (a form evaluated at setup time).
+:mode - permission bits applied after relocation.")
 
 (defun dotemacs-state-file (name)
+  "Return absolute path of NAME inside `dotemacs-state-directory'."
   (expand-file-name name dotemacs-state-directory))
 
 (defun dotemacs-state-setup ()
