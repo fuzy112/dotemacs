@@ -225,7 +225,6 @@ Otherwise disable it."
 
 (dolist (hook '(archive-mode-hook
                 dired-mode-hook
-                dired-mode-hook
                 ement-room-list-mode-hook
                 ement-notifications-mode-hook
                 git-rebase-mode-hook
