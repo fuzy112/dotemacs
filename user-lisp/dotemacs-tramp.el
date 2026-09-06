@@ -23,12 +23,6 @@
 (setq! tramp-use-connection-share nil
        tramp-verbose 2)
 
-(defvar tramp-persistency-file-name)
-(define-advice tramp-dump-connection-properties (:after () chmod)
-  "Change permission of `tramp-persistency-file-name' to 0600."
-  (when (file-readable-p tramp-persistency-file-name)
-    (chmod tramp-persistency-file-name #o600)))
-
 ;;; We need to ensure Unix domain sockets have paths shorter than 108 characters
 ;;; (this is a system limit). If tramp-compat-temporary-file-directory is too long,
 ;;; we'll use a shorter alternative location.

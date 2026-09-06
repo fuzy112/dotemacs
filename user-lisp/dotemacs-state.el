@@ -53,7 +53,8 @@
      :old (expand-file-name "project-compile-history.eld" user-emacs-directory))
     (tramp-persistency-file-name
      :new "tramp.eld"
-     :old (locate-user-emacs-file "tramp"))
+     :old (locate-user-emacs-file "tramp")
+     :mode #o600)
     (ecomplete-database-file
      :new "ecompleterc.zst"
      :old (locate-user-emacs-file "ecompleterc" "~/.ecompleterc"))
