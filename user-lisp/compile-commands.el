@@ -62,7 +62,7 @@
              do (puthash file entry ht))
     ht))
 
-(defun compile-commands--load ()
+(defun compile-commands--load (&rest _)
   (ignore-errors
     (goto-char (point-min))
     (let ((compile-commands (json-read)))
