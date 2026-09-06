@@ -46,6 +46,16 @@
   (setq! eshell-visual-commands nil)
   (add-hook 'eshell-load-hook #'eat-eshell-mode))
 
+(defvar eat-shell)
+
+(defun eat-connection-local-default-shell ()
+  (with-connection-local-variables
+    (or explicit-shell-file-name
+	eat-shell
+	shell-file-name)))
+
+(setq! eat-default-shell-function #'eat-connection-local-default-shell)
+
 (defvar eat-terminal)
 
 (defvar eat-term-terminfo-directory)
