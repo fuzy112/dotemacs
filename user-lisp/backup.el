@@ -48,17 +48,40 @@
   (interactive (list (backup--get-backup-file-at-point)) backup-list-mode)
   (find-file-read-only backup-file))
 
-(defun backup-diff (backup-file)
+(defun backup--get-prev-backup-file (backup-file)
+  "Return the backup file preceding BACKUP-FILE, or nil."
+  (let ((files (file-backup-file-names backup-real-file)))
+    (when-let ((pos (cl-position backup-file files :test #'equal))
+	       ((> pos 0)))
+      (nth (1- pos) files))))
+
+(defun backup--find-backup-file-noselect (backup-file)
+  "Find BACKUP-FILE in a read-only buffer and return it."
+  (let ((buf (find-file-noselect backup-file)))
+    (with-current-buffer buf
+      (setq-local buffer-read-only t))
+    buf))
+
+(defun backup-diff-with-prev-backup (backup-file)
+  "Diff BACKUP-FILE with the previous backup."
+  (interactive (list (backup--get-backup-file-at-point)) backup-list-mode)
+  (let ((prev-backup-file (backup--get-prev-backup-file backup-file)))
+    (unless prev-backup-file
+      (user-error "No previous backup file found"))
+    (diff-buffers (backup--find-backup-file-noselect backup-file)
+		  (backup--find-backup-file-noselect prev-backup-file))))
+
+(defun backup-diff-with-real-file (backup-file)
   "Diff BACKUP-FILE with the real file."
   (interactive (list (backup--get-backup-file-at-point)) backup-list-mode)
-  (let ((backup-buffer (find-file-noselect backup-file))
+  (let ((backup-buffer (backup--find-backup-file-noselect backup-file))
 	(real-buffer (find-file-noselect backup-real-file)))
     (diff-buffers backup-buffer real-buffer)))
 
-(defun backup-ediff (backup-file)
+(defun backup-ediff-with-real-file (backup-file)
   "Run `ediff' on BACKUP-FILE and the real file."
   (interactive (list (backup--get-backup-file-at-point)) backup-list-mode)
-  (let ((backup-buffer (find-file-noselect backup-file))
+  (let ((backup-buffer (backup--find-backup-file-noselect backup-file))
 	(real-buffer (find-file-noselect backup-real-file)))
     (ediff-buffers backup-buffer real-buffer)))
 
@@ -66,7 +89,7 @@
   "Restore the file with BACKUP-FILE."
   (interactive (list (backup--get-backup-file-at-point)) backup-list-mode)
   (save-window-excursion
-    (backup-diff backup-file)
+    (backup-diff-with-real-file backup-file)
     (when (y-or-n-p (format "Restore file \"%s\" with \"%s\"? "
 			    backup-real-file backup-file))
       (copy-file backup-file backup-real-file t)
@@ -79,7 +102,7 @@ If NOCONFIRM is non-nil, do not ask for confirmation."
 		     current-prefix-arg)
 	       backup-list-mode)
   (save-window-excursion
-    (backup-diff backup-file)
+    (backup-diff-with-real-file backup-file)
     (when (or noconfirm
 	      (y-or-n-p (format "Delete backup file \"%s\"? "
 				backup-file)))
@@ -116,10 +139,11 @@ If NOCONFIRM is non-nil, do not ask for confirmation."
 
 (defvar-keymap backup-list-mode-map
   "RET" #'backup-jump
-  "=" #'backup-diff
-  "e" #'backup-ediff
+  "=" #'backup-diff-with-real-file
+  "e" #'backup-ediff-with-real-file
+  "d" #'backup-diff-with-prev-backup
   "r" #'backup-restore
-  "d" #'backup-delete
+  "k" #'backup-delete
   "p" #'previous-line
   "n" #'next-line)
 
