@@ -530,9 +530,10 @@ callback that inserts the response into the minibuffer."
 				   (setq state 'stopped)
 				   (gptel-minibuffer-spinner-stop spinner))
 				  ((stringp response)
-				   (with-current-buffer buffer
-				     (goto-char (point-max))
-				     (insert response))))))))
+				   (when (buffer-live-p buffer)
+				     (with-current-buffer buffer
+				       (goto-char (point-max))
+				       (insert response)))))))))
 	  (setq state 'running))
       (error
        (funcall cleanup-function)
