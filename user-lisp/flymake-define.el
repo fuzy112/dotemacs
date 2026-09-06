@@ -1,5 +1,5 @@
 ;;; flymake-define.el --- Define flymake diagnostic functions. -*- lexical-binding: t -*-
-;; Copyright © 2024, 2025  Zhengyi Fu
+;; Copyright © 2024, 2025, 2026  Zhengyi Fu
 
 ;; Author:   Zhengyi Fu <i@fuzy.me>
 ;; Version: 0.8.5
@@ -136,7 +136,7 @@ ARGS -- see `make-process' for other arguments."
 PATTERNS is a sequence of [REGEXP ACTION].  REGEXP is a regular
 expression to search for in the output buffer.  ACTION is a function
 to be called on each match.  It can access the match data.  Both
-REGEXP and ACTION is byte-compiled during macro expansion.  Optionally,
+REGEXP and ACTION is compiled during macro expansion.  Optionally,
 PATTERNS can also be a sequence of pairs (TYPE . RX), where TYPE is
 the TYPE parameter of `flymake-make-diagnostic', RX is the regexp in
 `rx' notation.
@@ -151,40 +151,46 @@ If DEBUG is non-nil, the process buffer is displayed when the
 process terminates.  Otherwise, the buffer is killed silently."
   (let* ((compiled-patterns
           (cl-loop for rule being the elements of patterns
-                   collect (flymake-define--compile-rule rule))))
-    (byte-compile
-     (cl-function
-      (lambda (&key report-fn source file cleanup)
-        (lambda (p _ev)
-          (when (memq (process-status p) '(exit signal))
-            (unwind-protect
-                (if (eq p (buffer-local-value proc-var source))
-                    (with-current-buffer (process-buffer p)
-                      (when filter-color
-                        (ansi-color-filter-region (point-min) (point-max)))
-                      (goto-char (point-min))
-                      (let ((diags
-                             (cl-loop
-                              for (regexp . action) in compiled-patterns
-                              do (goto-char (point-min))
-                              nconc
-                              (cl-loop
-                               while (re-search-forward regexp nil t)
-                               for diag = (funcall action source file)
-                               collect diag))))
-                        (if (or diags (zerop (process-exit-status p)))
-                            (funcall report-fn diags)
-                          (funcall report-fn
-                                   :panic :explanation
-                                   (buffer-substring
-                                    (point-min)
-                                    (progn (goto-char (point-min))
-                                           (line-end-position)))))))
-                  (flymake-log :warning "Cancelling obsolete check %s" p))
-              (unless (process-live-p p)
-                (when debug (display-buffer (process-buffer p)))
-                (unless debug (kill-buffer (process-buffer p)))
-                (funcall cleanup))))))))))
+                   collect (flymake-define--compile-rule rule)))
+         (fun
+          (cl-function
+           (lambda (&key report-fn source file cleanup)
+             (lambda (p _ev)
+               (when (memq (process-status p) '(exit signal))
+                 (unwind-protect
+                     (if (eq p (buffer-local-value proc-var source))
+                         (with-current-buffer (process-buffer p)
+                           (when filter-color
+                             (ansi-color-filter-region (point-min) (point-max)))
+                           (goto-char (point-min))
+                           (let ((diags
+                                  (cl-loop
+                                   for (regexp . action) in compiled-patterns
+                                   do (goto-char (point-min))
+                                   nconc
+                                   (cl-loop
+                                    while (re-search-forward regexp nil t)
+                                    for diag = (funcall action source file)
+                                    collect diag))))
+                             (if (or diags (zerop (process-exit-status p)))
+                                 (funcall report-fn diags)
+                               (funcall report-fn
+                                        :panic :explanation
+                                        (buffer-substring
+                                         (point-min)
+                                         (progn (goto-char (point-min))
+                                                (line-end-position)))))))
+                       (flymake-log :warning "Cancelling obsolete check %s" p))
+                   (unless (process-live-p p)
+                     (when debug (display-buffer (process-buffer p)))
+                     (unless debug (kill-buffer (process-buffer p)))
+                     (funcall cleanup)))))))))
+    (unless (compiled-function-p fun)
+      (setq fun (if (and (fboundp 'native-comp-available-p)
+                         (native-comp-available-p))
+                    (native-compile fun)
+                  (byte-compile fun))))
+    fun))
 
 ;;;; Public macros
 
@@ -212,7 +218,7 @@ INPUT is `:stdin' or omitted, the content is passed by standard input.
 PATTERNS is a sequence of [REGEXP ACTION].  REGEXP is a regular
 expression to search for in the output buffer.  ACTION is a function to
 be called on each match.  It can access the match data.  Both REGEXP and
-ACTION is byte-compiled during macro expansion.
+ACTION is compiled during macro expansion.
 
 If FILTER-COLOR is non-nil, ANSI color sequences in the output of the
 process is filtered out by calling `ansi-color-filter-region'.  This is
