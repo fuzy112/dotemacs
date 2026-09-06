@@ -265,8 +265,11 @@ PROMPT is passed to `completing-read'."
   (let* ((current-entry (car good-doc--stack))
          (doc (get-text-property 0 'doc current-entry))
          (index (get-text-property 0 'index current-entry)) ;FIXME
-         (next (elt (good-doc--entries doc) (+ index count))))
-    (good-doc--render next)))
+         (entries (good-doc--entries doc))
+         (new-index (+ index count)))
+    (unless (<= 0 new-index (1- (length entries)))
+      (user-error "No %s entry" (if (> count 0) "next" "previous")))
+    (good-doc--render (elt entries new-index))))
 
 (defun good-doc-previous-entry (count)
   "Go backward COUNT entries in this document."
