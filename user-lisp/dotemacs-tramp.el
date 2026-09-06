@@ -51,14 +51,9 @@
    'remote-direct-async-process
    '((tramp-direct-async-process . t)))
 
-  (connection-local-set-profile-variables
-   'remote-explicit-shell-file-name
-   '((explicit-shell-file-name . "/bin/sh")))
-
   (dolist (protocol '("ssh" "sshx" "scp" "scpx"))
     (connection-local-set-profiles
      `(:application tramp :protocol ,protocol)
-     'remote-explicit-shell-file-name
      'remote-direct-async-process)))
 
 (provide 'dotemacs-tramp)
