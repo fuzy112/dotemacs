@@ -43,7 +43,7 @@
   "Gptel backend used for magit-gptel.
 See `gptel-backend'."
   :safe #'always
-  :type (custom-variable-type 'gptel-backend)
+  :type (get 'gptel-backend 'custom-type)
   :set (lambda (sym val &optional local)
 	 (let ((setter (get 'gptel-backend 'custom-set)))
 	   (if local
@@ -56,7 +56,7 @@ See `gptel-backend'."
   "Gptel model used for magit-gptel.
 See `gptel-model'."
   :safe #'always
-  :type (custom-variable-type 'gptel-model))
+  :type (get 'gptel-model 'custom-type))
 
 (defcustom magit-gptel-max-tokens 4096
   "Maximum number of tokens for gptel requests from magit-gptel."
