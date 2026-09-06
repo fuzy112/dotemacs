@@ -198,6 +198,7 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 
 (defvar magit-gptel--flag nil)
 
+;;;###autoload(autoload 'magit-gptel:/g "magit-gptel")
 (transient-define-infix magit-gptel:/g ()
   :description "Enable gptel commit message generation"
   :class 'transient-lisp-variable
@@ -214,6 +215,7 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 		(eql c ?y))))
   :key "/g")
 
+;;;###autoload(autoload 'magit-gptel:/m "magit-gptel")
 (transient-define-infix magit-gptel:/m ()
   :description "magit gptel model"
   :class 'gptel-provider-variable
@@ -260,11 +262,13 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 						  (gptel--model-name magit-gptel-model)))
 			 models-alist)))))
 
-(unless (transient--locate-child 'magit-commit "/g")
-  (transient-append-suffix 'magit-commit [0]
-    [["gptel backend"
-      (magit-gptel:/g)
-      (magit-gptel:/m)]]))
+;;;###autoload
+(with-eval-after-load 'magit-commit
+  (unless (transient--locate-child 'magit-commit "/g")
+    (transient-append-suffix 'magit-commit [0]
+      [["gptel backend"
+	(magit-gptel:/g)
+	(magit-gptel:/m)]])))
 
 (defun magit-gptel-generate-commit-message ()
   (when (and magit-gptel--flag
