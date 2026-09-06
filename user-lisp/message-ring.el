@@ -102,8 +102,7 @@ This function is designed to be added to `set-message-functions'."
 	(unless (null fns)
 	  (let* ((fn (car fns))
 		 (result (funcall fn message)))
-	    (when (or (and (stringp result) (setq message result))
-		      (null result))
+	    (when (and (stringp result) (setq message result))
 	      (loop (cdr fns)))))))))
 
 (defvar-keymap message-ring-mode-map
