@@ -102,9 +102,9 @@
 
 (defun org-protocol--remember-project (entry)
   (let* ((plist (cdr entry))
-         (wdir (plist-get plist :working-directory))
-         (pr (project-current nil wdir)))
-    (project-remember-project pr)))
+         (wdir (plist-get plist :working-directory)))
+    (when-let* ((pr (project-current nil wdir)))
+      (project-remember-project pr))))
 
 (defun org-protocol--save-project-alist (_entry)
   (customize-save-variable 'org-protocol-project-alist
