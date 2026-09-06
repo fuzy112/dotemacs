@@ -109,7 +109,7 @@ If you find anything is wrong or unclear, stop immediately without outputing any
       (insert (format "%s" (magit-repository-local-get 'last-commit-command)))
       (insert "</git-command>\n")
       (insert "<git-status>")
-      (magit-gptel--run-git "status")
+      (magit-gptel--run-git "status" "--porcelain=v1" "--branch")
       (insert "</git-status>\n")
       (insert "<git-diff-staged>")
       (magit-gptel--commit-diff)
