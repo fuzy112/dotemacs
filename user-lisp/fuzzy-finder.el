@@ -114,6 +114,7 @@
 (cl-defun fuzzy-finder-command (&rest args &key class &allow-other-keys)
   (unless class
     (setq class fuzzy-finder-default-class))
+  (cl-remf args :class)
   (concat
    (fuzzy-finder-build
     (apply #'make-instance class args))
