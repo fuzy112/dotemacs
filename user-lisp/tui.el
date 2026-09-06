@@ -54,14 +54,16 @@
      (lambda (p _m)
        (unwind-protect
 	   (unless (process-live-p p)
-	     (with-current-buffer buffer
-	       (erase-buffer)
-	       (when (and ofile (file-exists-p ofile))
-		 (insert-file-contents ofile)))
+	     (when (buffer-live-p buffer)
+	       (with-current-buffer buffer
+		 (erase-buffer)
+		 (when (and ofile (file-exists-p ofile))
+		   (insert-file-contents ofile))))
 	     (when callback
 	       (funcall callback p)))
 	 (unless (process-live-p p)
-	   (kill-buffer buffer)
+	   (when (buffer-live-p buffer)
+	     (kill-buffer buffer))
 	   (when ofile
 	     (delete-file ofile))))))))
 
@@ -98,14 +100,16 @@
      :sentinel (lambda (p _m)
 		 (unwind-protect
 		     (unless (process-live-p p)
-		       (with-current-buffer buffer
-			 (erase-buffer)
-			 (when (and ofile (file-exists-p ofile))
-			   (insert-file-contents ofile)))
+		       (when (buffer-live-p buffer)
+			 (with-current-buffer buffer
+			   (erase-buffer)
+			   (when (and ofile (file-exists-p ofile))
+			     (insert-file-contents ofile))))
 		       (when callback
 			 (funcall callback p)))
 		   (unless (process-live-p p)
-		     (kill-buffer buffer)
+		     (when (buffer-live-p buffer)
+		       (kill-buffer buffer))
 		     (when ofile
 		       (delete-file ofile))))))))
 
