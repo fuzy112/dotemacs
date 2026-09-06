@@ -155,7 +155,10 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 	 (tracking-marker (plist-get info :tracking-marker))
 	 (thinking-overlay (plist-get info :thinking-overlay)))
     (unless (markerp tracking-marker)
-      (setq tracking-marker (copy-marker (or tracking-marker start-marker) t))
+      (save-current-buffer
+	(unless (markerp start-marker)
+	  (set-buffer gptel-buffer))
+	(setq tracking-marker (copy-marker (or tracking-marker start-marker) t)))
       (plist-put info :tracking-marker tracking-marker))
     (unless thinking-overlay
       (with-current-buffer (marker-buffer start-marker)
