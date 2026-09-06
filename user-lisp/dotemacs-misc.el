@@ -293,7 +293,7 @@ if the current `default-directory' is remote and such a variable exists,
 
 (define-completion-category 'send-to-tailscale-target ()
   "Completion category for `send-to/tailscale-send-items' targets."
-  :style '(substring))
+  :styles '(substring))
 
 (declare-function send-to--convert-item-to-filename "send-to")
 
