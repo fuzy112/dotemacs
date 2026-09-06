@@ -264,7 +264,7 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 
 ;;;###autoload
 (with-eval-after-load 'magit-commit
-  (unless (transient--locate-child 'magit-commit "/g")
+  (unless (transient--locate-child 'magit-commit 'magit-gptel:/g)
     (transient-append-suffix 'magit-commit [0]
       [["gptel backend"
 	(magit-gptel:/g)
