@@ -59,7 +59,7 @@
            if (string-search k str)
            append (mapcar (lambda (i)
                             (propertize (string-replace k i str)
-                                        :unexpended str))
+                                        :unexpanded str))
                           v)
            into results
            finally return (or results (list str))
