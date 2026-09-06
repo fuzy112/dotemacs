@@ -384,7 +384,7 @@ If there is no active minibuffer, signal an error."
     (delete-minibuffer-contents)
     (if (stringp str-or-list)
         (insert str-or-list)
-      (let ((separator (or (get-text-property 0 'separatar crm-separator)
+      (let ((separator (or (get-text-property 0 'separator crm-separator)
                            (cl-loop for s in '(" " ":" "\t" ";" "." "-")
                                     thereis (string-match-p crm-separator s)))))
         (cl-loop for str in str-or-list
