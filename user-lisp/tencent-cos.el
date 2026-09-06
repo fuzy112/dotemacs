@@ -245,6 +245,8 @@ Called with nil on success, error message string on failure."
                   nil nil
                   (number-to-string (/ tencent-cos-default-link-validity 3600)))))
            tencent-cos-default-link-validity)))
+  (unless (string-prefix-p "/" file-key)
+    (setq file-key (concat "/" file-key)))
   (let* ((host (tencent-cos-host tencent-cos-default-bucket
                                  tencent-cos-default-region))
          (secret (tencent-cos-auth-info host))
