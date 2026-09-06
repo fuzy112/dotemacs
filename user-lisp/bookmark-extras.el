@@ -285,7 +285,7 @@ Also allows interactive bookmark selection."
    (save-window-excursion
      (mu4e)
      (current-buffer)))
-  (goto-char (alist-get 'position bookmark)))
+  (goto-char (bookmark-prop-get bookmark 'position)))
 
 ;;;###autoload
 (defun mu4e-bookmark-main-enable ()
@@ -511,7 +511,7 @@ compatible with `url-bookmark-jump', `eww-bookmark-jump', or
                          (remove-hook 'bookmark-after-jump-hook fun)
                          (set-window-configuration wincfg))))
            (funcall fn pos)
-           (add-hook 'bookmark-after-jump-hook fun wincfg)))))))
+           (add-hook 'bookmark-after-jump-hook fun)))))))
 
 (put 'url-bookmark-jump 'bookmark-handler-type "URL")
 
