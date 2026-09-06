@@ -284,7 +284,7 @@ function or a form."
                 ,proc-var
                 (flymake-define--make-process-in-mntns
                  :mount-points (and file tmpfile (not ,no-namespace)
-                                    `((,file ,tmpfile "ro,bind")))
+                                    `((,tmpfile ,file "ro,bind")))
                  :name ,name-string
                  :buffer (generate-new-buffer ,(format " *%s*" name))
                  :command cmd
