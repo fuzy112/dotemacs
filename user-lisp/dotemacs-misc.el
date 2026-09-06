@@ -258,7 +258,7 @@ if the current `default-directory' is remote and such a variable exists,
 (defun dotemacs-time-report ()
   (interactive)
   (let ((buffer (get-buffer-create "*dotemacs-time-report*")))
-    (pop-to-buffer buffer)
+    (pop-to-buffer buffer nil 'NO-RECORD)
     (erase-buffer)
     (dolist (item (sort dotemacs-time-alist :key (apply-partially #'nth 3) :reverse t ))
       (insert (truncate-string-to-width (prin1-to-string (car item)) 24))

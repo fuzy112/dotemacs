@@ -174,7 +174,7 @@ To use this protocol, add the following bookmarklet to your browser:
                                           (cons entry org-protocol-project-alist))
                                     (run-hook-with-args 'org-protocol-clone-repo-post-hook entry)
                                     (message "Registered org-protocol project for %s" base-url)))
-                              (pop-to-buffer "*org-protocol-git-clone*")
+                              (pop-to-buffer "*org-protocol-git-clone*" nil 'NO-RECORD)
                               (error "Git clone failed (exit %d)" exit)))))))))))
   nil)
 

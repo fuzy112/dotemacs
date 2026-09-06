@@ -38,7 +38,7 @@
     (with-current-buffer (get-buffer-create "*bookmarklet*")
       (erase-buffer)
       (insert str)
-      (pop-to-buffer (current-buffer)))))
+      (pop-to-buffer (current-buffer) nil 'NO-RECORD))))
 
 (provide 'bookmarklet)
 ;;; bookmarklet.el ends here

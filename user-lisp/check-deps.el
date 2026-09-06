@@ -85,6 +85,6 @@
                            ", ok: no"))))
           (funcall insert-line prog ": not found"))))
     (funcall insert-line)
-    (pop-to-buffer buf)
+    (pop-to-buffer buf nil 'NO-RECORD)
     (goto-char (point-max))))
 
