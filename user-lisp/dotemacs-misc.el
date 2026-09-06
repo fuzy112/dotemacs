@@ -49,10 +49,20 @@
 (defvar eat-shell)
 
 (defun eat-connection-local-default-shell ()
+  "Return the default shell for the current connection-local context.
+
+This function uses connection-local variables when available, falling back
+to the default value of `eat-shell'.  The value is chosen from, in order:
+`explicit-shell-file-name' if set, the connection-local value of `eat-shell'
+if the current `default-directory' is remote and such a variable exists,
+`shell-file-name', or the global default of `eat-shell'."
   (with-connection-local-variables
     (or explicit-shell-file-name
-	eat-shell
-	shell-file-name)))
+        (if (file-remote-p default-directory)
+	    (and (connection-local-p eat-shell) eat-shell)
+          eat-shell)
+	shell-file-name
+        (default-value 'eat-shell))))
 
 (setq! eat-default-shell-function #'eat-connection-local-default-shell)
 
