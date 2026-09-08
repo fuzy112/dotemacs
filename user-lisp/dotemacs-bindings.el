@@ -362,6 +362,7 @@
   "S-<down>"			#'windmove-down
   ;; remap some commands
   "<remap> <yank-pop>"          #'consult-yank-pop
+  "<remap> <dabbrev-expand>"	#'hippie-expand
   "<remap> <eval-last-sexp>"	#'pp-eval-last-sexp
   "<remap> <eval-expression>"	#'pp-eval-expression
   "<remap> <Info-search>"	#'consult-info
