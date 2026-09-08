@@ -43,7 +43,13 @@
   "Gptel backend used for magit-gptel.
 See `gptel-backend'."
   :safe #'always
-  :type (get 'gptel-backend 'custom-type)
+  :type (let ((type (copy-sequence (get 'gptel-backend 'custom-type))))
+	  (setcdr type (seq-union (cdr type)
+				  (nconc
+				   (mapcar (lambda (name) (list 'const :tag name name))
+					   (delq nil (mapcar #'car gptel--known-backends)))
+				   (list '(string :tag "Registered backend")))))
+	  type)
   :set (lambda (sym val &optional local)
 	 (let ((setter (get 'gptel-backend 'custom-set)))
 	   (if local
