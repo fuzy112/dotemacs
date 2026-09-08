@@ -161,7 +161,7 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 	(setq tracking-marker (copy-marker (or tracking-marker start-marker) t)))
       (plist-put info :tracking-marker tracking-marker))
     (unless thinking-overlay
-      (with-current-buffer (marker-buffer start-marker)
+      (with-current-buffer gptel-buffer
 	(save-excursion
 	  (goto-char tracking-marker)
 	  (insert "\n")
@@ -171,7 +171,7 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 	  (overlay-put thinking-overlay 'after-string "\n"))))
     (pcase-exhaustive response
       ((pred stringp)
-       (with-current-buffer (marker-buffer start-marker)
+       (with-current-buffer gptel-buffer
 	 (save-excursion
 	   (goto-char tracking-marker)
 	   (insert response))))
@@ -186,14 +186,14 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
        (message "LLM query finished")
        (pop-to-buffer gptel-buffer))
       (`(reasoning . ,(and text (pred stringp)))
-       (with-current-buffer (marker-buffer start-marker)
+       (with-current-buffer gptel-buffer
 	 (save-excursion
 	   (goto-char tracking-marker)
 	   (overlay-put thinking-overlay 'display
 			(concat (overlay-get thinking-overlay 'display)
 				(propertize text 'face 'magit-gptel-thinking-text))))))
       (`(reasoning . t)
-       (when-let* ((buf (marker-buffer start-marker))
+       (when-let* ((buf gptel-buffer)
 		   (win (get-buffer-window buf 0)))
 	 (with-selected-window win
 	   (goto-char tracking-marker)
