@@ -278,7 +278,7 @@ if the current `default-directory' is remote and such a variable exists,
        dired-hide-details-hide-absolute-location t
        dired-do-revert-buffer t
        dired-dwim-target t
-       dired-auto-revert-buffer t
+       dired-auto-revert-buffer 'dired-directory-changed-p
        dired-mouse-drag-files t
        dired-recursive-copies 'always
        dired-recursive-deletes 'always
