@@ -302,12 +302,28 @@
   (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
   (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode))
 
+;;;; hippie-expand
+
+(setq! hippie-expand-try-functions-list
+       '(try-expand-dabbrev
+    	 try-expand-dabbrev-all-buffers
+    	 try-expand-dabbrev-from-kill
+    	 try-expand-line
+    	 try-expand-line-all-buffers
+    	 try-expand-list
+    	 try-expand-list-all-buffers
+    	 try-complete-file-name-partially
+    	 try-complete-file-name
+    	 try-expand-all-abbrevs
+    	 try-complete-lisp-symbol-partially
+    	 try-complete-lisp-symbol))
+
 ;;;; tempel
 
 (defun tempel-setup-capf ()
   (setq-local completion-at-point-functions
-                (cons #'tempel-expand
-                      completion-at-point-functions)))
+              (cons #'tempel-expand
+                    completion-at-point-functions)))
 (add-hook 'conf-mode-hook 'tempel-setup-capf)
 (add-hook 'prog-mode-hook 'tempel-setup-capf)
 (add-hook 'text-mode-hook 'tempel-setup-capf)
