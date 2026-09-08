@@ -282,6 +282,7 @@ if the current `default-directory' is remote and such a variable exists,
        dired-mouse-drag-files t
        dired-recursive-copies 'always
        dired-recursive-deletes 'always
+       dired-vc-rename-file t
        shell-command-prompt-show-cwd t)
 
 ;;;; zone
