@@ -176,12 +176,15 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 	   (goto-char tracking-marker)
 	   (insert response))))
       ('abort
-       (message "LLM query aborted"))
+       (message "LLM query aborted")
+       (pop-to-buffer gptel-buffer))
       ('nil
-       (message "LLM query error: %s" (plist-get info :status)))
+       (message "LLM query error: %s" (plist-get info :status))
+       (pop-to-buffer gptel-buffer))
       ('t
        (message "LLM query status: %s" (plist-get info :status))
-       (message "LLM query finished"))
+       (message "LLM query finished")
+       (pop-to-buffer gptel-buffer))
       (`(reasoning . ,(and text (pred stringp)))
        (with-current-buffer (marker-buffer start-marker)
 	 (save-excursion
