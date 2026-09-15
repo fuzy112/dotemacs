@@ -140,8 +140,8 @@ created by `bookmark-make-record-default'."
                           (- mark bookmark-search-size))
 	               nil))))))))
 
-(define-advice bookmark-default-handler (:after (record) region)
-  "Restore the mark and region after jumping to a bookmark."
+(defun bookmark-restore-region (record)
+  "Restore the mark and region recorded in bookmark RECORD."
   (let ((mark (bookmark-prop-get record 'mark))
         (region-active (bookmark-prop-get record 'region-active))
         (forward-str (bookmark-prop-get record 'mark-front-context-string))
@@ -154,6 +154,8 @@ created by `bookmark-make-record-default'."
       (when (and behind-str (search-backward behind-str (point-min) t))
         (goto-char (match-end 0)))
       (push-mark (point) 'NO-MESSAGE region-active))))
+
+(add-hook 'bookmark-default-handler-functions #'bookmark-restore-region)
 
 ;;:; Dired
 
@@ -235,16 +237,19 @@ so that later jumps will restore the Dired state correctly."
 
 ;;;; EWW
 
-(define-advice eww-bookmark-jump (:after (record) pos-and-mark)
-  "Restore point and mark after EWW bookmark page loads.
-Also allows interactive bookmark selection."
+(define-advice eww-bookmark-jump (:after (record) interactive)
+  "Make `eww-bookmark-jump' interactive with bookmark completion."
   (interactive
    (list (bookmark-get-bookmark
           (bookmark-completing-read*
            '(eww-bookmark-jump
              url-bookmark-jump
              xwidget-webkit-bookmark-jump-handler)
-           "Jump to record"))))
+           "Jump to record")))))
+
+(defun eww-bookmark-restore-pos-and-mark (record)
+  "Restore point and mark after EWW bookmark page loads.
+RECORD is the bookmark being jumped to."
   (let ((buf (current-buffer)))
     (letrec ((hook (lambda ()
                      (remove-hook 'eww-after-render-hook hook t)
@@ -254,15 +259,23 @@ Also allows interactive bookmark selection."
                      (run-hooks 'bookmark-after-jump-hook))))
       (add-hook 'eww-after-render-hook hook nil t))))
 
+(add-hook 'eww-bookmark-jump-functions #'eww-bookmark-restore-pos-and-mark)
+
 ;;;; Help
 
-(define-advice help-bookmark-jump (:after (record) restore-point)
+(define-advice help-bookmark-jump (:after (record) interactive)
+  "Make `help-bookmark-jump' interactive with bookmark completion."
   (interactive
    (list (bookmark-get-bookmark
           (bookmark-completing-read*
            '(help-bookmark-jump)
-           "Jump to bookmark"))))
+           "Jump to bookmark")))))
+
+(defun help-bookmark-restore-point (record)
+  "Display the buffer of bookmark RECORD with its recorded point."
   (bookmark-display-buffer (current-buffer) record))
+
+(add-hook 'help-bookmark-jump-functions #'help-bookmark-restore-point)
 
 ;;;; Xwidget webkit
 

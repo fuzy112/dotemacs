@@ -46,9 +46,10 @@
   (add-to-list 'consult-buffer-filter "\\`\\*Telega" 'append))
 
 (defvar telega-cache-dir)
-(define-advice telega (:around (&rest args) default-directory)
+
+(define-advice telega (:around (&rest app) default-directory)
   (let ((default-directory "~/"))
-    (apply args)))
+    (apply app)))
 
 (add-hook 'telega-root-mode-hook #'hl-line-mode)
 

@@ -157,10 +157,13 @@
   (setq save-place-skip-check-regexp "\\`/\\(?:cdrom\\|floppy\\|mnt\\|run/user/[[:digit:]]+/gvfs/\\|\\(?:[^@/:]*@\\)?[^@/:]*[^@/:.]:\\)")
   (save-place-mode))
 
-(define-advice save-place-find-file-hook (:after (&rest _) recenter)
+(defun save-place-reposition-window ()
+  "Reposition the window after `save-place' restored point."
   (when (and buffer-file-name (buffer-live-p (current-buffer)))
     (ignore-errors
       (reposition-window))))
+
+(add-hook 'save-place-after-find-file-hook #'save-place-reposition-window)
 
 ;;;; savehist
 

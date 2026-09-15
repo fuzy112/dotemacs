@@ -80,7 +80,9 @@ If previous Git commit history is provided, align your message with the existing
 - Include descriptions of purpose and implementation details if that is the existing convention
 Output only the commit message, with no extra explanation or surrounding markup.
 
-If you find anything is wrong or unclear, stop immediately without outputing any commit message."
+If you find anything is wrong or unclear, stop immediately without outputing any commit message.
+
+Your thought should be brief and focused on important changes."
   "System message for magit-gptel-commit."
   :type 'string)
 

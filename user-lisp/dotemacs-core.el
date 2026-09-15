@@ -419,6 +419,126 @@ configuration until the relevant feature or file is available."
     ;; the function value of `minibuffer-message' to `ignore'.
     (apply fn args)))
 
+;;;###autoload
+(defmacro hookify! (fn &rest keys)
+  "Advise FN to run a hook, defining the hook if needed.
+
+Exactly one of the following keywords must be given, followed by the
+name of the hook to define and run:
+
+  :before HOOK    run HOOK before FN
+  :after HOOK     run HOOK after FN
+  :around HOOK    run HOOK around FN (see below)
+  :override HOOK  replace FN with the function stored in HOOK (see below)
+
+Optional keywords:
+
+  :args ARGS      argument list of FN; only meaningful for :before and
+                  :after.  If nil (the default), HOOK is a normal hook
+                  run with `run-hooks'; otherwise HOOK is an abnormal
+                  hook run with `run-hook-with-args' passing the
+                  elements of ARGS.
+  :doc DOCSTRING  documentation string of HOOK.
+
+For `:around', HOOK is an abnormal hook whose members wrap FN like
+`:around' advice: each member is called with the next function
+followed by the arguments; apply the next function to continue the
+chain down to FN, or not to short-circuit it.
+
+For `:override', HOOK is a variable (conventionally named
+`*-function') whose value is a function called with FN's arguments in
+place of FN.  If HOOK is nil, FN's original definition is called.
+
+The added advice is named `hookify-before', `hookify-after',
+`hookify-around' or `hookify-override' according to the keyword used,
+so the same function can have hooks of different kinds at once.
+
+A `;;;###autoload' cookie before a `hookify!' form autoloads only the
+hook definition, not the advice.
+
+\(fn FN [:before HOOK | :after HOOK | :around HOOK | :override HOOK] [:args ARGS] [:doc DOCSTRING])"
+  (declare (autoload-macro expand)
+           (indent 1)
+           (debug (&define name &rest [&or
+                                       [[":before" ":after" ":around"
+                                         ":override"]
+                                        name]
+                                       [":args" arglist]
+                                       [":doc" stringp]])))
+  (let ((where nil)
+        (hook nil)
+        (args nil)
+        (docstring nil)
+        (tail keys))
+    (while tail
+      (let ((key (pop tail)))
+        (pcase key
+          ((or ':before ':after ':around ':override)
+           (when where
+             (error "hookify!: %S used together with %S" key where))
+           (setq where key
+                 hook (pop tail)))
+          (':args (setq args (pop tail)))
+          (':doc (setq docstring (pop tail)))
+          (_ (error "hookify!: unknown keyword %S" key)))))
+    (unless where
+      (error "hookify!: one of :before, :after, :around or :override is required"))
+    (unless (symbolp hook)
+      (error "hookify!: HOOK should be a symbol, got %S" hook))
+    (let* ((advice-name (intern (concat "hookify-"
+                                        (substring (symbol-name where) 1))))
+           (hook-args nil)
+           (rest-arg nil)
+           (tail args))
+      (while (and tail (not (eq (car tail) '&rest)))
+        (unless (eq (car tail) '&optional)
+          (push (car tail) hook-args))
+        (pop tail))
+      (setq hook-args (nreverse hook-args)
+            rest-arg (cadr tail))
+      ;; A `&rest _' argument is actually used by the generated advice; give
+      ;; it a real name to avoid "argument not left unused" warnings.
+      (when (eq rest-arg '_)
+        (setq rest-arg 'rest
+              args (append hook-args '(&rest rest))))
+      (pcase where
+        ((or ':before ':after)
+         (let ((run-form
+                (cond ((null args)
+                       `(run-hooks ',hook))
+                      (rest-arg
+                       `(apply #'run-hook-with-args ',hook ,@hook-args ,rest-arg))
+                      (t
+                       `(run-hook-with-args ',hook ,@hook-args)))))
+           `(progn
+              (defvar ,hook nil ,docstring)
+              :autoload-end
+              (define-advice ,fn (,where ,(or args '(&rest _)) ,advice-name)
+                ,run-form))))
+        (':around
+         `(progn
+            (defvar ,hook nil ,docstring)
+            :autoload-end
+            (define-advice ,fn (:around (orig &rest rest) ,advice-name)
+              (letrec ((run-around-hook
+                        (lambda (fns args)
+                          (if (null fns)
+                              (apply orig args)
+                            (apply (car fns)
+                                   (lambda (&rest new-args)
+                                     (funcall run-around-hook (cdr fns)
+                                              new-args))
+                                   args)))))
+                (funcall run-around-hook ,hook rest)))))
+        (':override
+         `(progn
+            (defvar ,hook nil ,docstring)
+            :autoload-end
+            (define-advice ,fn (:around (orig &rest rest) ,advice-name)
+              (if (null ,hook)
+                  (apply orig rest)
+                (apply ,hook rest)))))))))
+
 (defmacro shut-up! (place)
   "Advise PLACE with `dotemacs-wrap-no-messages' to suppress messages.
 PLACE should be a function symbol or a place suitable for

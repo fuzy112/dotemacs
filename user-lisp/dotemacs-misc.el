@@ -175,7 +175,8 @@ if the current `default-directory' is remote and such a variable exists,
 
 ;;;; proced
 
-(define-advice proced-format-args (:override (args) nix)
+(defun proced-format-args-nix (args)
+  "Format ARGS, abbreviating executables under /nix to their base name."
   (if-let* ((splitted (split-string args))
             (exe (car splitted))
             ((string-prefix-p "/nix/" exe)))
@@ -184,6 +185,8 @@ if the current `default-directory' is remote and such a variable exists,
              (cdr splitted))
        " ")
     args))
+
+(setq! proced-format-args-function #'proced-format-args-nix)
 
 (setq! proced-auto-update-flag 'visible)
 (setq! proced-auto-update-interval 1)

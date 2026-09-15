@@ -121,7 +121,7 @@
 
 (after-load! magit-process
   (setq! magit-tramp-pipe-stty-settings 'pty)
-  (advice-add #'magit-maybe-start-credential-cache-daemon :after '+magit--ccdp-no-query))
+  (add-hook 'magit-credential-hook '+magit--ccdp-no-query 10))
 
 (declare-function magit-staged-files "ext:magit-commit.el")
 (defun +git-commit--log-edit-h ()
@@ -222,7 +222,7 @@ new record is started."
               (ignore-errors (apply args)))
             '((name . ignore-errors)))
 
-(define-advice diff-hl-margin-ensure-visible (:override () auto-width)
+(defun diff-hl-margin-auto-width ()
   "Ensure that diff-hl margin is wide enough to display all symbols.
 Calculate the maximum width of all symbols in `diff-hl-margin-symbols-alist'
 and set the appropriate margin width variable accordingly.
@@ -232,6 +232,8 @@ Then refresh all windows displaying the current buffer."
     (set-local width-var (apply #'max (map-values-apply #'string-width diff-hl-margin-symbols-alist))))
   (dolist (win (get-buffer-window-list))
     (set-window-buffer win (current-buffer))))
+
+(setq! diff-hl-margin-ensure-visible-function #'diff-hl-margin-auto-width)
 
 (after-load! (:or diff-hl vc magit)
   (global-diff-hl-mode)

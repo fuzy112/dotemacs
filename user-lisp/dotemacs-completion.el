@@ -169,8 +169,10 @@
   (alist-setq! marginalia-prompt-categories
     "--gpg-sign=" 'gpg-key)
 
-  (define-advice marginalia--annotator (:override (cat) cat-inherit)
-    "Return annotation function for category CAT."
+  (defun marginalia-annotator-cat-inherit (cat)
+    "Return annotation function for category CAT.
+Categories without their own annotator inherit from their
+`completion-category-parents'."
     (pcase (car (alist-get cat marginalia-annotators))
       ('none #'ignore)
       ('builtin nil)
@@ -178,7 +180,9 @@
       ;; completion-category-default and completion-category-overrides
       ('nil (cl-loop for p in (get cat 'completion-category-parents)
                      thereis (marginalia--annotator p)))
-      (fun fun))))
+      (fun fun)))
+
+  (setq! marginalia-annotator-function #'marginalia-annotator-cat-inherit))
 
 ;; Marginalia and embark expects recentf to be files.
 (define-completion-category 'recentf '(file)
@@ -344,9 +348,12 @@
 
 ;;;; embark
 
-(define-advice embark-dwim (:before (&rest _args) mouse)
+(defun +embark-dwim-mouse-set-point ()
+  "Set point to the position of the mouse event, if any."
   (when (mouse-event-p last-command-event)
     (mouse-set-point last-command-event)))
+
+(add-hook 'embark-dwim-before-hook #'+embark-dwim-mouse-set-point)
 
 (defun +embark/find-file-as-root (file)
   "Find FILE as root."
@@ -705,7 +712,8 @@ The source is hidden by default and can be summoned via its narrow key.")
 
 ;;;; Consult-Dir
 
-(define-advice consult-dir--bookmark-dirs (:override () dired)
+(defun consult-dir-bookmark-dirs-dired ()
+  "Return bookmarked directories as consult-dir candidates."
   (bookmark-maybe-load-default-file)
   (let (dirs)
     (dolist (cand bookmark-alist)
@@ -716,6 +724,8 @@ The source is hidden by default and can be summoned via its narrow key.")
                      (file-directory-p file))))
         (push (propertize (car cand) 'consult--type ?f) dirs)))
     (nreverse dirs)))
+
+(setq! consult-dir-bookmark-dirs-function #'consult-dir-bookmark-dirs-dired)
 
 ;;;; Prescent
 

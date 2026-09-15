@@ -87,8 +87,11 @@
 (autoload 'org--protocol-detect-protocol-server "org-protocol")
 (advice-add 'server-visit-files :around #'org--protocol-detect-protocol-server)
 
-(define-advice org-protocol-capture (:before (&rest _) raise-frame)
+(defun +org-protocol-capture-raise-frame ()
+  "Raise and focus the current frame."
   (select-frame-set-input-focus (selected-frame)))
+
+(add-hook 'org-protocol-before-capture-hook #'+org-protocol-capture-raise-frame)
 
 (defvar org-protocol-project-alist)
 

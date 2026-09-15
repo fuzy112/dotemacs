@@ -159,7 +159,7 @@ attributes."
     (consult-customize consult-theme :state (consult-theme--state))))
 
 (define-advice consult-theme (:after (theme) save)
-  "Advice to persist theme selections after using `consult-theme'.
+  "Persist THEME selection made by `consult-theme'.
 Saves `custom-enabled-themes' to customize settings permanently, and adds
 the selected theme's SHA256 hash to `custom-safe-themes' if the theme is not
 already marked as safe and is not a built-in default Emacs theme."
@@ -180,6 +180,7 @@ already marked as safe and is not a built-in default Emacs theme."
                                        (cons hash custom-safe-themes))))))
       (customize-save-variable 'custom-enabled-themes custom-enabled-themes
                                "Saved by `consult-theme'."))))
+
 
 (defun reload-enabled-themes ()
   (interactive)

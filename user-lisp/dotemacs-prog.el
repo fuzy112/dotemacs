@@ -80,9 +80,10 @@ See `xref-show-xrefs' for FETCHER and ALIST."
 ;;;; rust-mode
 
 (declare-function project-prefixed-buffer-name "project.el" (arg1))
-(define-advice rust--compile (:around (&rest args) project-prefix-buffer-name)
+
+(define-advice rust--compile (:around (&rest app) project-prefix-buffer-name)
   (let ((compilation-buffer-name-function #'project-prefixed-buffer-name))
-    (apply args)))
+    (apply app)))
 
 
 ;;;; sh-script
@@ -131,11 +132,11 @@ confirmed."
 
 (declare-function js-jsx--comment-region "js.el")
 
-(define-advice js-jsx-enable (:after () comments)
+(defun js-jsx-enable-comments ()
   "Enable JSX comments."
   (setq-local comment-region-function #'js-jsx--comment-region))
 
-(define-advice js-jsx-enable (:after () sgml)
+(defun js-jsx-enable-sgml ()
   "Enable sgml commands in JSX buffers."
   (eval-and-compile (require 'sgml-mode))
   (let ((map (make-sparse-keymap)))
@@ -147,6 +148,9 @@ confirmed."
     (define-key map (kbd "C-c C-f") #'sgml-skip-tag-forward)
     (define-key map (kbd "C-c C-o") #'sgml-tag)
     (define-key map (kbd "C-c C-t") #'sgml-tag)))
+
+(add-hook 'js-jsx-after-enable-hook #'js-jsx-enable-comments)
+(add-hook 'js-jsx-after-enable-hook #'js-jsx-enable-sgml)
 
 ;;;; markdown
 
