@@ -100,6 +100,7 @@ if the current `default-directory' is remote and such a variable exists,
 (add-hook 'shell-mode-hook #'with-editor-export-editor)
 (add-hook 'term-exec-hook #'with-editor-export-editor)
 (add-hook 'vterm-mode-hook #'with-editor-export-editor)
+(add-hook 'eat-exec-hook #'with-editor-export-editor)
 
 ;;;; shell-command
 
