@@ -25,8 +25,7 @@
 
 ;; Enable editing of variable values in help buffers
 (setq help-window-select t
-      help-window-keep-selected t
-      view-lossage-auto-refresh t)
+      help-window-keep-selected t)
 
 ;; help-fns
 (setq! help-enable-variable-value-editing t
