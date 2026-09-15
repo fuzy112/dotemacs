@@ -238,7 +238,8 @@ DOCUMENTATION is the doc-string of the diagnostic function.
 If CONDITION is specified, the diagnostic function will report a
 `:panic' if the condition is not met.  CONDITION can be either a
 function or a form."
-  (declare (indent 1))
+  (declare (indent 1)
+           (autoload-macro expand))
   (require 'flymake-define)
   (let* ((name-string (symbol-name name))
          (proc-var (intern (concat name-string  "--proc"))))
