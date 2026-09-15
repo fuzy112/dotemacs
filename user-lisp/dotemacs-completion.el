@@ -609,9 +609,26 @@ If there is no active minibuffer, signal an error."
      :annotate ,#'consult-source-agent-shell--annotate
      :items
      ,(lambda () (consult--buffer-query
+             :buffer-list #'agent-shell-buffers
              :sort 'visibility
-             :predicate (apply-partially #'buffer-match-p
-                                         '(derived-mode . agent-shell-mode))
+             :as #'consult--buffer-pair)))
+  "Source for `consult-buffer' for `agent-shell-mode' buffers.
+The source is hidden by default and can be summoned via its narrow key.")
+
+(defvar consult-source-project-agent-shell
+  `( :name    "Agent-shell"
+     :narrow   ?a
+     :category agent-shell
+     :hidden   t
+     :face     agent-shell-buffer-name
+     :history  buffer-name-history
+     :state    ,#'consult--buffer-state
+     :enabled  ,(lambda () (featurep 'agent-shell))
+     :annotate ,#'consult-source-agent-shell--annotate
+     :items
+     ,(lambda () (consult--buffer-query
+             :buffer-list #'agent-shell-project-buffers
+             :sort 'visibility
              :as #'consult--buffer-pair)))
   "Source for `consult-buffer' for `agent-shell-mode' buffers.
 The source is hidden by default and can be summoned via its narrow key.")
@@ -625,6 +642,8 @@ The source is hidden by default and can be summoned via its narrow key.")
   (add-to-list 'consult-buffer-sources 'consult-source-xwidget-webkit-buffer t)
   (add-to-list 'consult-buffer-sources 'consult-source-view t)
   (add-to-list 'consult-buffer-sources 'consult-source-agent-shell t)
+
+  (add-to-list 'consult-project-buffer-sources 'consult-source-project-agent-shell t)
 
 
   ;; consult-customize is a macro and is not autoloaded
