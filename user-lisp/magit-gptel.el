@@ -64,7 +64,7 @@ See `gptel-model'."
   :safe #'always
   :type (get 'gptel-model 'custom-type))
 
-(defcustom magit-gptel-max-tokens 4096
+(defcustom magit-gptel-max-tokens 50000
   "Maximum number of tokens for gptel requests from magit-gptel."
   :type 'integer
   :group 'magit-gptel)
