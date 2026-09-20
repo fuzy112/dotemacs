@@ -623,7 +623,7 @@ If there is no active minibuffer, signal an error."
 The source is hidden by default and can be summoned via its narrow key.")
 
 (defvar consult-source-project-agent-shell
-  `( :name    "Agent-shell"
+  `( :name    "Project Agent-shell"
      :narrow   ?a
      :category agent-shell
      :hidden   t
