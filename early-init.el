@@ -34,6 +34,9 @@
 
 (defun reevaluate-setting-default-toplevel-value (symbol)
   "Reset the toplevel default value of SYMBOL to its standard value."
+  (interactive "vVariable: ")
+  (unless (get symbol 'standard-value)
+    (error "No standard value found for symbol: `%S'" symbol))
   (set-default-toplevel-value
    symbol
    (eval (car (get symbol 'standard-value)))))
