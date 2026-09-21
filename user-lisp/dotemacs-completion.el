@@ -615,10 +615,9 @@ If there is no active minibuffer, signal an error."
      :enabled  ,(lambda () (featurep 'agent-shell))
      :annotate ,#'consult-source-agent-shell--annotate
      :items
-     ,(lambda () (consult--buffer-query
-             :buffer-list #'agent-shell-buffers
-             :sort 'visibility
-             :as #'consult--buffer-pair)))
+     ,(lambda () (consult--buffer-query :mode 'agent-shell-mode
+                                   :sort 'visibility
+                                   :as #'consult--buffer-pair)))
   "Source for `consult-buffer' for `agent-shell-mode' buffers.
 The source is hidden by default and can be summoned via its narrow key.")
 
@@ -633,10 +632,12 @@ The source is hidden by default and can be summoned via its narrow key.")
      :enabled  ,(lambda () (featurep 'agent-shell))
      :annotate ,#'consult-source-agent-shell--annotate
      :items
-     ,(lambda () (consult--buffer-query
-             :buffer-list #'agent-shell-project-buffers
-             :sort 'visibility
-             :as #'consult--buffer-pair)))
+     ,(lambda ()
+        (when-let* ((root (consult--project-root)))
+          (consult--buffer-query :directory root
+                                 :mode 'agent-shell-mode
+                                 :sort 'visibility
+                                 :as #'consult--buffer-pair))))
   "Source for `consult-buffer' for `agent-shell-mode' buffers.
 The source is hidden by default and can be summoned via its narrow key.")
 
