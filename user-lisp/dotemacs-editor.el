@@ -94,6 +94,8 @@
   (setq recentf-autosave-interval 30)
   (setq recentf-auto-cleanup 600)
   (setq recentf-show-messages nil)
+  (add-to-list 'recentf-exclude 'backup-file-name-p)
+  (add-to-list 'recentf-exclude "\\`/nix/store/")
   (shut-up! #'recentf-cleanup)
   (recentf-mode))
 
