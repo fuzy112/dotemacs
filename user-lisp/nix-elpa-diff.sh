@@ -166,7 +166,13 @@ for pkg in "${common[@]}"; do
         printf '\n===== %s =====\n' "$pkg"
         diff -Nur -x '*.elc' -x "*-pkg.el" -x "*.info" \
              -F "^(" \
-             "$d1" "$d2" || diffs=1
+             "$d1" "$d2"
+        rc=$?
+        case $rc in
+            0) ;;                     # -q said different; race, harmless
+            1) diffs=1 ;;
+            *) die "diff failed for package $pkg (exit $rc)" ;;
+        esac
     fi
 done
 
