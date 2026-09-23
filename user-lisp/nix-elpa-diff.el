@@ -71,13 +71,13 @@
 (defvar nix-elpa-diff-font-lock-keywords
   `(;; Added/removed summary (stderr, merged into the buffer).
     ("^\\(removed\\|added\\) packages ([0-9]+):$"
-     (0 'diff-file-header-face t))
+     (0 'diff-file-header t))
     ;; Our ===== pkg ===== section headers.
     ("^===== \\([^ \n]+\\) =====$"
-     (0 'diff-hunk-header-face t))
+     (0 'diff-hunk-header t))
     ;; The "diff ..." invocation lines and the --- / +++ file labels.
-    ("^diff .*$" (0 'diff-file-header-face t))
-    ("^\\(---\\|\\+\\+\\+\\) .*$" (0 'diff-file-header-face t)))
+    ("^diff .*$" (0 'diff-file-header t))
+    ("^\\(---\\|\\+\\+\\+\\) .*$" (0 'diff-file-header t)))
   "Font-lock rules for the *diff-pkgs* buffer.  Path shortening is NOT
 done here: it needs per-match dynamic replacements, which font-lock
 keywords cannot express; see `nix-elpa-diff--prettify'.")
