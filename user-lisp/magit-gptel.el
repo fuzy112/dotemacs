@@ -150,12 +150,12 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 	 (gptel-include-reasoning 'ignore)
 	 (gptel-use-tools nil)
 	 (gptel-max-tokens magit-gptel-max-tokens))
-     (when magit-gptel-backend
-       (setq gptel-backend (if (stringp magit-gptel-backend)
-			       (gptel-get-backend magit-gptel-backend)
-			     magit-gptel-backend)))
-     (when magit-gptel-model
-       (setq gptel-model magit-gptel-model))
+     (when-let* ((s (or (magit-repository-local-get 'magit-gptel-backend)
+			(symbol-value 'magit-gptel-backend))))
+       (setq gptel-backend (if (stringp s) (gptel-get-backend s) s)))
+     (when-let* ((m (or (magit-repository-local-get 'magit-gptel-model)
+			magit-gptel-model)))
+       (setq gptel-model m))
      ,@body))
 
 (defun magit-gptel--stream-callback (response info)
@@ -227,13 +227,51 @@ backend.  If `magit-gptel-model' is set, `gptel-model' is bound to that value."
 		(eql c ?y))))
   :key "/g")
 
+(defclass magit-gptel-provider-variable (transient-lisp-variable)
+  ((backend       :initarg :backend)
+   (backend-value :initarg :backend-value)
+   (always-read :initform t)
+   (set-value :initarg :set-value :initform #'set))
+  "Class used for gptel-backends.")
+
+(cl-defmethod transient-format-value ((obj magit-gptel-provider-variable))
+  "Format the value of OBJ as backend and model names."
+  (propertize (concat
+               (gptel-backend-name
+                (oref obj backend-value))
+	       ":"
+               (gptel--model-name (oref obj value)))
+              'face 'transient-value))
+
+(cl-defmethod transient-infix-set ((obj magit-gptel-provider-variable) value)
+  "Set OBJ's value to VALUE, a list of backend and model."
+  (pcase-let ((`(,backend-value ,model-value) value))
+    (funcall (oref obj set-value)
+             (oref obj variable)
+             (oset obj value model-value))
+    (funcall (oref obj set-value)
+             (oref obj backend)
+             (oset obj backend-value backend-value)))
+  (transient-setup))
+
 ;;;###autoload(autoload 'magit-gptel:/m "magit-gptel")
 (transient-define-infix magit-gptel:/m ()
   :description "magit gptel model"
-  :class 'gptel-provider-variable
+  :class 'magit-gptel-provider-variable
   :prompt "Model: "
   :variable 'magit-gptel-model
-  :set-value #'gptel--set-with-scope
+  :init-value (lambda (obj)
+		(oset obj backend-value
+		      (let ((b (or (magit-repository-local-get (oref obj backend))
+				   (symbol-value (oref obj backend))
+				   gptel-backend)))
+			(if (stringp b)
+			    (gptel-get-backend b)
+			  b)))
+		(oset obj value
+		      (or (magit-repository-local-get (oref obj variable))
+			  (symbol-value (oref obj variable)))))
+  :set-value #'magit-repository-local-set
   :backend 'magit-gptel-backend
   :key "/m"
   :reader (lambda (prompt &rest _)
