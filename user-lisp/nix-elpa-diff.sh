@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Diff Emacs Lisp packages between two Nix system generations.
 #
-# Usage: diff-emacs-pkgs [OLD_GENERATION NEW_GENERATION]
+# Usage: nix-elpa-diff [OLD_GENERATION NEW_GENERATION]
 #
 # With no arguments, diffs the previous system generation against the
 # current one. Each generation argument may be given as:
