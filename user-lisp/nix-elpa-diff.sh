@@ -88,13 +88,20 @@ sitelisp_from_generation() {
 }
 
 # Print version-stripped package names under <siteLisp>/elpa, sorted.
+# Strip at the LAST dash followed by a digit (start of the version), so
+# names containing a dash-digit sequence themselves survive, e.g.
+# foo-2bar-1.0 -> foo-2bar.
 list_packages() (
     shopt -s nullglob
     local dir base
     for dir in "$1"/elpa/*; do
         [ -d "$dir" ] || continue
         base=${dir##*/}
-        printf '%s\n' "${base%%-[0-9]*}"
+        if [[ $base =~ ^(.*)-[0-9][^-]*$ ]]; then
+            printf '%s\n' "${BASH_REMATCH[1]}"
+        else
+            printf '%s\n' "$base"
+        fi
     done | sort -u
 )
 
