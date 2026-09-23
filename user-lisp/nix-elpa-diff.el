@@ -181,3 +181,6 @@ like \"41\" or an absolute path."
 	(when (> status 1)
 	  (message "nix-elpa-diff exited with status %d" status))))
     (pop-to-buffer buf)))
+
+(provide 'nix-elpa-diff)
+;;; nix-elpa-diff.el ends here
