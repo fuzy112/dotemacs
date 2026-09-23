@@ -44,7 +44,21 @@
 
 (unless (memq system-type '(ms-dos windows-nt))
   (setq! eshell-visual-commands nil)
-  (add-hook 'eshell-load-hook #'eat-eshell-mode))
+  (after-load! eshell
+    (eat-eshell-mode)))
+
+(defun eat-my-setup ()
+  (setq-local truncate-lines t)
+  (setq-local nobreak-char-display nil)
+  (setq-local bidi-paragraph-direction 'left-to-right)
+  (setq-local bidi-inhibit-bpa t)
+  (setq-local line-spacing 0)
+  (setq-local scroll-conservatively 101)
+  (setq-local hscroll-margin 0)
+  (setq-local scroll-margin 0)
+  (setq-local auto-hscroll-mode nil))
+
+(add-hook 'eat-mode-hook 'eat-my-setup)
 
 (defvar eat-shell)
 
