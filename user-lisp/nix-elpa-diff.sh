@@ -105,6 +105,13 @@ list_packages() (
     done | sort -u
 )
 
+# Print the newest (by version sort) directory for package $2 under $1/elpa.
+latest_pkg_dir() {
+    local dirs=("$1/elpa/$2"-[0-9]*)
+    [ -d "${dirs[0]}" ] || return 1
+    printf '%s\n' "${dirs[@]}" | sort -V | tail -n 1
+}
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -149,19 +156,18 @@ fi
 
 diffs=0
 for pkg in "${common[@]}"; do
-    for d1 in "$site1/elpa/$pkg"-[0-9]*; do
-        [ -d "$d1" ] || continue
-        for d2 in "$site2/elpa/$pkg"-[0-9]*; do
-            [ -d "$d2" ] || continue
-            # cheap -q pre-pass: full diff (and header) only when needed
-            if ! diff -qr -x '*.elc' -x "*-pkg.el" -x "*.info" "$d1" "$d2" >/dev/null; then
-                printf '\n===== %s =====\n' "$pkg"
-                diff -Nur -x '*.elc' -x "*-pkg.el" -x "*.info" \
-                     -F "^(" \
-                     "$d1" "$d2" || diffs=1
-            fi
-        done
-    done
+    # Compare only the newest installed version of each side; packages
+    # with several versions installed would otherwise produce a
+    # cartesian product of diffs.
+    d1=$(latest_pkg_dir "$site1" "$pkg") || continue
+    d2=$(latest_pkg_dir "$site2" "$pkg") || continue
+    # cheap -q pre-pass: full diff (and header) only when needed
+    if ! diff -qr -x '*.elc' -x "*-pkg.el" -x "*.info" "$d1" "$d2" >/dev/null; then
+        printf '\n===== %s =====\n' "$pkg"
+        diff -Nur -x '*.elc' -x "*-pkg.el" -x "*.info" \
+             -F "^(" \
+             "$d1" "$d2" || diffs=1
+    fi
 done
 
 exit "$diffs"
