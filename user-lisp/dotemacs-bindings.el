@@ -330,6 +330,7 @@
   "C-S-d"	#'copy-from-above-command
   "C-S-u"       #'up-list
   "<delete>"    #'kill-word
+  "C-y"         #'insert-pair-x
   "C-z"		#'delete-pair
   ;; tempel
   "+"		#'tempel-complete

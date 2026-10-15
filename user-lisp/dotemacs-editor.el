@@ -307,5 +307,23 @@ BEG and END specify the region boundaries."
 (setq! duplicate-region-final-position 1 ; put region around first copy
        duplicate-line-final-position 1)  ; move point to first new line
 
+(defun insert-pair-x ()
+  "Insert pairs interactively.
+Prompt for the number of sexps to enclose in the pair, and the
+pair to insert."
+  (interactive)
+  (pcase-let* ((num (read-number "Sexp number: " 1))
+               (alist (mapcar (lambda (pair)
+                                (if (length= pair 3)
+                                    pair
+                                  (cons (car pair) pair)))
+                              insert-pair-alist))
+               (choices (mapcar (pcase-lambda (`(,key ,open ,close))
+                                  (list key (format "%c %c" open close)))
+                                alist))
+               (key (car (read-multiple-choice "Pair: " choices)))
+               (`(,open ,close) (alist-get key alist)))
+    (insert-pair num open close)))
+
 (provide 'dotemacs-editor)
 ;;; dotemacs-editor.el ends here
