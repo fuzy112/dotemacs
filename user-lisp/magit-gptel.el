@@ -74,7 +74,9 @@ See `gptel-model'."
 You will receive diffs and optional context from Magit, Emacs' Git interface.
 Your task is to generate a clean, concise yet informative commit message for the changes.
 Focus exclusively on staged changes; omit any mention of unstaged or untracked changes.
-The first line of the commit message should not excess 72 characters.
+The first line of the commit message should not excess 72 characters.  But don't overthink
+about the length--the user will check anyway.
+
 If previous Git commit history is provided, align your message with the existing project conventions:
 - Follow existing formatting, such as bullet points for multiple changes
 - Include descriptions of purpose and implementation details if that is the existing convention
