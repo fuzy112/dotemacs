@@ -182,7 +182,6 @@ also set the variable's `history-length' property to the value of
 		      (_file (nth 2 event))
 		      (_file1 (nth 3 event)))
 		 (cond ((eq action 'stopped)
-			(file-notify-rm-watch descriptor)
 			(setq pch:-watch-descriptor nil))
 		       ((and (memq action '(attribute-changed rename changed created))
 			     (not pch:-saving))
