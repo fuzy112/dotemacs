@@ -113,6 +113,7 @@
 
   ;; Assign fontsets to faces
   (set-face-font 'default "fontset-default" nil)
+  (modify-all-frames-parameters `((font . ,(face-font 'default))))
   (set-face-attribute 'variable-pitch nil :family "Iosevka Aile" :weight 'medium :fontset "fontset-variable")
   (set-face-attribute 'fixed-pitch nil :family "Iosevka Term Slab" :weight 'medium :fontset "fontset-term")
   (set-face-attribute 'fixed-pitch-serif nil :family "Iosevka Term Slab" :weight 'medium :fontset "fontset-term")
