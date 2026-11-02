@@ -178,6 +178,7 @@ already marked as safe and is not a built-in default Emacs theme."
             (unless (member hash custom-safe-themes)
               (customize-save-variable 'custom-safe-themes
                                        (cons hash custom-safe-themes))))))
+      (setq dotemacs-theme--toolkit-mode 'manual)
       (customize-save-variable 'custom-enabled-themes custom-enabled-themes
                                "Saved by `consult-theme'."))))
 
@@ -189,13 +190,17 @@ already marked as safe and is not a built-in default Emacs theme."
 
 ;;;; Following system theme
 
+(defvar dotemacs-theme--toolkit-mode nil)
+
 (defun dotemacs-theme-follow-toolkit-theme (mode)
-  (mapc #'disable-theme custom-enabled-themes)
-  (let ((theme (pcase mode
-                 ('light 'modus-operandi)
-                 ('dark 'modus-vivendi)
-                 (_ 'modus-vivendi))))
-    (enable-theme theme)))
+  (unless (or (eq mode t)
+              (eq mode dotemacs-theme--toolkit-mode))
+    (setq dotemacs-theme--toolkit-mode mode)
+    (mapc #'disable-theme custom-enabled-themes)
+    (enable-theme (pcase mode
+                    ('light 'modus-operandi)
+                    ('dark 'modus-vivendi)
+                    (_ 'modus-vivendi)))))
 
 (add-hook 'toolkit-theme-set-functions #'dotemacs-theme-follow-toolkit-theme)
 (unless (daemonp)
