@@ -77,8 +77,15 @@ UTF-8 bytes are counted.  The default stays below Linux's usual
 
 (defun herdr--read-with-input-method (prompt history)
   "Read PROMPT with HISTORY using `herdr-prompt-input-method'."
-  (let ((current-input-method herdr-prompt-input-method))
-    (read-string prompt nil history nil 'INHERIT-INPUT-METHOD)))
+  ;; `current-input-method' is buffer-local, and let-binding it leaks into
+  ;; the minibuffer, where `activate-input-method' then sees a non-nil value
+  ;; and skips activation, so the input method is never loaded.  Activate it
+  ;; explicitly in the minibuffer instead.
+  (minibuffer-with-setup-hook
+      (lambda ()
+        (when herdr-prompt-input-method
+          (activate-input-method herdr-prompt-input-method)))
+    (read-string prompt nil history)))
 
 (defun herdr--read-prompt ()
   "Read a Herdr prompt."
@@ -1105,7 +1112,7 @@ Prompt for the text in the minibuffer and send it to the agent."
   (when (plist-get herdr--question-data :multiple)
     (user-error "Free text is not available for multi-select questions"))
   (let* ((header (plist-get herdr--question-data :header))
-	 (text (read-string (format "%s: " header)))
+	 (text (herdr--read-with-input-method (format "%s: " header) nil))
 	 (options (plist-get herdr--question-data :options))
 	 (digit (number-to-string (1+ (length options))))
 	 (pane-id (plist-get herdr--question-agent :pane_id))
