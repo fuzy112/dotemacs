@@ -17,87 +17,18 @@
 
 ;;; Commentary:
 
-;; This maps XTERMINAL/CSI escape sequences in the form
-;; "CSI 27 ; mod ; base ~" to appropriate Emacs key representations.
-;; See <https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-Extended-keyboard-protocol>.
+;; Deprecated.  Emacs master now includes built-in support for the Kitty
+;; Keyboard Protocol (KKP), which supersedes this library.
+;;
+;; This file remains only as a compatibility stub so that any lingering
+;; `(require 'modify-other-keys)' does not error.
 
 ;;; Code:
 
-(defconst mok--modifiers-alist
-  '(("S-" . 2)
-    ("M-" . 3)
-    ("M-S-" . 4)
-    ("C-" . 5)
-    ("C-S-" . 6)
-    ("C-M-" . 7)
-    ("C-M-S-" . 8)))
+(make-obsolete 'modify-other-keys
+               "Emacs built-in Kitty Keyboard Protocol support"
+               "2026-11-08")
 
-(defun mok--define-key (base key-string)
-  (cl-loop for (prefix . mod) in mok--modifiers-alist
-           for xterm-seq = (format "\e[27;%d;%d~" mod base)
-           for csi-u-seq = (format "\e[%d;%du" base mod)
-           for emacs-key = (key-parse (concat prefix key-string))
-           do
-           (define-key input-decode-map xterm-seq emacs-key)
-           (define-key input-decode-map csi-u-seq emacs-key)))
-
-(defun mok--setup-input-decode-map ()
-  "Set up `input-decode-map' for the current terminal."
-  ;; Printable characters
-  (cl-loop for base from 33 upto 126
-           do (mok--define-key base (char-to-string base)))
-
-  ;; Special whitespace characters
-  (cl-loop for (key . base) in '(("DEL" . ?\d)
-                                 ("<return>" . ?\r)
-                                 ("<tab>" . ?\t)
-                                 ("SPC" . ?\s)
-                                 ("<escape>" . ?\e))
-           do (mok--define-key base key)))
-
-(defun mok--translate-shifted-digits ()
-  "Translate S-<digit> combinations to their corresponding punctuation symbols.
-This allows C-S-1 to be interpreted as C-!, M-S-4 as M-$, etc."
-  (cl-loop for (unshifted . shifted) in '(("S-0" . ")")
-                                          ("S-1" . "!")
-                                          ("S-2" . "@")
-                                          ("S-3" . "#")
-                                          ("S-4" . "$")
-                                          ("S-5" . "%")
-                                          ("S-6" . "^")
-                                          ("S-7" . "&")
-                                          ("S-8" . "*")
-                                          ("S-9" . "("))
-           do (cl-loop for mod in '("C-" "M-" "C-M-")
-                       do (define-key local-function-key-map
-                                      (kbd (concat mod unshifted))
-                                      (kbd (concat mod shifted))))))
-
-(defun mok--init (&optional terminal)
-  (when (and (eq t (terminal-live-p terminal))
-             (not (string= (terminal-name terminal) "initial_terminal")))
-    (with-selected-frame (car (frames-on-display-list terminal))
-      (mok--setup-input-decode-map)
-      (mok--translate-shifted-digits)
-      ;; TODO: use xterm--query to query whether kkp is supported
-      (send-string-to-terminal "\e[>4;2m")
-      ;; (send-string-to-terminal "\e[>4;1f")
-      ;; (push "\e[>4f" (terminal-parameter terminal 'tty-mode-reset-strings))
-      (push "\e[>4m" (terminal-parameter terminal 'tty-mode-reset-strings))
-      (setf (terminal-parameter terminal 'tty-mode-set-strings)
-            (delete "\e[>4;1m" (terminal-parameter terminal 'tty-mode-set-strings)))
-      ;; (push "\e[>4;1f" (terminal-parameter terminal 'tty-mode-set-strings))
-      (push "\e[>4;2m" (terminal-parameter terminal 'tty-mode-set-strings))
-      (set-terminal-parameter terminal 'mok-mode t))))
-
-(add-hook 'terminal-init-xterm-hook 'mok--init)
-(mapc 'mok--init (terminal-list))
-
-;; Provide the feature
 (provide 'modify-other-keys)
-
-;; Local Variables:
-;; read-symbol-shorthands: (("mok-" . "modify-other-keys-"))
-;; End:
 
 ;;; modify-other-keys.el ends here
