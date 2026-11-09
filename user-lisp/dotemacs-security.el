@@ -113,5 +113,17 @@ windows."
                                         nil process (process-buffer process)))
                         "\n")))
 
+;;;; agenix
+
+(declare-function agenix-secrets-base-dir "ext:agenix")
+
+(define-advice agenix-secrets-base-dir (:override (pathname) agenix-rules)
+  "Return the directory above PATHNAME containing secrets.nix file, if one exists."
+  (locate-dominating-file pathname "agenix-rules.nix"))
+
+(define-advice agenix-locate-secrets-nix (:override (pathname) agenix-rules)
+  (when-let* ((dir (agenix-secrets-base-dir pathname)))
+    (expand-file-name "agenix-rules.nix" dir)))
+
 (provide 'dotemacs-security)
 ;;; dotemacs-security.el ends here
