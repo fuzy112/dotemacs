@@ -1411,16 +1411,19 @@ dumped to the remote host."
        "\n\nRead the full buffer with:\n  emacsclient --eval '(with-current-buffer %S (buffer-string))'"
        (buffer-name)))))
 
-(defun herdr--ask-region-prompt (beg end instructions full)
+(defun herdr--ask-region-prompt (beg end instructions full &optional kind)
   "Build the prompt text for the region between BEG and END.
 INSTRUCTIONS, when non-nil, is prepended.  When FULL is non-nil, send
-the full region text; otherwise send a summary of long regions.  The
-prompt names the buffer location, the region's 1-based line and column
-range, and marks the text as the user's selection."
+the full region text; otherwise send a summary of long regions.  KIND is
+`region' (the default) for an active region, or `defun' for the defun at
+point.  The prompt names the buffer location and the text's 1-based line
+and column range, and says where the text came from."
   (save-excursion
     (concat
      (if instructions (concat instructions "\n\n---\n") "")
-     "The user selected the following text:\n\n"
+     (if (eq kind 'defun)
+         "The current defun:\n\n"
+       "The user selected the following text:\n\n")
      (format "%s:%d:%d-%d:%d:\n\n"
              (herdr--buffer-location)
              (line-number-at-pos beg t)
@@ -1433,7 +1436,7 @@ range, and marks the text as the user's selection."
      (herdr--buffer-read-hint))))
 
 ;;;###autoload
-(defun herdr-ask-region (agent beg end &optional instructions full)
+(defun herdr-ask-region (agent beg end &optional instructions full kind)
   "Send the region between BEG and END to Herdr AGENT.
 BEG and END may be positions or markers.  Marker endpoints track edits
 made while reading instructions.  Include the buffer's file name, or an
@@ -1441,6 +1444,8 @@ explicit \"Emacs buffer\" label with its buffer name when it does not
 visit a file, and the region's line and column range.  Regions longer
 than `herdr-region-max-length' are summarized unless optional argument
 FULL is non-nil.  If INSTRUCTIONS is non-nil, prepend it to the prompt.
+KIND is `region' (the default) for an active region, or `defun' for the
+defun at point; it only affects the prompt's wording.
 Interactively, always read INSTRUCTIONS and use the prefix argument as
 FULL."
   (interactive (list (herdr-get-project-agent)
@@ -1452,7 +1457,7 @@ FULL."
 	(end (copy-marker end t)))
     (when (equal instructions "")
       (setq instructions nil))
-    (herdr-ask agent (herdr--ask-region-prompt beg end instructions full))))
+    (herdr-ask agent (herdr--ask-region-prompt beg end instructions full kind))))
 
 (defun herdr--region-or-defun-bounds ()
   "Return the active region or defun bounds as a cons of markers, or nil.
@@ -1471,13 +1476,15 @@ question instead, like `herdr-ask'.  Prompt for instructions; an empty
 response means no instructions.  With a prefix argument, send the
 selected text in full regardless of `herdr-region-max-length'."
   (interactive)
-  (let* ((bounds (herdr--region-or-defun-bounds))
+  (let* ((region-active (use-region-p))
+	 (bounds (herdr--region-or-defun-bounds))
 	 (agent (herdr-get-project-agent))
 	 (instructions (herdr--read-prompt)))
     (if bounds
 	(herdr-ask-region agent (car bounds) (cdr bounds)
 			  (unless (equal instructions "") instructions)
-			  current-prefix-arg)
+			  current-prefix-arg
+			  (if region-active 'region 'defun))
       (herdr-ask agent instructions
 		 (and current-prefix-arg
 		      (prefix-numeric-value current-prefix-arg))))))

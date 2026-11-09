@@ -161,33 +161,35 @@
 (ert-deftest herdr-read-prompt-disables-input-method-by-default ()
   (let ((herdr-prompt-input-method nil)
         (current-input-method "existing-method")
-        received-args received-method)
+        received-args activations)
     (cl-letf (((symbol-function 'read-string)
                (lambda (&rest args)
-                 (setq received-args args
-                       received-method current-input-method)
-                 "prompt")))
+                 (setq received-args args)
+                 ;; Simulate entering the minibuffer: run its setup hook in
+                 ;; another buffer.
+                 (with-temp-buffer (run-hooks 'minibuffer-setup-hook))
+                 "prompt"))
+              ((symbol-function 'activate-input-method)
+               (lambda (method) (push method activations))))
       (should (equal (herdr--read-prompt) "prompt")))
-    (should (equal received-args
-                   (list "Prompt: " nil 'herdr-prompt-history
-                         nil 'INHERIT-INPUT-METHOD)))
-    (should-not received-method)
+    (should (equal received-args (list "Prompt: " nil 'herdr-prompt-history)))
+    (should-not activations)
     (should (equal current-input-method "existing-method"))))
 
 (ert-deftest herdr-read-prompt-uses-configured-input-method ()
   (let ((herdr-prompt-input-method "chinese-py")
         (current-input-method "existing-method")
-        received-args received-method)
+        received-args activations)
     (cl-letf (((symbol-function 'read-string)
                (lambda (&rest args)
-                 (setq received-args args
-                       received-method current-input-method)
-                 "prompt")))
+                 (setq received-args args)
+                 (with-temp-buffer (run-hooks 'minibuffer-setup-hook))
+                 "prompt"))
+              ((symbol-function 'activate-input-method)
+               (lambda (method) (push method activations))))
       (should (equal (herdr--read-prompt) "prompt")))
-    (should (equal received-args
-                   (list "Prompt: " nil 'herdr-prompt-history
-                         nil 'INHERIT-INPUT-METHOD)))
-    (should (equal received-method "chinese-py"))
+    (should (equal received-args (list "Prompt: " nil 'herdr-prompt-history)))
+    (should (equal activations '("chinese-py")))
     (should (equal current-input-method "existing-method"))))
 
 (ert-deftest herdr-prompt-input-method-widget-offers-choices ()
@@ -457,7 +459,7 @@
       (should (markerp (nth 2 received)))
       (should (= (marker-position (nth 1 received)) 1))
       (should (= (marker-position (nth 2 received)) 10))
-      (should (equal (nthcdr 3 received) '(nil nil))))))
+      (should (equal (nthcdr 3 received) '(nil nil region))))))
 
 (ert-deftest herdr-ask-dwim-sends-defun-and-instructions ()
   (with-temp-buffer
@@ -480,6 +482,25 @@
                                                  (nth 2 received))))
         (should (string-match-p "\\`(defun one" text))
         (should-not (string-match-p "(defun two" text))))))
+
+(ert-deftest herdr-ask-dwim-defun-does-not-claim-user-selection ()
+  (with-temp-buffer
+    (emacs-lisp-mode)
+    (setq buffer-file-name "/tmp/herdr-dwim.el")
+    (insert "(defun one ()\n  (message \"one\"))\n\n(defun two () 2)\n")
+    (goto-char 15)
+    (setq mark-active nil)
+    (let (received)
+      (cl-letf (((symbol-function 'herdr-get-project-agent)
+                 (lambda (&rest _) 'AGENT))
+                ((symbol-function 'herdr--read-prompt)
+                 (lambda (&rest _) ""))
+                ((symbol-function 'herdr-ask)
+                 (lambda (_agent prompt) (setq received prompt))))
+        (call-interactively #'herdr-ask-dwim))
+      (should (string-prefix-p "The current defun:" received))
+      (should-not (string-match-p "The user selected" received))
+      (should (string-match-p "(defun one" received)))))
 
 (ert-deftest herdr-ask-dwim-prefix-sends-full-text ()
   (with-temp-buffer
