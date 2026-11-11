@@ -110,11 +110,20 @@ if the current `default-directory' is remote and such a variable exists,
 
 (setopt shell-command-with-editor-mode t)
 
-(add-hook 'eshell-mode-hook #'with-editor-export-editor)
-(add-hook 'shell-mode-hook #'with-editor-export-editor)
-(add-hook 'term-exec-hook #'with-editor-export-editor)
-(add-hook 'vterm-mode-hook #'with-editor-export-editor)
-(add-hook 'eat-exec-hook #'with-editor-export-editor)
+(defun with-editor-export-visual (&optional process interactive)
+  "Like `with-editor-export-editor' but always set `$VISUAL'.
+
+PROCESS is only intended for use by `eat-exec-hook'.  When invoked
+interactively, INTERACTIVE is non-nil, which suppresses the call to
+\"clear\"."
+  (interactive (list nil t))
+  (with-editor-export-editor "VISUAL" process interactive))
+
+(add-hook 'eshell-mode-hook #'with-editor-export-visual)
+(add-hook 'shell-mode-hook #'with-editor-export-visual)
+(add-hook 'term-exec-hook #'with-editor-export-visual)
+(add-hook 'vterm-mode-hook #'with-editor-export-visual)
+(add-hook 'eat-exec-hook #'with-editor-export-visual)
 
 ;;;; shell-command
 
