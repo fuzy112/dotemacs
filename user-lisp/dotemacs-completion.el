@@ -471,7 +471,11 @@ If there is no active minibuffer, signal an error."
   (setq embark-indicators '(embark-mixed-indicator
                             embark-highlight-indicator
                             embark-isearch-highlight-indicator))
-  (add-to-list 'embark-target-finders 'embark-kmacro-target)
+  (when-let* (((not (memq 'embark-kmacro-target embark-target-finders)))
+              (x (memq 'embark-target-guess-file-at-point embark-target-finders))
+              (new-tail (cons (car x) (cdr x))))
+    (setcar x 'embark-kmacro-target)
+    (setcdr x new-tail))
 
   (defvar-keymap embark-kmacro-map
     :doc "Actions on kmacros."
