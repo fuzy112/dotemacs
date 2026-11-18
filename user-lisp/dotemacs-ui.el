@@ -334,14 +334,6 @@ not used, but is required by the hook."
   ;; Make sure prism colors are updated when themes change
   (add-hook 'enable-theme-functions #'+prism--enable-theme-f 100))
 
-
-;;;; mode-line
-
-(setq! doom-modeline-gnus t
-       doom-modeline-irc t)
-(after-init! doom-modeline
-  (doom-modeline-mode))
-
 ;;; message-ring
 
 (message-ring-mode)
