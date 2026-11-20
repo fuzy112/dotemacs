@@ -65,17 +65,26 @@
 (defun eat-connection-local-default-shell ()
   "Return the default shell for the current connection-local context.
 
-This function uses connection-local variables when available, falling back
-to the default value of `eat-shell'.  The value is chosen from, in order:
-`explicit-shell-file-name' if set, the connection-local value of `eat-shell'
-if the current `default-directory' is remote and such a variable exists,
-`shell-file-name', or the global default of `eat-shell'."
-  (with-connection-local-variables
-    (or explicit-shell-file-name
+The connection-local values are consulted without applying them to the
+current buffer.  Note that `connection-local-value' is not enough by itself:
+`connection-local-criteria-for-default-directory' applies connection-local
+variables to `file-local-variables-alist' while it is being evaluated, which
+happens before the `let' inside `connection-local-value' is established.
+The stale entries left behind are later re-applied by
+`hack-local-variables-apply', e.g. in Magit status buffers, so bind the
+alist here before doing anything else.
+
+The value is chosen from, in order: `explicit-shell-file-name' if set, the
+connection-local value of `eat-shell' if the current `default-directory' is
+remote and such a variable exists, `shell-file-name', or the global default
+of `eat-shell'."
+  (let (file-local-variables-alist)
+    (or (connection-local-value explicit-shell-file-name)
         (if (file-remote-p default-directory)
-	    (and (connection-local-p eat-shell) eat-shell)
+            (and (connection-local-p eat-shell)
+                 (connection-local-value eat-shell))
           eat-shell)
-	shell-file-name
+        (connection-local-value shell-file-name)
         (default-value 'eat-shell))))
 
 (setq! eat-default-shell-function #'eat-connection-local-default-shell)
